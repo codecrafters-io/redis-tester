@@ -35,6 +35,9 @@ func main() {
 	// Run tests here
 	time.Sleep(1 * time.Second)
 
+	stageRunner := StageRunner{}
+	stageRunner.Run()
+
 	fmt.Println("Running stage 1 test...")
 	if err := runStage1(); err != nil {
 		fmt.Println("Failed to run stage 1 test")
@@ -56,6 +59,8 @@ func killCmdAndExit(cmd *exec.Cmd, code int) {
 
 func runBinary(binaryPath string) (*exec.Cmd, error) {
 	command := exec.Command(binaryPath)
+	command.Stdout = os.Stdout
+	command.Stderr = os.Stderr
 	command.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 	err := command.Start()
 	if err != nil {
