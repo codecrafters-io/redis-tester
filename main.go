@@ -67,15 +67,16 @@ func runBinary(binaryPath string) (*exec.Cmd, error) {
 
 func runStage1() error {
 	client := redis.NewClient(&redis.Options{
-		Addr: "localhost:6739",
+		Addr:        "localhost:6379",
+		DialTimeout: 30 * time.Second,
 	})
 	pong, err := client.Ping().Result()
 	if err != nil {
 		return err
 	}
 
-	if pong != "pong" {
-		return fmt.Errorf("Expected pong, got %s", pong)
+	if pong != "PONG" {
+		return fmt.Errorf("Expected PONG, got %s", pong)
 	}
 
 	return nil
