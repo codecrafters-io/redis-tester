@@ -35,10 +35,11 @@ func runStage2(logger *customLogger) error {
 		return err
 	}
 
-	// 	err = sendPing(conn2)
-	// 	if err != nil {
-	// 		return err
-	// 	}
+	logger.Debugf("Sending ping to connection 2 again")
+	err = sendPing(conn2, logger)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
