@@ -9,5 +9,5 @@ build:
 run: build
 	dest/main.out --binary-path=./run.sh
 
-run_with_redis:
+run_with_redis: build
 	dest/main.out --binary-path=redis-server
