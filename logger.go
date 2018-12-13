@@ -69,3 +69,13 @@ func (l *customLogger) Errorln(msg string) {
 	msg = errorColorize(msg)
 	l.logger.Println(msg)
 }
+
+func (l *customLogger) Debugf(fstring string, args ...interface{}) {
+	msg := debugColorize(fstring, args...)
+	l.Successln(msg)
+}
+
+func (l *customLogger) Debugln(msg string) {
+	msg = debugColorize(msg)
+	l.logger.Println(msg)
+}

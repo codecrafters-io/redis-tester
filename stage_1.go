@@ -4,6 +4,10 @@ import "fmt"
 import "github.com/go-redis/redis"
 import "time"
 
+type stage1 struct {
+	Stage
+}
+
 func getStageOne() Stage {
 	return Stage{
 		name:    "Stage 1: PING <-> PONG",
@@ -11,7 +15,7 @@ func getStageOne() Stage {
 	}
 }
 
-func runStage1() error {
+func runStage1(logger *customLogger) error {
 	client := redis.NewClient(&redis.Options{
 		Addr:        "localhost:6379",
 		DialTimeout: 30 * time.Second,

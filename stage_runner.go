@@ -1,11 +1,10 @@
 package main
 
-import "fmt"
-
 // StageRunnerResult is returned from StageRunner.Run()
 type StageRunnerResult struct {
 	failedAtStage Stage
 	error         error
+	logger        *customLogger
 }
 
 // IsSuccess says whether a StageRunnerResult was successful
@@ -22,18 +21,26 @@ type StageRunner struct {
 func newStageRunner() StageRunner {
 	return StageRunner{
 		stages: map[string]Stage{
-			"stage-1": getStageOne(),
+			"stage-1": Stage{
+				name:    "Stage 1: PING <-> PONG",
+				logger:  getLogger("[stage-1] "),
+				runFunc: runStage1,
+			},
+			"stage-2": Stage{
+				name:    "Stage 2: Multiple Clients",
+				logger:  getLogger("[stage-2] "),
+				runFunc: runStage2,
+			},
 		},
 	}
 }
 
 // Run tests in a specific StageRunner
 func (r StageRunner) Run() StageRunnerResult {
-	for stageKey, stage := range r.stages {
-		logPrefix := fmt.Sprintf("[%s] ", stageKey)
-		logger := getLogger(logPrefix)
+	for _, stage := range r.stages {
+		logger := stage.logger
 		logger.Infof("Running test: %s", stage.name)
-		err := stage.runFunc()
+		err := stage.runFunc(logger)
 		if err != nil {
 			logger.Errorf("Test failed")
 			logger.Errorf("%s", err)
@@ -55,5 +62,6 @@ func (r StageRunner) Run() StageRunnerResult {
 type Stage struct {
 	name        string
 	description string
-	runFunc     func() error
+	runFunc     func(logger *customLogger) error
+	logger      *customLogger
 }
