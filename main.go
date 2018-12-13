@@ -41,7 +41,7 @@ func main() {
 	// TODO: Make this a proper wait?
 	time.Sleep(1 * time.Second)
 
-	result := newStageRunner().Run()
+	result := newStageRunner(*debugPtr).Run()
 	if result.IsSuccess() {
 		fmt.Println("")
 		fmt.Println("All tests ran successfully. Congrats!")

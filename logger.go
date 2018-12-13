@@ -30,13 +30,15 @@ func yellowColorize(fstring string, args ...interface{}) string {
 }
 
 type customLogger struct {
-	logger log.Logger
+	logger  log.Logger
+	isDebug bool
 }
 
-func getLogger(prefix string) *customLogger {
+func getLogger(isDebug bool, prefix string) *customLogger {
 	prefix = yellowColorize(prefix)
 	return &customLogger{
-		logger: *log.New(os.Stdout, prefix, 0),
+		logger:  *log.New(os.Stdout, prefix, 0),
+		isDebug: isDebug,
 	}
 }
 
@@ -71,11 +73,17 @@ func (l *customLogger) Errorln(msg string) {
 }
 
 func (l *customLogger) Debugf(fstring string, args ...interface{}) {
+	if !l.isDebug {
+		return
+	}
 	msg := debugColorize(fstring, args...)
 	l.Successln(msg)
 }
 
 func (l *customLogger) Debugln(msg string) {
+	if !l.isDebug {
+		return
+	}
 	msg = debugColorize(msg)
 	l.logger.Println(msg)
 }

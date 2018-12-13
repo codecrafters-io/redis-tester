@@ -15,20 +15,22 @@ func (res StageRunnerResult) IsSuccess() bool {
 
 // StageRunner is used to run multiple stages
 type StageRunner struct {
-	stages map[string]Stage
+	stages  map[string]Stage
+	isDebug bool
 }
 
-func newStageRunner() StageRunner {
+func newStageRunner(isDebug bool) StageRunner {
 	return StageRunner{
+		isDebug: isDebug,
 		stages: map[string]Stage{
 			"stage-1": Stage{
 				name:    "Stage 1: PING <-> PONG",
-				logger:  getLogger("[stage-1] "),
+				logger:  getLogger(isDebug, "[stage-1] "),
 				runFunc: runStage1,
 			},
 			"stage-2": Stage{
 				name:    "Stage 2: Multiple Clients",
-				logger:  getLogger("[stage-2] "),
+				logger:  getLogger(isDebug, "[stage-2] "),
 				runFunc: runStage2,
 			},
 		},
