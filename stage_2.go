@@ -5,31 +5,35 @@ import "fmt"
 import "net"
 
 func runStage2(logger *customLogger) error {
+	logger.Debugf("Creating first connection")
 	conn1, err := net.Dial("tcp", "localhost:6379")
 	if err != nil {
 		return err
 	}
 
+	logger.Debugf("Creating second connection")
 	conn2, err := net.Dial("tcp", "localhost:6379")
 	if err != nil {
 		return err
 	}
 
 	logger.Debugf("Sending ping to connection 1")
-	err = sendPing(conn1)
+	err = sendPing(conn1, logger)
 	if err != nil {
 		return err
 	}
 
-	err = sendPing(conn2)
+	logger.Debugf("Sending ping to connection 2")
+	err = sendPing(conn2, logger)
 	if err != nil {
 		return err
 	}
 
-	// 	err = sendPing(conn1)
-	// 	if err != nil {
-	// 		return err
-	// 	}
+	logger.Debugf("Sending ping to connection 1 again")
+	err = sendPing(conn1, logger)
+	if err != nil {
+		return err
+	}
 
 	// 	err = sendPing(conn2)
 	// 	if err != nil {
@@ -39,13 +43,15 @@ func runStage2(logger *customLogger) error {
 	return nil
 }
 
-func sendPing(conn net.Conn) error {
+func sendPing(conn net.Conn, logger *customLogger) error {
 	tmp := make([]byte, 256)
 
+	logger.Debugf("- Writing PING command")
 	_, err := conn.Write([]byte("*1\r\n$4\r\nping\r\n"))
 	if err != nil {
 		return err
 	}
+	logger.Debugf("- Reading response")
 	readlen, err := conn.Read(tmp)
 	if err != nil {
 		return err

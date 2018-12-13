@@ -44,8 +44,13 @@ func (r StageRunner) Run() StageRunnerResult {
 		logger.Infof("Running test: %s", stage.name)
 		err := stage.runFunc(logger)
 		if err != nil {
-			logger.Errorf("Test failed")
 			logger.Errorf("%s", err)
+			if r.isDebug {
+				logger.Errorf("Test failed")
+			} else {
+				logger.Errorf("Test failed " +
+					"(try using the --debug flag to see more output)")
+			}
 			return StageRunnerResult{
 				failedAtStage: stage,
 				error:         err,

@@ -6,6 +6,7 @@ import "os"
 import "os/exec"
 import "syscall"
 import "time"
+import "os/signal"
 
 func main() {
 	fmt.Println("Welcome to the redis challenge!")
@@ -37,6 +38,7 @@ func main() {
 		os.Exit(1)
 	}
 	defer killCmdAndExit(cmd, 0)
+	installSignalHandler(cmd)
 
 	// TODO: Make this a proper wait?
 	time.Sleep(1 * time.Second)
@@ -48,6 +50,17 @@ func main() {
 	} else {
 		killCmdAndExit(cmd, 1)
 	}
+}
+
+func installSignalHandler(cmd *exec.Cmd) {
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+	go func() {
+		for range c {
+			// sig is a ^C, handle it
+			killCmdAndExit(cmd, 0)
+		}
+	}()
 }
 
 func killCmdAndExit(cmd *exec.Cmd, code int) {
