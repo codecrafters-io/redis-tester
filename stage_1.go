@@ -29,5 +29,7 @@ func runStage1(logger *customLogger) error {
 		return fmt.Errorf("Expected PONG, got %s", pong)
 	}
 
+	client.Close()
+
 	return nil
 }
