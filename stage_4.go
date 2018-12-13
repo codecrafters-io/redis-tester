@@ -28,6 +28,8 @@ func runStage4(logger *customLogger) error {
 
 	randomKey := strings[rand.Intn(10)]
 	randomValue := strings[rand.Intn(10)]
+
+	logger.Debugf("Setting key %s to %s", randomKey, randomValue)
 	resp, err := client.Set(randomKey, randomValue, 0).Result()
 	if err != nil {
 		return err
@@ -37,6 +39,7 @@ func runStage4(logger *customLogger) error {
 		return fmt.Errorf("Expected 'OK', got %s", resp)
 	}
 
+	logger.Debugf("Getting key %s", randomKey)
 	resp, err = client.Get(randomKey).Result()
 	if err != nil {
 		return err
