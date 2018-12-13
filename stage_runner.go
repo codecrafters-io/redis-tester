@@ -46,6 +46,11 @@ func newStageRunner(isDebug bool) StageRunner {
 				logger:  getLogger(isDebug, "[stage-4] "),
 				runFunc: runStage4,
 			},
+			Stage{
+				name:    "Stage 5: Expiry!",
+				logger:  getLogger(isDebug, "[stage-5] "),
+				runFunc: runStage5,
+			},
 		},
 	}
 }

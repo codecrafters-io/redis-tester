@@ -6,8 +6,8 @@ import "time"
 
 import "math/rand"
 
-// Tests 'GET, SET'
-func runStage4(logger *customLogger) error {
+// Tests Expiry
+func runStage5(logger *customLogger) error {
 	client := redis.NewClient(&redis.Options{
 		Addr:        "localhost:6379",
 		DialTimeout: 30 * time.Second,
@@ -28,7 +28,7 @@ func runStage4(logger *customLogger) error {
 
 	randomKey := strings[rand.Intn(10)]
 	randomValue := strings[rand.Intn(10)]
-	resp, err := client.Set(randomKey, randomValue, 0).Result()
+	resp, err := client.Set(randomKey, randomValue, 100*time.Millisecond).Result()
 	if err != nil {
 		return err
 	}
@@ -41,9 +41,19 @@ func runStage4(logger *customLogger) error {
 	if err != nil {
 		return err
 	}
-
 	if resp != randomValue {
 		return fmt.Errorf("Expected %s, got %s", randomValue, resp)
+	}
+
+	time.Sleep(101 * time.Millisecond)
+
+	resp, err = client.Get(randomKey).Result()
+	if err != redis.Nil {
+		if err == nil {
+			return fmt.Errorf("Expected nil, got %s", resp)
+		}
+
+		return err
 	}
 
 	client.Close()
