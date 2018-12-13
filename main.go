@@ -43,21 +43,17 @@ func main() {
 
 	result := newStageRunner().Run()
 	if result.IsSuccess() {
-		fmt.Println("All tests ran successfully.")
+		fmt.Println("")
+		fmt.Println("All tests ran successfully. Congrats!")
 	} else {
-		fmt.Println("Failed to run stage 1 test")
-		fmt.Println(result.error)
 		killCmdAndExit(cmd, 1)
 	}
-
-	fmt.Println("Tests done")
 }
 
 func killCmdAndExit(cmd *exec.Cmd, code int) {
-	fmt.Printf("Killing process (PID: %d)\n", cmd.Process.Pid)
 	err := syscall.Kill(-cmd.Process.Pid, syscall.SIGKILL)
 	if err != nil {
-		fmt.Printf("Error when killing process: %s\n", err)
+		fmt.Printf("Error when killing process with PID %d: %s\n", cmd.Process.Pid, err)
 	}
 	os.Exit(code)
 }

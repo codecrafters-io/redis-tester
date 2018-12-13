@@ -6,9 +6,8 @@ import "time"
 
 func getStageOne() Stage {
 	return Stage{
-		name:        "stage 1",
-		description: "stage 1 desc",
-		runFunc:     runStage1,
+		name:    "Stage 1: PING <-> PONG",
+		runFunc: runStage1,
 	}
 }
 

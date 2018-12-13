@@ -1,5 +1,9 @@
 package main
 
+import "fmt"
+import "log"
+import "os"
+
 // StageRunnerResult is returned from StageRunner.Run()
 type StageRunnerResult struct {
 	failedAtStage Stage
@@ -27,15 +31,21 @@ func newStageRunner() StageRunner {
 
 // Run tests in a specific StageRunner
 func (r StageRunner) Run() StageRunnerResult {
-	for _, stage := range r.stages {
+	for stageKey, stage := range r.stages {
+		logPrefix := fmt.Sprintf("[%s] ", stageKey)
+		logger := log.New(os.Stdout, logPrefix, 0)
+		logger.Printf("Running test: %s\n", stage.name)
 		err := stage.runFunc()
 		if err != nil {
+			logger.Println("Test failed")
+			logger.Println(err)
 			return StageRunnerResult{
 				failedAtStage: stage,
 				error:         err,
 			}
 		}
 
+		logger.Println("Test passed.")
 	}
 
 	return StageRunnerResult{
