@@ -1,5 +1,8 @@
 package main
 
+import "time"
+import "fmt"
+
 // StageRunnerResult is returned from StageRunner.Run()
 type StageRunnerResult struct {
 	failedAtStage Stage
@@ -42,15 +45,23 @@ func (r StageRunner) Run() StageRunnerResult {
 	for _, stage := range r.stages {
 		logger := stage.logger
 		logger.Infof("Running test: %s", stage.name)
-		err := stage.runFunc(logger)
+
+		stageResultChannel := make(chan error, 1)
+		go func() {
+			err := stage.runFunc(logger)
+			stageResultChannel <- err
+		}()
+
+		var err error
+		select {
+		case stageErr := <-stageResultChannel:
+			err = stageErr
+		case <-time.After(1 * time.Second):
+			err = fmt.Errorf("timed out, test exceeded 1 seconds")
+		}
+
 		if err != nil {
-			logger.Errorf("%s", err)
-			if r.isDebug {
-				logger.Errorf("Test failed")
-			} else {
-				logger.Errorf("Test failed " +
-					"(try using the --debug flag to see more output)")
-			}
+			reportTestError(err, r.isDebug, logger)
 			return StageRunnerResult{
 				failedAtStage: stage,
 				error:         err,
@@ -62,6 +73,16 @@ func (r StageRunner) Run() StageRunnerResult {
 
 	return StageRunnerResult{
 		error: nil,
+	}
+}
+
+func reportTestError(err error, isDebug bool, logger *customLogger) {
+	logger.Errorf("%s", err)
+	if isDebug {
+		logger.Errorf("Test failed")
+	} else {
+		logger.Errorf("Test failed " +
+			"(try using the --debug flag to see more output)")
 	}
 }
 
