@@ -4,8 +4,6 @@ import "flag"
 import "fmt"
 import "os"
 import "os/exec"
-import "time"
-import "github.com/go-redis/redis"
 import "syscall"
 
 func main() {
@@ -32,10 +30,7 @@ func main() {
 	}
 	defer killCmdAndExit(cmd, 0)
 
-	// Run tests here
-	time.Sleep(1 * time.Second)
-
-	stageRunner := StageRunner{}
+	stageRunner := newStageRunner()
 	stageRunner.Run()
 
 	fmt.Println("Running stage 1 test...")
@@ -68,21 +63,4 @@ func runBinary(binaryPath string) (*exec.Cmd, error) {
 	}
 
 	return command, nil
-}
-
-func runStage1() error {
-	client := redis.NewClient(&redis.Options{
-		Addr:        "localhost:6379",
-		DialTimeout: 30 * time.Second,
-	})
-	pong, err := client.Ping().Result()
-	if err != nil {
-		return err
-	}
-
-	if pong != "PONG" {
-		return fmt.Errorf("Expected PONG, got %s", pong)
-	}
-
-	return nil
 }

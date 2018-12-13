@@ -14,6 +14,11 @@ func (res StageRunnerResult) IsSuccess() bool {
 
 // StageRunner is used to run multiple stages
 type StageRunner struct {
+	stages map[string]func
+}
+
+func newStageRunner() StageRunner {
+	return StageRunner{}
 }
 
 // Run tests in a specific StageRunner
@@ -22,4 +27,7 @@ func (r StageRunner) Run() StageRunnerResult {
 		failedAtStage: 0,
 		error:         nil,
 	}
+}
+
+type Stage struct {
 }
