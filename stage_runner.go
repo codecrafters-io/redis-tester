@@ -1,10 +1,6 @@
 package main
 
 import "fmt"
-import "log"
-import "os"
-
-import "github.com/fatih/color"
 
 // StageRunnerResult is returned from StageRunner.Run()
 type StageRunnerResult struct {
@@ -34,25 +30,20 @@ func newStageRunner() StageRunner {
 // Run tests in a specific StageRunner
 func (r StageRunner) Run() StageRunnerResult {
 	for stageKey, stage := range r.stages {
-		infoCol := color.New(color.FgBlue).SprintfFunc()
-		mildInfoCol := color.New(color.FgCyan).SprintfFunc()
-		errCol := color.New(color.FgRed).SprintfFunc()
-		successCol := color.New(color.FgGreen).SprintfFunc()
 		logPrefix := fmt.Sprintf("[%s] ", stageKey)
-		logPrefix = infoCol(logPrefix)
-		logger := log.New(os.Stdout, logPrefix, 0)
-		logger.Printf(mildInfoCol("Running test: %s", stage.name))
+		logger := getLogger(logPrefix)
+		logger.Infof("Running test: %s", stage.name)
 		err := stage.runFunc()
 		if err != nil {
-			logger.Println(errCol("Test failed"))
-			logger.Println(errCol("%s", err))
+			logger.Errorf("Test failed")
+			logger.Errorf("%s", err)
 			return StageRunnerResult{
 				failedAtStage: stage,
 				error:         err,
 			}
 		}
 
-		logger.Println(successCol("Test passed."))
+		logger.Successf("Test passed.")
 	}
 
 	return StageRunnerResult{
