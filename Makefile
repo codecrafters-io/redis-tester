@@ -26,5 +26,8 @@ bump_version:
 
 upload_to_travis:
 	aws s3 cp \
-		s3://paul-redis-challenge/binaries/$(current_version)/redis-challenge-tester_$(current_version)_linux_amd64.tar.gz \
-		s3://paul-redis-challenge/travis.tar.gz
+		s3://paul-redis-challenge/binaries/$(current_version)/$(current_version)_linux_amd64.tar.gz \
+		s3://paul-redis-challenge/linux.tar.gz
+	aws s3 cp \
+		s3://paul-redis-challenge/binaries/$(current_version)/$(current_version)_darwin_amd64.tar.gz \
+		s3://paul-redis-challenge/darwin.tar.gz
