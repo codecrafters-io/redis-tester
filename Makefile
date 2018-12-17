@@ -25,9 +25,9 @@ bump_version:
 	bumpversion --verbose --tag patch
 
 upload_to_travis:
-	aws s3 cp \
+	aws s3 cp --acl public-read \
 		s3://paul-redis-challenge/binaries/$(current_version)/$(current_version)_linux_amd64.tar.gz \
 		s3://paul-redis-challenge/linux.tar.gz
-	aws s3 cp \
+	aws s3 cp --acl public-read \
 		s3://paul-redis-challenge/binaries/$(current_version)/$(current_version)_darwin_amd64.tar.gz \
 		s3://paul-redis-challenge/darwin.tar.gz
