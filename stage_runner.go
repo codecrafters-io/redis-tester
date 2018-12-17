@@ -37,14 +37,14 @@ func newStageRunner(isDebug bool) StageRunner {
 				runFunc: testPingPong,
 			},
 			Stage{
-				name:    "Stage 2: Multiple Clients",
+				name:    "Stage 2: ECHO... O... O...",
 				logger:  getLogger(isDebug, "[stage-2] "),
-				runFunc: testMultipleClients,
+				runFunc: testEcho,
 			},
 			Stage{
-				name:    "Stage 3: ECHO... O... O...",
+				name:    "Stage 3: Multiple Clients",
 				logger:  getLogger(isDebug, "[stage-3] "),
-				runFunc: testEcho,
+				runFunc: testMultipleClients,
 			},
 			Stage{
 				name:    "Stage 4: SET & GET",
