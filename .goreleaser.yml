@@ -1,6 +1,6 @@
 # .goreleaser.yml
 archive:
-  name_template: "{{ .Tag }}"
+  name_template: "{{ .Tag }}_{{ .Os }}_{{ .Arch }}"
 
 s3:
   # You can have multiple s3 configs
