@@ -1,6 +1,7 @@
 .PHONY: release build run run_with_redis
 
 release:
+	rm -rf dist
 	goreleaser
 
 build:
