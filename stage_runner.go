@@ -29,32 +29,32 @@ func newStageRunner(isDebug bool) StageRunner {
 			Stage{
 				name:    "Stage 0: Bind to a port",
 				logger:  getLogger(isDebug, "[stage-0] "),
-				runFunc: runStage0,
+				runFunc: testBindToPort,
 			},
 			Stage{
 				name:    "Stage 1: PING <-> PONG",
 				logger:  getLogger(isDebug, "[stage-1] "),
-				runFunc: runStage1,
+				runFunc: testPingPong,
 			},
 			Stage{
 				name:    "Stage 2: Multiple Clients",
 				logger:  getLogger(isDebug, "[stage-2] "),
-				runFunc: runStage2,
+				runFunc: testMultipleClients,
 			},
 			Stage{
 				name:    "Stage 3: ECHO... O... O...",
 				logger:  getLogger(isDebug, "[stage-3] "),
-				runFunc: runStage3,
+				runFunc: testEcho,
 			},
 			Stage{
 				name:    "Stage 4: SET & GET",
 				logger:  getLogger(isDebug, "[stage-4] "),
-				runFunc: runStage4,
+				runFunc: testGetSet,
 			},
 			Stage{
 				name:    "Stage 5: Expiry!",
 				logger:  getLogger(isDebug, "[stage-5] "),
-				runFunc: runStage5,
+				runFunc: testExpiry,
 			},
 		},
 	}

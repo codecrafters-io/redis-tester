@@ -7,7 +7,7 @@ import "time"
 import "math/rand"
 
 // Tests 'GET, SET'
-func runStage4(logger *customLogger) error {
+func testGetSet(logger *customLogger) error {
 	client := redis.NewClient(&redis.Options{
 		Addr:        "localhost:6379",
 		DialTimeout: 30 * time.Second,

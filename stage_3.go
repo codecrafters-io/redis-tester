@@ -7,7 +7,7 @@ import "time"
 import "math/rand"
 
 // Tests 'ECHO'
-func runStage3(logger *customLogger) error {
+func testEcho(logger *customLogger) error {
 	client := redis.NewClient(&redis.Options{
 		Addr:        "localhost:6379",
 		DialTimeout: 30 * time.Second,

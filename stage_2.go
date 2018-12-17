@@ -4,7 +4,7 @@ import "fmt"
 
 import "net"
 
-func runStage2(logger *customLogger) error {
+func testMultipleClients(logger *customLogger) error {
 	logger.Debugf("Creating first connection")
 	conn1, err := net.Dial("tcp", "localhost:6379")
 	if err != nil {
