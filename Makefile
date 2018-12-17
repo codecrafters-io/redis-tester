@@ -1,6 +1,6 @@
 .PHONY: release build run run_with_redis
 
-current_version := $(shell git describe --tags --abbrev=0)
+current_version = $(shell git describe --tags --abbrev=0)
 
 release:
 	rm -rf dist
