@@ -31,38 +31,42 @@ func newStageRunner(isDebug bool) StageRunner {
 				logger:  getLogger(isDebug, "[stage-0] "),
 				runFunc: runStage0,
 			},
-			// Stage{
-			// 	name:    "Stage 1: PING <-> PONG",
-			// 	logger:  getLogger(isDebug, "[stage-1] "),
-			// 	runFunc: runStage1,
-			// },
-			// Stage{
-			// 	name:    "Stage 2: Multiple Clients",
-			// 	logger:  getLogger(isDebug, "[stage-2] "),
-			// 	runFunc: runStage2,
-			// },
-			// Stage{
-			// 	name:    "Stage 3: ECHO... O... O...",
-			// 	logger:  getLogger(isDebug, "[stage-3] "),
-			// 	runFunc: runStage3,
-			// },
-			// Stage{
-			// 	name:    "Stage 4: SET & GET",
-			// 	logger:  getLogger(isDebug, "[stage-4] "),
-			// 	runFunc: runStage4,
-			// },
-			// Stage{
-			// 	name:    "Stage 5: Expiry!",
-			// 	logger:  getLogger(isDebug, "[stage-5] "),
-			// 	runFunc: runStage5,
-			// },
+			Stage{
+				name:    "Stage 1: PING <-> PONG",
+				logger:  getLogger(isDebug, "[stage-1] "),
+				runFunc: runStage1,
+			},
+			Stage{
+				name:    "Stage 2: Multiple Clients",
+				logger:  getLogger(isDebug, "[stage-2] "),
+				runFunc: runStage2,
+			},
+			Stage{
+				name:    "Stage 3: ECHO... O... O...",
+				logger:  getLogger(isDebug, "[stage-3] "),
+				runFunc: runStage3,
+			},
+			Stage{
+				name:    "Stage 4: SET & GET",
+				logger:  getLogger(isDebug, "[stage-4] "),
+				runFunc: runStage4,
+			},
+			Stage{
+				name:    "Stage 5: Expiry!",
+				logger:  getLogger(isDebug, "[stage-5] "),
+				runFunc: runStage5,
+			},
 		},
 	}
 }
 
 // Run tests in a specific StageRunner
-func (r StageRunner) Run() StageRunnerResult {
-	for _, stage := range r.stages {
+func (r StageRunner) Run(maxStage int) StageRunnerResult {
+	for index, stage := range r.stages {
+		if index > maxStage {
+			break
+		}
+
 		logger := stage.logger
 		logger.Infof("Running test: %s", stage.name)
 

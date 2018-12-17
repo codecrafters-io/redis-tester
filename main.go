@@ -7,6 +7,10 @@ import "os/exec"
 import "syscall"
 import "time"
 import "os/signal"
+import "strconv"
+
+// Set by ldflags
+var maxStageStr string
 
 func main() {
 	fmt.Println("Welcome to the redis challenge!")
@@ -43,7 +47,13 @@ func main() {
 	// TODO: Make this a proper wait?
 	time.Sleep(1 * time.Second)
 
-	result := newStageRunner(*debugPtr).Run()
+	maxStage, err := strconv.Atoi(maxStageStr)
+	if err != nil {
+		fmt.Printf("Error when parsing maxStage: %s", err)
+		os.Exit(1)
+	}
+
+	result := newStageRunner(*debugPtr).Run(maxStage)
 	if result.IsSuccess() {
 		fmt.Println("")
 		fmt.Println("All tests ran successfully. Congrats!")

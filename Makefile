@@ -7,7 +7,7 @@ release:
 	goreleaser
 
 build:
-	go build -o dist/main.out
+	go build -ldflags="-X main.maxStageStr=999" -o dist/main.out
 
 run: build
 	dist/main.out --binary-path=./run_success.sh
