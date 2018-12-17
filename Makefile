@@ -22,7 +22,7 @@ run_with_redis: build
 	dist/main.out --binary-path=redis-server
 
 bump_version:
-	bumpversion --verbose patch
+	bumpversion --verbose --tag patch
 
 upload_to_travis:
 	aws s3 cp \
