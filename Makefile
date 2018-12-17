@@ -31,3 +31,5 @@ upload_to_travis:
 	aws s3 cp --acl public-read \
 		s3://paul-redis-challenge/binaries/$(current_version)/$(current_version)_darwin_amd64.tar.gz \
 		s3://paul-redis-challenge/darwin.tar.gz
+
+bump_release_upload: bump_version release upload_to_travis
