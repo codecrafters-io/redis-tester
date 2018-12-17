@@ -21,6 +21,9 @@ run_for_failure: build
 run_with_redis: build
 	dist/main.out --binary-path=redis-server
 
+bump_version:
+	bumpversion --verbose patch
+
 upload_to_travis:
 	aws s3 cp \
 		s3://paul-redis-challenge/binaries/$(current_version)/redis-challenge-tester_$(current_version)_linux_amd64.tar.gz \
