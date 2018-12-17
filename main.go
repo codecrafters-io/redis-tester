@@ -31,8 +31,16 @@ func main() {
 		fmt.Println("The --binary-path flag must be specified")
 		os.Exit(1)
 	}
+
+	maxStage, err := strconv.Atoi(maxStageStr)
+	if err != nil {
+		fmt.Printf("Error when parsing maxStage: %s", err)
+		os.Exit(1)
+	}
+
 	fmt.Println("Binary Path =", *binaryPathPtr)
 	fmt.Println("Debug =", *debugPtr)
+	fmt.Println("Stage =", maxStage)
 	fmt.Println("")
 
 	cmd, err := runBinary(*binaryPathPtr, *debugPtr)
@@ -46,12 +54,6 @@ func main() {
 
 	// TODO: Make this a proper wait?
 	time.Sleep(1 * time.Second)
-
-	maxStage, err := strconv.Atoi(maxStageStr)
-	if err != nil {
-		fmt.Printf("Error when parsing maxStage: %s", err)
-		os.Exit(1)
-	}
 
 	result := newStageRunner(*debugPtr).Run(maxStage)
 	if result.IsSuccess() {
