@@ -1,5 +1,7 @@
 .PHONY: release build run run_with_redis
 
+current_version := $(shell git describe --tags --abbrev=0)
+
 release:
 	rm -rf dist
 	goreleaser
@@ -20,4 +22,6 @@ run_with_redis: build
 	dist/main.out --binary-path=redis-server
 
 upload_to_travis:
-	aws s3 cp s3://paul-redis-challenge/binaries/v0.0.5/redis-challenge-tester_0.0.5_linux_amd64.tar.gz s3://paul-redis-challenge/travis.tar.gz
+	aws s3 cp \
+		s3://paul-redis-challenge/binaries/$(current_version)/redis-challenge-tester_$(current_version)_linux_amd64.tar.gz \
+		s3://paul-redis-challenge/travis.tar.gz

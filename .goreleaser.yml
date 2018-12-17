@@ -1,4 +1,8 @@
 # .goreleaser.yml
+archive:
+  name_template: "{{ .Tag }}"
+  format: "binary"
+
 s3:
   # You can have multiple s3 configs
   -
