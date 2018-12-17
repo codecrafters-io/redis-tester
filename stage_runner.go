@@ -27,10 +27,15 @@ func newStageRunner(isDebug bool) StageRunner {
 		isDebug: isDebug,
 		stages: []Stage{
 			Stage{
-				name:    "Stage 1: PING <-> PONG",
-				logger:  getLogger(isDebug, "[stage-1] "),
-				runFunc: runStage1,
+				name:    "Stage 0: Bind to a port",
+				logger:  getLogger(isDebug, "[stage-0] "),
+				runFunc: runStage0,
 			},
+			// Stage{
+			// 	name:    "Stage 1: PING <-> PONG",
+			// 	logger:  getLogger(isDebug, "[stage-1] "),
+			// 	runFunc: runStage1,
+			// },
 			// Stage{
 			// 	name:    "Stage 2: Multiple Clients",
 			// 	logger:  getLogger(isDebug, "[stage-2] "),
