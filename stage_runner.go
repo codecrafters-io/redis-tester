@@ -31,26 +31,26 @@ func newStageRunner(isDebug bool) StageRunner {
 				logger:  getLogger(isDebug, "[stage-1] "),
 				runFunc: runStage1,
 			},
-			Stage{
-				name:    "Stage 2: Multiple Clients",
-				logger:  getLogger(isDebug, "[stage-2] "),
-				runFunc: runStage2,
-			},
-			Stage{
-				name:    "Stage 3: ECHO... O... O...",
-				logger:  getLogger(isDebug, "[stage-3] "),
-				runFunc: runStage3,
-			},
-			Stage{
-				name:    "Stage 4: SET & GET",
-				logger:  getLogger(isDebug, "[stage-4] "),
-				runFunc: runStage4,
-			},
-			Stage{
-				name:    "Stage 5: Expiry!",
-				logger:  getLogger(isDebug, "[stage-5] "),
-				runFunc: runStage5,
-			},
+			// Stage{
+			// 	name:    "Stage 2: Multiple Clients",
+			// 	logger:  getLogger(isDebug, "[stage-2] "),
+			// 	runFunc: runStage2,
+			// },
+			// Stage{
+			// 	name:    "Stage 3: ECHO... O... O...",
+			// 	logger:  getLogger(isDebug, "[stage-3] "),
+			// 	runFunc: runStage3,
+			// },
+			// Stage{
+			// 	name:    "Stage 4: SET & GET",
+			// 	logger:  getLogger(isDebug, "[stage-4] "),
+			// 	runFunc: runStage4,
+			// },
+			// Stage{
+			// 	name:    "Stage 5: Expiry!",
+			// 	logger:  getLogger(isDebug, "[stage-5] "),
+			// 	runFunc: runStage5,
+			// },
 		},
 	}
 }
