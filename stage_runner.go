@@ -5,9 +5,9 @@ import "fmt"
 
 // StageRunnerResult is returned from StageRunner.Run()
 type StageRunnerResult struct {
-	failedAtStage Stage
-	error         error
-	logger        *customLogger
+	lastStageIndex int
+	error          error
+	logger         *customLogger
 }
 
 // IsSuccess says whether a StageRunnerResult was successful
@@ -87,8 +87,8 @@ func (r StageRunner) Run(maxStage int) StageRunnerResult {
 		if err != nil {
 			reportTestError(err, r.isDebug, logger)
 			return StageRunnerResult{
-				failedAtStage: stage,
-				error:         err,
+				lastStageIndex: index,
+				error:          err,
 			}
 		}
 

@@ -21,6 +21,12 @@ run_for_failure: build
 run_with_redis: build
 	dist/main.out --binary-path=redis-server
 
+report: build
+	dist/main.out --binary-path=./run_success.sh --report
+
+report_with_redis: build
+	dist/main.out --binary-path=redis-server --report
+
 bump_version:
 	bumpversion --verbose --tag patch
 

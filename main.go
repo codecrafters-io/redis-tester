@@ -25,6 +25,11 @@ func main() {
 		false,
 		"Whether debug logs must be printed")
 
+	reportOnSuccessPtr := flag.Bool(
+		"report",
+		false,
+		"Whether test results must be reported")
+
 	flag.Parse()
 
 	if *binaryPathPtr == "" {
@@ -40,6 +45,7 @@ func main() {
 
 	fmt.Println("Binary Path =", *binaryPathPtr)
 	fmt.Println("Debug =", *debugPtr)
+	fmt.Println("Report On Success =", *reportOnSuccessPtr)
 	fmt.Println("Stage =", maxStage)
 	fmt.Println("")
 
@@ -59,8 +65,14 @@ func main() {
 	if result.IsSuccess() {
 		fmt.Println("")
 		fmt.Println("All tests ran successfully. Congrats!")
+		fmt.Println("")
 	} else {
 		killCmdAndExit(cmd, 1)
+		return
+	}
+
+	if *reportOnSuccessPtr {
+		report(result)
 	}
 }
 
