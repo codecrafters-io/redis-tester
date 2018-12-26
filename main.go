@@ -7,10 +7,6 @@ import "os/exec"
 import "syscall"
 import "time"
 import "os/signal"
-import "strconv"
-
-// Set by ldflags
-var maxStageStr string
 
 func main() {
 	fmt.Println("Welcome to the redis challenge!")
@@ -25,6 +21,16 @@ func main() {
 		false,
 		"Whether debug logs must be printed")
 
+	reportOnSuccessPtr := flag.Bool(
+		"report",
+		false,
+		"Whether test results must be reported")
+
+	currentStagePtr := flag.Int(
+		"stage",
+		0,
+		"The current stage you're on")
+
 	flag.Parse()
 
 	if *binaryPathPtr == "" {
@@ -32,15 +38,10 @@ func main() {
 		os.Exit(1)
 	}
 
-	maxStage, err := strconv.Atoi(maxStageStr)
-	if err != nil {
-		fmt.Printf("Error when parsing maxStage: %s", err)
-		os.Exit(1)
-	}
-
 	fmt.Println("Binary Path =", *binaryPathPtr)
 	fmt.Println("Debug =", *debugPtr)
-	fmt.Println("Stage =", maxStage)
+	fmt.Println("Report On Success =", *reportOnSuccessPtr)
+	fmt.Println("Stage =", *currentStagePtr)
 	fmt.Println("")
 
 	cmd, err := runBinary(*binaryPathPtr, *debugPtr)
@@ -55,12 +56,21 @@ func main() {
 	// TODO: Make this a proper wait?
 	time.Sleep(1 * time.Second)
 
-	result := newStageRunner(*debugPtr).Run(maxStage)
+	result := newStageRunner(*debugPtr).Run(*currentStagePtr)
 	if result.IsSuccess() {
 		fmt.Println("")
 		fmt.Println("All tests ran successfully. Congrats!")
+		fmt.Println("")
 	} else {
 		killCmdAndExit(cmd, 1)
+		return
+	}
+
+	if *reportOnSuccessPtr {
+		report(result)
+	} else {
+		fmt.Println("If you'd like to report these results, " +
+			"add the --report flag")
 	}
 }
 

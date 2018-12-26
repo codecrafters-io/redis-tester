@@ -5,9 +5,9 @@ import "fmt"
 
 // StageRunnerResult is returned from StageRunner.Run()
 type StageRunnerResult struct {
-	failedAtStage Stage
-	error         error
-	logger        *customLogger
+	lastStageIndex int
+	error          error
+	logger         *customLogger
 }
 
 // IsSuccess says whether a StageRunnerResult was successful
@@ -80,15 +80,15 @@ func (r StageRunner) Run(maxStage int) StageRunnerResult {
 		select {
 		case stageErr := <-stageResultChannel:
 			err = stageErr
-		case <-time.After(1 * time.Second):
-			err = fmt.Errorf("timed out, test exceeded 1 seconds")
+		case <-time.After(5 * time.Second):
+			err = fmt.Errorf("timed out, test exceeded 5 seconds")
 		}
 
 		if err != nil {
 			reportTestError(err, r.isDebug, logger)
 			return StageRunnerResult{
-				failedAtStage: stage,
-				error:         err,
+				lastStageIndex: index,
+				error:          err,
 			}
 		}
 

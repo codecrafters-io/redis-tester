@@ -7,7 +7,7 @@ release:
 	goreleaser
 
 build:
-	go build -ldflags="-X main.maxStageStr=999" -o dist/main.out
+	go build -o dist/main.out
 
 run: build
 	dist/main.out --binary-path=./run_success.sh
@@ -20,6 +20,12 @@ run_for_failure: build
 
 run_with_redis: build
 	dist/main.out --binary-path=redis-server
+
+report: build
+	dist/main.out --binary-path=./run_success.sh --report
+
+report_with_redis: build
+	dist/main.out --binary-path=redis-server --report
 
 bump_version:
 	bumpversion --verbose --tag patch
