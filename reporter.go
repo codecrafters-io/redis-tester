@@ -1,10 +1,10 @@
 package main
 
-func report(result StageRunnerResult) error {
+func report(result StageRunnerResult, apiKey string) error {
 	logger := getLogger(false, "[reporter] ")
 	logger.Infoln("Submitting test results...")
 
-	err := tellLeaderboard("abcd", result.lastStageIndex)
+	err := tellLeaderboard(apiKey, result.lastStageIndex)
 	return err
 }
 

@@ -48,7 +48,7 @@ func main() {
 	}
 
 	if context.reportOnSuccess {
-		report(result)
+		report(result, context.apiKey)
 	} else {
 		fmt.Println("If you'd like to report these " +
 			"results, add the --report flag")
@@ -69,7 +69,8 @@ func installSignalHandler(cmd *exec.Cmd) {
 func killCmdAndExit(cmd *exec.Cmd, code int) {
 	err := syscall.Kill(-cmd.Process.Pid, syscall.SIGKILL)
 	if err != nil {
-		fmt.Printf("Error when killing process with PID %d: %s\n", cmd.Process.Pid, err)
+		fmt.Printf("Error when killing process "+
+			"with PID %d: %s\n", cmd.Process.Pid, err)
 	}
 	os.Exit(code)
 }
