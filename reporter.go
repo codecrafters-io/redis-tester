@@ -18,7 +18,8 @@ func report(result StageRunnerResult, apiKey string) error {
 
 func tellLeaderboard(apiKey string, stage int, logger *customLogger) error {
 	b, err := json.Marshal(map[string]interface{}{
-		"api_key": apiKey,
+		"api_key":                apiKey,
+		"successful_stage_index": stage,
 	})
 	resp, err := http.Post(apiURL+"/report", "application/json", bytes.NewReader(b))
 	if err != nil {
@@ -38,6 +39,8 @@ func tellLeaderboard(apiKey string, stage int, logger *customLogger) error {
 		logger.Errorf("Body: %s", string(responseBody))
 		return fmt.Errorf("error")
 	}
+
+	logger.Successln("Successfully reported tests results. Yay!")
 
 	return nil
 }
