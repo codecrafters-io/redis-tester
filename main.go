@@ -48,7 +48,9 @@ func main() {
 	}
 
 	if context.reportOnSuccess {
-		report(result, context.apiKey)
+		if report(result, context.apiKey) != nil {
+			os.Exit(1)
+		}
 	} else {
 		fmt.Println("If you'd like to report these " +
 			"results, add the --report flag")
