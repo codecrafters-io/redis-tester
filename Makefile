@@ -22,10 +22,10 @@ run_with_redis: build
 	dist/main.out --binary-path=redis-server
 
 report: build
-	dist/main.out --binary-path=./run_success.sh --report
+	dist/main.out --binary-path=./run_success.sh --report --api-key=abcd
 
 report_with_redis: build
-	dist/main.out --binary-path=redis-server --report
+	dist/main.out --binary-path=redis-server --report --api-key=abcd
 
 bump_version:
 	bumpversion --verbose --tag patch
