@@ -17,10 +17,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Println("Binary Path =", context.binaryPath)
-	fmt.Println("Debug =", context.isDebug)
-	fmt.Println("Report On Success =", context.reportOnSuccess)
-	fmt.Println("Stage =", context.currentStageIndex)
+	context.print()
 	fmt.Println("")
 
 	cmd, err := runBinary(context.binaryPath, context.isDebug)
