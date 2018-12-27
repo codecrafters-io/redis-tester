@@ -65,7 +65,7 @@ func main() {
 }
 
 func runRandomizedMultipleAndLog(runner StageRunner) error {
-	fmt.Println("Running tests multiple times, randomized order")
+	fmt.Println("Running tests multiple times to make sure...")
 
 	fmt.Println("")
 	time.Sleep(1 * time.Second)
