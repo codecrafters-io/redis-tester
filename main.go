@@ -33,25 +33,71 @@ func main() {
 	time.Sleep(1 * time.Second)
 
 	runner := newStageRunner(context.isDebug)
+	runner = runner.Truncated(context.currentStageIndex)
 
-	result := runner.Run(context.currentStageIndex)
-	if result.IsSuccess() {
-		fmt.Println("")
-		fmt.Println("All tests ran successfully. Congrats!")
-		fmt.Println("")
-	} else {
+	result, err := runInOrder(runner)
+	if err != nil {
 		killCmdAndExit(cmd, 1)
 		return
 	}
 
-	if context.reportOnSuccess {
-		if report(result, context.apiKey) != nil {
-			os.Exit(1)
-		}
-	} else {
+	if !context.reportOnSuccess {
 		fmt.Println("If you'd like to report these " +
 			"results, add the --report flag")
+		return
 	}
+
+	if context.currentStageIndex > 0 {
+		err = runRandomizedMultipleAndLog(runner)
+		if err != nil {
+			killCmdAndExit(cmd, 1)
+		}
+	}
+
+	time.Sleep(1 * time.Second)
+	if report(result, context.apiKey) != nil {
+		os.Exit(1)
+	}
+}
+
+func runRandomizedMultipleAndLog(runner StageRunner) error {
+	fmt.Println("Running tests multiple times, randomized order")
+
+	fmt.Println("")
+	time.Sleep(1 * time.Second)
+
+	for i := 1; i <= 5; i++ {
+		fmt.Printf("%d...\n\n", i)
+		time.Sleep(1 * time.Second)
+		err := runRandomized(runner)
+		if err != nil {
+			return err
+		}
+		fmt.Println("")
+	}
+
+	return nil
+}
+
+func runInOrder(runner StageRunner) (StageRunnerResult, error) {
+	result := runner.Run()
+	if !result.IsSuccess() {
+		return result, fmt.Errorf("error")
+	}
+
+	fmt.Println("")
+	fmt.Println("All tests ran successfully. Congrats!")
+	fmt.Println("")
+	return result, nil
+}
+
+func runRandomized(runner StageRunner) error {
+	result := runner.Randomized().Run()
+	if !result.IsSuccess() {
+		return fmt.Errorf("error")
+	}
+
+	return nil
 }
 
 func installSignalHandler(cmd *exec.Cmd) {
