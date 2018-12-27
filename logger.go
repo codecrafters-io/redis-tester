@@ -32,6 +32,7 @@ func yellowColorize(fstring string, args ...interface{}) string {
 type customLogger struct {
 	logger  log.Logger
 	isDebug bool
+	isQuiet bool // Only CRITICAL logs
 }
 
 func getLogger(isDebug bool, prefix string) *customLogger {
@@ -42,32 +43,75 @@ func getLogger(isDebug bool, prefix string) *customLogger {
 	}
 }
 
+func getQuietLogger(prefix string) *customLogger {
+	prefix = yellowColorize(prefix)
+	return &customLogger{
+		logger:  *log.New(os.Stdout, prefix, 0),
+		isDebug: false,
+		isQuiet: true,
+	}
+}
+
 func (l *customLogger) Successf(fstring string, args ...interface{}) {
+	if l.isQuiet {
+		return
+	}
 	msg := successColorize(fstring, args...)
 	l.Successln(msg)
 }
 
 func (l *customLogger) Successln(msg string) {
+	if l.isQuiet {
+		return
+	}
 	msg = successColorize(msg)
 	l.logger.Println(msg)
 }
 
 func (l *customLogger) Infof(fstring string, args ...interface{}) {
+	if l.isQuiet {
+		return
+	}
 	msg := infoColorize(fstring, args...)
-	l.Successln(msg)
+	l.Infoln(msg)
 }
 
 func (l *customLogger) Infoln(msg string) {
+	if l.isQuiet {
+		return
+	}
 	msg = infoColorize(msg)
 	l.logger.Println(msg)
 }
 
-func (l *customLogger) Errorf(fstring string, args ...interface{}) {
+func (l *customLogger) Criticalf(fstring string, args ...interface{}) {
+	if !l.isQuiet {
+		panic("Critical is only for quiet loggers")
+	}
 	msg := errorColorize(fstring, args...)
-	l.Successln(msg)
+	l.Criticalln(msg)
+}
+
+func (l *customLogger) Criticalln(msg string) {
+	if !l.isQuiet {
+		panic("Critical is only for quiet loggers")
+	}
+	msg = errorColorize(msg)
+	l.logger.Println(msg)
+}
+
+func (l *customLogger) Errorf(fstring string, args ...interface{}) {
+	if l.isQuiet {
+		return
+	}
+	msg := errorColorize(fstring, args...)
+	l.Errorln(msg)
 }
 
 func (l *customLogger) Errorln(msg string) {
+	if l.isQuiet {
+		return
+	}
 	msg = errorColorize(msg)
 	l.logger.Println(msg)
 }
@@ -77,7 +121,7 @@ func (l *customLogger) Debugf(fstring string, args ...interface{}) {
 		return
 	}
 	msg := debugColorize(fstring, args...)
-	l.Successln(msg)
+	l.Debugln(msg)
 }
 
 func (l *customLogger) Debugln(msg string) {

@@ -54,6 +54,10 @@ func main() {
 		}
 	}
 
+	if antiCheatRunner().Run().error != nil {
+		os.Exit(1)
+	}
+
 	time.Sleep(1 * time.Second)
 	if report(result, context.apiKey) != nil {
 		os.Exit(1)
