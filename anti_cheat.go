@@ -3,6 +3,7 @@ package main
 import "github.com/go-redis/redis"
 import "fmt"
 import "time"
+import "strings"
 
 func antiCheatRunner() StageRunner {
 	return StageRunner{
@@ -22,14 +23,23 @@ func testCommand(logger *customLogger) error {
 		Addr:        "localhost:6379",
 		DialTimeout: 30 * time.Second,
 	})
-	result := client.Info()
-	if result.Err() == nil {
-		logger.Criticalf("anti-cheat (ac1) failed. ")
-		logger.Criticalf(
-			"Are you sure you aren't running this " +
-				"against the actual Redis?")
-		return fmt.Errorf("anti-cheat (ac1) failed")
+	result := client.Info("server")
+	if result.Err() != nil {
+		return nil
 	}
 
-	return nil
+	str, err := result.Result()
+	if err != nil {
+		return nil
+	}
+
+	if !strings.HasPrefix(str, "# Server") {
+		return nil
+	}
+
+	logger.Criticalf("anti-cheat (ac1) failed. ")
+	logger.Criticalf(
+		"Are you sure you aren't running this " +
+			"against the actual Redis?")
+	return fmt.Errorf("anti-cheat (ac1) failed")
 }

@@ -24,6 +24,9 @@ test_for_failure: build
 test_with_redis: build
 	dist/main.out --stage 8 --binary-path=redis-server
 
+report_first_stage: build
+	dist/main.out --binary-path=./run_success.sh --report --api-key=abcd
+
 report: build
 	dist/main.out --stage 8 --binary-path=./run_success.sh --report --api-key=abcd
 
