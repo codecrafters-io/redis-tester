@@ -1,6 +1,5 @@
 package main
 
-import "flag"
 import "fmt"
 import "os"
 import "os/exec"
@@ -11,40 +10,20 @@ import "os/signal"
 func main() {
 	fmt.Println("Welcome to the redis challenge!")
 	fmt.Println("")
-	binaryPathPtr := flag.String(
-		"binary-path",
-		"",
-		"path to the redis executable to test. Ex: ./run_redis.sh")
 
-	debugPtr := flag.Bool(
-		"debug",
-		false,
-		"Whether debug logs must be printed")
-
-	reportOnSuccessPtr := flag.Bool(
-		"report",
-		false,
-		"Whether test results must be reported")
-
-	currentStagePtr := flag.Int(
-		"stage",
-		0,
-		"The current stage you're on")
-
-	flag.Parse()
-
-	if *binaryPathPtr == "" {
-		fmt.Println("The --binary-path flag must be specified")
+	context, err := GetContext()
+	if err != nil {
+		fmt.Printf("%s", err)
 		os.Exit(1)
 	}
 
-	fmt.Println("Binary Path =", *binaryPathPtr)
-	fmt.Println("Debug =", *debugPtr)
-	fmt.Println("Report On Success =", *reportOnSuccessPtr)
-	fmt.Println("Stage =", *currentStagePtr)
+	fmt.Println("Binary Path =", context.binaryPath)
+	fmt.Println("Debug =", context.isDebug)
+	fmt.Println("Report On Success =", context.reportOnSuccess)
+	fmt.Println("Stage =", context.currentStageIndex)
 	fmt.Println("")
 
-	cmd, err := runBinary(*binaryPathPtr, *debugPtr)
+	cmd, err := runBinary(context.binaryPath, context.isDebug)
 	if err != nil {
 		fmt.Printf("Error when starting process: %s", err)
 		fmt.Println("")
@@ -56,7 +35,9 @@ func main() {
 	// TODO: Make this a proper wait?
 	time.Sleep(1 * time.Second)
 
-	result := newStageRunner(*debugPtr).Run(*currentStagePtr)
+	runner := newStageRunner(context.isDebug)
+
+	result := runner.Run(context.currentStageIndex)
 	if result.IsSuccess() {
 		fmt.Println("")
 		fmt.Println("All tests ran successfully. Congrats!")
@@ -66,11 +47,13 @@ func main() {
 		return
 	}
 
-	if *reportOnSuccessPtr {
-		report(result)
+	if context.reportOnSuccess {
+		if report(result, context.apiKey) != nil {
+			os.Exit(1)
+		}
 	} else {
-		fmt.Println("If you'd like to report these results, " +
-			"add the --report flag")
+		fmt.Println("If you'd like to report these " +
+			"results, add the --report flag")
 	}
 }
 
@@ -88,7 +71,8 @@ func installSignalHandler(cmd *exec.Cmd) {
 func killCmdAndExit(cmd *exec.Cmd, code int) {
 	err := syscall.Kill(-cmd.Process.Pid, syscall.SIGKILL)
 	if err != nil {
-		fmt.Printf("Error when killing process with PID %d: %s\n", cmd.Process.Pid, err)
+		fmt.Printf("Error when killing process "+
+			"with PID %d: %s\n", cmd.Process.Pid, err)
 	}
 	os.Exit(code)
 }

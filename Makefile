@@ -9,23 +9,26 @@ release:
 build:
 	go build -o dist/main.out
 
-run: build
+test: build
+	dist/main.out --stage 8 --binary-path=./run_success.sh
+
+test_first_stage: build
 	dist/main.out --binary-path=./run_success.sh
 
-run_debug: build
-	dist/main.out --binary-path=./run_success.sh --debug=true
+test_debug: build
+	dist/main.out --stage 8 --binary-path=./run_success.sh --debug=true
 
-run_for_failure: build
-	dist/main.out --binary-path=./run_failure.sh
+test_for_failure: build
+	dist/main.out --stage 8 --binary-path=./run_failure.sh
 
-run_with_redis: build
-	dist/main.out --binary-path=redis-server
+test_with_redis: build
+	dist/main.out --stage 8 --binary-path=redis-server
 
 report: build
-	dist/main.out --binary-path=./run_success.sh --report
+	dist/main.out --stage 8 --binary-path=./run_success.sh --report --api-key=abcd
 
 report_with_redis: build
-	dist/main.out --binary-path=redis-server --report
+	dist/main.out --stage 8 --binary-path=redis-server --report --api-key=abcd
 
 bump_version:
 	bumpversion --verbose --tag patch
