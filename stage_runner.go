@@ -2,6 +2,7 @@ package main
 
 import "time"
 import "fmt"
+import "math/rand"
 
 // StageRunnerResult is returned from StageRunner.Run()
 type StageRunnerResult struct {
@@ -61,12 +62,8 @@ func newStageRunner(isDebug bool) StageRunner {
 }
 
 // Run tests in a specific StageRunner
-func (r StageRunner) Run(maxStage int) StageRunnerResult {
+func (r StageRunner) Run() StageRunnerResult {
 	for index, stage := range r.stages {
-		if index > maxStage {
-			break
-		}
-
 		logger := stage.logger
 		logger.Infof("Running test: %s", stage.name)
 
@@ -98,6 +95,46 @@ func (r StageRunner) Run(maxStage int) StageRunnerResult {
 	return StageRunnerResult{
 		error: nil,
 	}
+}
+
+// Truncated returns a stageRunner with fewer stages
+func (r StageRunner) Truncated(stageIndex int) StageRunner {
+	maxStageIndex := min(stageIndex, len(r.stages)-1)
+	newStages := make([]Stage, maxStageIndex+1)
+	for i := 0; i <= maxStageIndex; i++ {
+		newStages[i] = r.stages[i]
+	}
+
+	return StageRunner{
+		isDebug: r.isDebug,
+		stages:  newStages,
+	}
+}
+
+// Fuck you, go
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+// Randomized returns a stage runner that has stages randomized
+func (r StageRunner) Randomized() StageRunner {
+	return StageRunner{
+		isDebug: r.isDebug,
+		stages:  shuffleStages(r.stages),
+	}
+}
+
+func shuffleStages(stages []Stage) []Stage {
+	r := rand.New(rand.NewSource(time.Now().Unix()))
+	ret := make([]Stage, len(stages))
+	perm := r.Perm(len(stages))
+	for i, randIndex := range perm {
+		ret[i] = stages[randIndex]
+	}
+	return ret
 }
 
 func reportTestError(err error, isDebug bool, logger *customLogger) {

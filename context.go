@@ -12,6 +12,13 @@ type Context struct {
 	apiKey            string
 }
 
+func (c Context) print() {
+	fmt.Println("Binary Path =", c.binaryPath)
+	fmt.Println("Debug =", c.isDebug)
+	fmt.Println("Report On Success =", c.reportOnSuccess)
+	fmt.Println("Stage =", c.currentStageIndex)
+}
+
 // GetContext parses flags and returns a Context object
 func GetContext() (Context, error) {
 	binaryPathPtr := flag.String(
