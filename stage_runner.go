@@ -93,7 +93,8 @@ func (r StageRunner) Run() StageRunnerResult {
 	}
 
 	return StageRunnerResult{
-		error: nil,
+		lastStageIndex: len(r.stages) - 1,
+		error:          nil,
 	}
 }
 
