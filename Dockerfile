@@ -2,7 +2,7 @@ FROM alpine
 
 RUN apk add go
 
-ARG logstream_version=v10
+ARG logstream_version=
 
 ADD https://github.com/codecrafters-io/logstream/releases/download/${logstream_version}/${logstream_version}_linux_amd64.tar.gz /tmp/logstream.tar.gz
 RUN tar -xvf /tmp/logstream.tar.gz -C /bin
