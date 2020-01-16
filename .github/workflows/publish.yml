@@ -20,7 +20,7 @@ jobs:
     - name: Docker Build & Push
       run: |
         repo="codecrafters-bot/redis-tester"
-        pkg=redis-tester"
+        pkg="redis-tester"
         tag=$(echo $GITHUB_REF | sed "s/refs\\/tags\\///")
         image_tag="docker.pkg.github.com/${repo}/${pkg}:${tag}"
         docker build -t $image_tag -f Dockerfile .
