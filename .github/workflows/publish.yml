@@ -25,6 +25,6 @@ jobs:
         version_img_tag="docker.pkg.github.com/${repo}/${pkg}:${tag}"
         latest_img_tag="docker.pkg.github.com/${repo}/${pkg}:latest"
         docker build -t $version_img_tag -f Dockerfile .
-        docker tag $version_image_tag $latest_img_tag
+        docker tag $version_img_tag $latest_img_tag
         docker push $version_img_tag
         docker push $latest_img_tag
