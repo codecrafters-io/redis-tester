@@ -1,6 +1,12 @@
 .PHONY: release build run run_with_redis
 
-current_version = $(shell git describe --tags --abbrev=0)
+current_version_number := $(shell git tag --list "v*" | sort -V | tail -n 1 | cut -c 2-)
+next_version_number := $(shell echo $$(($(current_version_number)+1)))
+
+release_docker:
+	git push origin master
+	git tag v$(next_version_number)
+	git push origin v$(next_version_number)
 
 release:
 	rm -rf dist
