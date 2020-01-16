@@ -1,9 +1,11 @@
 package main
 
-import "log"
-import "os"
+import (
+	"log"
+	"os"
 
-import "github.com/fatih/color"
+	"github.com/fatih/color"
+)
 
 func colorize(colorToUse color.Attribute, fstring string, args ...interface{}) string {
 	return color.New(colorToUse).SprintfFunc()(fstring, args...)
@@ -36,6 +38,8 @@ type customLogger struct {
 }
 
 func getLogger(isDebug bool, prefix string) *customLogger {
+	color.NoColor = false
+
 	prefix = yellowColorize(prefix)
 	return &customLogger{
 		logger:  *log.New(os.Stdout, prefix, 0),
@@ -44,6 +48,8 @@ func getLogger(isDebug bool, prefix string) *customLogger {
 }
 
 func getQuietLogger(prefix string) *customLogger {
+	color.NoColor = false
+
 	prefix = yellowColorize(prefix)
 	return &customLogger{
 		logger:  *log.New(os.Stdout, prefix, 0),
