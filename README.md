@@ -16,4 +16,6 @@ docker run -v <path-to-user-app>:/app -e LOGSTREAM_URL=<logstream_url> redis-tes
 # User code requirements
 
 - A binary named `spawn_redis_server.sh` that spins up the Redis server.
-- A file named `.codecrafters.yml`
+- A file named `codecrafters.yml`, with the following values: 
+  - `debug`
+  - `current_stage`
