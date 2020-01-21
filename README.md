@@ -12,3 +12,8 @@ Usage:
 ```
 docker run -v <path-to-user-app>:/app -e LOGSTREAM_URL=<logstream_url> redis-tester
 ```
+
+# User code requirements
+
+- A binary named `spawn_redis_server.sh` that spins up the Redis server.
+- A file named `.codecrafters.yml`
