@@ -60,7 +60,7 @@ func GetContext(args []string) (Context, error) {
 	return Context{
 		binaryPath:        *binaryPathPtr,
 		isDebug:           yamlConfig.Debug,
-		currentStageIndex: yamlConfig.CurrentStage,
+		currentStageIndex: yamlConfig.CurrentStage - 1,
 		apiKey:            "dummy",
 	}, nil
 }
