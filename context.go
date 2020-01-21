@@ -24,7 +24,7 @@ type YAMLConfig struct {
 func (c Context) print() {
 	fmt.Println("Binary Path =", c.binaryPath)
 	fmt.Println("Debug =", c.isDebug)
-	fmt.Println("Stage =", c.currentStageIndex)
+	fmt.Println("Stage =", c.currentStageIndex+1)
 }
 
 // GetContext parses flags and returns a Context object
