@@ -19,8 +19,10 @@ func main() {
 		os.Exit(1)
 	}
 
-	context.print()
-	fmt.Println("")
+	if context.isDebug {
+		context.print()
+		fmt.Println("")
+	}
 
 	cmd, err := runBinary(context.binaryPath, context.isDebug)
 	if err != nil {
@@ -37,15 +39,9 @@ func main() {
 	runner := newStageRunner(context.isDebug)
 	runner = runner.Truncated(context.currentStageIndex)
 
-	result, err := runInOrder(runner)
+	_, err = runInOrder(runner)
 	if err != nil {
 		killCmdAndExit(cmd, 1)
-		return
-	}
-
-	if !context.reportOnSuccess {
-		fmt.Println("If you'd like to report these " +
-			"results, add the --report flag")
 		return
 	}
 
@@ -61,9 +57,6 @@ func main() {
 	}
 
 	time.Sleep(1 * time.Second)
-	if report(result, context.apiKey) != nil {
-		killCmdAndExit(cmd, 1)
-	}
 }
 
 func runRandomizedMultipleAndLog(runner StageRunner) error {

@@ -13,7 +13,6 @@ type Context struct {
 	binaryPath        string
 	isDebug           bool
 	currentStageIndex int
-	reportOnSuccess   bool
 	apiKey            string
 }
 
@@ -25,7 +24,6 @@ type YAMLConfig struct {
 func (c Context) print() {
 	fmt.Println("Binary Path =", c.binaryPath)
 	fmt.Println("Debug =", c.isDebug)
-	fmt.Println("Report On Success =", c.reportOnSuccess)
 	fmt.Println("Stage =", c.currentStageIndex)
 }
 
@@ -63,7 +61,6 @@ func GetContext(args []string) (Context, error) {
 		binaryPath:        *binaryPathPtr,
 		isDebug:           yamlConfig.Debug,
 		currentStageIndex: yamlConfig.CurrentStage,
-		reportOnSuccess:   true,
 		apiKey:            "dummy",
 	}, nil
 }
