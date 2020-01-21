@@ -12,4 +12,4 @@ WORKDIR /src
 
 RUN go build -o /usr/bin/redis-tester
 
-CMD logstream -url=$LOGSTREAM_URL run redis-tester -debug --binary-path=/app/spawn_redis_server.sh
+CMD logstream -url=$LOGSTREAM_URL run redis-tester --binary-path=/app/spawn_redis_server.sh --config-path=/app/.codecrafters.yml
