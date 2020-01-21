@@ -1,8 +1,10 @@
 package main
 
-import "time"
-import "fmt"
-import "math/rand"
+import (
+	"fmt"
+	"math/rand"
+	"time"
+)
 
 // StageRunnerResult is returned from StageRunner.Run()
 type StageRunnerResult struct {
@@ -144,7 +146,7 @@ func reportTestError(err error, isDebug bool, logger *customLogger) {
 		logger.Errorf("Test failed")
 	} else {
 		logger.Errorf("Test failed " +
-			"(try using the --debug flag to see more output)")
+			"(try setting 'debug: true' in your codecrafters.yml to see more details)")
 	}
 }
 
