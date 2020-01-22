@@ -6,6 +6,7 @@ RUN apk add go
 RUN apk add python3=3.8.1-r0
 RUN ln -s /usr/bin/python3 /usr/bin/python
 RUN ln -s /usr/bin/pip3 /usr/bin/pip
+RUN pip install pipenv
 
 ARG logstream_version=v14
 
