@@ -56,12 +56,10 @@ func main() {
 		killCmdAndExit(cmd, 1)
 	}
 
-	fmt.Println("All tests passed!")
-	if context.currentStageIndex == len(runner.stages)-1 {
-		fmt.Println("You've finished the Redis challenge. Congratulations!")
-	} else {
-		fmt.Println("Bump current_stage in your codecrafters.yml to advance to the next stage!")
-	}
+	fmt.Println("")
+	fmt.Println("All tests ran successfully. Congrats!")
+	fmt.Println("Bump current_stage in your codecrafters.yml to advance to the next stage!")
+	fmt.Println("")
 }
 
 func runRandomizedMultipleAndLog(runner StageRunner) error {
@@ -89,9 +87,6 @@ func runInOrder(runner StageRunner) (StageRunnerResult, error) {
 		return result, fmt.Errorf("error")
 	}
 
-	fmt.Println("")
-	fmt.Println("All tests ran successfully. Congrats!")
-	fmt.Println("")
 	return result, nil
 }
 
