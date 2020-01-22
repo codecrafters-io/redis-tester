@@ -56,7 +56,12 @@ func main() {
 		killCmdAndExit(cmd, 1)
 	}
 
-	time.Sleep(1 * time.Second)
+	fmt.Println("All tests passed!")
+	if context.currentStageIndex == len(runner.stages)-1 {
+		fmt.Println("You've finished the Redis challenge. Congratulations!")
+	} else {
+		fmt.Println("Bump current_stage in your codecrafters.yml to advance to the next stage!")
+	}
 }
 
 func runRandomizedMultipleAndLog(runner StageRunner) error {
