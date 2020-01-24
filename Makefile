@@ -3,14 +3,9 @@
 current_version_number := $(shell git tag --list "v*" | sort -V | tail -n 1 | cut -c 2-)
 next_version_number := $(shell echo $$(($(current_version_number)+1)))
 
-release_docker:
-	git push origin master
-	git tag v$(next_version_number)
-	git push origin v$(next_version_number)
-
 release:
-	rm -rf dist
-	goreleaser
+	git tag v$(next_version_number)
+	git push origin master v$(next_version_number)
 
 build:
 	go build -o dist/main.out
