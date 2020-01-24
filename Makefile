@@ -2,13 +2,6 @@
 
 current_version_number := $(shell git tag --list "v*" | sort -V | tail -n 1 | cut -c 2-)
 next_version_number := $(shell echo $$(($(current_version_number)+1)))
-latest_logstream_version = $(shell hub api -X GET repos/codecrafters-io/logstream/releases/latest \
-							| jq ".tag_name")
-
-update_logstream_version:
-	sed -E -i "/^ARG logstream_version/ s/v[0-9]+/$(latest_logstream_version)/g" Dockerfile
-	git add Dockerfile
-	git commit -m "Update logstream version"
 
 release_docker:
 	git push origin master
