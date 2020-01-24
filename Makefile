@@ -15,8 +15,3 @@ make test:
 
 test_with_redis: build
 	APP_DIR=./test_helpers/pass_all dist/main.out
-
-bump_version:
-	bumpversion --verbose --tag patch
-
-bump_release_upload: bump_version release upload_to_travis
