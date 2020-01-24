@@ -1,9 +1,9 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"io/ioutil"
+	"path"
 
 	"gopkg.in/yaml.v2"
 )
@@ -28,37 +28,21 @@ func (c Context) print() {
 }
 
 // GetContext parses flags and returns a Context object
-func GetContext(args []string) (Context, error) {
-	flagSet := flag.NewFlagSet("redis-tester", flag.ExitOnError)
-	binaryPathPtr := flagSet.String(
-		"binary-path",
-		"",
-		"path to the redis executable to test. Ex: ./run_redis.sh")
-
-	configPathPtr := flagSet.String(
-		"config-path",
-		"",
-		"path to the codecrafters config file. Ex: ./.codecrafters.yml")
-
-	flagSet.Parse(args)
-
-	if *binaryPathPtr == "" {
-		return Context{}, fmt.Errorf("" +
-			"The --binary-path flag must be specified")
+func GetContext(env map[string]string) (Context, error) {
+	appDir, ok := env["APP_DIR"]
+	if !ok {
+		return Context{}, fmt.Errorf("APP_DIR env var not found")
 	}
+	configPath := path.Join(appDir, "codecrafters.yml")
+	binaryPath := path.Join(appDir, "spawn_redis_server.sh")
 
-	if *configPathPtr == "" {
-		return Context{}, fmt.Errorf("" +
-			"The --config-path flag must be specified")
-	}
-
-	yamlConfig, err := ReadFromYAML(*configPathPtr)
+	yamlConfig, err := ReadFromYAML(configPath)
 	if err != nil {
 		return Context{}, err
 	}
 
 	return Context{
-		binaryPath:        *binaryPathPtr,
+		binaryPath:        binaryPath,
 		isDebug:           yamlConfig.Debug,
 		currentStageIndex: yamlConfig.CurrentStage - 1,
 		apiKey:            "dummy",

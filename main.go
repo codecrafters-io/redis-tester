@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 )
@@ -13,7 +14,7 @@ func main() {
 	fmt.Println("Welcome to the redis challenge!")
 	fmt.Println("")
 
-	context, err := GetContext(os.Args[1:])
+	context, err := GetContext(envMap())
 	if err != nil {
 		fmt.Printf("%s", err)
 		os.Exit(1)
@@ -60,6 +61,17 @@ func main() {
 	fmt.Println("All tests ran successfully. Congrats!")
 	fmt.Println("Bump current_stage in your codecrafters.yml to advance to the next stage!")
 	fmt.Println("")
+}
+
+func envMap() map[string]string {
+	result := make(map[string]string)
+	for _, keyVal := range os.Environ() {
+		split := strings.SplitN(keyVal, "=", 2)
+		key, val := split[0], split[1]
+		result[key] = val
+	}
+
+	return result
 }
 
 func runRandomizedMultipleAndLog(runner StageRunner) error {

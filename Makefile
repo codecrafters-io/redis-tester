@@ -15,8 +15,11 @@ release:
 build:
 	go build -o dist/main.out
 
-test: build
-	dist/main.out --binary-path=./run_success.sh --config-path=./test_helpers/valid_config.yml
+make test:
+	go test -v
+
+test_with_redis: build
+	APP_DIR=./test_helpers/pass_all dist/main.out
 
 bump_version:
 	bumpversion --verbose --tag patch

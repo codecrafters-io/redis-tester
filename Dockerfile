@@ -16,4 +16,5 @@ RUN go build -o /usr/bin/redis-tester
 
 WORKDIR /app
 
-CMD redis-tester --binary-path=/app/spawn_redis_server.sh --config-path=/app/codecrafters.yml
+ENV APP_DIR=/app
+CMD redis-tester
