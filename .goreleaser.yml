@@ -1,23 +1,6 @@
-# .goreleaser.yml
-
-archive:
-  name_template: "{{ .Tag }}_{{ .Os }}_{{ .Arch }}"
-
-s3:
-  # You can have multiple s3 configs
-  -
-    # Bucket name (without the s3:// prefix)
-    # Default is empty.
-    bucket: paul-redis-challenge
-
-    # AWS Region to use.
-    # Defaults is us-east-1
-    region: ap-south-1
-
-    # Template for the path/name inside the bucket.
-    # Default is `{{ .ProjectName }}/{{ .Tag }}`
-    folder: "binaries/{{.Tag}}"
-
-    # Sets the ACL of the object using the specified canned ACL.
-    # Default is private.
-    acl: public-read
+builds:
+- env:
+    - CGO_ENABLED=0
+archives:
+  - name_template: "{{ .Tag }}_{{ .Os }}_{{ .Arch }}"
+    format: binary
