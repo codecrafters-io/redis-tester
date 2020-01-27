@@ -57,7 +57,7 @@ func ReadFromYAML(configPath string) (YAMLConfig, error) {
 		return YAMLConfig{}, err
 	}
 
-	if err := yaml.UnmarshalStrict(fileContents, c); err != nil {
+	if err := yaml.Unmarshal(fileContents, c); err != nil {
 		return YAMLConfig{}, err
 	}
 
