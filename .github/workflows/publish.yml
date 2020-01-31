@@ -6,29 +6,6 @@ on:
       - "v*"
 
 jobs:
-  publish_docker:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v1
-    - name: Docker Login
-      run: echo "$DOCKER_PASSWORD" | docker login "$DOCKER_REGISTRY_URL" -u "$DOCKER_USERNAME" --password-stdin
-      env:
-        DOCKER_REGISTRY_URL: docker.pkg.github.com
-        DOCKER_USERNAME: codecrafters-bot
-        DOCKER_PASSWORD: ${{ github.token }}
-    - name: Docker Build & Push
-      run: |
-        repo="codecrafters-bot/redis-tester"
-        pkg="redis-tester"
-        tag=$(echo $GITHUB_REF | sed "s/refs\\/tags\\///")
-        version_img_tag="docker.pkg.github.com/${repo}/${pkg}:${tag}"
-        latest_img_tag="docker.pkg.github.com/${repo}/${pkg}:latest"
-        docker build -t $version_img_tag -f Dockerfile .
-        docker tag $version_img_tag $latest_img_tag
-        docker push $version_img_tag
-        docker push $latest_img_tag
-
   publish_binary:
     runs-on: ubuntu-latest
     steps:
