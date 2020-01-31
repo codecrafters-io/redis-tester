@@ -75,13 +75,14 @@ func envMap() map[string]string {
 }
 
 func runRandomizedMultipleAndLog(runner StageRunner) error {
+	fmt.Println("")
 	fmt.Println("Running tests multiple times to make sure...")
 
 	fmt.Println("")
 	time.Sleep(1 * time.Second)
 
 	for i := 1; i <= 5; i++ {
-		fmt.Printf("%d...\n\n", i)
+		fmt.Printf("Randomized Run #%d...\n\n", i)
 		time.Sleep(1 * time.Second)
 		err := runRandomized(runner)
 		if err != nil {
