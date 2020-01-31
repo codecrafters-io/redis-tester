@@ -3,10 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
-	"os/exec"
-	"os/signal"
 	"strings"
-	"syscall"
 	"time"
 )
 
@@ -25,14 +22,9 @@ func main() {
 		fmt.Println("")
 	}
 
-	cmd, err := runBinary(context.binaryPath, context.isDebug)
-	if err != nil {
-		fmt.Printf("Error when starting process: %s", err)
-		fmt.Println("")
-		os.Exit(1)
-	}
-	defer killCmdAndExit(cmd, 0)
-	installSignalHandler(cmd)
+	executable := NewVerboseExecutable(context.binaryPath)
+	// defer killCmdAndExit(cmd, 0)
+	// installSignalHandler(cmd)
 
 	// TODO: Make this a proper wait?
 	time.Sleep(1 * time.Second)
@@ -40,21 +32,21 @@ func main() {
 	runner := newStageRunner(context.isDebug)
 	runner = runner.Truncated(context.currentStageIndex)
 
-	_, err = runInOrder(runner)
+	_, err = runInOrder(runner, executable)
 	if err != nil {
-		killCmdAndExit(cmd, 1)
+		os.Exit(1)
 		return
 	}
 
 	if context.currentStageIndex > 0 {
-		err = runRandomizedMultipleAndLog(runner)
+		err = runRandomizedMultipleAndLog(runner, executable)
 		if err != nil {
-			killCmdAndExit(cmd, 1)
+			os.Exit(1)
 		}
 	}
 
-	if antiCheatRunner().Run().error != nil {
-		killCmdAndExit(cmd, 1)
+	if antiCheatRunner().Run(executable).error != nil {
+		os.Exit(1)
 	}
 
 	fmt.Println("")
@@ -74,7 +66,7 @@ func envMap() map[string]string {
 	return result
 }
 
-func runRandomizedMultipleAndLog(runner StageRunner) error {
+func runRandomizedMultipleAndLog(runner StageRunner, executable *Executable) error {
 	fmt.Println("")
 	fmt.Println("Running tests multiple times to make sure...")
 
@@ -84,7 +76,7 @@ func runRandomizedMultipleAndLog(runner StageRunner) error {
 	for i := 1; i <= 5; i++ {
 		fmt.Printf("Randomized Run #%d...\n\n", i)
 		time.Sleep(1 * time.Second)
-		err := runRandomized(runner)
+		err := runRandomized(runner, executable)
 		if err != nil {
 			return err
 		}
@@ -94,8 +86,8 @@ func runRandomizedMultipleAndLog(runner StageRunner) error {
 	return nil
 }
 
-func runInOrder(runner StageRunner) (StageRunnerResult, error) {
-	result := runner.Run()
+func runInOrder(runner StageRunner, executable *Executable) (StageRunnerResult, error) {
+	result := runner.Run(executable)
 	if !result.IsSuccess() {
 		return result, fmt.Errorf("error")
 	}
@@ -103,8 +95,8 @@ func runInOrder(runner StageRunner) (StageRunnerResult, error) {
 	return result, nil
 }
 
-func runRandomized(runner StageRunner) error {
-	result := runner.Randomized().Run()
+func runRandomized(runner StageRunner, executable *Executable) error {
+	result := runner.Randomized().Run(executable)
 	if !result.IsSuccess() {
 		return fmt.Errorf("error")
 	}
@@ -112,37 +104,13 @@ func runRandomized(runner StageRunner) error {
 	return nil
 }
 
-func installSignalHandler(cmd *exec.Cmd) {
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
-	go func() {
-		for range c {
-			// sig is a ^C, handle it
-			killCmdAndExit(cmd, 0)
-		}
-	}()
-}
-
-func killCmdAndExit(cmd *exec.Cmd, code int) {
-	err := syscall.Kill(-cmd.Process.Pid, syscall.SIGKILL)
-	if err != nil {
-		fmt.Printf("Error when killing process "+
-			"with PID %d: %s\n", cmd.Process.Pid, err)
-	}
-	os.Exit(code)
-}
-
-func runBinary(binaryPath string, debug bool) (*exec.Cmd, error) {
-	command := exec.Command(binaryPath)
-	if debug {
-		command.Stdout = os.Stdout
-		command.Stderr = os.Stderr
-	}
-	command.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
-	err := command.Start()
-	if err != nil {
-		return nil, err
-	}
-
-	return command, nil
-}
+// func installSignalHandler(cmd *exec.Cmd) {
+// 	c := make(chan os.Signal, 1)
+// 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+// 	go func() {
+// 		for range c {
+// 			// sig is a ^C, handle it
+// 			os.Exit(0)
+// 		}
+// 	}()
+// }

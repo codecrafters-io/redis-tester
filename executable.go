@@ -3,10 +3,12 @@ package main
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"syscall"
 )
 
 // Executable represents a program that can be executed
@@ -125,4 +127,12 @@ func (e *Executable) Wait() (ExecutableResult, error) {
 		Stderr:   stderr,
 		ExitCode: e.cmd.ProcessState.ExitCode(),
 	}, nil
+}
+
+// Kill terminates the program
+func (e *Executable) Kill() error {
+	syscall.Kill(e.cmd.Process.Pid, syscall.SIGKILL)
+	fmt.Println("Killing PID %v")
+	_, err := e.Wait()
+	return err
 }

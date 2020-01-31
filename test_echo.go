@@ -1,13 +1,22 @@
 package main
 
-import "fmt"
-import "github.com/go-redis/redis"
-import "time"
+import (
+	"fmt"
+	"math/rand"
+	"time"
 
-import "math/rand"
+	"github.com/go-redis/redis"
+)
 
 // Tests 'ECHO'
-func testEcho(logger *customLogger) error {
+func testEcho(executable *Executable, logger *customLogger) error {
+	logger.Debugf("Running program")
+	if err := executable.Start(); err != nil {
+		return err
+	}
+	defer executable.Kill()
+
+	time.Sleep(1 * time.Second)
 	client := redis.NewClient(&redis.Options{
 		Addr:        "localhost:6379",
 		DialTimeout: 30 * time.Second,

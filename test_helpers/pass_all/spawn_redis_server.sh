@@ -1,2 +1,2 @@
 #!/bin/sh
-redis-server
+exec redis-server

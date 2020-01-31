@@ -1,10 +1,17 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"net"
+)
 
-import "net"
+func testMultipleClients(executable *Executable, logger *customLogger) error {
+	// logger.Debugf("Running program")
+	// if err := executable.Start(); err != nil {
+	// 	return err
+	// }
+	// defer executable.Kill()
 
-func testMultipleClients(logger *customLogger) error {
 	logger.Debugf("Creating first connection")
 	conn1, err := net.Dial("tcp", "localhost:6379")
 	if err != nil {

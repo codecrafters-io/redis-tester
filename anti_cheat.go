@@ -18,7 +18,7 @@ func antiCheatRunner() StageRunner {
 	}
 }
 
-func testCommand(logger *customLogger) error {
+func testCommand(executable *Executable, logger *customLogger) error {
 	client := redis.NewClient(&redis.Options{
 		Addr:        "localhost:6379",
 		DialTimeout: 30 * time.Second,

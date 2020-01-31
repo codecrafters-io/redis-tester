@@ -1,10 +1,19 @@
 package main
 
-import "fmt"
-import "github.com/go-redis/redis"
-import "time"
+import (
+	"fmt"
+	"time"
 
-func testPingPong(logger *customLogger) error {
+	"github.com/go-redis/redis"
+)
+
+func testPingPong(executable *Executable, logger *customLogger) error {
+	logger.Debugf("Running program")
+	if err := executable.Start(); err != nil {
+		return err
+	}
+	defer executable.Kill()
+
 	client := redis.NewClient(&redis.Options{
 		Addr:        "localhost:6379",
 		DialTimeout: 30 * time.Second,
