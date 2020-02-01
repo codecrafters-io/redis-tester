@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"errors"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
@@ -131,10 +130,7 @@ func (e *Executable) Wait() (ExecutableResult, error) {
 
 // Kill terminates the program
 func (e *Executable) Kill() error {
-	fmt.Println("Killing PID %v, waiting", e.cmd.Process.Pid)
-	syscall.Kill(e.cmd.Process.Pid, syscall.SIGKILL)
-	e.cmd.Process.Kill()
+	syscall.Kill(e.cmd.Process.Pid, syscall.SIGTERM)
 	_, err := e.Wait()
-	fmt.Println("Waited after killing PID %v")
 	return err
 }

@@ -10,13 +10,12 @@ import (
 
 // Tests 'ECHO'
 func testEcho(executable *Executable, logger *customLogger) error {
-	logger.Debugf("Running program")
-	if err := executable.Start(); err != nil {
+	b := NewRedisBinary(executable, logger)
+	if err := b.Run(); err != nil {
 		return err
 	}
-	defer executable.Kill()
+	defer b.Kill()
 
-	time.Sleep(1 * time.Second)
 	client := redis.NewClient(&redis.Options{
 		Addr:        "localhost:6379",
 		DialTimeout: 30 * time.Second,

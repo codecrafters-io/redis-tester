@@ -6,11 +6,11 @@ import (
 )
 
 func testMultipleClients(executable *Executable, logger *customLogger) error {
-	// logger.Debugf("Running program")
-	// if err := executable.Start(); err != nil {
-	// 	return err
-	// }
-	// defer executable.Kill()
+	b := NewRedisBinary(executable, logger)
+	if err := b.Run(); err != nil {
+		return err
+	}
+	defer b.Kill()
 
 	logger.Debugf("Creating first connection")
 	conn1, err := net.Dial("tcp", "localhost:6379")

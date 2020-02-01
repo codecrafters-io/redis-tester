@@ -1,21 +1,17 @@
 package main
 
 import (
-	"fmt"
 	"net"
-	"time"
 )
 
 func testBindToPort(executable *Executable, logger *customLogger) error {
-	logger.Debugf("Running program")
-	if err := executable.Start(); err != nil {
+	b := NewRedisBinary(executable, logger)
+	if err := b.Run(); err != nil {
 		return err
 	}
-	defer executable.Kill()
-	defer fmt.Println("after test")
+	defer b.Kill()
 
 	logger.Debugf("Creating first connection")
-	time.Sleep(1 * time.Second)
 	conn, err := net.Dial("tcp", "localhost:6379")
 	if err != nil {
 		return err

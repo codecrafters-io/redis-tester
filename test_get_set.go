@@ -1,13 +1,21 @@
 package main
 
-import "fmt"
-import "github.com/go-redis/redis"
-import "time"
+import (
+	"fmt"
+	"math/rand"
+	"time"
 
-import "math/rand"
+	"github.com/go-redis/redis"
+)
 
 // Tests 'GET, SET'
 func testGetSet(executable *Executable, logger *customLogger) error {
+	b := NewRedisBinary(executable, logger)
+	if err := b.Run(); err != nil {
+		return err
+	}
+	defer b.Kill()
+
 	client := redis.NewClient(&redis.Options{
 		Addr:        "localhost:6379",
 		DialTimeout: 30 * time.Second,

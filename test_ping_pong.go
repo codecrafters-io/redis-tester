@@ -8,11 +8,11 @@ import (
 )
 
 func testPingPong(executable *Executable, logger *customLogger) error {
-	logger.Debugf("Running program")
-	if err := executable.Start(); err != nil {
+	b := NewRedisBinary(executable, logger)
+	if err := b.Run(); err != nil {
 		return err
 	}
-	defer executable.Kill()
+	defer b.Kill()
 
 	client := redis.NewClient(&redis.Options{
 		Addr:        "localhost:6379",
