@@ -131,8 +131,10 @@ func (e *Executable) Wait() (ExecutableResult, error) {
 
 // Kill terminates the program
 func (e *Executable) Kill() error {
+	fmt.Println("Killing PID %v, waiting", e.cmd.Process.Pid)
 	syscall.Kill(e.cmd.Process.Pid, syscall.SIGKILL)
-	fmt.Println("Killing PID %v")
+	e.cmd.Process.Kill()
 	_, err := e.Wait()
+	fmt.Println("Waited after killing PID %v")
 	return err
 }
