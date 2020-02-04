@@ -2,6 +2,7 @@ package main
 
 import (
 	"net"
+	"time"
 )
 
 func testBindToPort(executable *Executable, logger *customLogger) error {
@@ -12,9 +13,23 @@ func testBindToPort(executable *Executable, logger *customLogger) error {
 	defer b.Kill()
 
 	logger.Debugf("Creating first connection")
-	conn, err := net.Dial("tcp", "localhost:6379")
-	if err != nil {
-		return err
+	retries := 0
+	var conn net.Conn
+	var err error
+	for {
+		conn, err = net.Dial("tcp", "localhost:6379")
+		if err != nil && retries > 10 {
+			logger.Debugf("All retries failed.")
+			return err
+		}
+
+		if err != nil {
+			logger.Debugf("Failed, retrying in one second")
+			retries += 1
+			time.Sleep(1 * time.Second)
+		} else {
+			break
+		}
 	}
 
 	logger.Debugf("Writing a PING command")
