@@ -80,8 +80,8 @@ func (r StageRunner) Run(executable *Executable) StageRunnerResult {
 		select {
 		case stageErr := <-stageResultChannel:
 			err = stageErr
-		case <-time.After(20 * time.Second):
-			err = fmt.Errorf("timed out, test exceeded 20 seconds")
+		case <-time.After(60 * time.Second):
+			err = fmt.Errorf("timed out, test exceeded 60 seconds")
 		}
 
 		if err != nil {
