@@ -22,16 +22,16 @@ func testEcho(executable *Executable, logger *customLogger) error {
 	})
 
 	strings := [10]string{
-		"abcd",
-		"defg",
-		"heya",
-		"heya",
-		"heya",
-		"heya",
-		"heya",
-		"heya",
-		"heya",
-		"heya",
+		"pans",
+		"pots",
+		"cats",
+		"apples",
+		"oranges",
+		"this",
+		"is",
+		"random",
+		"input",
+		"dogs",
 	}
 
 	randomString := strings[rand.Intn(10)]
