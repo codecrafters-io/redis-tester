@@ -18,6 +18,7 @@ func testPingPong(executable *Executable, logger *customLogger) error {
 		Addr:        "localhost:6379",
 		DialTimeout: 30 * time.Second,
 	})
+	logger.Debugf("Sending ping command...")
 	pong, err := client.Ping().Result()
 	if err != nil {
 		return err
@@ -27,6 +28,7 @@ func testPingPong(executable *Executable, logger *customLogger) error {
 		return fmt.Errorf("Expected PONG, got %s", pong)
 	}
 
+	logger.Debugf("Success, closing connection with client...")
 	client.Close()
 
 	return nil
