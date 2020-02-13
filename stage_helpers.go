@@ -21,7 +21,7 @@ func (b *RedisBinary) Run() error {
 	}
 
 	// Wait for Redis program to boot
-	time.Sleep(1 * time.Second)
+	time.Sleep(2 * time.Second)
 
 	return nil
 }
