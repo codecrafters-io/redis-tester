@@ -50,16 +50,16 @@ func newStageRunner(isDebug bool) StageRunner {
 				logger:  getLogger(isDebug, "[stage-4] "),
 				runFunc: testMultipleClients,
 			},
-			// Stage{
-			// 	name:    "Stage 5: SET & GET",
-			// 	logger:  getLogger(isDebug, "[stage-5] "),
-			// 	runFunc: testGetSet,
-			// },
-			// Stage{
-			// 	name:    "Stage 6: Expiry!",
-			// 	logger:  getLogger(isDebug, "[stage-6] "),
-			// 	runFunc: testExpiry,
-			// },
+			Stage{
+				name:    "Stage 5: SET & GET",
+				logger:  getLogger(isDebug, "[stage-5] "),
+				runFunc: testGetSet,
+			},
+			Stage{
+				name:    "Stage 6: Expiry!",
+				logger:  getLogger(isDebug, "[stage-6] "),
+				runFunc: testExpiry,
+			},
 		},
 	}
 }
