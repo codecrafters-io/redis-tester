@@ -31,31 +31,37 @@ func newStageRunner(isDebug bool) StageRunner {
 		isDebug: isDebug,
 		stages: []Stage{
 			Stage{
+				slug:    "init",
 				name:    "Stage 1: Bind to a port",
 				logger:  getLogger(isDebug, "[stage-1] "),
 				runFunc: testBindToPort,
 			},
 			Stage{
+				slug:    "ping-pong",
 				name:    "Stage 2: PING <-> PONG",
 				logger:  getLogger(isDebug, "[stage-2] "),
 				runFunc: testPingPong,
 			},
 			Stage{
+				slug:    "echo",
 				name:    "Stage 3: ECHO... O... O...",
 				logger:  getLogger(isDebug, "[stage-3] "),
 				runFunc: testEcho,
 			},
 			Stage{
+				slug:    "multiple-clients",
 				name:    "Stage 4: Multiple Clients",
 				logger:  getLogger(isDebug, "[stage-4] "),
 				runFunc: testMultipleClients,
 			},
 			Stage{
+				slug:    "set_get",
 				name:    "Stage 5: SET & GET",
 				logger:  getLogger(isDebug, "[stage-5] "),
 				runFunc: testGetSet,
 			},
 			Stage{
+				slug:    "expiry",
 				name:    "Stage 6: Expiry!",
 				logger:  getLogger(isDebug, "[stage-6] "),
 				runFunc: testExpiry,
@@ -153,8 +159,8 @@ func reportTestError(err error, isDebug bool, logger *customLogger) {
 
 // Stage is blah
 type Stage struct {
-	name        string
-	description string
-	runFunc     func(executable *Executable, logger *customLogger) error
-	logger      *customLogger
+	slug    string
+	name    string
+	runFunc func(executable *Executable, logger *customLogger) error
+	logger  *customLogger
 }
