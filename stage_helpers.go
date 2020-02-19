@@ -24,10 +24,12 @@ func (b *RedisBinary) Run() error {
 		return err
 	}
 
-	ctx := context.Background()
-	ctx, cancel := context.WithTimeout(ctx, 2*time.Second)
-	defer cancel()
-	b.waitForPort(ctx)
+	time.Sleep(500 * time.Millisecond)
+
+	// ctx := context.Background()
+	// ctx, cancel := context.WithTimeout(ctx, 2*time.Second)
+	// defer cancel()
+	// b.waitForPort(ctx)
 
 	return nil
 }
