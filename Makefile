@@ -14,4 +14,6 @@ make test:
 	go test -v
 
 test_with_redis: build
-	APP_DIR=./test_helpers/pass_all dist/main.out
+	CODECRAFTERS_SUBMISSION_DIR=./test_helpers/pass_all \
+	CODECRAFTERS_CURRENT_STAGE_SLUG="expiry" \
+	dist/main.out

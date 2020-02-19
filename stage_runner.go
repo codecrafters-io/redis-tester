@@ -107,18 +107,24 @@ func (r StageRunner) Run(executable *Executable) StageRunnerResult {
 	}
 }
 
+func (r StageRunner) StageCount() int {
+	return len(r.stages)
+}
+
 // Truncated returns a stageRunner with fewer stages
-func (r StageRunner) Truncated(stageIndex int) StageRunner {
-	maxStageIndex := min(stageIndex, len(r.stages)-1)
-	newStages := make([]Stage, maxStageIndex+1)
-	for i := 0; i <= maxStageIndex; i++ {
-		newStages[i] = r.stages[i]
+func (r StageRunner) Truncated(stageSlug string) StageRunner {
+	newStages := make([]Stage, 0)
+	for _, stage := range r.stages {
+		newStages = append(newStages, stage)
+		if stage.slug == stageSlug {
+			return StageRunner{
+				isDebug: r.isDebug,
+				stages:  newStages,
+			}
+		}
 	}
 
-	return StageRunner{
-		isDebug: r.isDebug,
-		stages:  newStages,
-	}
+	panic(fmt.Sprintf("Stage slug %v not found. Stages: %v", stageSlug, r.stages))
 }
 
 // Fuck you, go

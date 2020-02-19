@@ -10,31 +10,35 @@ import (
 
 // Context holds all flags that a user has passed in
 type Context struct {
-	binaryPath        string
-	isDebug           bool
-	currentStageIndex int
-	apiKey            string
+	binaryPath       string
+	isDebug          bool
+	currentStageSlug string
+	apiKey           string
 }
 
 type YAMLConfig struct {
-	CurrentStage int  `yaml:"current_stage"`
-	Debug        bool `yaml:"debug"`
+	Debug bool `yaml:"debug"`
 }
 
 func (c Context) print() {
 	fmt.Println("Binary Path =", c.binaryPath)
 	fmt.Println("Debug =", c.isDebug)
-	fmt.Println("Stage =", c.currentStageIndex+1)
+	fmt.Println("Stage =", c.currentStageSlug)
 }
 
 // GetContext parses flags and returns a Context object
 func GetContext(env map[string]string) (Context, error) {
-	appDir, ok := env["APP_DIR"]
+	submissionDir, ok := env["CODECRAFTERS_SUBMISSION_DIR"]
 	if !ok {
-		return Context{}, fmt.Errorf("APP_DIR env var not found")
+		return Context{}, fmt.Errorf("CODECRAFTERS_SUBMISSION_DIR env var not found")
 	}
-	configPath := path.Join(appDir, "codecrafters.yml")
-	binaryPath := path.Join(appDir, "spawn_redis_server.sh")
+
+	currentStageSlug, ok := env["CODECRAFTERS_CURRENT_STAGE_SLUG"]
+	if !ok {
+		return Context{}, fmt.Errorf("CODECRAFTERS_CURRENT_STAGE_SLUG env var not found")
+	}
+	configPath := path.Join(submissionDir, "codecrafters.yml")
+	binaryPath := path.Join(submissionDir, "spawn_redis_server.sh")
 
 	yamlConfig, err := ReadFromYAML(configPath)
 	if err != nil {
@@ -42,10 +46,10 @@ func GetContext(env map[string]string) (Context, error) {
 	}
 
 	return Context{
-		binaryPath:        binaryPath,
-		isDebug:           yamlConfig.Debug,
-		currentStageIndex: yamlConfig.CurrentStage - 1,
-		apiKey:            "dummy",
+		binaryPath:       binaryPath,
+		isDebug:          yamlConfig.Debug,
+		currentStageSlug: currentStageSlug,
+		apiKey:           "dummy",
 	}, nil
 }
 

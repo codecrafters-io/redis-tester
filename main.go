@@ -30,7 +30,7 @@ func main() {
 	time.Sleep(1 * time.Second)
 
 	runner := newStageRunner(context.isDebug)
-	runner = runner.Truncated(context.currentStageIndex)
+	runner = runner.Truncated(context.currentStageSlug)
 
 	_, err = runInOrder(runner, executable)
 	if err != nil {
@@ -38,7 +38,7 @@ func main() {
 		return
 	}
 
-	if context.currentStageIndex > 0 {
+	if runner.StageCount() > 1 {
 		err = runRandomizedMultipleAndLog(runner, executable)
 		if err != nil {
 			os.Exit(1)
@@ -51,7 +51,8 @@ func main() {
 
 	fmt.Println("")
 	fmt.Println("All tests ran successfully. Congrats!")
-	fmt.Println("Bump current_stage in your codecrafters.yml to advance to the next stage!")
+	fmt.Println("")
+	fmt.Println(" ---> Push an empty commit to run the next stage")
 	fmt.Println("")
 }
 
