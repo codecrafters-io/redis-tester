@@ -52,8 +52,8 @@ func main() {
 	fmt.Println("")
 	fmt.Println("All tests ran successfully. Congrats!")
 	fmt.Println("")
-	fmt.Println(" ---> Push an empty commit to run the next stage")
-	fmt.Println("")
+
+	// TODO: Print next stage!
 }
 
 func envMap() map[string]string {
