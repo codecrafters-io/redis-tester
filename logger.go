@@ -137,3 +137,7 @@ func (l *customLogger) Debugln(msg string) {
 	msg = debugColorize(msg)
 	l.logger.Println(msg)
 }
+
+func (l *customLogger) Plainln(msg string) {
+	l.logger.Println(msg)
+}
