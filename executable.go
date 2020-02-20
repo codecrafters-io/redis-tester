@@ -3,18 +3,17 @@ package main
 import (
 	"bytes"
 	"errors"
+
 	"io"
 	"io/ioutil"
-	"os"
 	"os/exec"
 	"syscall"
 )
 
 // Executable represents a program that can be executed
 type Executable struct {
-	path           string
-	timeoutInSecs  int
-	suppressOutput bool
+	path          string
+	timeoutInSecs int
 
 	// These are set & removed together
 	cmd          *exec.Cmd
@@ -24,6 +23,8 @@ type Executable struct {
 	stderrBytes  []byte
 	stdoutBuffer *bytes.Buffer
 	stderrBuffer *bytes.Buffer
+
+	loggerFunc func(string)
 
 	stdoutEchoed chan (bool)
 	stderrEchoed chan (bool)
@@ -36,13 +37,46 @@ type ExecutableResult struct {
 	ExitCode int
 }
 
-// NewExecutable returns an Executable struct
-func NewExecutable(path string) *Executable {
-	return &Executable{path: path, timeoutInSecs: 10, suppressOutput: true}
+type loggerWriter struct {
+	loggerFunc func(string)
+	buffer     []byte
 }
 
-func NewVerboseExecutable(path string) *Executable {
-	return &Executable{path: path, timeoutInSecs: 10, suppressOutput: false}
+func newLoggerWriter(loggerFunc func(string)) *loggerWriter {
+	return &loggerWriter{
+		loggerFunc: loggerFunc,
+		buffer:     make([]byte, 80),
+	}
+}
+
+func (w *loggerWriter) Write(bytes []byte) (n int, err error) {
+	for _, byte := range bytes {
+		if byte == '\n' {
+			w.flushBuffer()
+		} else {
+			w.buffer = append(w.buffer, byte)
+		}
+	}
+	return len(bytes), nil
+}
+
+func (w *loggerWriter) flushBuffer() {
+	w.loggerFunc(string(w.buffer))
+	w.buffer = make([]byte, 80)
+}
+
+func nullLogger(msg string) {
+	return
+}
+
+// NewExecutable returns an Executable struct
+func NewExecutable(path string) *Executable {
+	return &Executable{path: path, timeoutInSecs: 10, loggerFunc: nullLogger}
+}
+
+// NewVerboseExecutable returns an Executable struct with a logger configured
+func NewVerboseExecutable(path string, loggerFunc func(string)) *Executable {
+	return &Executable{path: path, timeoutInSecs: 10, loggerFunc: loggerFunc}
 }
 
 func (e *Executable) isRunning() bool {
@@ -67,7 +101,7 @@ func (e *Executable) Start(args ...string) error {
 	}
 	e.stdoutBytes = []byte{}
 	e.stdoutBuffer = bytes.NewBuffer(e.stdoutBytes)
-	e.setupIORelay(e.stdoutPipe, os.Stdout, e.stdoutBuffer)
+	e.setupIORelay(e.stdoutPipe, e.stdoutBuffer)
 
 	// Setup stderr relay
 	e.stderrPipe, err = e.cmd.StderrPipe()
@@ -76,20 +110,16 @@ func (e *Executable) Start(args ...string) error {
 	}
 	e.stderrBytes = []byte{}
 	e.stderrBuffer = bytes.NewBuffer(e.stderrBytes)
-	e.setupIORelay(e.stderrPipe, os.Stderr, e.stderrBuffer)
+	e.setupIORelay(e.stderrPipe, e.stderrBuffer)
 
 	return e.cmd.Start()
 }
 
-func (e *Executable) setupIORelay(childReader io.Reader, parentWriter io.Writer, buffer io.Writer) {
+func (e *Executable) setupIORelay(childReader io.Reader, buffer io.Writer) {
 	go func() {
-		writer := buffer
-		if !e.suppressOutput {
-			writer = io.MultiWriter(parentWriter, writer)
-		}
+		writer := io.MultiWriter(newLoggerWriter(e.loggerFunc), buffer)
 		ioutil.ReadAll(io.TeeReader(childReader, writer))
 	}()
-
 }
 
 // Run starts the specified command, waits for it to complete and returns the
