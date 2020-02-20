@@ -18,7 +18,7 @@ func testBindToPort(executable *Executable, logger *customLogger) error {
 	var err error
 	for {
 		conn, err = net.Dial("tcp", "localhost:6379")
-		if err != nil && retries > 30 {
+		if err != nil && retries > 5 {
 			logger.Debugf("All retries failed.")
 			return err
 		}
