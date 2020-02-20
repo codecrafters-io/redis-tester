@@ -22,8 +22,7 @@ func main() {
 		fmt.Println("")
 	}
 
-	executable := NewVerboseExecutable(context.binaryPath, getLogger(true, "[your_program] ").Plainln)
-
+	executable := NewVerboseExecutable(context.binaryPath)
 	// defer killCmdAndExit(cmd, 0)
 	// installSignalHandler(cmd)
 
