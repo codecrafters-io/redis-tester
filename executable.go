@@ -3,11 +3,14 @@ package main
 import (
 	"bytes"
 	"errors"
+	"time"
 
 	"io"
 	"io/ioutil"
 	"os/exec"
 	"syscall"
+
+	"github.com/rohitpaulk/redis-challenge-tester/linewriter"
 )
 
 // Executable represents a program that can be executed
@@ -16,13 +19,15 @@ type Executable struct {
 	timeoutInSecs int
 
 	// These are set & removed together
-	cmd          *exec.Cmd
-	stdoutPipe   io.ReadCloser
-	stderrPipe   io.ReadCloser
-	stdoutBytes  []byte
-	stderrBytes  []byte
-	stdoutBuffer *bytes.Buffer
-	stderrBuffer *bytes.Buffer
+	cmd              *exec.Cmd
+	stdoutPipe       io.ReadCloser
+	stderrPipe       io.ReadCloser
+	stdoutBytes      []byte
+	stderrBytes      []byte
+	stdoutBuffer     *bytes.Buffer
+	stderrBuffer     *bytes.Buffer
+	stdoutLineWriter *linewriter.LineWriter
+	stderrLineWriter *linewriter.LineWriter
 
 	loggerFunc func(string)
 
@@ -50,19 +55,8 @@ func newLoggerWriter(loggerFunc func(string)) *loggerWriter {
 }
 
 func (w *loggerWriter) Write(bytes []byte) (n int, err error) {
-	for _, byte := range bytes {
-		if byte == '\n' {
-			w.flushBuffer()
-		} else {
-			w.buffer = append(w.buffer, byte)
-		}
-	}
+	w.loggerFunc(string(bytes[:len(bytes)-1]))
 	return len(bytes), nil
-}
-
-func (w *loggerWriter) flushBuffer() {
-	w.loggerFunc(string(w.buffer))
-	w.buffer = make([]byte, 80)
 }
 
 func nullLogger(msg string) {
@@ -101,7 +95,8 @@ func (e *Executable) Start(args ...string) error {
 	}
 	e.stdoutBytes = []byte{}
 	e.stdoutBuffer = bytes.NewBuffer(e.stdoutBytes)
-	e.setupIORelay(e.stdoutPipe, e.stdoutBuffer)
+	e.stdoutLineWriter = linewriter.New(newLoggerWriter(e.loggerFunc), 500*time.Millisecond)
+	e.setupIORelay(e.stdoutPipe, e.stdoutBuffer, e.stdoutLineWriter)
 
 	// Setup stderr relay
 	e.stderrPipe, err = e.cmd.StderrPipe()
@@ -110,14 +105,15 @@ func (e *Executable) Start(args ...string) error {
 	}
 	e.stderrBytes = []byte{}
 	e.stderrBuffer = bytes.NewBuffer(e.stderrBytes)
-	e.setupIORelay(e.stderrPipe, e.stderrBuffer)
+	e.stderrLineWriter = linewriter.New(newLoggerWriter(e.loggerFunc), 500*time.Millisecond)
+	e.setupIORelay(e.stderrPipe, e.stderrBuffer, e.stderrLineWriter)
 
 	return e.cmd.Start()
 }
 
-func (e *Executable) setupIORelay(childReader io.Reader, buffer io.Writer) {
+func (e *Executable) setupIORelay(childReader io.Reader, buffer io.Writer, writer io.Writer) {
 	go func() {
-		writer := io.MultiWriter(newLoggerWriter(e.loggerFunc), buffer)
+		writer := io.MultiWriter(writer, buffer)
 		ioutil.ReadAll(io.TeeReader(childReader, writer))
 	}()
 }
@@ -138,6 +134,9 @@ func (e *Executable) Run(args ...string) (ExecutableResult, error) {
 func (e *Executable) Wait() (ExecutableResult, error) {
 	e.cmd.Wait()
 
+	e.stdoutLineWriter.Flush()
+	e.stderrLineWriter.Flush()
+
 	stdout := e.stdoutBuffer.Bytes()
 	stderr := e.stderrBuffer.Bytes()
 
@@ -149,6 +148,8 @@ func (e *Executable) Wait() (ExecutableResult, error) {
 		e.stderrBuffer = nil
 		e.stdoutBytes = nil
 		e.stderrBytes = nil
+		e.stdoutLineWriter = nil
+		e.stderrLineWriter = nil
 	}()
 
 	return ExecutableResult{

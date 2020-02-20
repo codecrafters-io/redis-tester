@@ -87,9 +87,11 @@ func (w *LineWriter) startWriter() {
 		for {
 			select {
 			case str, more := <-w.flushableStrings:
-				_, err := w.writer.Write([]byte(str))
-				if err != nil {
-					w.lastErr = err
+				if str != "" {
+					_, err := w.writer.Write([]byte(str))
+					if err != nil {
+						w.lastErr = err
+					}
 				}
 
 				if !more {
