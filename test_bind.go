@@ -14,10 +14,9 @@ func testBindToPort(executable *Executable, logger *customLogger) error {
 
 	logger.Debugf("Creating first connection")
 	retries := 0
-	var conn net.Conn
 	var err error
 	for {
-		conn, err = net.Dial("tcp", "localhost:6379")
+		_, err = net.Dial("tcp", "localhost:6379")
 		if err != nil && retries > 5 {
 			logger.Debugf("All retries failed.")
 			return err
@@ -32,11 +31,6 @@ func testBindToPort(executable *Executable, logger *customLogger) error {
 		}
 	}
 
-	logger.Debugf("Writing a PING command")
-	_, err = conn.Write([]byte("*1\r\n$4\r\nping\r\n"))
-	if err != nil {
-		return err
-	}
-
+	logger.Debugf("Connection successful")
 	return nil
 }
