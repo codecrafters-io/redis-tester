@@ -17,3 +17,9 @@ test_with_redis: build
 	CODECRAFTERS_SUBMISSION_DIR=./test_helpers/pass_all \
 	CODECRAFTERS_CURRENT_STAGE_SLUG="expiry" \
 	dist/main.out
+
+test_tmp: build
+	cd /tmp/45c297f9e27ea8dc && \
+	CODECRAFTERS_SUBMISSION_DIR=/tmp/45c297f9e27ea8dc \
+	CODECRAFTERS_CURRENT_STAGE_SLUG="ping-pong" \
+	$(shell pwd)/dist/main.out
