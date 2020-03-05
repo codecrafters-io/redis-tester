@@ -24,7 +24,7 @@ func (b *RedisBinary) Run() error {
 		return err
 	}
 
-	time.Sleep(500 * time.Millisecond)
+	time.Sleep(1000 * time.Millisecond)
 
 	// ctx := context.Background()
 	// ctx, cancel := context.WithTimeout(ctx, 2*time.Second)
