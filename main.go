@@ -21,9 +21,6 @@ func main() {
 
 	executable := NewVerboseExecutable(context.binaryPath, getLogger(true, "[your_program] ").Plainln)
 
-	// defer killCmdAndExit(cmd, 0)
-	// installSignalHandler(cmd)
-
 	// TODO: Make this a proper wait?
 	time.Sleep(1 * time.Second)
 
