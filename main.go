@@ -33,13 +33,6 @@ func main() {
 		return
 	}
 
-	if runner.StageCount() > 1 {
-		err = runRandomizedMultipleAndLog(runner, executable)
-		if err != nil {
-			os.Exit(1)
-		}
-	}
-
 	if antiCheatRunner().Run(executable).error != nil {
 		os.Exit(1)
 	}
