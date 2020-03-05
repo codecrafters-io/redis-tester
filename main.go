@@ -69,7 +69,7 @@ func runRandomizedMultipleAndLog(runner StageRunner, executable *Executable) err
 	fmt.Println("")
 	time.Sleep(1 * time.Second)
 
-	for i := 1; i <= 5; i++ {
+	for i := 1; i <= 2; i++ {
 		fmt.Printf("Randomized Run #%d...\n\n", i)
 		time.Sleep(1 * time.Second)
 		err := runRandomized(runner, executable)
