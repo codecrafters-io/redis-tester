@@ -17,6 +17,7 @@ import (
 type Executable struct {
 	path          string
 	timeoutInSecs int
+	loggerFunc    func(string)
 
 	// These are set & removed together
 	cmd              *exec.Cmd
@@ -28,11 +29,6 @@ type Executable struct {
 	stderrBuffer     *bytes.Buffer
 	stdoutLineWriter *linewriter.LineWriter
 	stderrLineWriter *linewriter.LineWriter
-
-	loggerFunc func(string)
-
-	stdoutEchoed chan (bool)
-	stderrEchoed chan (bool)
 }
 
 // ExecutableResult holds the result of an executable run
@@ -132,6 +128,18 @@ func (e *Executable) Run(args ...string) (ExecutableResult, error) {
 
 // Wait waits for the program to finish and results the result
 func (e *Executable) Wait() (ExecutableResult, error) {
+	defer func() {
+		e.cmd = nil
+		e.stdoutPipe = nil
+		e.stderrPipe = nil
+		e.stdoutBuffer = nil
+		e.stderrBuffer = nil
+		e.stdoutBytes = nil
+		e.stderrBytes = nil
+		e.stdoutLineWriter = nil
+		e.stderrLineWriter = nil
+	}()
+
 	err := e.cmd.Wait()
 	e.stdoutLineWriter.Flush()
 	e.stderrLineWriter.Flush()
@@ -145,19 +153,6 @@ func (e *Executable) Wait() (ExecutableResult, error) {
 
 	stdout := e.stdoutBuffer.Bytes()
 	stderr := e.stderrBuffer.Bytes()
-
-	defer func() {
-		e.cmd = nil
-		e.stdoutPipe = nil
-		e.stderrPipe = nil
-		e.stdoutBuffer = nil
-		e.stderrBuffer = nil
-		e.stdoutBytes = nil
-		e.stderrBytes = nil
-		e.stdoutLineWriter = nil
-		e.stderrLineWriter = nil
-	}()
-
 	return ExecutableResult{
 		Stdout:   stdout,
 		Stderr:   stderr,
