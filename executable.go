@@ -133,15 +133,15 @@ func (e *Executable) Run(args ...string) (ExecutableResult, error) {
 // Wait waits for the program to finish and results the result
 func (e *Executable) Wait() (ExecutableResult, error) {
 	err := e.cmd.Wait()
+	e.stdoutLineWriter.Flush()
+	e.stderrLineWriter.Flush()
+
 	if err != nil {
 		// Ignore exit errors, we'd rather send the exit code back
 		if _, ok := err.(*exec.ExitError); !ok {
 			return ExecutableResult{}, err
 		}
 	}
-
-	e.stdoutLineWriter.Flush()
-	e.stderrLineWriter.Flush()
 
 	stdout := e.stdoutBuffer.Bytes()
 	stderr := e.stderrBuffer.Bytes()
