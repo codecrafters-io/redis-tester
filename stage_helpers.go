@@ -36,7 +36,11 @@ func (b *RedisBinary) Run() error {
 
 func (b *RedisBinary) Kill() error {
 	b.logger.Debugf("Terminating program")
-	b.executable.Kill()
+	if err := b.executable.Kill(); err != nil {
+		b.logger.Debugf("Error terminating program: '%v'", err)
+		return err
+	}
+
 	b.logger.Debugf("Program terminated successfully")
 	return nil // When does this happen?
 }
