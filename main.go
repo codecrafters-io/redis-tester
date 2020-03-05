@@ -8,9 +8,6 @@ import (
 )
 
 func main() {
-	fmt.Println("Welcome to the redis challenge!")
-	fmt.Println("")
-
 	context, err := GetContext(envMap())
 	if err != nil {
 		fmt.Printf("%s", err)
