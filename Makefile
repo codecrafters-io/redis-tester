@@ -23,3 +23,10 @@ test_tmp: build
 	CODECRAFTERS_SUBMISSION_DIR=/tmp/45c297f9e27ea8dc \
 	CODECRAFTERS_CURRENT_STAGE_SLUG="ping-pong" \
 	$(shell pwd)/dist/main.out
+
+copy_course_file:
+	hub api \
+		repos/rohitpaulk/codecrafters-server/contents/codecrafters/store/data/redis.yml \
+		| jq -r .content \
+		| base64 -d \
+		> test_helpers/course_definition.yml
