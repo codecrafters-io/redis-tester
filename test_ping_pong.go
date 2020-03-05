@@ -41,18 +41,18 @@ func testPingPongMultiple(executable *Executable, logger *customLogger) error {
 	}
 	defer b.Kill()
 
+	client := redis.NewClient(&redis.Options{
+		Addr:        "localhost:6379",
+		DialTimeout: 30 * time.Second,
+	})
 	for i := 1; i <= 3; i++ {
-		client := redis.NewClient(&redis.Options{
-			Addr:        "localhost:6379",
-			DialTimeout: 30 * time.Second,
-		})
-		if err := runPing(logger, client, i); err != nil {
+		if err := runPing(logger, client, 1); err != nil {
 			return err
 		}
-
-		logger.Debugf("client-%d: Success, closing connection...", i)
-		client.Close()
 	}
+
+	logger.Debugf("Success, closing connection...")
+	client.Close()
 
 	return nil
 }
