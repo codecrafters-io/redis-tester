@@ -62,7 +62,7 @@ func testExpiry(executable *Executable, logger *customLogger) error {
 	resp, err = client.Get(randomKey).Result()
 	if err != redis.Nil {
 		if err == nil {
-			return fmt.Errorf("Expected nil, got %v", resp)
+			return fmt.Errorf("Expected nil, got %v, Hint: Read about Null Bulk Strings in RESP", resp)
 		}
 
 		return err
