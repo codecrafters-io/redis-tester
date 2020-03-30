@@ -55,26 +55,6 @@ func envMap() map[string]string {
 	return result
 }
 
-func runRandomizedMultipleAndLog(runner StageRunner, executable *Executable) error {
-	fmt.Println("")
-	fmt.Println("Running tests multiple times to make sure...")
-
-	fmt.Println("")
-	time.Sleep(1 * time.Second)
-
-	for i := 1; i <= 2; i++ {
-		fmt.Printf("Randomized Run #%d...\n\n", i)
-		time.Sleep(1 * time.Second)
-		err := runRandomized(runner, executable)
-		if err != nil {
-			return err
-		}
-		fmt.Println("")
-	}
-
-	return nil
-}
-
 func runInOrder(runner StageRunner, executable *Executable) (StageRunnerResult, error) {
 	result := runner.Run(executable)
 	if !result.IsSuccess() {
@@ -83,23 +63,3 @@ func runInOrder(runner StageRunner, executable *Executable) (StageRunnerResult, 
 
 	return result, nil
 }
-
-func runRandomized(runner StageRunner, executable *Executable) error {
-	result := runner.Randomized().Run(executable)
-	if !result.IsSuccess() {
-		return fmt.Errorf("error")
-	}
-
-	return nil
-}
-
-// func installSignalHandler(cmd *exec.Cmd) {
-// 	c := make(chan os.Signal, 1)
-// 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
-// 	go func() {
-// 		for range c {
-// 			// sig is a ^C, handle it
-// 			os.Exit(0)
-// 		}
-// 	}()
-// }
