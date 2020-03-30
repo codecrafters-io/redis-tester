@@ -1,4 +1,4 @@
-package main
+package internal
 
 import (
 	"fmt"
@@ -8,8 +8,8 @@ import (
 	"github.com/go-redis/redis"
 )
 
-// Tests 'GET, SET'
-func testGetSet(executable *Executable, logger *customLogger) error {
+// Tests Expiry
+func testExpiry(executable *Executable, logger *customLogger) error {
 	b := NewRedisBinary(executable, logger)
 	if err := b.Run(); err != nil {
 		return err
@@ -37,12 +37,11 @@ func testGetSet(executable *Executable, logger *customLogger) error {
 	randomKey := strings[rand.Intn(10)]
 	randomValue := strings[rand.Intn(10)]
 
-	logger.Debugf("Setting key %s to %s", randomKey, randomValue)
-	resp, err := client.Set(randomKey, randomValue, 0).Result()
+	logger.Debugf("Setting key %s to %s, with expiry of 100ms", randomKey, randomValue)
+	resp, err := client.Set(randomKey, randomValue, 100*time.Millisecond).Result()
 	if err != nil {
 		return err
 	}
-
 	if resp != "OK" {
 		return fmt.Errorf("Expected 'OK', got %s", resp)
 	}
@@ -52,9 +51,22 @@ func testGetSet(executable *Executable, logger *customLogger) error {
 	if err != nil {
 		return err
 	}
-
 	if resp != randomValue {
 		return fmt.Errorf("Expected %s, got %s", randomValue, resp)
+	}
+
+	logger.Debugf("Sleeping for 101ms")
+	time.Sleep(101 * time.Millisecond)
+
+	logger.Debugf("Fetching value for key %s", randomKey)
+	resp, err = client.Get(randomKey).Result()
+	if err != redis.Nil {
+		if err == nil {
+			logger.Debugf("Hint: Read about null bulk strings in the Redis protocol docs")
+			return fmt.Errorf("Expected null string, got '%v'", resp)
+		}
+
+		return err
 	}
 
 	client.Close()

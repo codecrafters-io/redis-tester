@@ -1,4 +1,4 @@
-package main
+package internal
 
 import (
 	"bytes"
@@ -9,7 +9,7 @@ import (
 	"os/exec"
 	"syscall"
 
-	"github.com/rohitpaulk/redis-challenge-tester/linewriter"
+	"github.com/codecrafters-io/redis-tester/linewriter"
 )
 
 // Executable represents a program that can be executed

@@ -1,17 +1,15 @@
-package main
+package internal
 
 import (
 	"fmt"
-	"os"
-	"strings"
 	"time"
 )
 
-func main() {
-	context, err := GetContext(envMap())
+func RunCLI(env map[string]string) int {
+	context, err := GetContext(env)
 	if err != nil {
 		fmt.Printf("%s", err)
-		os.Exit(1)
+		return 1
 	}
 
 	if context.isDebug {
@@ -29,12 +27,11 @@ func main() {
 
 	_, err = runInOrder(runner, executable)
 	if err != nil {
-		os.Exit(1)
-		return
+		return 1
 	}
 
 	if antiCheatRunner().Run(executable).error != nil {
-		os.Exit(1)
+		return 1
 	}
 
 	fmt.Println("")
@@ -42,19 +39,8 @@ func main() {
 	fmt.Println("")
 
 	// TODO: Print next stage!
+	return 0
 }
-
-func envMap() map[string]string {
-	result := make(map[string]string)
-	for _, keyVal := range os.Environ() {
-		split := strings.SplitN(keyVal, "=", 2)
-		key, val := split[0], split[1]
-		result[key] = val
-	}
-
-	return result
-}
-
 func runInOrder(runner StageRunner, executable *Executable) (StageRunnerResult, error) {
 	result := runner.Run(executable)
 	if !result.IsSuccess() {

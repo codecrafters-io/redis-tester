@@ -8,7 +8,7 @@ release:
 	git push origin master v$(next_version_number)
 
 build:
-	go build -o dist/main.out
+	go build -o dist/main.out ./cmd/tester
 
 make test:
 	go test -v
