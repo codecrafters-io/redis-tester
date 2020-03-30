@@ -23,7 +23,7 @@ func TestRun(t *testing.T) {
 	e := NewExecutable("./test_helpers/executable_test/stdout_echo.sh")
 	result, err := e.Run("hey")
 	assert.NoError(t, err)
-	assert.Equal(t, string(result.Stdout), "hey\n")
+	assert.Equal(t, "hey\n", string(result.Stdout))
 }
 
 func TestOutputCapture(t *testing.T) {
@@ -32,16 +32,16 @@ func TestOutputCapture(t *testing.T) {
 	result, err := e.Run("hey")
 
 	assert.NoError(t, err)
-	assert.Equal(t, string(result.Stdout), "hey\n")
-	assert.Equal(t, string(result.Stderr), "")
+	assert.Equal(t, "hey\n", string(result.Stdout))
+	assert.Equal(t, "", string(result.Stderr))
 
 	// Stderr capture
 	e = NewExecutable("./test_helpers/executable_test/stderr_echo.sh")
 	result, err = e.Run("hey")
 
 	assert.NoError(t, err)
-	assert.Equal(t, string(result.Stdout), "")
-	assert.Equal(t, string(result.Stderr), "hey\n")
+	assert.Equal(t, "", string(result.Stdout))
+	assert.Equal(t, "hey\n", string(result.Stderr))
 }
 
 func TestExitCode(t *testing.T) {
@@ -83,8 +83,8 @@ func TestSuccessiveExecutions(t *testing.T) {
 	e := NewExecutable("./test_helpers/executable_test/stdout_echo.sh")
 
 	result, _ := e.Run("1")
-	assert.Equal(t, string(result.Stdout), "1\n")
+	assert.Equal(t, "1\n", string(result.Stdout))
 
 	result, _ = e.Run("2")
-	assert.Equal(t, string(result.Stdout), "2\n")
+	assert.Equal(t, "2\n", string(result.Stdout))
 }
