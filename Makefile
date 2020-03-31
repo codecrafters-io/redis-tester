@@ -9,9 +9,14 @@ release:
 
 build:
 	go build -o dist/main.out ./cmd/tester
+	go build -o dist/main_init.out ./cmd/init-tester
 
 make test:
 	go test -v
+
+make test-init-with-redis: build
+	CODECRAFTERS_SUBMISSION_DIR=./test_helpers/pass_all \
+	dist/main_init.out
 
 test_with_redis: build
 	CODECRAFTERS_SUBMISSION_DIR=./test_helpers/pass_all \
