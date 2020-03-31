@@ -15,11 +15,11 @@ test:
 	go test -v ./internal/
 
 test_starter_with_redis: build
-	CODECRAFTERS_SUBMISSION_DIR=./test_helpers/pass_all \
+	CODECRAFTERS_SUBMISSION_DIR=./internal/test_helpers/pass_all \
 	dist/starter.out
 
 test_with_redis: build
-	CODECRAFTERS_SUBMISSION_DIR=./test_helpers/pass_all \
+	CODECRAFTERS_SUBMISSION_DIR=./internal/test_helpers/pass_all \
 	CODECRAFTERS_CURRENT_STAGE_SLUG="expiry" \
 	dist/main.out
 
@@ -34,4 +34,4 @@ copy_course_file:
 		repos/rohitpaulk/codecrafters-server/contents/codecrafters/store/data/redis.yml \
 		| jq -r .content \
 		| base64 -d \
-		> test_helpers/course_definition.yml
+		> internal/test_helpers/course_definition.yml
