@@ -12,7 +12,7 @@ build:
 	go build -o dist/starter.out ./cmd/starter_tester
 
 test:
-	go test -v
+	go test -v ./internal/
 
 test_starter_with_redis: build
 	CODECRAFTERS_SUBMISSION_DIR=./test_helpers/pass_all \
