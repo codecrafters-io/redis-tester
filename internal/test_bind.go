@@ -23,9 +23,9 @@ func testBindToPort(executable *Executable, logger *customLogger) error {
 		}
 
 		if err != nil {
-			logger.Debugf("Failed, retrying in one second")
+			logger.Debugf("Failed, retrying in 500ms")
 			retries += 1
-			time.Sleep(1 * time.Second)
+			time.Sleep(500 * time.Millisecond)
 		} else {
 			break
 		}
