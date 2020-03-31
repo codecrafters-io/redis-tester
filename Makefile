@@ -11,10 +11,10 @@ build:
 	go build -o dist/main.out ./cmd/tester
 	go build -o dist/starter.out ./cmd/starter_tester
 
-make test:
+test:
 	go test -v
 
-make test_starter_with_redis: build
+test_starter_with_redis: build
 	CODECRAFTERS_SUBMISSION_DIR=./test_helpers/pass_all \
 	dist/starter.out
 
