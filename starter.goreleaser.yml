@@ -1,0 +1,16 @@
+builds:
+  - main: ./cmd/starter_tester/main.go
+    env:
+      - CGO_ENABLED=0
+
+release:
+  github:
+    owner: "codecrafters-io"
+    name: "redis-starter-tester"
+
+changelog:
+  skip: true
+
+archives:
+  - name_template: "{{ .Tag }}_{{ .Os }}_{{ .Arch }}"
+    format: binary

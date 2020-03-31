@@ -6,7 +6,7 @@ on:
       - "v*"
 
 jobs:
-  publish_binary:
+  publish_tester:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -21,6 +21,26 @@ jobs:
         uses: goreleaser/goreleaser-action@v1
         with:
           version: latest
-          args: release --rm-dist
+          args: release -f main.goreleaser.yml --rm-dist
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish_starter_tester:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Unshallow
+        run: git fetch --prune --unshallow
+      - name: Set up Go
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.13.x
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v1
+        with:
+          version: latest
+          args: release -f starter.goreleaser.yml --rm-dist
+        env:
+          # TODO: Change to codecrafters-io token
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

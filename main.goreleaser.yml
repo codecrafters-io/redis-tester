@@ -1,6 +1,8 @@
 builds:
-- env:
-    - CGO_ENABLED=0
+  - main: ./cmd/tester/main.go
+    env:
+      - CGO_ENABLED=0
+
 archives:
   - name_template: "{{ .Tag }}_{{ .Os }}_{{ .Arch }}"
     format: binary
