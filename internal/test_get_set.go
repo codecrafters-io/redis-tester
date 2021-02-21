@@ -5,16 +5,19 @@ import (
 	"math/rand"
 	"time"
 
+	testerutils "github.com/codecrafters-io/tester-utils"
 	"github.com/go-redis/redis"
 )
 
 // Tests 'GET, SET'
-func testGetSet(executable *Executable, logger *customLogger) error {
-	b := NewRedisBinary(executable, logger)
+func testGetSet(stageHarness testerutils.StageHarness) error {
+	b := NewRedisBinary(stageHarness.Executable, stageHarness.Logger)
 	if err := b.Run(); err != nil {
 		return err
 	}
 	defer b.Kill()
+
+	logger := stageHarness.Logger
 
 	client := redis.NewClient(&redis.Options{
 		Addr:        "localhost:6379",

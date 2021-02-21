@@ -3,16 +3,19 @@ package internal
 import (
 	"net"
 	"time"
+
+	testerutils "github.com/codecrafters-io/tester-utils"
 )
 
-func testBindToPort(executable *Executable, logger *customLogger) error {
-	b := NewRedisBinary(executable, logger)
+func testBindToPort(stageHarness testerutils.StageHarness) error {
+	b := NewRedisBinary(stageHarness.Executable, stageHarness.Logger)
 	if err := b.Run(); err != nil {
 		return err
 	}
 	defer b.Kill()
 
-	logger.Debugf("Creating first connection")
+	logger := stageHarness.Logger
+
 	retries := 0
 	var err error
 	for {

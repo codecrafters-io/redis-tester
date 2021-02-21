@@ -5,12 +5,13 @@ import (
 	"math/rand"
 	"time"
 
+	testerutils "github.com/codecrafters-io/tester-utils"
 	"github.com/go-redis/redis"
 )
 
 // Tests 'ECHO'
-func testEcho(executable *Executable, logger *customLogger) error {
-	b := NewRedisBinary(executable, logger)
+func testEcho(stageHarness testerutils.StageHarness) error {
+	b := NewRedisBinary(stageHarness.Executable, stageHarness.Logger)
 	if err := b.Run(); err != nil {
 		return err
 	}

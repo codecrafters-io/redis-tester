@@ -3,14 +3,18 @@ package internal
 import (
 	"fmt"
 	"net"
+
+	testerutils "github.com/codecrafters-io/tester-utils"
 )
 
-func testMultipleClients(executable *Executable, logger *customLogger) error {
-	b := NewRedisBinary(executable, logger)
+func testMultipleClients(stageHarness testerutils.StageHarness) error {
+	b := NewRedisBinary(stageHarness.Executable, stageHarness.Logger)
 	if err := b.Run(); err != nil {
 		return err
 	}
 	defer b.Kill()
+
+	logger := stageHarness.Logger
 
 	logger.Debugf("Creating first connection")
 	conn1, err := net.Dial("tcp", "localhost:6379")
@@ -51,7 +55,7 @@ func testMultipleClients(executable *Executable, logger *customLogger) error {
 	return nil
 }
 
-func sendPing(conn net.Conn, logger *customLogger) error {
+func sendPing(conn net.Conn, logger *testerutils.Logger) error {
 	tmp := make([]byte, 256)
 
 	logger.Debugf("- Writing PING command")

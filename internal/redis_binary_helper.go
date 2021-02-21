@@ -4,14 +4,16 @@ import (
 	"context"
 	"net"
 	"time"
+
+	testerutils "github.com/codecrafters-io/tester-utils"
 )
 
 type RedisBinary struct {
-	executable *Executable
-	logger     *customLogger
+	executable *testerutils.Executable
+	logger     *testerutils.Logger
 }
 
-func NewRedisBinary(executable *Executable, logger *customLogger) *RedisBinary {
+func NewRedisBinary(executable *testerutils.Executable, logger *testerutils.Logger) *RedisBinary {
 	return &RedisBinary{
 		executable: executable,
 		logger:     logger,
