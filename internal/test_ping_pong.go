@@ -4,15 +4,18 @@ import (
 	"fmt"
 	"time"
 
+	testerutils "github.com/codecrafters-io/tester-utils"
 	"github.com/go-redis/redis"
 )
 
-func testPingPongOnce(executable *Executable, logger *customLogger) error {
-	b := NewRedisBinary(executable, logger)
+func testPingPongOnce(stageHarness testerutils.StageHarness) error {
+	b := NewRedisBinary(stageHarness.Executable, stageHarness.Logger)
 	if err := b.Run(); err != nil {
 		return err
 	}
 	defer b.Kill()
+
+	logger := stageHarness.Logger
 
 	client := redis.NewClient(&redis.Options{
 		Addr:        "localhost:6379",
@@ -34,12 +37,14 @@ func testPingPongOnce(executable *Executable, logger *customLogger) error {
 	return nil
 }
 
-func testPingPongMultiple(executable *Executable, logger *customLogger) error {
-	b := NewRedisBinary(executable, logger)
+func testPingPongMultiple(stageHarness testerutils.StageHarness) error {
+	b := NewRedisBinary(stageHarness.Executable, stageHarness.Logger)
 	if err := b.Run(); err != nil {
 		return err
 	}
 	defer b.Kill()
+
+	logger := stageHarness.Logger
 
 	client := redis.NewClient(&redis.Options{
 		Addr:        "localhost:6379",
@@ -57,12 +62,14 @@ func testPingPongMultiple(executable *Executable, logger *customLogger) error {
 	return nil
 }
 
-func testPingPongConcurrent(executable *Executable, logger *customLogger) error {
-	b := NewRedisBinary(executable, logger)
+func testPingPongConcurrent(stageHarness testerutils.StageHarness) error {
+	b := NewRedisBinary(stageHarness.Executable, stageHarness.Logger)
 	if err := b.Run(); err != nil {
 		return err
 	}
 	defer b.Kill()
+
+	logger := stageHarness.Logger
 
 	client1 := redis.NewClient(&redis.Options{
 		Addr:        "localhost:6379",
@@ -109,7 +116,7 @@ func testPingPongConcurrent(executable *Executable, logger *customLogger) error 
 	return nil
 }
 
-func runPing(logger *customLogger, client *redis.Client, clientNum int) error {
+func runPing(logger *testerutils.Logger, client *redis.Client, clientNum int) error {
 	logger.Debugf("client-%d: Sending ping command...", clientNum)
 	pong, err := client.Ping().Result()
 	if err != nil {

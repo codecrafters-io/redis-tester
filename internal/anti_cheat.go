@@ -1,28 +1,22 @@
 package internal
 
-import "github.com/go-redis/redis"
-import "fmt"
-import "time"
-import "strings"
+import (
+	"fmt"
+	"strings"
+	"time"
 
-func antiCheatRunner() StageRunner {
-	return StageRunner{
-		isDebug: false,
-		stages: []Stage{
-			Stage{
-				name:    "AC1",
-				logger:  getQuietLogger("[anticheat] "),
-				runFunc: testCommand,
-			},
-		},
-	}
-}
+	testerutils "github.com/codecrafters-io/tester-utils"
+	"github.com/go-redis/redis"
+)
 
-func testCommand(executable *Executable, logger *customLogger) error {
+func antiCheatTest(harness testerutils.StageHarness) error {
 	client := redis.NewClient(&redis.Options{
 		Addr:        "localhost:6379",
 		DialTimeout: 30 * time.Second,
 	})
+
+	logger := harness.Logger
+
 	result := client.Info("server")
 	if result.Err() != nil {
 		return nil
@@ -37,9 +31,7 @@ func testCommand(executable *Executable, logger *customLogger) error {
 		return nil
 	}
 
-	logger.Criticalf("anti-cheat (ac1) failed. ")
-	logger.Criticalf(
-		"Are you sure you aren't running this " +
-			"against the actual Redis?")
+	logger.Criticalf("anti-cheat (ac1) failed.")
+	logger.Criticalf("Are you sure you aren't running this against the actual Redis?")
 	return fmt.Errorf("anti-cheat (ac1) failed")
 }
