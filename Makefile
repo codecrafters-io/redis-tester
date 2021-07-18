@@ -16,11 +16,19 @@ test:
 
 test_starter_with_redis: build
 	CODECRAFTERS_SUBMISSION_DIR=./internal/test_helpers/pass_all \
+	CODECRAFTERS_COURSE_PAGE_URL="https://dummy.io" \
 	dist/starter.out
 
 test_with_redis: build
 	CODECRAFTERS_SUBMISSION_DIR=./internal/test_helpers/pass_all \
+	CODECRAFTERS_COURSE_PAGE_URL="https://dummy.io" \
 	CODECRAFTERS_CURRENT_STAGE_SLUG="expiry" \
+	dist/main.out
+
+test_stage_1: build
+	CODECRAFTERS_SUBMISSION_DIR=./internal/test_helpers/stages/bind \
+	CODECRAFTERS_COURSE_PAGE_URL="https://dummy.io" \
+	CODECRAFTERS_CURRENT_STAGE_SLUG="init" \
 	dist/main.out
 
 test_tmp: build
