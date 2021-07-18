@@ -25,6 +25,12 @@ test_with_redis: build
 	CODECRAFTERS_CURRENT_STAGE_SLUG="expiry" \
 	dist/main.out
 
+test_stage_1_failure: build
+	CODECRAFTERS_SUBMISSION_DIR=./internal/test_helpers/stages/bind_failure \
+	CODECRAFTERS_COURSE_PAGE_URL="https://dummy.io" \
+	CODECRAFTERS_CURRENT_STAGE_SLUG="init" \
+	dist/main.out
+
 test_stage_1: build
 	CODECRAFTERS_SUBMISSION_DIR=./internal/test_helpers/stages/bind \
 	CODECRAFTERS_COURSE_PAGE_URL="https://dummy.io" \

@@ -26,7 +26,7 @@ func testBindToPort(stageHarness testerutils.StageHarness) error {
 		}
 
 		if err != nil {
-			logger.Debugf("Failed, retrying in 500ms")
+			logger.Infof("Failed to connect to port 6379, retrying in 500ms")
 			retries += 1
 			time.Sleep(500 * time.Millisecond)
 		} else {
