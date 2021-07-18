@@ -17,6 +17,7 @@ func RunCLI(env map[string]string) int {
 	tester.PrintDebugContext()
 
 	if !tester.RunStages() {
+		tester.PrintFailureMessage()
 		return 1
 	}
 
