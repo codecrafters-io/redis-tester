@@ -123,6 +123,8 @@ func runPing(logger *testerutils.Logger, client *redis.Client, clientNum int) er
 		return err
 	}
 
+	logger.Debugf("client-%d: Received response.", clientNum)
+
 	if pong != "PONG" {
 		return fmt.Errorf("client-%d: Expected PONG, got %s", clientNum, pong)
 	}
