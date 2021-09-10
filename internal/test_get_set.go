@@ -10,12 +10,11 @@ import (
 )
 
 // Tests 'GET, SET'
-func testGetSet(stageHarness testerutils.StageHarness) error {
-	b := NewRedisBinary(stageHarness.Executable, stageHarness.Logger)
+func testGetSet(stageHarness *testerutils.StageHarness) error {
+	b := NewRedisBinary(stageHarness)
 	if err := b.Run(); err != nil {
 		return err
 	}
-	defer b.Kill()
 
 	logger := stageHarness.Logger
 

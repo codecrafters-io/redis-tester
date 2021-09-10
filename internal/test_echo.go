@@ -10,15 +10,13 @@ import (
 )
 
 // Tests 'ECHO'
-func testEcho(stageHarness testerutils.StageHarness) error {
-	logger := stageHarness.Logger
-
-	b := NewRedisBinary(stageHarness.Executable, logger)
+func testEcho(stageHarness *testerutils.StageHarness) error {
+	b := NewRedisBinary(stageHarness)
 	if err := b.Run(); err != nil {
-		logger.Errorf(err.Error())
 		return err
 	}
-	defer b.Kill()
+
+	logger := stageHarness.Logger
 
 	client := redis.NewClient(&redis.Options{
 		Addr:        "localhost:6379",

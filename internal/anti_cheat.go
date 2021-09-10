@@ -9,7 +9,7 @@ import (
 	"github.com/go-redis/redis"
 )
 
-func antiCheatTest(harness testerutils.StageHarness) error {
+func antiCheatTest(harness *testerutils.StageHarness) error {
 	client := redis.NewClient(&redis.Options{
 		Addr:        "localhost:6379",
 		DialTimeout: 30 * time.Second,

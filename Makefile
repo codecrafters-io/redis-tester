@@ -26,13 +26,13 @@ test_with_redis: build
 	dist/main.out
 
 test_stage_1_failure: build
-	CODECRAFTERS_SUBMISSION_DIR=./internal/test_helpers/stages/bind_failure \
+	CODECRAFTERS_SUBMISSION_DIR=./internal/test_helpers/scenarios/bind/failure \
 	CODECRAFTERS_COURSE_PAGE_URL="https://dummy.io" \
 	CODECRAFTERS_CURRENT_STAGE_SLUG="init" \
 	dist/main.out
 
 test_stage_1: build
-	CODECRAFTERS_SUBMISSION_DIR=./internal/test_helpers/stages/bind \
+	CODECRAFTERS_SUBMISSION_DIR=./internal/test_helpers/scenarios/bind/success \
 	CODECRAFTERS_COURSE_PAGE_URL="https://dummy.io" \
 	CODECRAFTERS_CURRENT_STAGE_SLUG="ping-pong" \
 	dist/main.out

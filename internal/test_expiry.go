@@ -10,12 +10,11 @@ import (
 )
 
 // Tests Expiry
-func testExpiry(stageHarness testerutils.StageHarness) error {
-	b := NewRedisBinary(stageHarness.Executable, stageHarness.Logger)
+func testExpiry(stageHarness *testerutils.StageHarness) error {
+	b := NewRedisBinary(stageHarness)
 	if err := b.Run(); err != nil {
 		return err
 	}
-	defer b.Kill()
 
 	logger := stageHarness.Logger
 
