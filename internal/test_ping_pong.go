@@ -23,7 +23,13 @@ func testPingPongOnce(stageHarness *testerutils.StageHarness) error {
 	logger.Debugf("Sending ping command...")
 	pong, err := client.Ping().Result()
 	if err != nil {
-		return err
+		if err.Error() == "EOF" {
+			logger.Infof("Hint: EOF is short for 'end of file'. This usually means that your program either:")
+			logger.Infof(" (a) didn't send a complete response, or")
+			logger.Infof(" (b) closed the connection early")
+		}
+
+		return fmt.Errorf("failed to read response, err: %s", err)
 	}
 
 	if pong != "PONG" {
