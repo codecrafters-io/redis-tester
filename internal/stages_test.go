@@ -13,32 +13,45 @@ import (
 	"testing"
 )
 
-func TestBindFailure(t *testing.T) {
-	m := NewStdIOMocker()
-	m.Start()
-	defer m.End()
-
-	exitCode := runCLIStage("init", "./test_helpers/scenarios/bind/failure")
-	if !assert.Equal(t, 1, exitCode) {
-		failWithMockerOutput(t, m)
-	}
-
-	CompareOutputWithFixture(t, m.ReadStdout(), "./test_helpers/fixtures/bind/failure")
+type TesterOutputTestConfiguration struct {
+	CodePath string
+	ExpectedExitCode int
+	StageName string
+	StdoutFixturePath string
 }
 
-func TestBindSuccess(t *testing.T) {
-	m := NewStdIOMocker()
-	m.Start()
-	defer m.End()
-
-	exitCode := runCLIStage("init", "./test_helpers/scenarios/bind/success")
-	if !assert.Equal(t, 0, exitCode) {
-		failWithMockerOutput(t, m)
+func TestStages(t *testing.T) {
+	tests := map[string]TesterOutputTestConfiguration{
+		"bind_failure": {
+			StageName: "init",
+			CodePath: "./test_helpers/scenarios/bind/failure",
+			ExpectedExitCode: 1,
+			StdoutFixturePath: "./test_helpers/fixtures/bind/failure",
+		},
+		"bind_success": {
+			StageName: "init",
+			CodePath: "./test_helpers/scenarios/bind/success",
+			ExpectedExitCode: 0,
+			StdoutFixturePath: "./test_helpers/fixtures/bind/success",
+		},
 	}
 
-	m.End()
+	m := NewStdIOMocker()
+	defer m.End()
 
-	CompareOutputWithFixture(t, m.ReadStdout(), "./test_helpers/fixtures/bind/success")
+	for testName, config := range tests {
+		t.Run(testName, func(t *testing.T) {
+			m.Start()
+
+			exitCode := runCLIStage(config.StageName, config.CodePath)
+			if !assert.Equal(t, config.ExpectedExitCode, exitCode) {
+				failWithMockerOutput(t, m)
+			}
+
+			m.End()
+			CompareOutputWithFixture(t, m.ReadStdout(), config.StdoutFixturePath)
+		})
+	}
 }
 
 func CompareOutputWithFixture(t *testing.T, testerOutput []byte, fixturePath string) {
@@ -87,47 +100,6 @@ func CompareOutputWithFixture(t *testing.T, testerOutput []byte, fixturePath str
 		t.FailNow()
 	}
 }
-
-
-//func TestBind(t *testing.T) {
-//	m := NewStdIOMocker()
-//	m.Start()
-//	defer m.End()
-//
-//	fmt.Println("Test failure")
-//	exitCode := runCLIStage("init", "./test_helpers/fixtures/failure")
-//	if !assert.Equal(t, 1, exitCode) {
-//		failWithMockerOutput(t, m)
-//	}
-//	assert.Contains(t, m.ReadStdout(), "Test failed")
-//
-//	m.Reset()
-//
-//	fmt.Println("Test success")
-//	exitCode = runCLIStage("init", "./test_helpers/fixtures/success")
-//	if !assert.Equal(t, 0, exitCode) {
-//		failWithMockerOutput(t, m)
-//	}
-//}
-
-//func TestRespondToPing(t *testing.T) {
-//	m := NewStdIOMocker()
-//	m.Start()
-//	defer m.End()
-//
-//	exitCode := runCLIStage("ping-pong", "./test_helpers/fixtures/success")
-//	if !assert.Equal(t, 1, exitCode) {
-//		failWithMockerOutput(t, m)
-//	}
-//	assert.Contains(t, m.ReadStdout(), "Test failed")
-//
-//	m.Reset()
-//
-//	exitCode = runCLIStage("ping-pong", "./test_helpers/fixtures/success")
-//	if !assert.Equal(t, 0, exitCode) {
-//		failWithMockerOutput(t, m)
-//	}
-//}
 
 func runCLIStage(slug string, path string) (exitCode int) {
 	return RunCLI(map[string]string{
