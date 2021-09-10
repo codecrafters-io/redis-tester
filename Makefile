@@ -34,7 +34,7 @@ test_stage_1_failure: build
 test_stage_1: build
 	CODECRAFTERS_SUBMISSION_DIR=./internal/test_helpers/stages/bind \
 	CODECRAFTERS_COURSE_PAGE_URL="https://dummy.io" \
-	CODECRAFTERS_CURRENT_STAGE_SLUG="init" \
+	CODECRAFTERS_CURRENT_STAGE_SLUG="ping-pong" \
 	dist/main.out
 
 test_tmp: build
