@@ -8,12 +8,11 @@ import (
 	"github.com/go-redis/redis"
 )
 
-func testPingPongOnce(stageHarness testerutils.StageHarness) error {
-	b := NewRedisBinary(stageHarness.Executable, stageHarness.Logger)
+func testPingPongOnce(stageHarness *testerutils.StageHarness) error {
+	b := NewRedisBinary(stageHarness)
 	if err := b.Run(); err != nil {
 		return err
 	}
-	defer b.Kill()
 
 	logger := stageHarness.Logger
 
@@ -37,12 +36,11 @@ func testPingPongOnce(stageHarness testerutils.StageHarness) error {
 	return nil
 }
 
-func testPingPongMultiple(stageHarness testerutils.StageHarness) error {
-	b := NewRedisBinary(stageHarness.Executable, stageHarness.Logger)
+func testPingPongMultiple(stageHarness *testerutils.StageHarness) error {
+	b := NewRedisBinary(stageHarness)
 	if err := b.Run(); err != nil {
 		return err
 	}
-	defer b.Kill()
 
 	logger := stageHarness.Logger
 
@@ -62,12 +60,11 @@ func testPingPongMultiple(stageHarness testerutils.StageHarness) error {
 	return nil
 }
 
-func testPingPongConcurrent(stageHarness testerutils.StageHarness) error {
-	b := NewRedisBinary(stageHarness.Executable, stageHarness.Logger)
+func testPingPongConcurrent(stageHarness *testerutils.StageHarness) error {
+	b := NewRedisBinary(stageHarness)
 	if err := b.Run(); err != nil {
 		return err
 	}
-	defer b.Kill()
 
 	logger := stageHarness.Logger
 

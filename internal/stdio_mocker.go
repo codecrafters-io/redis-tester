@@ -36,20 +36,22 @@ func (m *IOMocker) Reset() {
 	os.Stderr = m.mockedStderr
 }
 
-func (m *IOMocker) ReadStdout() string {
+func (m *IOMocker) ReadStdout() []byte {
 	bytes, err := ioutil.ReadFile(m.mockedStdout.Name())
 	if err != nil {
 		panic(err)
 	}
-	return string(bytes)
+
+	return bytes
 }
 
-func (m *IOMocker) ReadStderr() string {
+func (m *IOMocker) ReadStderr() []byte {
 	bytes, err := ioutil.ReadFile(m.mockedStderr.Name())
 	if err != nil {
 		panic(err)
 	}
-	return string(bytes)
+
+	return bytes
 }
 
 func (m *IOMocker) End() {

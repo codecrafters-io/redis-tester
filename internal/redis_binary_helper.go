@@ -13,11 +13,15 @@ type RedisBinary struct {
 	logger     *testerutils.Logger
 }
 
-func NewRedisBinary(executable *testerutils.Executable, logger *testerutils.Logger) *RedisBinary {
-	return &RedisBinary{
-		executable: executable,
-		logger:     logger,
+func NewRedisBinary(stageHarness *testerutils.StageHarness) *RedisBinary {
+	b := &RedisBinary{
+		executable: stageHarness.Executable,
+		logger:     stageHarness.Logger,
 	}
+
+	stageHarness.RegisterTeardownFunc(func() { b.Kill() })
+
+	return b
 }
 
 func (b *RedisBinary) Run() error {

@@ -10,12 +10,13 @@ import (
 )
 
 // Tests 'ECHO'
-func testEcho(stageHarness testerutils.StageHarness) error {
-	b := NewRedisBinary(stageHarness.Executable, stageHarness.Logger)
+func testEcho(stageHarness *testerutils.StageHarness) error {
+	b := NewRedisBinary(stageHarness)
 	if err := b.Run(); err != nil {
 		return err
 	}
-	defer b.Kill()
+
+	logger := stageHarness.Logger
 
 	client := redis.NewClient(&redis.Options{
 		Addr:        "localhost:6379",
@@ -38,11 +39,14 @@ func testEcho(stageHarness testerutils.StageHarness) error {
 	randomString := strings[rand.Intn(10)]
 	resp, err := client.Echo(randomString).Result()
 	if err != nil {
+		logger.Errorf(err.Error())
 		return err
 	}
 
 	if resp != randomString {
-		return fmt.Errorf("Expected %s, got %s", randomString, resp)
+		err := fmt.Errorf("Expected %s, got %s", randomString, resp)
+		logger.Errorf(err.Error())
+		return err
 	}
 
 	client.Close()
