@@ -1,4 +1,4 @@
-#!/usr/bin/env python3 -u
+#!/usr/bin/env -S python3 -u
 import socket
 print("hey, binding to 6379")
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
