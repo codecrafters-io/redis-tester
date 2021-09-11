@@ -36,7 +36,7 @@ func TestStages(t *testing.T) {
 		},
 		"ping_pong_failure": {
 			StageName: "ping-pong",
-			CodePath: "./test_helpers/scenarios/bind/success",
+			CodePath: "./test_helpers/scenarios/ping-pong/eof",
 			ExpectedExitCode: 1,
 			StdoutFixturePath: "./test_helpers/fixtures/ping-pong/failure",
 		},
