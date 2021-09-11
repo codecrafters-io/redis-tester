@@ -31,8 +31,8 @@ test_stage_1_failure: build
 	CODECRAFTERS_CURRENT_STAGE_SLUG="init" \
 	dist/main.out
 
-test_stage_1: build
-	CODECRAFTERS_SUBMISSION_DIR=./internal/test_helpers/scenarios/bind/success \
+test_ping_pong_eof: build
+	CODECRAFTERS_SUBMISSION_DIR=./internal/test_helpers/scenarios/ping-pong/eof \
 	CODECRAFTERS_COURSE_PAGE_URL="https://dummy.io" \
 	CODECRAFTERS_CURRENT_STAGE_SLUG="ping-pong" \
 	dist/main.out

@@ -10,6 +10,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 	"testing"
 )
 
@@ -33,6 +34,12 @@ func TestStages(t *testing.T) {
 			CodePath: "./test_helpers/scenarios/bind/success",
 			ExpectedExitCode: 0,
 			StdoutFixturePath: "./test_helpers/fixtures/bind/success",
+		},
+		"ping_pong_failure": {
+			StageName: "ping-pong",
+			CodePath: "./test_helpers/scenarios/ping-pong/eof",
+			ExpectedExitCode: 1,
+			StdoutFixturePath: "./test_helpers/fixtures/ping-pong/failure",
 		},
 	}
 
@@ -74,6 +81,9 @@ func CompareOutputWithFixture(t *testing.T, testerOutput []byte, fixturePath str
 		panic(err)
 	}
 
+	testerOutput = normalizeTesterOutput(testerOutput)
+	fixtureContents = normalizeTesterOutput(fixtureContents)
+
 	if bytes.Compare(testerOutput, fixtureContents) != 0 {
 		diffExecutablePath, err := exec.LookPath("diff")
 		if err != nil {
@@ -99,6 +109,11 @@ func CompareOutputWithFixture(t *testing.T, testerOutput []byte, fixturePath str
 		os.Stdout.Write(result.Stdout)
 		t.FailNow()
 	}
+}
+
+func normalizeTesterOutput(testerOutput []byte) []byte {
+	re, _ := regexp.Compile("read tcp 127.0.0.1:\\d+->127.0.0.1:6379: read: connection reset by peer")
+	return re.ReplaceAll(testerOutput, []byte("read tcp 127.0.0.1:xxxxx+->127.0.0.1:6379: read: connection reset by peer"))
 }
 
 func runCLIStage(slug string, path string) (exitCode int) {
