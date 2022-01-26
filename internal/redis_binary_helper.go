@@ -40,6 +40,10 @@ func (b *RedisBinary) Run() error {
 	return nil
 }
 
+func (b *RedisBinary) HasExited() bool {
+	return b.executable.HasExited()
+}
+
 func (b *RedisBinary) Kill() error {
 	b.logger.Debugf("Terminating program")
 	if err := b.executable.Kill(); err != nil {

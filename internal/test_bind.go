@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"fmt"
 	"net"
 	"time"
 
@@ -19,9 +20,13 @@ func testBindToPort(stageHarness *testerutils.StageHarness) error {
 	var err error
 	for {
 		_, err = net.Dial("tcp", "localhost:6379")
-		if err != nil && retries > 60 {
+		if err != nil && retries > 20 {
 			logger.Infof("All retries failed.")
 			return err
+		}
+
+		if b.HasExited() {
+			return fmt.Errorf("process has terminated, expected server to a be a long-running process")
 		}
 
 		if err != nil {
