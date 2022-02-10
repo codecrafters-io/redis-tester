@@ -25,11 +25,11 @@ func testBindToPort(stageHarness *testerutils.StageHarness) error {
 			return err
 		}
 
-		if b.HasExited() {
-			return fmt.Errorf("process has terminated, expected server to a be a long-running process")
-		}
-
 		if err != nil {
+			if b.HasExited() {
+				return fmt.Errorf("process has terminated, expected server to a be a long-running process")
+			}
+
 			logger.Infof("Failed to connect to port 6379, retrying in 500ms")
 			retries += 1
 			time.Sleep(500 * time.Millisecond)
