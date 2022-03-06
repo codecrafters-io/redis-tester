@@ -42,6 +42,7 @@ func testGetSet(stageHarness *testerutils.StageHarness) error {
 	logger.Debugf("Setting key %s to %s", randomKey, randomValue)
 	resp, err := client.Set(randomKey, randomValue, 0).Result()
 	if err != nil {
+		logFriendlyError(logger, err)
 		return err
 	}
 

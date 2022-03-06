@@ -40,6 +40,7 @@ func testEcho(stageHarness *testerutils.StageHarness) error {
 	resp, err := client.Echo(randomString).Result()
 	if err != nil {
 		logger.Errorf(err.Error())
+		logFriendlyError(logger, err)
 		return err
 	}
 

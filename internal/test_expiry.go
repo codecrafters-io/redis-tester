@@ -42,6 +42,7 @@ func testExpiry(stageHarness *testerutils.StageHarness) error {
 	logger.Debugf("Setting key %s to %s, with expiry of 100ms", randomKey, randomValue)
 	resp, err := client.Set(randomKey, randomValue, 100*time.Millisecond).Result()
 	if err != nil {
+		logFriendlyError(logger, err)
 		return err
 	}
 	if resp != "OK" {
@@ -51,6 +52,7 @@ func testExpiry(stageHarness *testerutils.StageHarness) error {
 	logger.Debugf("Getting key %s", randomKey)
 	resp, err = client.Get(randomKey).Result()
 	if err != nil {
+		logFriendlyError(logger, err)
 		return err
 	}
 	if resp != randomValue {
@@ -68,6 +70,7 @@ func testExpiry(stageHarness *testerutils.StageHarness) error {
 			return fmt.Errorf("Expected null string, got '%v'", resp)
 		}
 
+		logFriendlyError(logger, err)
 		return err
 	}
 
