@@ -28,7 +28,7 @@ func testPingPongOnce(stageHarness *testerutils.StageHarness) error {
 	}
 
 	if pong != "PONG" {
-		return fmt.Errorf("Expected PONG, got %s", pong)
+		return fmt.Errorf("Expected \"PONG\", got %#v", pong)
 	}
 
 	logger.Debugf("Success, closing connection...")
@@ -125,7 +125,7 @@ func runPing(logger *testerutils.Logger, client *redis.Client, clientNum int) er
 	logger.Debugf("client-%d: Received response.", clientNum)
 
 	if pong != "PONG" {
-		return fmt.Errorf("client-%d: Expected PONG, got %s", clientNum, pong)
+		return fmt.Errorf("client-%d: Expected \"PONG\", got %#v", clientNum, pong)
 	}
 
 	return nil

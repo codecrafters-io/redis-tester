@@ -47,7 +47,7 @@ func testGetSet(stageHarness *testerutils.StageHarness) error {
 	}
 
 	if resp != "OK" {
-		return fmt.Errorf("Expected 'OK', got %s", resp)
+		return fmt.Errorf("Expected \"OK\", got %#v", resp)
 	}
 
 	logger.Debugf("Getting key %s", randomKey)
@@ -57,7 +57,7 @@ func testGetSet(stageHarness *testerutils.StageHarness) error {
 	}
 
 	if resp != randomValue {
-		return fmt.Errorf("Expected %s, got %s", randomValue, resp)
+		return fmt.Errorf("Expected %#v, got %#v", randomValue, resp)
 	}
 
 	client.Close()
