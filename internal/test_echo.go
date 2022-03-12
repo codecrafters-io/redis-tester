@@ -37,6 +37,7 @@ func testEcho(stageHarness *testerutils.StageHarness) error {
 	}
 
 	randomString := strings[rand.Intn(10)]
+	logger.Debugf("Sending command: ECHO %s", randomString)
 	resp, err := client.Echo(randomString).Result()
 	if err != nil {
 		logger.Errorf(err.Error())
