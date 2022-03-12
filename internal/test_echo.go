@@ -46,9 +46,7 @@ func testEcho(stageHarness *testerutils.StageHarness) error {
 	}
 
 	if resp != randomString {
-		err := fmt.Errorf("Expected %s, got %s", randomString, resp)
-		logger.Errorf(err.Error())
-		return err
+		return fmt.Errorf("Expected %#v, got %#v", randomString, resp)
 	}
 
 	client.Close()
