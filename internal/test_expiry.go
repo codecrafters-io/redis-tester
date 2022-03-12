@@ -39,35 +39,35 @@ func testExpiry(stageHarness *testerutils.StageHarness) error {
 	randomKey := strings[rand.Intn(10)]
 	randomValue := strings[rand.Intn(10)]
 
-	logger.Debugf("Setting key %s to %s, with expiry of 100ms", randomKey, randomValue)
+	logger.Debugf("Running command: set %s %s px 100", randomKey, randomValue)
 	resp, err := client.Set(randomKey, randomValue, 100*time.Millisecond).Result()
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
 	}
 	if resp != "OK" {
-		return fmt.Errorf("Expected 'OK', got %s", resp)
+		return fmt.Errorf("Expected \"OK\", got %#v", resp)
 	}
 
-	logger.Debugf("Getting key %s", randomKey)
+	logger.Debugf("Running command: get %s", randomKey)
 	resp, err = client.Get(randomKey).Result()
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
 	}
 	if resp != randomValue {
-		return fmt.Errorf("Expected %s, got %s", randomValue, resp)
+		return fmt.Errorf("Expected %#v, got %#v", randomValue, resp)
 	}
 
 	logger.Debugf("Sleeping for 101ms")
 	time.Sleep(101 * time.Millisecond)
 
-	logger.Debugf("Fetching value for key %s", randomKey)
+	logger.Debugf("Running command: get %s", randomKey)
 	resp, err = client.Get(randomKey).Result()
 	if err != redis.Nil {
 		if err == nil {
 			logger.Debugf("Hint: Read about null bulk strings in the Redis protocol docs")
-			return fmt.Errorf("Expected null string, got '%v'", resp)
+			return fmt.Errorf("Expected null string, got %#v", resp)
 		}
 
 		logFriendlyError(logger, err)

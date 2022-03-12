@@ -24,19 +24,20 @@ func testEcho(stageHarness *testerutils.StageHarness) error {
 	})
 
 	strings := [10]string{
-		"pans",
-		"pots",
-		"cats",
+		"hello",
+		"world",
+		"mangos",
 		"apples",
 		"oranges",
-		"this",
-		"is",
-		"random",
-		"input",
-		"dogs",
+		"watermelons",
+		"grapes",
+		"pears",
+		"horses",
+		"elephants",
 	}
 
 	randomString := strings[rand.Intn(10)]
+	logger.Debugf("Sending command: echo %s", randomString)
 	resp, err := client.Echo(randomString).Result()
 	if err != nil {
 		logger.Errorf(err.Error())
@@ -45,9 +46,7 @@ func testEcho(stageHarness *testerutils.StageHarness) error {
 	}
 
 	if resp != randomString {
-		err := fmt.Errorf("Expected %s, got %s", randomString, resp)
-		logger.Errorf(err.Error())
-		return err
+		return fmt.Errorf("Expected %#v, got %#v", randomString, resp)
 	}
 
 	client.Close()
