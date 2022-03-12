@@ -39,7 +39,7 @@ func testExpiry(stageHarness *testerutils.StageHarness) error {
 	randomKey := strings[rand.Intn(10)]
 	randomValue := strings[rand.Intn(10)]
 
-	logger.Debugf("Running command: SET %s %s PX 100", randomKey, randomValue)
+	logger.Debugf("Running command: set %s %s px 100", randomKey, randomValue)
 	resp, err := client.Set(randomKey, randomValue, 100*time.Millisecond).Result()
 	if err != nil {
 		logFriendlyError(logger, err)
@@ -49,7 +49,7 @@ func testExpiry(stageHarness *testerutils.StageHarness) error {
 		return fmt.Errorf("Expected \"OK\", got %#v", resp)
 	}
 
-	logger.Debugf("Running command: GET %s", randomKey)
+	logger.Debugf("Running command: get %s", randomKey)
 	resp, err = client.Get(randomKey).Result()
 	if err != nil {
 		logFriendlyError(logger, err)
@@ -62,7 +62,7 @@ func testExpiry(stageHarness *testerutils.StageHarness) error {
 	logger.Debugf("Sleeping for 101ms")
 	time.Sleep(101 * time.Millisecond)
 
-	logger.Debugf("Running command: GET %s", randomKey)
+	logger.Debugf("Running command: get %s", randomKey)
 	resp, err = client.Get(randomKey).Result()
 	if err != redis.Nil {
 		if err == nil {
