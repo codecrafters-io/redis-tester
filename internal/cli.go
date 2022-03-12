@@ -2,11 +2,15 @@ package internal
 
 import (
 	"fmt"
+	"math/rand"
+	"time"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
 )
 
 func RunCLI(env map[string]string) int {
+	rand.Seed(time.Now().UnixNano()) // TODO: Move random phrase functions into a separate package that handles this
+
 	tester, err := testerutils.NewTester(env, testerDefinition)
 
 	if err != nil {

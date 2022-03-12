@@ -24,16 +24,16 @@ func testEcho(stageHarness *testerutils.StageHarness) error {
 	})
 
 	strings := [10]string{
-		"pans",
-		"pots",
-		"cats",
+		"hello",
+		"world",
+		"mangos",
 		"apples",
 		"oranges",
-		"this",
-		"is",
-		"random",
-		"input",
-		"dogs",
+		"watermelons",
+		"grapes",
+		"pears",
+		"horses",
+		"elephants",
 	}
 
 	randomString := strings[rand.Intn(10)]
