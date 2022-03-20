@@ -3,10 +3,8 @@ package internal
 import (
 	"fmt"
 	"math/rand"
-	"time"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
-	"github.com/go-redis/redis"
 )
 
 // Tests 'GET, SET'
@@ -18,10 +16,7 @@ func testGetSet(stageHarness *testerutils.StageHarness) error {
 
 	logger := stageHarness.Logger
 
-	client := redis.NewClient(&redis.Options{
-		Addr:        "localhost:6379",
-		DialTimeout: 30 * time.Second,
-	})
+	client := NewRedisClient()
 
 	strings := [10]string{
 		"abcd",

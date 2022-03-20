@@ -2,8 +2,6 @@ package internal
 
 import (
 	"fmt"
-	"time"
-
 	testerutils "github.com/codecrafters-io/tester-utils"
 	"github.com/go-redis/redis"
 )
@@ -15,11 +13,8 @@ func testPingPongOnce(stageHarness *testerutils.StageHarness) error {
 	}
 
 	logger := stageHarness.Logger
+	client := NewRedisClient()
 
-	client := redis.NewClient(&redis.Options{
-		Addr:        "localhost:6379",
-		DialTimeout: 30 * time.Second,
-	})
 	logger.Debugf("Sending ping command...")
 	pong, err := client.Ping().Result()
 	if err != nil {
@@ -44,11 +39,8 @@ func testPingPongMultiple(stageHarness *testerutils.StageHarness) error {
 	}
 
 	logger := stageHarness.Logger
+	client := NewRedisClient()
 
-	client := redis.NewClient(&redis.Options{
-		Addr:        "localhost:6379",
-		DialTimeout: 30 * time.Second,
-	})
 	for i := 1; i <= 3; i++ {
 		if err := runPing(logger, client, 1); err != nil {
 			return err
@@ -68,19 +60,13 @@ func testPingPongConcurrent(stageHarness *testerutils.StageHarness) error {
 	}
 
 	logger := stageHarness.Logger
+	client1 := NewRedisClient()
 
-	client1 := redis.NewClient(&redis.Options{
-		Addr:        "localhost:6379",
-		DialTimeout: 30 * time.Second,
-	})
 	if err := runPing(logger, client1, 1); err != nil {
 		return err
 	}
 
-	client2 := redis.NewClient(&redis.Options{
-		Addr:        "localhost:6379",
-		DialTimeout: 30 * time.Second,
-	})
+	client2 := NewRedisClient()
 	if err := runPing(logger, client2, 2); err != nil {
 		return err
 	}
@@ -98,10 +84,7 @@ func testPingPongConcurrent(stageHarness *testerutils.StageHarness) error {
 	logger.Debugf("client-%d: Success, closing connection...", 1)
 	client1.Close()
 
-	client3 := redis.NewClient(&redis.Options{
-		Addr:        "localhost:6379",
-		DialTimeout: 30 * time.Second,
-	})
+	client3 := NewRedisClient()
 	if err := runPing(logger, client3, 3); err != nil {
 		return err
 	}
