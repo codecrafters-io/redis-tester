@@ -18,10 +18,7 @@ func testGetSet(stageHarness *testerutils.StageHarness) error {
 
 	logger := stageHarness.Logger
 
-	client := redis.NewClient(&redis.Options{
-		Addr:        "localhost:6379",
-		DialTimeout: 30 * time.Second,
-	})
+	client := NewRedisClient()
 
 	strings := [10]string{
 		"abcd",
