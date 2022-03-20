@@ -3,10 +3,8 @@ package internal
 import (
 	"fmt"
 	"math/rand"
-	"time"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
-	"github.com/go-redis/redis"
 )
 
 // Tests 'GET, SET'
