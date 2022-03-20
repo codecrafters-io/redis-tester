@@ -30,7 +30,7 @@ func (b *RedisBinary) Run() error {
 		return err
 	}
 
-	time.Sleep(2000 * time.Millisecond)
+	time.Sleep(1000 * time.Millisecond) // Redis clients perform 20 retries with a 500ms backoff, so let's keep this short-ish.
 
 	// ctx := context.Background()
 	// ctx, cancel := context.WithTimeout(ctx, 2*time.Second)
