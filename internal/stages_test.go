@@ -1,4 +1,3 @@
-
 package internal
 
 import (
@@ -15,31 +14,37 @@ import (
 )
 
 type TesterOutputTestConfiguration struct {
-	CodePath string
-	ExpectedExitCode int
-	StageName string
+	CodePath          string
+	ExpectedExitCode  int
+	StageName         string
 	StdoutFixturePath string
 }
 
 func TestStages(t *testing.T) {
 	tests := map[string]TesterOutputTestConfiguration{
 		"bind_failure": {
-			StageName: "init",
-			CodePath: "./test_helpers/scenarios/bind/failure",
-			ExpectedExitCode: 1,
+			StageName:         "init",
+			CodePath:          "./test_helpers/scenarios/bind/failure",
+			ExpectedExitCode:  1,
 			StdoutFixturePath: "./test_helpers/fixtures/bind/failure",
 		},
 		"bind_success": {
-			StageName: "init",
-			CodePath: "./test_helpers/scenarios/bind/success",
-			ExpectedExitCode: 0,
+			StageName:         "init",
+			CodePath:          "./test_helpers/scenarios/bind/success",
+			ExpectedExitCode:  0,
 			StdoutFixturePath: "./test_helpers/fixtures/bind/success",
 		},
-		"ping_pong_failure": {
-			StageName: "ping-pong",
-			CodePath: "./test_helpers/scenarios/ping-pong/eof",
-			ExpectedExitCode: 1,
+		"ping_pong_eof": {
+			StageName:         "ping-pong",
+			CodePath:          "./test_helpers/scenarios/ping-pong/eof",
+			ExpectedExitCode:  1,
 			StdoutFixturePath: "./test_helpers/fixtures/ping-pong/failure",
+		},
+		"ping_pong_multiple_empty_reply": {
+			StageName:         "ping-pong-multiple",
+			CodePath:          "./test_helpers/scenarios/ping-pong-multiple/empty-reply",
+			ExpectedExitCode:  1,
+			StdoutFixturePath: "./test_helpers/fixtures/ping-pong-multiple/empty-reply",
 		},
 	}
 
@@ -78,6 +83,11 @@ func CompareOutputWithFixture(t *testing.T, testerOutput []byte, fixturePath str
 
 	fixtureContents, err := os.ReadFile(fixturePath)
 	if err != nil {
+		if os.IsNotExist(err) {
+			t.Errorf("Fixture file %s does not exist. To create a new one, use CODECRAFTERS_RECORD_FIXTURES=true", fixturePath)
+			return
+		}
+
 		panic(err)
 	}
 
@@ -119,7 +129,7 @@ func normalizeTesterOutput(testerOutput []byte) []byte {
 func runCLIStage(slug string, path string) (exitCode int) {
 	return RunCLI(map[string]string{
 		"CODECRAFTERS_CURRENT_STAGE_SLUG": slug,
-		"CODECRAFTERS_COURSE_PAGE_URL": "http://dummy_url",
+		"CODECRAFTERS_COURSE_PAGE_URL":    "http://dummy_url",
 		"CODECRAFTERS_SUBMISSION_DIR":     path,
 	})
 }
