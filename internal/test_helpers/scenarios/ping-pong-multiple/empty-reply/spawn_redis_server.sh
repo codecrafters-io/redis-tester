@@ -10,5 +10,5 @@ sock.bind(('', 6379))
 sock.listen(1)
 
 conn, cli_addr = sock.accept()
-conn.sendall(b'+PONG\r\n\n') # The extra \n would be sent if a user users Println.
+conn.sendall(b'+PONG\r\n\n') # The extra \n would be sent if a user uses Println.
 time.sleep(5)
