@@ -28,6 +28,12 @@ func TestStages(t *testing.T) {
 			ExpectedExitCode:  1,
 			StdoutFixturePath: "./test_helpers/fixtures/bind/failure",
 		},
+		"bind_timeout": {
+			StageName:         "init",
+			CodePath:          "./test_helpers/scenarios/bind/timeout",
+			ExpectedExitCode:  1,
+			StdoutFixturePath: "./test_helpers/fixtures/bind/timeout",
+		},
 		"bind_success": {
 			StageName:         "init",
 			CodePath:          "./test_helpers/scenarios/bind/success",
@@ -38,7 +44,7 @@ func TestStages(t *testing.T) {
 			StageName:         "ping-pong",
 			CodePath:          "./test_helpers/scenarios/ping-pong/eof",
 			ExpectedExitCode:  1,
-			StdoutFixturePath: "./test_helpers/fixtures/ping-pong/failure",
+			StdoutFixturePath: "./test_helpers/fixtures/ping-pong/eof",
 		},
 		"ping_pong_multiple_empty_reply": {
 			StageName:         "ping-pong-multiple",
