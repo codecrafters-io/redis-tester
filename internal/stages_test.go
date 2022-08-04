@@ -129,7 +129,7 @@ func CompareOutputWithFixture(t *testing.T, testerOutput []byte, fixturePath str
 
 func normalizeTesterOutput(testerOutput []byte) []byte {
 	re, _ := regexp.Compile("read tcp 127.0.0.1:\\d+->127.0.0.1:6379: read: connection reset by peer")
-	return re.ReplaceAll(testerOutput, []byte("read tcp 127.0.0.1:xxxxx+->127.0.0.1:6379: read: connection reset by peer"))
+	return re.ReplaceAll(testerOutput, []byte("read tcp 127.0.0.1:xxxxx->127.0.0.1:6379: read: connection reset by peer"))
 }
 
 func runCLIStage(slug string, path string) (exitCode int) {

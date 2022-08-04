@@ -18,6 +18,7 @@ var testerDefinition = testerutils.TesterDefinition{
 	Stages: []testerutils.Stage{
 		{
 			Slug:                    "init",
+			Number:                  1,
 			Title:                   "Bind to a port",
 			TestFunc:                testBindToPort,
 			ShouldRunPreviousStages: true,
@@ -25,6 +26,7 @@ var testerDefinition = testerutils.TesterDefinition{
 		},
 		{
 			Slug:                    "ping-pong",
+			Number:                  2,
 			Title:                   "Respond to PING",
 			TestFunc:                testPingPongOnce,
 			ShouldRunPreviousStages: true,
@@ -32,30 +34,35 @@ var testerDefinition = testerutils.TesterDefinition{
 		{
 			Slug:                    "ping-pong-multiple",
 			Title:                   "Respond to multiple PINGs",
+			Number:                  3,
 			TestFunc:                testPingPongMultiple,
 			ShouldRunPreviousStages: true,
 		},
 		{
 			Slug:                    "concurrent-clients",
+			Number:                  4,
 			Title:                   "Handle concurrent clients",
 			TestFunc:                testPingPongConcurrent,
 			ShouldRunPreviousStages: true,
 		},
 		{
 			Slug:                    "echo",
+			Number:                  5,
 			Title:                   "Implement the ECHO command",
 			TestFunc:                testEcho,
 			ShouldRunPreviousStages: true,
 		},
 		{
 			Slug:                    "set_get",
-			Title:                   "SET & GET",
+			Number:                  6,
+			Title:                   "Implement the SET & GET commands",
 			TestFunc:                testGetSet,
 			ShouldRunPreviousStages: true,
 		},
 		{
 			Slug:                    "expiry",
-			Title:                   "Expiry!",
+			Number:                  7,
+			Title:                   "Expiry",
 			TestFunc:                testExpiry,
 			ShouldRunPreviousStages: true,
 		},
