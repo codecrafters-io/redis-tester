@@ -2,20 +2,18 @@ package internal
 
 import (
 	"fmt"
-	"strings"
-	"time"
-
 	testerutils "github.com/codecrafters-io/tester-utils"
-	"github.com/go-redis/redis"
+	"strings"
 )
 
-func antiCheatTest(harness *testerutils.StageHarness) error {
-	client := redis.NewClient(&redis.Options{
-		Addr:        "localhost:6379",
-		DialTimeout: 30 * time.Second,
-	})
+func antiCheatTest(stageHarness *testerutils.StageHarness) error {
+	b := NewRedisBinary(stageHarness)
+	if err := b.Run(); err != nil {
+		return err
+	}
 
-	logger := harness.Logger
+	client := NewRedisClient()
+	logger := stageHarness.Logger
 
 	result := client.Info("server")
 	if result.Err() != nil {
