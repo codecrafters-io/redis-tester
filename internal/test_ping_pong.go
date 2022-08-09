@@ -4,6 +4,8 @@ import (
 	"fmt"
 	testerutils "github.com/codecrafters-io/tester-utils"
 	"github.com/go-redis/redis"
+	"net"
+	"time"
 )
 
 func testPingPongOnce(stageHarness *testerutils.StageHarness) error {
@@ -13,21 +15,52 @@ func testPingPongOnce(stageHarness *testerutils.StageHarness) error {
 	}
 
 	logger := stageHarness.Logger
-	client := NewRedisClient()
 
-	logger.Debugf("Sending ping command...")
-	pong, err := client.Ping().Result()
+	retries := 0
+	var err error
+	var conn net.Conn
+
+	for {
+		conn, err = net.Dial("tcp", "localhost:6379")
+		if err != nil && retries > 15 {
+			logger.Infof("All retries failed.")
+			return err
+		}
+
+		if err != nil {
+			// Don't print errors in the first second
+			if retries > 2 {
+				logger.Infof("Failed to connect to port 6379, retrying in 1s")
+			}
+
+			retries += 1
+			time.Sleep(1000 * time.Millisecond)
+		} else {
+			break
+		}
+	}
+
+	logger.Debugln("Connection established, sending PING command (*1\\r\\n$4\\r\\nping\\r\\n)")
+
+	_, err = conn.Write([]byte("*1\r\n$4\r\nping\r\n"))
 	if err != nil {
-		logFriendlyError(logger, err)
-		return fmt.Errorf("failed to read response, err: %s", err)
+		return err
 	}
 
-	if pong != "PONG" {
-		return fmt.Errorf("Expected \"PONG\", got %#v", pong)
+	time.Sleep(100 * time.Millisecond) // Ensure we aren't reading partial responses
+
+	logger.Debugln("Reading response...")
+
+	var readBytes = make([]byte, 16)
+
+	numberOfBytesRead, err := conn.Read(readBytes)
+	if err != nil {
+		return err
 	}
 
-	logger.Debugf("Success, closing connection...")
-	client.Close()
+	if string(readBytes[:numberOfBytesRead]) != "+PONG\r\n" {
+		return fmt.Errorf("Expected response to be \"+PONG\r\n\", got %#v", string(readBytes))
+	}
 
 	return nil
 }
