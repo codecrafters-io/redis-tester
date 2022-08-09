@@ -36,6 +36,13 @@ func TestStages(t *testing.T) {
 			StdoutFixturePath:   "./test_helpers/fixtures/ping-pong/eof",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
+		"ping_pong_without_crlf": {
+			StageName:           "ping-pong",
+			CodePath:            "./test_helpers/scenarios/ping-pong/without_crlf",
+			ExpectedExitCode:    1,
+			StdoutFixturePath:   "./test_helpers/fixtures/ping-pong/without_crlf",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
 		"ping_pong_multiple_empty_reply": {
 			StageName:           "ping-pong-multiple",
 			CodePath:            "./test_helpers/scenarios/ping-pong-multiple/empty-reply",
