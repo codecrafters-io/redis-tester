@@ -7,7 +7,6 @@ This is a program that validates your progress on the Redis challenge.
 - Following environment variables:
   - `CODECRAFTERS_SUBMISSION_DIR` - root of the user's code submission
   - `CODECRAFTERS_CURRENT_STAGE_SLUG` - current stage the user is on
-  - `CODECRAFTERS_COURSE_PAGE_URL` - URL to view next stage instructions
 
 # User code requirements
 
