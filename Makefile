@@ -9,31 +9,26 @@ release:
 
 build:
 	go build -o dist/main.out ./cmd/tester
-	go build -o dist/starter.out ./cmd/starter_tester
 
 test:
 	go test -v ./internal/
 
 test_starter_with_redis: build
 	CODECRAFTERS_SUBMISSION_DIR=./internal/test_helpers/pass_all \
-	CODECRAFTERS_COURSE_PAGE_URL="https://dummy.io" \
 	dist/starter.out
 
 test_with_redis: build
 	CODECRAFTERS_SUBMISSION_DIR=./internal/test_helpers/pass_all \
-	CODECRAFTERS_COURSE_PAGE_URL="https://dummy.io" \
 	CODECRAFTERS_CURRENT_STAGE_SLUG="expiry" \
 	dist/main.out
 
 test_stage_1_failure: build
 	CODECRAFTERS_SUBMISSION_DIR=./internal/test_helpers/scenarios/bind/failure \
-	CODECRAFTERS_COURSE_PAGE_URL="https://dummy.io" \
 	CODECRAFTERS_CURRENT_STAGE_SLUG="init" \
 	dist/main.out
 
 test_ping_pong_eof: build
 	CODECRAFTERS_SUBMISSION_DIR=./internal/test_helpers/scenarios/ping-pong/eof \
-	CODECRAFTERS_COURSE_PAGE_URL="https://dummy.io" \
 	CODECRAFTERS_CURRENT_STAGE_SLUG="ping-pong" \
 	dist/main.out
 
@@ -41,7 +36,6 @@ test_tmp: build
 	cd /tmp/0d8e4ba11c57085f && \
 	CODECRAFTERS_SUBMISSION_DIR=/tmp/0d8e4ba11c57085f  \
 	CODECRAFTERS_CURRENT_STAGE_SLUG="ping-pong" \
-	CODECRAFTERS_COURSE_PAGE_URL="test" \
 	$(shell pwd)/dist/main.out
 
 copy_course_file:

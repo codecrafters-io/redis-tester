@@ -24,22 +24,3 @@ jobs:
           args: release -f main.goreleaser.yml --rm-dist
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  publish_starter_tester:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Unshallow
-        run: git fetch --prune --unshallow
-      - name: Set up Go
-        uses: actions/setup-go@v1
-        with:
-          go-version: 1.17.x
-      - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v1
-        with:
-          version: v0.177.0
-          args: release -f starter.goreleaser.yml --rm-dist
-        env:
-          GITHUB_TOKEN: ${{ secrets.STARTER_PUBLISH_GITHUB_TOKEN }}
