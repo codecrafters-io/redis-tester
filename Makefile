@@ -45,5 +45,8 @@ copy_course_file:
 		| base64 -d \
 		> internal/test_helpers/course_definition.yml
 
+record_fixtures:
+	CODECRAFTERS_RECORD_FIXTURES=true make test
+
 update_tester_utils:
 	go get -u github.com/codecrafters-io/tester-utils

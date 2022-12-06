@@ -44,6 +44,7 @@ func testPingPongOnce(stageHarness *testerutils.StageHarness) error {
 
 	_, err = conn.Write([]byte("*1\r\n$4\r\nping\r\n"))
 	if err != nil {
+		logFriendlyError(logger, err)
 		return err
 	}
 
@@ -55,6 +56,7 @@ func testPingPongOnce(stageHarness *testerutils.StageHarness) error {
 
 	numberOfBytesRead, err := conn.Read(readBytes)
 	if err != nil {
+		logFriendlyError(logger, err)
 		return err
 	}
 
