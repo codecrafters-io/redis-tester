@@ -19,16 +19,16 @@ func testGetSet(stageHarness *testerutils.StageHarness) error {
 	client := NewRedisClient()
 
 	strings := [10]string{
-		"abcd",
-		"defg",
-		"heya",
-		"heya",
-		"heya",
-		"heya",
-		"heya",
-		"heya",
-		"heya",
-		"heya",
+		"hello",
+		"world",
+		"mangos",
+		"apples",
+		"oranges",
+		"watermelons",
+		"grapes",
+		"pears",
+		"horses",
+		"elephants",
 	}
 
 	randomKey := strings[rand.Intn(10)]
