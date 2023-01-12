@@ -61,10 +61,11 @@ func testPingPongOnce(stageHarness *testerutils.StageHarness) error {
 	}
 
 	actual := string(readBytes[:numberOfBytesRead])
-	expected := "+PONG\r\n"
+	expected1 := "+PONG\r\n"
+	expected2 := "$4\r\nPONG\r\n"
 
-	if actual != expected {
-		return fmt.Errorf("expected response to be %#v, got %#v", expected, actual)
+	if actual != expected1 && actual != expected2 {
+		return fmt.Errorf("expected response to be either %#v or %#v, got %#v", expected1, expected2, actual)
 	}
 
 	return nil
