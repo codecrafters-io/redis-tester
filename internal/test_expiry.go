@@ -49,6 +49,9 @@ func testExpiry(stageHarness *testerutils.StageHarness) error {
 	logger.Debugf("Running command: get %s", randomKey)
 	resp, err = client.Get(randomKey).Result()
 	if err != nil {
+		if err == redis.Nil {
+			return fmt.Errorf("Expected %#v, got nil", randomValue)
+		}
 		logFriendlyError(logger, err)
 		return err
 	}
