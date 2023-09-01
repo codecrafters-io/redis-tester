@@ -2,7 +2,6 @@ package internal
 
 import (
 	"fmt"
-	"io"
 	"net"
 	"time"
 
@@ -42,16 +41,7 @@ func testPingPongOnce(stageHarness *testerutils.StageHarness) error {
 		}
 	}
 
-	logger.Debugln("Verifying connection has no data...")
-
-	var checkBytes = make([]byte, 1)
-	_, err = conn.Read(checkBytes)
-	if err != net.ErrClosed && err != io.EOF {
-		return fmt.Errorf("Connection already has data, expected it to be empty before sending PING command.")
-	}
-
 	logger.Debugln("Connection established, sending PING command (*1\\r\\n$4\\r\\nping\\r\\n)")
-
 
 	_, err = conn.Write([]byte("*1\r\n$4\r\nping\r\n"))
 	if err != nil {
