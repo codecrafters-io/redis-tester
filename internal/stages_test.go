@@ -1,9 +1,10 @@
 package internal
 
 import (
-	tester_utils "github.com/codecrafters-io/tester-utils"
 	"regexp"
 	"testing"
+
+	tester_utils "github.com/codecrafters-io/tester-utils"
 )
 
 func TestStages(t *testing.T) {
@@ -41,6 +42,13 @@ func TestStages(t *testing.T) {
 			CodePath:            "./test_helpers/scenarios/ping-pong/without_crlf",
 			ExpectedExitCode:    1,
 			StdoutFixturePath:   "./test_helpers/fixtures/ping-pong/without_crlf",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
+		"ping_pong_without_read_multiple_pongs": {
+			StageName:           "ping-pong",
+			CodePath:            "./test_helpers/scenarios/ping-pong/without_read_multiple_pongs",
+			ExpectedExitCode:    1,
+			StdoutFixturePath:   "./test_helpers/fixtures/ping-pong/without_read_multiple_pongs",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 	}
