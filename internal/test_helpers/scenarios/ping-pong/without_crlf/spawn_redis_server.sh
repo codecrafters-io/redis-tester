@@ -10,5 +10,4 @@ sock.bind(('', 6379))
 sock.listen(1)
 
 conn, cli_addr = sock.accept()
-conn.recv(1024)
 conn.send(b"+PONG")

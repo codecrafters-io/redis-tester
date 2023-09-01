@@ -66,7 +66,7 @@ func testPingPongOnce(stageHarness *testerutils.StageHarness) error {
 	expected2 := "$4\r\nPONG\r\n"
 
 	if actual != expected1 && actual != expected2 {
-		return fmt.Errorf("expected response to be either %#v or %#v, got %#v", expected1, expected2, actual)
+		return fmt.Errorf("expected response to be either %#v (%d bytes) or %#v (%d bytes), got %#v (%d bytes)", expected1, len(expected1), expected2, len(expected2), actual, len(actual))
 	}
 
 	return nil
