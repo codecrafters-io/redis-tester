@@ -7,5 +7,8 @@
 # DON'T EDIT THIS!
 set -e
 tmpFile=$(mktemp)
-go build -o "$tmpFile" app/*.go
+
+(cd $(dirname "$0") &&
+    go build -o "$tmpFile" app/main.go)
+
 exec "$tmpFile"
