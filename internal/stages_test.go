@@ -4,48 +4,48 @@ import (
 	"regexp"
 	"testing"
 
-	tester_utils "github.com/codecrafters-io/tester-utils"
+	tester_utils_testing "github.com/codecrafters-io/tester-utils/testing"
 )
 
 func TestStages(t *testing.T) {
-	testCases := map[string]tester_utils.TesterOutputTestCase{
+	testCases := map[string]tester_utils_testing.TesterOutputTestCase{
 		"bind_failure": {
-			StageName:           "init",
+			UntilStageSlug:      "init",
 			CodePath:            "./test_helpers/scenarios/bind/failure",
 			ExpectedExitCode:    1,
 			StdoutFixturePath:   "./test_helpers/fixtures/bind/failure",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 		"bind_timeout": {
-			StageName:           "init",
+			UntilStageSlug:      "init",
 			CodePath:            "./test_helpers/scenarios/bind/timeout",
 			ExpectedExitCode:    1,
 			StdoutFixturePath:   "./test_helpers/fixtures/bind/timeout",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 		"bind_success": {
-			StageName:           "init",
+			UntilStageSlug:      "init",
 			CodePath:            "./test_helpers/scenarios/bind/success",
 			ExpectedExitCode:    0,
 			StdoutFixturePath:   "./test_helpers/fixtures/bind/success",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 		"ping_pong_eof": {
-			StageName:           "ping-pong",
+			UntilStageSlug:      "ping-pong",
 			CodePath:            "./test_helpers/scenarios/ping-pong/eof",
 			ExpectedExitCode:    1,
 			StdoutFixturePath:   "./test_helpers/fixtures/ping-pong/eof",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 		"ping_pong_without_crlf": {
-			StageName:           "ping-pong",
+			UntilStageSlug:      "ping-pong",
 			CodePath:            "./test_helpers/scenarios/ping-pong/without_crlf",
 			ExpectedExitCode:    1,
 			StdoutFixturePath:   "./test_helpers/fixtures/ping-pong/without_crlf",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 		"ping_pong_without_read_multiple_pongs": {
-			StageName:           "ping-pong",
+			UntilStageSlug:      "ping-pong",
 			CodePath:            "./test_helpers/scenarios/ping-pong/without_read_multiple_pongs",
 			ExpectedExitCode:    1,
 			StdoutFixturePath:   "./test_helpers/fixtures/ping-pong/without_read_multiple_pongs",
@@ -53,7 +53,7 @@ func TestStages(t *testing.T) {
 		},
 	}
 
-	tester_utils.TestTesterOutput(t, testerDefinition, testCases)
+	tester_utils_testing.TestTesterOutput(t, testerDefinition, testCases)
 }
 
 func normalizeTesterOutput(testerOutput []byte) []byte {
