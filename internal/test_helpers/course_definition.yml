@@ -1,6 +1,6 @@
 slug: "redis"
 name: "Redis"
-description_md: |
+description_md: |-
   In this challenge, you'll build a toy Redis clone
   that's capable of handling basic commands like PING, GET
   and SET. Along the way, we'll learn about event loops, the Redis
@@ -13,7 +13,7 @@ starter_repos:
   go: https://github.com/codecrafters-io/redis-starter-golang
   php: https://github.com/codecrafters-io/redis-starter-php
 
-marketing_intro_md: |
+marketing_intro_md: |-
   This is the first CodeCrafters challenge. We're currently running [early
   access](/early-access) trials.
 
@@ -24,7 +24,7 @@ marketing_intro_md: |
 stages:
   - slug: "init"
     name: "Bind to a port"
-    description_md: |
+    description_md: |-
       Let's start out with some basics.
 
       In this stage, CodeCrafters will try to bind to port 6379, which is the default
@@ -33,13 +33,13 @@ stages:
       Your task is to start a TCP server on port 6379. We'd like to make the first
       stage easy to pass, so we've included steps on how to pass this stage in the
       readme.
-    marketing_md: |
+    marketing_md: |-
       In this stage, you'll start a TCP server on port 6379, which is the
       default port that Redis uses.
 
   - slug: "ping-pong"
     name: "Respond to PING"
-    description_md: |
+    description_md: |-
       In this stage, you'll respond to the
       [PING](https://redis.io/commands/ping) command.
 
@@ -51,26 +51,26 @@ stages:
       just sending "PONG" back won't suffice. You'll need to encode it as a
       [RESP simple
       string](https://redis.io/topics/protocol#resp-simple-strings).
-    marketing_md: |
+    marketing_md: |-
       In this stage, you'll respond to the
       [PING](https://redis.io/commands/ping) command. You'll use [the Redis
       protocol](https://redis.io/topics/protocol) to encode the reply. 
 
   - slug: "ping-pong-multiple"
     name: "Respond to multiple PINGs"
-    description_md: |
+    description_md: |-
       In this stage, you'll respond to multiple
       [PING](https://redis.io/commands/ping) commands, sent by the same client.
 
       You'll need to run a loop that reads input from a client and sends a
       response back.
-    marketing_md: |
+    marketing_md: |-
       In this stage, you'll respond to multiple
       [PING](https://redis.io/commands/ping) commands sent by the same client.
 
   - slug: "concurrent-clients"
     name: "Handle concurrent clients"
-    description_md: |
+    description_md: |-
       In this stage, your server will need to handle multiple concurrent
       clients. Just like the previous stages, all clients will only send `PING`
       commands for now.
@@ -78,7 +78,7 @@ stages:
       To achieve this, you'll need to either use threads, or, if you're feeling
       adventurous, an [Event Loop](https://en.wikipedia.org/wiki/Event_Loop) (like
       the official Redis implementation does).
-    marketing_md: |
+    marketing_md: |-
       In this stage, you'll add support for multiple concurrent clients to your
       Redis server. To achieve this you'll use an [Event
       Loop](https://en.wikipedia.org/wiki/Event_loop),
@@ -86,7 +86,7 @@ stages:
 
   - slug: "echo"
     name: "Implement the ECHO command"
-    description_md: |
+    description_md: |-
       In this stage, you'll respond to the
       [ECHO](https://redis.io/commands/echo) command.
 
@@ -99,7 +99,7 @@ stages:
 
       Seems confusing? Read up about [sending commands to a Redis
       server](https://redis.io/topics/protocol#sending-commands-to-a-redis-server).
-    marketing_md: |
+    marketing_md: |-
       In this stage, you'll respond to the
       [ECHO](https://redis.io/commands/echo) command. You'll parse user input
       according to the [the Redis protocol
@@ -108,22 +108,22 @@ stages:
   # TODO: Change this to use hyphens
   - slug: "set_get"
     name: "Implement the SET & GET commands"
-    description_md: |
+    description_md: |-
       In this stage, you'll need to implement the
       [SET](https://redis.io/commands/set) &
       [GET](https://redis.io/commands/get) commands.
-    marketing_md: |
+    marketing_md: |-
       In this stage, you'll need to implement the
       [SET](https://redis.io/commands/set) &
       [GET](https://redis.io/commands/get) commands.
 
   - slug: "expiry"
     name: "Expiry"
-    description_md: |
+    description_md: |-
       In this stage, you'll need to support setting a key with an expiry. The
       expiry is provided using the "PX" argument to the
       [SET](https://redis.io/commands/set) command.
-    marketing_md: |
+    marketing_md: |-
       In this stage, you'll add support for setting a key with an expiry. The
       expiry is provided using the "PX" argument to the
       [SET](https://redis.io/commands/set) command.
