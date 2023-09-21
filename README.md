@@ -6,10 +6,10 @@ This is a program that validates your progress on the Redis challenge.
 
 - Following environment variables:
   - `CODECRAFTERS_SUBMISSION_DIR` - root of the user's code submission
-  - `CODECRAFTERS_CURRENT_STAGE_SLUG` - current stage the user is on
+  - `CODECRAFTERS_TEST_CASES_JSON` - test cases in JSON format
 
 # User code requirements
 
 - A binary named `spawn_redis_server.sh` that spins up the Redis server.
-- A file named `codecrafters.yml`, with the following values: 
+- A file named `codecrafters.yml`, with the following values:
   - `debug`
