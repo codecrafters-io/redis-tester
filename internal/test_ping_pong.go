@@ -6,6 +6,7 @@ import (
 	"time"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
+	logger "github.com/codecrafters-io/tester-utils/logger"
 	"github.com/go-redis/redis"
 )
 
@@ -137,7 +138,7 @@ func testPingPongConcurrent(stageHarness *testerutils.StageHarness) error {
 	return nil
 }
 
-func runPing(logger *testerutils.Logger, client *redis.Client, clientNum int) error {
+func runPing(logger *logger.Logger, client *redis.Client, clientNum int) error {
 	logger.Debugf("client-%d: Sending ping command...", clientNum)
 	pong, err := client.Ping().Result()
 	if err != nil {

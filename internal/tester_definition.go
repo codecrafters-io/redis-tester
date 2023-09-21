@@ -6,65 +6,42 @@ import (
 )
 
 var testerDefinition = testerutils.TesterDefinition{
-	AntiCheatStages: []testerutils.Stage{
+	AntiCheatTestCases: []testerutils.TestCase{
 		{
-			Slug:                    "anti-cheat-1",
-			Title:                   "Anti-cheat 1",
-			TestFunc:                antiCheatTest,
-			ShouldRunPreviousStages: true,
+			Slug:     "anti-cheat-1",
+			TestFunc: antiCheatTest,
 		},
 	},
 	ExecutableFileName: "spawn_redis_server.sh",
-	Stages: []testerutils.Stage{
+	TestCases: []testerutils.TestCase{
 		{
-			Slug:                    "init",
-			Number:                  1,
-			Title:                   "Bind to a port",
-			TestFunc:                testBindToPort,
-			ShouldRunPreviousStages: true,
-			Timeout:                 15 * time.Second,
+			Slug:     "init",
+			TestFunc: testBindToPort,
+			Timeout:  15 * time.Second,
 		},
 		{
-			Slug:                    "ping-pong",
-			Number:                  2,
-			Title:                   "Respond to PING",
-			TestFunc:                testPingPongOnce,
-			ShouldRunPreviousStages: true,
+			Slug:     "ping-pong",
+			TestFunc: testPingPongOnce,
 		},
 		{
-			Slug:                    "ping-pong-multiple",
-			Title:                   "Respond to multiple PINGs",
-			Number:                  3,
-			TestFunc:                testPingPongMultiple,
-			ShouldRunPreviousStages: true,
+			Slug:     "ping-pong-multiple",
+			TestFunc: testPingPongMultiple,
 		},
 		{
-			Slug:                    "concurrent-clients",
-			Number:                  4,
-			Title:                   "Handle concurrent clients",
-			TestFunc:                testPingPongConcurrent,
-			ShouldRunPreviousStages: true,
+			Slug:     "concurrent-clients",
+			TestFunc: testPingPongConcurrent,
 		},
 		{
-			Slug:                    "echo",
-			Number:                  5,
-			Title:                   "Implement the ECHO command",
-			TestFunc:                testEcho,
-			ShouldRunPreviousStages: true,
+			Slug:     "echo",
+			TestFunc: testEcho,
 		},
 		{
-			Slug:                    "set_get",
-			Number:                  6,
-			Title:                   "Implement the SET & GET commands",
-			TestFunc:                testGetSet,
-			ShouldRunPreviousStages: true,
+			Slug:     "set_get",
+			TestFunc: testGetSet,
 		},
 		{
-			Slug:                    "expiry",
-			Number:                  7,
-			Title:                   "Expiry",
-			TestFunc:                testExpiry,
-			ShouldRunPreviousStages: true,
+			Slug:     "expiry",
+			TestFunc: testExpiry,
 		},
 	},
 }
