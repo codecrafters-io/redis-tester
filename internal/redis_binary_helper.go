@@ -5,12 +5,14 @@ import (
 	"net"
 	"time"
 
+	executable "github.com/codecrafters-io/tester-utils/executable"
+	logger "github.com/codecrafters-io/tester-utils/logger"
 	testerutils "github.com/codecrafters-io/tester-utils"
 )
 
 type RedisBinary struct {
-	executable *testerutils.Executable
-	logger     *testerutils.Logger
+	executable *executable.Executable
+	logger     *logger.Logger
 }
 
 func NewRedisBinary(stageHarness *testerutils.StageHarness) *RedisBinary {
