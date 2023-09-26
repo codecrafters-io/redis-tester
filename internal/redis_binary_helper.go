@@ -3,16 +3,18 @@ package internal
 import (
 	"context"
 	"net"
+	"strings"
 	"time"
 
+	testerutils "github.com/codecrafters-io/tester-utils"
 	executable "github.com/codecrafters-io/tester-utils/executable"
 	logger "github.com/codecrafters-io/tester-utils/logger"
-	testerutils "github.com/codecrafters-io/tester-utils"
 )
 
 type RedisBinary struct {
 	executable *executable.Executable
 	logger     *logger.Logger
+	args       []string
 }
 
 func NewRedisBinary(stageHarness *testerutils.StageHarness) *RedisBinary {
@@ -27,8 +29,13 @@ func NewRedisBinary(stageHarness *testerutils.StageHarness) *RedisBinary {
 }
 
 func (b *RedisBinary) Run() error {
-	b.logger.Debugf("Running program")
-	if err := b.executable.Start(); err != nil {
+	if b.args == nil || len(b.args) == 0 {
+		b.logger.Debugf("$ ./spawn_redis_server.sh")
+	} else {
+		b.logger.Debugf("$ ./spawn_redis_server.sh %s", strings.Join(b.args, " "))
+	}
+
+	if err := b.executable.Start(b.args...); err != nil {
 		return err
 	}
 

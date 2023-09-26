@@ -51,6 +51,13 @@ func TestStages(t *testing.T) {
 			StdoutFixturePath:   "./test_helpers/fixtures/ping-pong/without_read_multiple_pongs",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
+		"rdb_config_pass": {
+			UntilStageSlug:      "rdb-config",
+			CodePath:            "./test_helpers/pass_all",
+			ExpectedExitCode:    0,
+			StdoutFixturePath:   "./test_helpers/fixtures/rdb-config/pass",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
 	}
 
 	tester_utils_testing.TestTesterOutput(t, testerDefinition, testCases)
