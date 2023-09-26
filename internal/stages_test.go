@@ -68,12 +68,12 @@ func TestStages(t *testing.T) {
 
 func normalizeTesterOutput(testerOutput []byte) []byte {
 	replacements := map[string][]*regexp.Regexp{
-		"tcp_port": [regexp.MustCompile("read tcp 127.0.0.1:\\d+->127.0.0.1:6379: read: connection reset by peer")],
-		"tmp_dir":  [regexp.MustCompile("/var/folders/[^ ]+"), regexp.MustCompile("/tmp/[^ ]+")][0],
+		"tcp_port": {regexp.MustCompile("read tcp 127.0.0.1:\\d+->127.0.0.1:6379: read: connection reset by peer")},
+		"tmp_dir":  {regexp.MustCompile("/var/folders/[^ ]+"), regexp.MustCompile("/tmp/[^ ]+")},
 	}
 
 	for replacement, regexes := range replacements {
-		for  _, regex := range regexes {
+		for _, regex := range regexes {
 			testerOutput = regex.ReplaceAll(testerOutput, []byte(replacement))
 		}
 	}
