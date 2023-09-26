@@ -30,7 +30,7 @@ test_tmp: build
 
 copy_course_file:
 	hub api \
-		repos/codecrafters-io/build-your-own-redis/contents/course-definition.yml \
+		repos/codecrafters-io/build-your-own-redis/contents/course-definition.yml?ref=add-persistence-support \
 		| jq -r .content \
 		| base64 -d \
 		> internal/test_helpers/course_definition.yml
