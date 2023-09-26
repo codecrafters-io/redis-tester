@@ -10,3 +10,6 @@ require (
 	github.com/onsi/gomega v1.8.1 // indirect
 	golang.org/x/sys v0.12.0 // indirect
 )
+
+// Use this to test locally
+replace github.com/codecrafters-io/tester-utils v0.2.0 => /Users/rohitpaulk/experiments/codecrafters/tester-utils
