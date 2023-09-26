@@ -21,6 +21,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install redis
 
+      - name: "Stop redis service"
+        run: sudo service redis-server stop
+
       - run: redis-cli ping
 
       - uses: actions/setup-python@v2
