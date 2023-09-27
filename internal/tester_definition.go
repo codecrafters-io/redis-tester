@@ -5,7 +5,6 @@ import (
 
 	testerutils "github.com/codecrafters-io/tester-utils"
 )
-
 var testerDefinition = testerutils.TesterDefinition{
 	AntiCheatTestCases: []testerutils.TestCase{
 		{
