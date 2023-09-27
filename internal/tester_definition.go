@@ -56,5 +56,9 @@ var testerDefinition = testerutils.TesterDefinition{
 			Slug:     "rdb-read-string-value",
 			TestFunc: testRdbReadStringValue,
 		},
+		{
+			Slug:     "rdb-read-multiple-keys",
+			TestFunc: testRdbReadMultipleKeys,
+		},
 	},
 }

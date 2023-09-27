@@ -2,6 +2,7 @@ package internal
 
 import (
 	"fmt"
+	"sort"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
@@ -15,11 +16,16 @@ func testRdbReadMultipleKeys(stageHarness *testerutils.StageHarness) error {
 
 	defer RDBFileCreator.Cleanup()
 
-	randomKeyAndValue := testerutils_random.RandomWords(2)
-	randomKey := randomKeyAndValue[0]
-	randomValue := randomKeyAndValue[1]
+	keyCount := testerutils_random.RandomInt(3, 6)
+	keys := testerutils_random.RandomWords(keyCount)
+	values := testerutils_random.RandomWords(keyCount)
 
-	if err := RDBFileCreator.Write([]KeyValuePair{{key: randomKey, value: randomValue}}); err != nil {
+	keyValuePairs := make([]KeyValuePair, keyCount)
+	for i := 0; i < keyCount; i++ {
+		keyValuePairs[i] = KeyValuePair{key: keys[i], value: values[i]}
+	}
+
+	if err := RDBFileCreator.Write(keyValuePairs); err != nil {
 		return fmt.Errorf("CodeCrafters Tester Error: %s", err)
 	}
 
@@ -43,12 +49,20 @@ func testRdbReadMultipleKeys(stageHarness *testerutils.StageHarness) error {
 		return err
 	}
 
-	if len(resp) != 1 {
-		return fmt.Errorf("Expected response to contain exactly one element, got %v", len(resp))
+	if len(resp) != len(keys) {
+		return fmt.Errorf("Expected response to contain exactly %v elements, got %v", len(keys), len(resp))
 	}
 
-	if resp[0] != randomKey {
-		return fmt.Errorf("Expected first element of response to be %v, got %v", randomKey, resp[0])
+	expectedKeysSorted := make([]string, len(keys))
+	copy(expectedKeysSorted, keys)
+	sort.Strings(expectedKeysSorted)
+
+	actualKeysSorted := make([]string, len(resp))
+	copy(actualKeysSorted, resp)
+	sort.Strings(actualKeysSorted)
+
+	if fmt.Sprintf("%v", actualKeysSorted) != fmt.Sprintf("%v", expectedKeysSorted) {
+		return fmt.Errorf("Expected response to be %v, got %v (sorted alphabetically for comparison)", expectedKeysSorted, actualKeysSorted)
 	}
 
 	client.Close()
