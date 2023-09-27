@@ -4,6 +4,7 @@ builds:
     env:
       - CGO_ENABLED=0
     goarch: [amd64, arm64]
+    goos: [linux, darwin]
 
 archives:
   - name_template: "{{ .Tag }}_{{ .Os }}_{{ .Arch }}"
