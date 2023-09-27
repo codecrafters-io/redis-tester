@@ -1,9 +1,11 @@
 package internal
 
 import (
-	testerutils "github.com/codecrafters-io/tester-utils"
 	"time"
+
+	testerutils "github.com/codecrafters-io/tester-utils"
 )
+
 var testerDefinition = testerutils.TesterDefinition{
 	AntiCheatTestCases: []testerutils.TestCase{
 		{
@@ -43,8 +45,12 @@ var testerDefinition = testerutils.TesterDefinition{
 			TestFunc: testExpiry,
 		},
 		{
-			Slug: "rdb-config",
+			Slug:     "rdb-config",
 			TestFunc: testRdbConfig,
+		},
+		{
+			Slug:     "rdb-read-key",
+			TestFunc: testRdbReadKey,
 		},
 	},
 }

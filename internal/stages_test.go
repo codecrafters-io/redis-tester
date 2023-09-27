@@ -61,6 +61,13 @@ func TestStages(t *testing.T) {
 			StdoutFixturePath:   "./test_helpers/fixtures/rdb-config/pass",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
+		"rdb_read_key_pass": {
+			UntilStageSlug:      "rdb-read-key",
+			CodePath:            "./test_helpers/pass_all",
+			ExpectedExitCode:    0,
+			StdoutFixturePath:   "./test_helpers/fixtures/rdb-read-key/pass",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
 	}
 
 	tester_utils_testing.TestTesterOutput(t, testerDefinition, testCases)
