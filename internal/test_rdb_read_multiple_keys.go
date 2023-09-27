@@ -7,7 +7,7 @@ import (
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 )
 
-func testRdbReadKey(stageHarness *testerutils.StageHarness) error {
+func testRdbReadMultipleKeys(stageHarness *testerutils.StageHarness) error {
 	RDBFileCreator, err := NewRDBFileCreator(stageHarness)
 	if err != nil {
 		return fmt.Errorf("CodeCrafters Tester Error: %s", err)

@@ -7,7 +7,7 @@ import (
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 )
 
-func testRdbReadKey(stageHarness *testerutils.StageHarness) error {
+func testRdbReadStringValue(stageHarness *testerutils.StageHarness) error {
 	RDBFileCreator, err := NewRDBFileCreator(stageHarness)
 	if err != nil {
 		return fmt.Errorf("CodeCrafters Tester Error: %s", err)
@@ -36,19 +36,15 @@ func testRdbReadKey(stageHarness *testerutils.StageHarness) error {
 	logger := stageHarness.Logger
 	client := NewRedisClient()
 
-	logger.Infof("$ redis-cli KEYS *")
-	resp, err := client.Keys("*").Result()
+	logger.Infof(fmt.Sprintf("$ redis-cli GET %s", randomKey))
+	resp, err := client.Get(randomKey).Result()
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
 	}
 
-	if len(resp) != 1 {
-		return fmt.Errorf("Expected response to contain exactly one element, got %v", len(resp))
-	}
-
-	if resp[0] != randomKey {
-		return fmt.Errorf("Expected first element of response to be %v, got %v", randomKey, resp[0])
+	if resp != randomValue {
+		return fmt.Errorf("Expected response to be %v, got %v", randomValue, resp)
 	}
 
 	client.Close()
