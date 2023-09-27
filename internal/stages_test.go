@@ -82,6 +82,13 @@ func TestStages(t *testing.T) {
 			StdoutFixturePath:   "./test_helpers/fixtures/rdb-read-multiple-keys/pass",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
+		"rdb_read_multiple_string_values_pass": {
+			UntilStageSlug:      "rdb-read-multiple-string-values",
+			CodePath:            "./test_helpers/pass_all",
+			ExpectedExitCode:    0,
+			StdoutFixturePath:   "./test_helpers/fixtures/rdb-read-multiple-string-values/pass",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
 	}
 
 	tester_utils_testing.TestTesterOutput(t, testerDefinition, testCases)
