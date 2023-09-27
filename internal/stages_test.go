@@ -89,6 +89,13 @@ func TestStages(t *testing.T) {
 			StdoutFixturePath:   "./test_helpers/fixtures/rdb-read-multiple-string-values/pass",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
+		"rdb_read_value_with_expiry_pass": {
+			UntilStageSlug:      "rdb-read-value-with-expiry",
+			CodePath:            "./test_helpers/pass_all",
+			ExpectedExitCode:    0,
+			StdoutFixturePath:   "./test_helpers/fixtures/rdb-read-value-with-expiry/pass",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
 	}
 
 	tester_utils_testing.TestTesterOutput(t, testerDefinition, testCases)

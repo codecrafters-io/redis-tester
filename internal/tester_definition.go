@@ -5,6 +5,7 @@ import (
 
 	testerutils "github.com/codecrafters-io/tester-utils"
 )
+
 var testerDefinition = testerutils.TesterDefinition{
 	AntiCheatTestCases: []testerutils.TestCase{
 		{
@@ -62,6 +63,10 @@ var testerDefinition = testerutils.TesterDefinition{
 		{
 			Slug:     "rdb-read-multiple-string-values",
 			TestFunc: testRdbReadMultipleStringValues,
+		},
+		{
+			Slug:     "rdb-read-value-with-expiry",
+			TestFunc: testRdbReadValueWithExpiry,
 		},
 	},
 }
