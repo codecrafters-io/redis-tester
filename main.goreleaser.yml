@@ -3,6 +3,7 @@ builds:
     binary: tester
     env:
       - CGO_ENABLED=0
+    goarch: [amd64, arm64]
 
 archives:
   - name_template: "{{ .Tag }}_{{ .Os }}_{{ .Arch }}"
