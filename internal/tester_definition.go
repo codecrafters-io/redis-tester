@@ -4,7 +4,6 @@ import (
 	testerutils "github.com/codecrafters-io/tester-utils"
 	"time"
 )
-
 var testerDefinition = testerutils.TesterDefinition{
 	AntiCheatTestCases: []testerutils.TestCase{
 		{
@@ -42,6 +41,10 @@ var testerDefinition = testerutils.TesterDefinition{
 		{
 			Slug:     "expiry",
 			TestFunc: testExpiry,
+		},
+		{
+			Slug: "rdb-config",
+			TestFunc: testRdbConfig,
 		},
 	},
 }

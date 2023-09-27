@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"os"
 	"regexp"
 	"testing"
 
@@ -8,6 +9,8 @@ import (
 )
 
 func TestStages(t *testing.T) {
+	os.Setenv("CODECRAFTERS_RANDOM_SEED", "1234567890")
+
 	testCases := map[string]tester_utils_testing.TesterOutputTestCase{
 		"bind_failure": {
 			UntilStageSlug:      "init",
@@ -51,12 +54,29 @@ func TestStages(t *testing.T) {
 			StdoutFixturePath:   "./test_helpers/fixtures/ping-pong/without_read_multiple_pongs",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
+		"rdb_config_pass": {
+			UntilStageSlug:      "rdb-config",
+			CodePath:            "./test_helpers/pass_all",
+			ExpectedExitCode:    0,
+			StdoutFixturePath:   "./test_helpers/fixtures/rdb-config/pass",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
 	}
 
 	tester_utils_testing.TestTesterOutput(t, testerDefinition, testCases)
 }
 
 func normalizeTesterOutput(testerOutput []byte) []byte {
-	re, _ := regexp.Compile("read tcp 127.0.0.1:\\d+->127.0.0.1:6379: read: connection reset by peer")
-	return re.ReplaceAll(testerOutput, []byte("read tcp 127.0.0.1:xxxxx->127.0.0.1:6379: read: connection reset by peer"))
+	replacements := map[string][]*regexp.Regexp{
+		"tcp_port": {regexp.MustCompile("read tcp 127.0.0.1:\\d+->127.0.0.1:6379: read: connection reset by peer")},
+		" tmp_dir ":  {regexp.MustCompile(" /private/var/folders/[^ ]+ "), regexp.MustCompile(" /tmp/[^ ]+ ")},
+	}
+
+	for replacement, regexes := range replacements {
+		for _, regex := range regexes {
+			testerOutput = regex.ReplaceAll(testerOutput, []byte(replacement))
+		}
+	}
+
+	return testerOutput
 }

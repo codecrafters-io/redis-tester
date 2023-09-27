@@ -1,92 +1,180 @@
 slug: "redis"
-name: "Redis"
-description_md: |-
+name: "Build your own Redis"
+short_name: "Redis"
+release_status: "live"
+
+description_md: |
   In this challenge, you'll build a toy Redis clone
   that's capable of handling basic commands like PING, GET
   and SET. Along the way, we'll learn about event loops, the Redis
   Protocol and more.
 
-supported_languages: ["python", "go", "php"]
-starter_repos:
-  python: https://github.com/codecrafters-io/redis-starter-py
-  swift: https://github.com/codecrafters-io/redis-starter-swift
-  go: https://github.com/codecrafters-io/redis-starter-golang
-  php: https://github.com/codecrafters-io/redis-starter-php
+short_description_md: |
+  Learn about TCP servers, the Redis protocol and more
 
-marketing_intro_md: |-
-  This is the first CodeCrafters challenge. We're currently running [early
-  access](/early-access) trials.
+completion_percentage: 30
+concept_slugs: ["network-protocols", "tcp-overview"]
 
-  In this challenge, you’ll build an application that can speak the Redis
-  protocol, and is capable of serving basic commands like PING, ECHO, SET and
-  GET. Along the way, you’ll learn about TCP servers, event loops and more.
+languages:
+  - slug: "c"
+  - slug: "clojure"
+  - slug: "cpp"
+  - slug: "crystal"
+  - slug: "csharp"
+  - slug: "elixir"
+  - slug: "go"
+  - slug: "haskell"
+  - slug: "java"
+  - slug: "javascript"
+  - slug: "php"
+  - slug: "python"
+  - slug: "ruby"
+  - slug: "rust"
+
+marketing:
+  difficulty: medium
+  sample_extension_idea_title: "Persistence"
+  sample_extension_idea_description: "A Redis server that can read and write .rdb files"
+  testimonials:
+    - author_name: "Charles Guo"
+      author_description: "Software Engineer, Stripe"
+      author_avatar: "https://codecrafters.io/images/external/testimonials/charles-guo.png"
+      link: "https://github.com/shaldengeki"
+      text: |
+        The Redis challenge was extremely fun. I ended up having to read the
+        Redis Protocol specification doc pretty carefully in its entirety! The result
+        felt like lightly-guided independent study, if that makes sense. (Which, again, was lots of fun)
+    - author_name: "Patrick Burris"
+      author_description: "Senior Software Developer, CenturyLink"
+      author_avatar: "https://codecrafters.io/images/external/testimonials/patrick-burris.jpeg"
+      link: "https://github.com/Jumballaya"
+      text: |
+        I think the instant feedback right there in the git push is really cool.
+        Didn't even know that was possible!
+
+extensions:
+  - slug: "persistence-rdb"
+    name: "RDB Persistence"
+    description_markdown: |
+      In this challenge extension you'll add [persistence][redis-persistence] support to your Redis implementation.
+
+      Along the way you'll learn about Redis's [RDB file format][rdb-file-format], the [SAVE][save-command] command, and more.
+
+      [redis-persistence]: https://redis.io/docs/manual/persistence/
+      [rdb-file-format]: https://github.com/sripathikrishnan/redis-rdb-tools/blob/548b11ec3c81a603f5b321228d07a61a0b940159/docs/RDB_File_Format.textile
+      [save-command]: https://redis.io/commands/save/
+
+#   - slug: "streams"
+#     name: "Streams"
+#     description_markdown: |
+#       In this challenge extension you'll add support for the [Stream][redis-streams-data-type] data type to your Redis implementation.
+
+#       Along the way you'll learn about commands like [XADD][xadd-command], [XRANGE][xrange-command] and more.
+
+#       [redis-streams-data-type]: https://redis.io/docs/data-types/streams/
+#       [xadd-command]: https://redis.io/commands/xadd/
+#       [xrange-command]: https://redis.io/commands/xrange/
 
 stages:
   - slug: "init"
+    concept_slugs: ["network-protocols", "tcp-overview"]
     name: "Bind to a port"
-    description_md: |-
-      Let's start out with some basics.
-
-      In this stage, CodeCrafters will try to bind to port 6379, which is the default
-      port that Redis uses.
-
-      Your task is to start a TCP server on port 6379. We'd like to make the first
-      stage easy to pass, so we've included steps on how to pass this stage in the
-      readme.
-    marketing_md: |-
+    description_md: |
+      In this stage, your task is to start a TCP server on port 6379, the default port that redis uses.
+    difficulty: very_easy
+    marketing_md: |
       In this stage, you'll start a TCP server on port 6379, which is the
       default port that Redis uses.
+    tester_source_code_url: "https://github.com/codecrafters-io/redis-tester/blob/a58b9d58b33870fe26a164c0e323f809275a7250/internal/test_bind.go#L11"
 
   - slug: "ping-pong"
+    concept_slugs: ["network-protocols", "tcp-overview"]
     name: "Respond to PING"
-    description_md: |-
+    difficulty: easy
+    description_md: |
       In this stage, you'll respond to the
       [PING](https://redis.io/commands/ping) command.
 
-      Since the tester client _only_ sends `PING` at the moment, it's okay to
+      Your server should respond with `+PONG\r\n`, which is "PONG" encoded as a [RESP simple string](https://redis.io/docs/reference/protocol-spec/#resp-simple-strings).
+
+      Since the tester client _only_ sends the PING command at the moment, it's okay to
       ignore what the client sends and hardcode a response. We'll get to parsing
       client input in later stages.
-
-      Keep in mind that Redis clients & servers speak the Redis protocol, so
-      just sending "PONG" back won't suffice. You'll need to encode it as a
-      [RESP simple
-      string](https://redis.io/topics/protocol#resp-simple-strings).
-    marketing_md: |-
+    marketing_md: |
       In this stage, you'll respond to the
       [PING](https://redis.io/commands/ping) command. You'll use [the Redis
-      protocol](https://redis.io/topics/protocol) to encode the reply. 
+      protocol](https://redis.io/topics/protocol) to encode the reply.
+    tester_source_code_url: "https://github.com/codecrafters-io/redis-tester/blob/a58b9d58b33870fe26a164c0e323f809275a7250/internal/test_ping_pong.go#L9"
 
   - slug: "ping-pong-multiple"
+    concept_slugs: ["network-protocols", "tcp-overview"]
     name: "Respond to multiple PINGs"
-    description_md: |-
+    difficulty: easy
+    description_md: |
       In this stage, you'll respond to multiple
-      [PING](https://redis.io/commands/ping) commands, sent by the same client.
+      [PING](https://redis.io/commands/ping) commands sent by the same connection.
 
-      You'll need to run a loop that reads input from a client and sends a
+      To test your implementation using the [official Redis CLI](https://redis.io/docs/ui/cli/), you can start your server using
+      `./spawn_redis_server.sh` and then run `echo -e "ping\nping" | redis-cli` from your terminal. This will send two PING commands
+      using the same connection.
+
+      {{#lang_is_javascript}}
+      In most languages, you'd need to run a loop that reads input from a connection and sends a
+      response back. In JavaScript however, if you're listening to the
+      [`data`](https://nodejs.org/api/net.html#net_event_data) event, this should be automatically handled for you. **It
+      is very likely that the code you had for the previous stage will pass this stage without any changes!**
+      {{/lang_is_javascript}}
+
+      {{^lang_is_javascript}}
+      You'll need to run a loop that reads input from a connection and sends a
       response back.
-    marketing_md: |-
+      {{/lang_is_javascript}}
+
+      Since the tester client _only_ sends the PING command at the moment, it's okay to
+      ignore what the client sends and hardcode a response. We'll get to parsing
+      client input in later stages.
+    marketing_md: |
       In this stage, you'll respond to multiple
       [PING](https://redis.io/commands/ping) commands sent by the same client.
+    tester_source_code_url: "https://github.com/codecrafters-io/redis-tester/blob/a58b9d58b33870fe26a164c0e323f809275a7250/internal/test_ping_pong.go#L35"
 
   - slug: "concurrent-clients"
+    concept_slugs: ["network-protocols", "tcp-overview"]
     name: "Handle concurrent clients"
-    description_md: |-
+    difficulty: medium
+    description_md: |
       In this stage, your server will need to handle multiple concurrent
       clients. Just like the previous stages, all clients will only send `PING`
       commands for now.
 
+      {{#lang_is_javascript}}
+      In most languages, you'd need to either use threads or implement an
+      [Event Loop](https://en.wikipedia.org/wiki/Event_loop) to do this. In JavaScript however, since [the concurrency
+      model itself is based on an event loop](https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop), most
+      standard library functions are designed to support this kind of concurrent behaviour out of the box. **It is very
+      likely that the code you had for the previous stage will pass this stage without any changes!**
+      {{/lang_is_javascript}}
+
+      {{^lang_is_javascript}}
       To achieve this, you'll need to either use threads, or, if you're feeling
-      adventurous, an [Event Loop](https://en.wikipedia.org/wiki/Event_Loop) (like
+      adventurous, an [Event Loop](https://en.wikipedia.org/wiki/Event_loop) (like
       the official Redis implementation does).
-    marketing_md: |-
+      {{/lang_is_javascript}}
+
+      Since the tester client _only_ sends the PING command at the moment, it's okay to
+      ignore what the client sends and hardcode a response. We'll get to parsing
+      client input in later stages.
+    marketing_md: |
       In this stage, you'll add support for multiple concurrent clients to your
       Redis server. To achieve this you'll use an [Event
       Loop](https://en.wikipedia.org/wiki/Event_loop),
       like the official Redis implementation does.
+    tester_source_code_url: "https://github.com/codecrafters-io/redis-tester/blob/a58b9d58b33870fe26a164c0e323f809275a7250/internal/test_ping_pong.go#L56"
 
   - slug: "echo"
     name: "Implement the ECHO command"
-    description_md: |-
+    difficulty: medium
+    description_md: |
       In this stage, you'll respond to the
       [ECHO](https://redis.io/commands/echo) command.
 
@@ -98,32 +186,134 @@ stages:
       ```
 
       Seems confusing? Read up about [sending commands to a Redis
-      server](https://redis.io/topics/protocol#sending-commands-to-a-redis-server).
-    marketing_md: |-
+      server](https://redis.io/docs/reference/protocol-spec/#send-commands-to-a-redis-server).
+    marketing_md: |
       In this stage, you'll respond to the
       [ECHO](https://redis.io/commands/echo) command. You'll parse user input
       according to the [the Redis protocol
       specification](https://redis.io/topics/protocol).
+    tester_source_code_url: "https://github.com/codecrafters-io/redis-tester/blob/a58b9d58b33870fe26a164c0e323f809275a7250/internal/test_echo.go#L11"
 
   # TODO: Change this to use hyphens
   - slug: "set_get"
     name: "Implement the SET & GET commands"
-    description_md: |-
+    difficulty: medium
+    description_md: |
+      In this stage, you'll need to implement the [SET](https://redis.io/commands/set) &
+      [GET](https://redis.io/commands/get) commands. For now, you can ignore all extra
+      options for `SET` and just implement the simple form: `SET key value`. You'll add support
+      for expiry in the next stage.
+    marketing_md: |
       In this stage, you'll need to implement the
       [SET](https://redis.io/commands/set) &
       [GET](https://redis.io/commands/get) commands.
-    marketing_md: |-
-      In this stage, you'll need to implement the
-      [SET](https://redis.io/commands/set) &
-      [GET](https://redis.io/commands/get) commands.
+    tester_source_code_url: "https://github.com/codecrafters-io/redis-tester/blob/a58b9d58b33870fe26a164c0e323f809275a7250/internal/test_get_set.go#L11"
 
   - slug: "expiry"
     name: "Expiry"
-    description_md: |-
+    difficulty: medium
+    description_md: |
       In this stage, you'll need to support setting a key with an expiry. The
       expiry is provided using the "PX" argument to the
       [SET](https://redis.io/commands/set) command.
-    marketing_md: |-
+
+      The tester will first send a `SET` command with an expiry, like this: `SET <key> <value> PX <expiry>`.
+      Then, it will send a `GET` command to retrieve the value, like this: `GET <key>`. If the key has expired, the
+      tester will expect a Null value as the response. Read about "Null Bulk Strings"
+      [here](https://redis.io/docs/reference/protocol-spec/#resp-bulk-strings) to know how to send a Null value.
+
+      {{#lang_is_haskell}}
+      The [time](https://hackage.haskell.org/package/time) package is available
+      to use as a dependency.
+      {{/lang_is_haskell}}
+    marketing_md: |
       In this stage, you'll add support for setting a key with an expiry. The
       expiry is provided using the "PX" argument to the
       [SET](https://redis.io/commands/set) command.
+    tester_source_code_url: "https://github.com/codecrafters-io/redis-tester/blob/master/internal/test_expiry.go"
+
+  # Persistence
+
+  - slug: "rdb-config"
+    primary_extension_slug: "persistence-rdb"
+    name: "RDB file config"
+    difficulty: easy
+    description_md: |
+      Redis uses `.rdb` files for persistence. In this stage, you'll add support for reading the config values related to where RDB files are stored.
+
+      There are two config values that determine where RDB files are stored:
+
+      - `dir`: The directory where RDB files are stored
+      - `dbfilename`: The name of the RDB file
+
+      These values will be passed into your program like this:
+
+      ```
+      ./your_server.sh --dir /tmp/redisfiles --dbfilename dump.rdb
+      ```
+
+      To verify whether your program is reading config values correctly, the tester will send you two commands:
+
+      ```bash
+      redis-cli CONFIG GET dir
+      redis-cli CONFIG GET dbfilename
+      ```
+
+      The response to `CONFIG GET <key>` should be a RESP array with two elements: the key and the value.
+
+      For example, let's say the `dir` value is `/tmp/redis-files`. The expected response will be:
+
+      ```
+      *2\r\n$3\r\ndir\r\n$16\r\n/tmp/redis-files\r\n
+      ```
+
+      - `*2\r\n` indicates that the array has two elements
+      - `$3\r\ndir\r\n` indicates that the first element is a bulk string with the value `dir`
+      - `$16\r\n/tmp/redis-files\r\n` indicates that the second element is a bulk string with the value `/tmp/redis-files`
+    marketing_md: |
+      In this stage, you'll add support for reading the config values related to where RDB files are stored. You'll implement the `CONFIG GET` command.
+
+  # - slug: "rdb-read-key"
+  #   primary_extension_slug: "persistence-rdb"
+  #   name: "Read a key"
+  #   difficulty: medium
+  #   description_md: |
+  #     **TODO**: This stage doesn't have instructions yet.
+  #   marketing_md: |
+  #     In this stage, you'll add support for reading a key from an RDB file that contains a single key-value pair. You'll do this by implementing the `KEYS *` command.
+
+  # - slug: "rdb-read-string-value"
+  #   primary_extension_slug: "persistence-rdb"
+  #   name: "Read a string value"
+  #   difficulty: medium
+  #   description_md: |
+  #     **TODO**: This stage doesn't have instructions yet.
+  #   marketing_md: |
+  #     In this stage, you'll add support for reading the value of a key from an RDB file that contains a single key-value pair.
+
+  # - slug: "rdb-read-multiple-keys"
+  #   primary_extension_slug: "persistence-rdb"
+  #   name: "Read multiple keys"
+  #   difficulty: medium
+  #   description_md: |
+  #     **TODO**: This stage doesn't have instructions yet.
+  #   marketing_md: |
+  #     In this stage, you'll add support for reading multiple keys from an RDB file. You'll do this by extending the `KEYS *` command to support multiple keys.
+
+  # - slug: "rdb-read-multiple-string-values"
+  #   primary_extension_slug: "persistence-rdb"
+  #   name: "Read multiple string values"
+  #   difficulty: medium
+  #   description_md: |
+  #     **TODO**: This stage doesn't have instructions yet.
+  #   marketing_md: |
+  #     In this stage, you'll add support for reading multiple string values from an RDB file.
+
+  # - slug: "rdb-read-value-with-expiry"
+  #   primary_extension_slug: "persistence-rdb"
+  #   name: "Read value with expiry"
+  #   difficulty: medium
+  #   description_md: |
+  #     **TODO**: This stage doesn't have instructions yet.
+  #   marketing_md: |
+  #     In this stage, you'll add support for reading values that have an expiry set.
