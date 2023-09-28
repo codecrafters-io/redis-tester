@@ -30,9 +30,9 @@ func NewRedisBinary(stageHarness *testerutils.StageHarness) *RedisBinary {
 
 func (b *RedisBinary) Run() error {
 	if b.args == nil || len(b.args) == 0 {
-		b.logger.Debugf("$ ./spawn_redis_server.sh")
+		b.logger.Infof("$ ./spawn_redis_server.sh")
 	} else {
-		b.logger.Debugf("$ ./spawn_redis_server.sh %s", strings.Join(b.args, " "))
+		b.logger.Infof("$ ./spawn_redis_server.sh %s", strings.Join(b.args, " "))
 	}
 
 	if err := b.executable.Start(b.args...); err != nil {

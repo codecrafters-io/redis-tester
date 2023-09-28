@@ -16,6 +16,8 @@ func testBindToPort(stageHarness *testerutils.StageHarness) error {
 
 	logger := stageHarness.Logger
 
+	logger.Infof("Connecting to port 6379...")
+
 	retries := 0
 	var err error
 	for {
@@ -42,6 +44,6 @@ func testBindToPort(stageHarness *testerutils.StageHarness) error {
 		}
 	}
 
-	logger.Debugf("Connection successful")
+	logger.Successln("Connection successful")
 	return nil
 }
