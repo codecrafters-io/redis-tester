@@ -147,9 +147,8 @@ func runPing(logger *logger.Logger, client *redis.Client, clientNum int) error {
 		return err
 	}
 
-	logger.Debugf("client-%d: Received response.", clientNum)
-
 	if pong != "PONG" {
+		logger.Debugf("client-%d: Received response.", clientNum)
 		return fmt.Errorf("client-%d: Expected \"PONG\", got %#v", clientNum, pong)
 	}
 

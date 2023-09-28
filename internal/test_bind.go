@@ -44,6 +44,6 @@ func testBindToPort(stageHarness *testerutils.StageHarness) error {
 		}
 	}
 
-	logger.Successln("Connection successful")
+	logger.Debugln("Connection successful")
 	return nil
 }
