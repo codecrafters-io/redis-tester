@@ -1,48 +1,50 @@
 Debug = true
 
 [33m[stage-1] [0m[94m[94mRunning tests for Stage #1: init[0m[0m
-[33m[stage-1] [0m[36m[36m$ ./spawn_redis_server.sh[0m[0m
-[33m[stage-1] [0m[36m[36mConnection successful[0m[0m
+[33m[stage-1] [0m[94m[94m$ ./spawn_redis_server.sh[0m[0m
+[33m[stage-1] [0m[94m[94mConnecting to port 6379...[0m[0m
+[33m[stage-1] [0m[36mConnection successful[0m
 [33m[stage-1] [0m[92m[92mTest passed.[0m[0m
 [33m[stage-1] [0m[36m[36mTerminating program[0m[0m
 [33m[stage-1] [0m[36m[36mProgram terminated successfully[0m[0m
 
 [33m[stage-2] [0m[94m[94mRunning tests for Stage #2: ping-pong[0m[0m
-[33m[stage-2] [0m[36m[36m$ ./spawn_redis_server.sh[0m[0m
+[33m[stage-2] [0m[94m[94m$ ./spawn_redis_server.sh[0m[0m
 [33m[stage-2] [0m[36mConnection established, sending PING command (*1\r\n$4\r\nping\r\n)[0m
+[33m[stage-2] [0m[94m[94m$ redis-cli ping[0m[0m
 [33m[stage-2] [0m[36mReading response...[0m
 [33m[stage-2] [0m[92m[92mTest passed.[0m[0m
 [33m[stage-2] [0m[36m[36mTerminating program[0m[0m
 [33m[stage-2] [0m[36m[36mProgram terminated successfully[0m[0m
 
 [33m[stage-3] [0m[94m[94mRunning tests for Stage #3: ping-pong-multiple[0m[0m
-[33m[stage-3] [0m[36m[36m$ ./spawn_redis_server.sh[0m[0m
-[33m[stage-3] [0m[36m[36mclient-1: Sending ping command...[0m[0m
-[33m[stage-3] [0m[36m[36mclient-1: Received response.[0m[0m
-[33m[stage-3] [0m[36m[36mclient-1: Sending ping command...[0m[0m
-[33m[stage-3] [0m[36m[36mclient-1: Received response.[0m[0m
-[33m[stage-3] [0m[36m[36mclient-1: Sending ping command...[0m[0m
-[33m[stage-3] [0m[36m[36mclient-1: Received response.[0m[0m
+[33m[stage-3] [0m[94m[94m$ ./spawn_redis_server.sh[0m[0m
+[33m[stage-3] [0m[94m[94mclient-1: Sending ping command...[0m[0m
+[33m[stage-3] [0m[92m[92mclient-1: Received PONG.[0m[0m
+[33m[stage-3] [0m[94m[94mclient-1: Sending ping command...[0m[0m
+[33m[stage-3] [0m[92m[92mclient-1: Received PONG.[0m[0m
+[33m[stage-3] [0m[94m[94mclient-1: Sending ping command...[0m[0m
+[33m[stage-3] [0m[92m[92mclient-1: Received PONG.[0m[0m
 [33m[stage-3] [0m[36m[36mSuccess, closing connection...[0m[0m
 [33m[stage-3] [0m[92m[92mTest passed.[0m[0m
 [33m[stage-3] [0m[36m[36mTerminating program[0m[0m
 [33m[stage-3] [0m[36m[36mProgram terminated successfully[0m[0m
 
 [33m[stage-4] [0m[94m[94mRunning tests for Stage #4: concurrent-clients[0m[0m
-[33m[stage-4] [0m[36m[36m$ ./spawn_redis_server.sh[0m[0m
-[33m[stage-4] [0m[36m[36mclient-1: Sending ping command...[0m[0m
-[33m[stage-4] [0m[36m[36mclient-1: Received response.[0m[0m
-[33m[stage-4] [0m[36m[36mclient-2: Sending ping command...[0m[0m
-[33m[stage-4] [0m[36m[36mclient-2: Received response.[0m[0m
-[33m[stage-4] [0m[36m[36mclient-1: Sending ping command...[0m[0m
-[33m[stage-4] [0m[36m[36mclient-1: Received response.[0m[0m
-[33m[stage-4] [0m[36m[36mclient-1: Sending ping command...[0m[0m
-[33m[stage-4] [0m[36m[36mclient-1: Received response.[0m[0m
-[33m[stage-4] [0m[36m[36mclient-2: Sending ping command...[0m[0m
-[33m[stage-4] [0m[36m[36mclient-2: Received response.[0m[0m
+[33m[stage-4] [0m[94m[94m$ ./spawn_redis_server.sh[0m[0m
+[33m[stage-4] [0m[94m[94mclient-1: Sending ping command...[0m[0m
+[33m[stage-4] [0m[92m[92mclient-1: Received PONG.[0m[0m
+[33m[stage-4] [0m[94m[94mclient-2: Sending ping command...[0m[0m
+[33m[stage-4] [0m[92m[92mclient-2: Received PONG.[0m[0m
+[33m[stage-4] [0m[94m[94mclient-1: Sending ping command...[0m[0m
+[33m[stage-4] [0m[92m[92mclient-1: Received PONG.[0m[0m
+[33m[stage-4] [0m[94m[94mclient-1: Sending ping command...[0m[0m
+[33m[stage-4] [0m[92m[92mclient-1: Received PONG.[0m[0m
+[33m[stage-4] [0m[94m[94mclient-2: Sending ping command...[0m[0m
+[33m[stage-4] [0m[92m[92mclient-2: Received PONG.[0m[0m
 [33m[stage-4] [0m[36m[36mclient-1: Success, closing connection...[0m[0m
-[33m[stage-4] [0m[36m[36mclient-3: Sending ping command...[0m[0m
-[33m[stage-4] [0m[36m[36mclient-3: Received response.[0m[0m
+[33m[stage-4] [0m[94m[94mclient-3: Sending ping command...[0m[0m
+[33m[stage-4] [0m[92m[92mclient-3: Received PONG.[0m[0m
 [33m[stage-4] [0m[36m[36mclient-2: Success, closing connection...[0m[0m
 [33m[stage-4] [0m[36m[36mclient-3: Success, closing connection...[0m[0m
 [33m[stage-4] [0m[92m[92mTest passed.[0m[0m
@@ -50,14 +52,14 @@ Debug = true
 [33m[stage-4] [0m[36m[36mProgram terminated successfully[0m[0m
 
 [33m[stage-5] [0m[94m[94mRunning tests for Stage #5: echo[0m[0m
-[33m[stage-5] [0m[36m[36m$ ./spawn_redis_server.sh[0m[0m
+[33m[stage-5] [0m[94m[94m$ ./spawn_redis_server.sh[0m[0m
 [33m[stage-5] [0m[36m[36mSending command: echo apples[0m[0m
 [33m[stage-5] [0m[92m[92mTest passed.[0m[0m
 [33m[stage-5] [0m[36m[36mTerminating program[0m[0m
 [33m[stage-5] [0m[36m[36mProgram terminated successfully[0m[0m
 
 [33m[stage-6] [0m[94m[94mRunning tests for Stage #6: set_get[0m[0m
-[33m[stage-6] [0m[36m[36m$ ./spawn_redis_server.sh[0m[0m
+[33m[stage-6] [0m[94m[94m$ ./spawn_redis_server.sh[0m[0m
 [33m[stage-6] [0m[36m[36mSetting key world to horses[0m[0m
 [33m[stage-6] [0m[36m[36mGetting key world[0m[0m
 [33m[stage-6] [0m[92m[92mTest passed.[0m[0m
@@ -65,7 +67,7 @@ Debug = true
 [33m[stage-6] [0m[36m[36mProgram terminated successfully[0m[0m
 
 [33m[stage-7] [0m[94m[94mRunning tests for Stage #7: expiry[0m[0m
-[33m[stage-7] [0m[36m[36m$ ./spawn_redis_server.sh[0m[0m
+[33m[stage-7] [0m[94m[94m$ ./spawn_redis_server.sh[0m[0m
 [33m[stage-7] [0m[36m[36mRunning command: set grapes apples px 100[0m[0m
 [33m[stage-7] [0m[36m[36mRunning command: get grapes[0m[0m
 [33m[stage-7] [0m[36m[36mSleeping for 101ms[0m[0m
@@ -75,14 +77,14 @@ Debug = true
 [33m[stage-7] [0m[36m[36mProgram terminated successfully[0m[0m
 
 [33m[stage-8] [0m[94m[94mRunning tests for Stage #8: rdb-config[0m[0m
-[33m[stage-8] [0m[36m[36m$ ./spawn_redis_server.sh --dir /private/var/folders/f1/bs24_53x44j26flrfvyg416m0000gn/T/rdbfiles3019840842 --dbfilename banana.rdb[0m[0m
+[33m[stage-8] [0m[94m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/f1/bs24_53x44j26flrfvyg416m0000gn/T/rdbfiles2355491801 --dbfilename banana.rdb[0m[0m
 [33m[stage-8] [0m[94m[94m$ redis-cli CONFIG GET dir[0m[0m
 [33m[stage-8] [0m[92m[92mTest passed.[0m[0m
 [33m[stage-8] [0m[36m[36mTerminating program[0m[0m
 [33m[stage-8] [0m[36m[36mError terminating program: 'program failed to exit in 2 seconds after receiving sigterm'[0m[0m
 
 [33m[stage-9] [0m[94m[94mRunning tests for Stage #9: rdb-read-key[0m[0m
-[33m[stage-9] [0m[36m[36m$ ./spawn_redis_server.sh --dir /private/var/folders/f1/bs24_53x44j26flrfvyg416m0000gn/T/rdbfiles3860696077 --dbfilename blueberry.rdb[0m[0m
+[33m[stage-9] [0m[94m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/f1/bs24_53x44j26flrfvyg416m0000gn/T/rdbfiles2598093162 --dbfilename blueberry.rdb[0m[0m
 [33m[stage-9] [0m[94m[94m$ redis-cli KEYS *[0m[0m
 [33m[stage-9] [0m[92m[92mTest passed.[0m[0m
 [33m[stage-9] [0m[36m[36mTerminating program[0m[0m

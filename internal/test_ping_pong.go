@@ -43,6 +43,7 @@ func testPingPongOnce(stageHarness *testerutils.StageHarness) error {
 	}
 
 	logger.Debugln("Connection established, sending PING command (*1\\r\\n$4\\r\\nping\\r\\n)")
+	logger.Infof("$ redis-cli ping")
 
 	_, err = conn.Write([]byte("*1\r\n$4\r\nping\r\n"))
 	if err != nil {
@@ -139,18 +140,19 @@ func testPingPongConcurrent(stageHarness *testerutils.StageHarness) error {
 }
 
 func runPing(logger *logger.Logger, client *redis.Client, clientNum int) error {
-	logger.Debugf("client-%d: Sending ping command...", clientNum)
+	logger.Infof("client-%d: Sending ping command...", clientNum)
 	pong, err := client.Ping().Result()
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
 	}
 
-	logger.Debugf("client-%d: Received response.", clientNum)
-
 	if pong != "PONG" {
+		logger.Debugf("client-%d: Received response.", clientNum)
 		return fmt.Errorf("client-%d: Expected \"PONG\", got %#v", clientNum, pong)
 	}
+
+	logger.Successf("client-%d: Received PONG.", clientNum)
 
 	return nil
 }
