@@ -36,7 +36,7 @@ func testExpiry(stageHarness *testerutils.StageHarness) error {
 	randomKey := strings[rand.Intn(10)]
 	randomValue := strings[rand.Intn(10)]
 
-	logger.Debugf("Running command: set %s %s px 100", randomKey, randomValue)
+	logger.Infof("$ redis-cli set %s %s px 100", randomKey, randomValue)
 	resp, err := client.Set(randomKey, randomValue, 100*time.Millisecond).Result()
 	if err != nil {
 		logFriendlyError(logger, err)
@@ -45,8 +45,10 @@ func testExpiry(stageHarness *testerutils.StageHarness) error {
 	if resp != "OK" {
 		return fmt.Errorf("Expected \"OK\", got %#v", resp)
 	}
+	logger.Successf("Received OK (at %s)", time.Now().Format("15:04:05.000"))
 
-	logger.Debugf("Running command: get %s", randomKey)
+	logger.Infof("$ redis-cli get %s (sent at %s, key should not be expired)", randomKey, time.Now().Format("15:04:05.000"))
+
 	resp, err = client.Get(randomKey).Result()
 	if err != nil {
 		if err == redis.Nil {
@@ -59,10 +61,12 @@ func testExpiry(stageHarness *testerutils.StageHarness) error {
 		return fmt.Errorf("Expected %#v, got %#v", randomValue, resp)
 	}
 
+	logger.Successf("Received %#v", randomValue)
+
 	logger.Debugf("Sleeping for 101ms")
 	time.Sleep(101 * time.Millisecond)
 
-	logger.Debugf("Running command: get %s", randomKey)
+	logger.Infof("$ redis-cli get %s (sent at %s, key should be expired)", randomKey, time.Now().Format("15:04:05.000"))
 	resp, err = client.Get(randomKey).Result()
 	if err != redis.Nil {
 		if err == nil {
