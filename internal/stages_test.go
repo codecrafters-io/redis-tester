@@ -54,6 +54,13 @@ func TestStages(t *testing.T) {
 			StdoutFixturePath:   "./test_helpers/fixtures/ping-pong/without_read_multiple_pongs",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
+		"expiry_pass": {
+			UntilStageSlug:      "expiry",
+			CodePath:            "./test_helpers/pass_all",
+			ExpectedExitCode:    0,
+			StdoutFixturePath:   "./test_helpers/fixtures/expiry/pass",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
 		"rdb_config_pass": {
 			UntilStageSlug:      "rdb-config",
 			CodePath:            "./test_helpers/pass_all",
@@ -105,6 +112,7 @@ func normalizeTesterOutput(testerOutput []byte) []byte {
 	replacements := map[string][]*regexp.Regexp{
 		"tcp_port":  {regexp.MustCompile("read tcp 127.0.0.1:\\d+->127.0.0.1:6379: read: connection reset by peer")},
 		" tmp_dir ": {regexp.MustCompile(" /private/var/folders/[^ ]+ "), regexp.MustCompile(" /tmp/[^ ]+ ")},
+		"timestamp": {regexp.MustCompile("\\d{2}:\\d{2}:\\d{2}\\.\\d{3}")},
 	}
 
 	for replacement, regexes := range replacements {
