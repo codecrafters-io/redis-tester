@@ -2,6 +2,7 @@ package internal
 
 import (
 	"fmt"
+	"strings"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
@@ -24,6 +25,14 @@ func testRdbReadMultipleStringValues(stageHarness *testerutils.StageHarness) err
 		keyValuePairs[i] = KeyValuePair{key: keys[i], value: values[i]}
 	}
 
+	formattedKeyValuePairs := make([]string, keyCount)
+	for i := 0; i < keyCount; i++ {
+		formattedKeyValuePairs[i] = fmt.Sprintf("%q=%q", keys[i], values[i])
+	}
+
+	logger := stageHarness.Logger
+	logger.Infof("Created RDB file with key-value pairs: %s", strings.Join(formattedKeyValuePairs, ", "))
+
 	if err := RDBFileCreator.Write(keyValuePairs); err != nil {
 		return fmt.Errorf("CodeCrafters Tester Error: %s", err)
 	}
@@ -38,7 +47,6 @@ func testRdbReadMultipleStringValues(stageHarness *testerutils.StageHarness) err
 		return err
 	}
 
-	logger := stageHarness.Logger
 	client := NewRedisClient()
 
 	for _, key := range keys {
