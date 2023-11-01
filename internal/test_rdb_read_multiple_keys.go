@@ -29,6 +29,9 @@ func testRdbReadMultipleKeys(stageHarness *testerutils.StageHarness) error {
 		return fmt.Errorf("CodeCrafters Tester Error: %s", err)
 	}
 
+	logger := stageHarness.Logger
+	logger.Infof("Created RDB file with %d keys: %q", keyCount, keys)
+
 	b := NewRedisBinary(stageHarness)
 	b.args = []string{
 		"--dir", RDBFileCreator.Dir,
@@ -39,7 +42,6 @@ func testRdbReadMultipleKeys(stageHarness *testerutils.StageHarness) error {
 		return err
 	}
 
-	logger := stageHarness.Logger
 	client := NewRedisClient()
 
 	logger.Infof("$ redis-cli KEYS *")

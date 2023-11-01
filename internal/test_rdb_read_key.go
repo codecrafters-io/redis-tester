@@ -23,6 +23,9 @@ func testRdbReadKey(stageHarness *testerutils.StageHarness) error {
 		return fmt.Errorf("CodeCrafters Tester Error: %s", err)
 	}
 
+	logger := stageHarness.Logger
+	logger.Infof("Created RDB file with single key: %q", randomKey)
+
 	b := NewRedisBinary(stageHarness)
 	b.args = []string{
 		"--dir", RDBFileCreator.Dir,
@@ -33,7 +36,6 @@ func testRdbReadKey(stageHarness *testerutils.StageHarness) error {
 		return err
 	}
 
-	logger := stageHarness.Logger
 	client := NewRedisClient()
 
 	logger.Infof("$ redis-cli KEYS *")
