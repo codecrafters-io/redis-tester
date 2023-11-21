@@ -70,7 +70,15 @@ func (r *RDBFileCreator) Write(keyValuePairs []KeyValuePair) error {
 		}
 	}
 
-	if err := enc.WriteDBHeader(0, 5, 1); err != nil {
+	keysWithTtlCount := 0
+
+	for _, keyValuePair := range keyValuePairs {
+		if keyValuePair.expiryTs > 0 {
+			keysWithTtlCount++
+		}
+	}
+
+	if err := enc.WriteDBHeader(0, uint64(len(keyValuePairs)), uint64(keysWithTtlCount)); err != nil {
 		return err
 	}
 
