@@ -19,20 +19,18 @@ func testReplInfo(stageHarness *testerutils.StageHarness) error {
 
 	logger.Infof("$ redis-cli INFO replication")
 	resp, err := client.Info("replication").Result()
-	roleLine := strings.TrimSpace(strings.Split(resp, "\n")[1])
-	logger.Debugf("Role line is %s", roleLine)
-
-	parts := strings.Split(roleLine, ":")
-	var key, role string
-	key, role = parts[0], parts[1]
+	lines := strings.Split(resp, "\n")
+	infoMap := parseInfoOutput(lines, ":")
+	key := "role"
+	role := infoMap[key]
 
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
 	}
 
-	if key != "role" {
-		return fmt.Errorf("Expected 'role' key in INFO replication, got %v", key)
+	if infoMap[key] == "" {
+		return fmt.Errorf("Expected 'role' key in INFO replication.")
 	}
 
 	if role != "master" {
