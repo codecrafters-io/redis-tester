@@ -68,5 +68,21 @@ var testerDefinition = testerutils.TesterDefinition{
 			Slug:     "rdb-read-value-with-expiry",
 			TestFunc: testRdbReadValueWithExpiry,
 		},
+		{
+			Slug:     "repl-custom-port",
+			TestFunc: testReplBindToCustomPort,
+		},
+		{
+			Slug:     "repl-info",
+			TestFunc: testReplInfo,
+		},
+		{
+			Slug:     "repl-info-replica",
+			TestFunc: testReplInfoReplica,
+		},
+		{
+			Slug:     "repl-id",
+			TestFunc: testReplReplicationID,
+		},
 	},
 }
