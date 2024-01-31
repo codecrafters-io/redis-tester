@@ -7,20 +7,6 @@ import (
 	testerutils "github.com/codecrafters-io/tester-utils"
 )
 
-func parseInfoOutput(lines []string, seperator string) map[string]string {
-	infoMap := make(map[string]string)
-	for _, line := range lines {
-		trimmedLine := strings.TrimSpace(line)
-		parts := strings.Split(trimmedLine, seperator)
-		if len(parts) == 2 {
-			key := parts[0]
-			value := parts[1]
-			infoMap[key] = value
-		}
-	}
-	return infoMap
-}
-
 func testReplReplicationID(stageHarness *testerutils.StageHarness) error {
 	b := NewRedisBinary(stageHarness)
 
