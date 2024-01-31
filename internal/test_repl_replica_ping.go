@@ -8,35 +8,6 @@ import (
 	"github.com/smallnest/resp3"
 )
 
-func convertToStringArray(interfaceSlice []interface{}) ([]string, error) {
-	stringSlice := make([]string, 0, len(interfaceSlice))
-
-	for _, v := range interfaceSlice {
-		str, ok := v.(string)
-		if !ok {
-			return nil, fmt.Errorf("element is not a string: %v", v)
-		}
-		stringSlice = append(stringSlice, str)
-	}
-
-	return stringSlice, nil
-}
-
-func compareStringSlices(actual, expected []string) error {
-	if len(actual) != len(expected) {
-		return fmt.Errorf("Length mismatch between actual message and expected message.")
-	}
-
-	for i := range actual {
-		if actual[i] != expected[i] {
-			return fmt.Errorf("Expected : '%v' and actual : '%v' messages don't match", expected[i], actual[i])
-
-		}
-	}
-
-	return nil
-}
-
 func testReplReplicaSendsPing(stageHarness *testerutils.StageHarness) error {
 	listener, err := net.Listen("tcp", ":6379")
 	if err != nil {
