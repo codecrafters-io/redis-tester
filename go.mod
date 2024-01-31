@@ -3,7 +3,7 @@ module github.com/codecrafters-io/redis-tester
 go 1.14
 
 require (
-	github.com/codecrafters-io/tester-utils v0.2.10
+	github.com/codecrafters-io/tester-utils v0.2.11
 	github.com/emirpasic/gods v1.18.1 // indirect
 	github.com/fatih/color v1.16.0 // indirect
 	github.com/go-redis/redis v6.15.9+incompatible
