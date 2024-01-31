@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/hdt3213/rdb/parser"
 	"github.com/smallnest/resp3"
 )
 
@@ -70,4 +71,23 @@ func deleteRDBfile() {
 		return
 	}
 	_ = os.Remove(fileName)
+}
+
+// Used for parsing RDB file, to check validity.
+func processRedisObject(o parser.RedisObject) bool {
+	switch o.GetType() {
+	case parser.StringType:
+		str := o.(*parser.StringObject)
+		println(str.Key, str.Value)
+	case parser.ListType:
+		list := o.(*parser.ListObject)
+		println(list.Key, list.Values)
+	case parser.HashType:
+		hash := o.(*parser.HashObject)
+		println(hash.Key, hash.Hash)
+	case parser.ZSetType:
+		zset := o.(*parser.ZSetObject)
+		println(zset.Key, zset.Entries)
+	}
+	return true
 }

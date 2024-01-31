@@ -2,13 +2,13 @@ package internal
 
 import (
 	"bufio"
-	"encoding/hex"
 	"fmt"
 	"net"
 	"strings"
 	"time"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
+	"github.com/hdt3213/rdb/parser"
 	"github.com/smallnest/resp3"
 )
 
@@ -95,13 +95,13 @@ func testReplMasterPsyncRdb(stageHarness *testerutils.StageHarness) error {
 	}
 
 	dataString := string(data)[6:]
-	// stringIOReader := strings.NewReader(dataString)
-	hexDigest := hex.EncodeToString([]byte(dataString))
-	fmt.Println(hexDigest)
-	// fmt.Println(dataString)
-	// decoder := core.NewDecoder(stringIOReader)
-	// fmt.Println(decoder.CheckHeader())
-
+	// First 6 chars are for RESP `$176\r\n` or similar.
+	stringIOReader := strings.NewReader(dataString)
+	decoder := parser.NewDecoder(stringIOReader)
+	err = decoder.Parse(processRedisObject)
+	if err != nil {
+		return fmt.Errorf("Error while parsing RDB file : %v", err)
+	}
 	logger.Successf("RDB file received from master.")
 	client.Close()
 	return nil
