@@ -11,6 +11,7 @@ import (
 )
 
 func testReplReplicaSendsPsync(stageHarness *testerutils.StageHarness) error {
+	deleteRDBfile()
 	listener, err := net.Listen("tcp", ":6379")
 	if err != nil {
 		fmt.Println("Error starting TCP server:", err)

@@ -2,6 +2,7 @@ package internal
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/smallnest/resp3"
@@ -60,4 +61,13 @@ func readRespMessage(reader *resp3.Reader) ([]string, error) {
 	message := resp.SmartResult()
 	slice, _ := message.([]interface{})
 	return convertToStringArray(slice)
+}
+
+func deleteRDBfile() {
+	fileName := "dump.rdb"
+	_, err := os.Stat(fileName)
+	if os.IsNotExist(err) {
+		return
+	}
+	_ = os.Remove(fileName)
 }
