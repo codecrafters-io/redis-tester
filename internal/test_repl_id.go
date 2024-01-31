@@ -7,7 +7,7 @@ import (
 	testerutils "github.com/codecrafters-io/tester-utils"
 )
 
-func testReplInfo(stageHarness *testerutils.StageHarness) error {
+func testReplReplicationID(stageHarness *testerutils.StageHarness) error {
 	b := NewRedisBinary(stageHarness)
 
 	if err := b.Run(); err != nil {
@@ -21,20 +21,20 @@ func testReplInfo(stageHarness *testerutils.StageHarness) error {
 	resp, err := client.Info("replication").Result()
 	lines := strings.Split(resp, "\n")
 	infoMap := parseInfoOutput(lines, ":")
-	key := "role"
-	role := infoMap[key]
 
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
 	}
+	var idKey, offsetKey string
+	idKey, offsetKey = "master_replid", "master_repl_offset"
 
-	if infoMap[key] == "" {
-		return fmt.Errorf("Expected 'role' key in INFO replication.")
+	if infoMap[idKey] == "" {
+		return fmt.Errorf("Expected '%v' key in INFO replication.", idKey)
 	}
 
-	if role != "master" {
-		return fmt.Errorf("Expected 'role' to be 'master' in INFO replication, got %v", role)
+	if infoMap[offsetKey] != "0" {
+		return fmt.Errorf("Expected 0 value for '%v' in INFO replication.", offsetKey)
 	}
 
 	client.Close()

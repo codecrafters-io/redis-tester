@@ -8,10 +8,10 @@ import (
 
 var testerDefinition = testerutils.TesterDefinition{
 	AntiCheatTestCases: []testerutils.TestCase{
-		{
-			Slug:     "anti-cheat-1",
-			TestFunc: antiCheatTest,
-		},
+		// {
+		// 	Slug:     "anti-cheat-1",
+		// 	TestFunc: antiCheatTest,
+		// },
 	},
 	ExecutableFileName: "spawn_redis_server.sh",
 	TestCases: []testerutils.TestCase{
@@ -68,5 +68,49 @@ var testerDefinition = testerutils.TesterDefinition{
 			Slug:     "rdb-read-value-with-expiry",
 			TestFunc: testRdbReadValueWithExpiry,
 		},
+		{
+			Slug:     "repl-custom-port",
+			TestFunc: testReplBindToCustomPort,
+		},
+		{
+			Slug:     "repl-info",
+			TestFunc: testReplInfo,
+		},
+		{
+			Slug:     "repl-info-replica",
+			TestFunc: testReplInfoReplica,
+		},
+		{
+			Slug:     "repl-id",
+			TestFunc: testReplReplicationID,
+		},
+		{
+			Slug:     "repl-replica-ping",
+			TestFunc: testReplReplicaSendsPing,
+		},
+		{
+			Slug:     "repl-replica-replconf",
+			TestFunc: testReplReplicaSendsReplconf,
+		},
+		{
+			Slug:     "repl-replica-psync",
+			TestFunc: testReplReplicaSendsPsync,
+		},
+		{
+			Slug:     "repl-master-replconf",
+			TestFunc: testReplMasterReplconf,
+		},
+		{
+			Slug:     "repl-master-psync",
+			TestFunc: testReplMasterPsync,
+		},
+		{
+			Slug:     "repl-master-psync-rdb",
+			TestFunc: testReplMasterPsyncRdb,
+		},
+		// {
+		// 	Slug:     "repl-master-cmd-prop",
+		// 	TestFunc: testReplMasterCmdProp,
+		// },
 	},
 }

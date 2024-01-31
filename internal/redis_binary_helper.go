@@ -19,7 +19,7 @@ type RedisBinary struct {
 
 func NewRedisBinary(stageHarness *testerutils.StageHarness) *RedisBinary {
 	b := &RedisBinary{
-		executable: stageHarness.Executable,
+		executable: stageHarness.NewExecutable(),
 		logger:     stageHarness.Logger,
 	}
 
