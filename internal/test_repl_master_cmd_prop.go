@@ -88,9 +88,11 @@ func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
 
 	conn.SetReadDeadline(time.Time{})
 
-	dataString := string(data)[6:]
-	// First 6 chars are for RESP `$176\r\n` or similar.
-	stringIOReader := strings.NewReader(dataString)
+	// TODO(Ryan): Ensure that we're using a proper RESP parser, not relying on hand-rolled parsing
+	// First 5 chars are for RESP `$88\r\n` or similar, read until the first `\n` to discard them
+	stringIOReader := bufio.NewReader(strings.NewReader(string(data)))
+	stringIOReader.ReadBytes('\n')
+
 	decoder := parser.NewDecoder(stringIOReader)
 	err = decoder.Parse(processRedisObject)
 	if err != nil {
