@@ -42,7 +42,7 @@ func testRdbReadMultipleKeys(stageHarness *testerutils.StageHarness) error {
 		return err
 	}
 
-	client := NewRedisClient()
+	client := NewRedisClient("localhost:6379")
 
 	logger.Infof("$ redis-cli KEYS *")
 	resp, err := client.Keys("*").Result()

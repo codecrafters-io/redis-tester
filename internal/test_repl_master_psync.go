@@ -19,7 +19,7 @@ func testReplMasterPsync(stageHarness *testerutils.StageHarness) error {
 
 	logger := stageHarness.Logger
 
-	client := NewRedisClient()
+	client := NewRedisClient("localhost:6379")
 
 	logger.Infof("$ redis-cli PING")
 	resp, err := client.Do("PING").Result()

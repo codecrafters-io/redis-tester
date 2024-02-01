@@ -2,8 +2,9 @@ package internal
 
 import (
 	"fmt"
-	testerutils "github.com/codecrafters-io/tester-utils"
 	"strings"
+
+	testerutils "github.com/codecrafters-io/tester-utils"
 )
 
 func antiCheatTest(stageHarness *testerutils.StageHarness) error {
@@ -12,7 +13,7 @@ func antiCheatTest(stageHarness *testerutils.StageHarness) error {
 		return err
 	}
 
-	client := NewRedisClient()
+	client := NewRedisClient("localhost:6379")
 	logger := stageHarness.Logger
 
 	result := client.Info("server")

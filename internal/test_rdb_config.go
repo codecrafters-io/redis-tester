@@ -34,7 +34,7 @@ func testRdbConfig(stageHarness *testerutils.StageHarness) error {
 	}
 
 	logger := stageHarness.Logger
-	client := NewRedisClient()
+	client := NewRedisClient("localhost:6379")
 
 	logger.Infof("$ redis-cli CONFIG GET dir")
 	resp, err := client.ConfigGet("dir").Result()

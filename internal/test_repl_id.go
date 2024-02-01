@@ -15,7 +15,7 @@ func testReplReplicationID(stageHarness *testerutils.StageHarness) error {
 	}
 
 	logger := stageHarness.Logger
-	client := NewRedisClient()
+	client := NewRedisClient("localhost:6379")
 
 	logger.Infof("$ redis-cli INFO replication")
 	resp, err := client.Info("replication").Result()

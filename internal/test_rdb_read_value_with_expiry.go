@@ -54,7 +54,7 @@ func testRdbReadValueWithExpiry(stageHarness *testerutils.StageHarness) error {
 	}
 
 	logger := stageHarness.Logger
-	client := NewRedisClient()
+	client := NewRedisClient("localhost:6379")
 
 	for keyIndex, key := range keys {
 		logger.Infof(fmt.Sprintf("$ redis-cli GET %s", key))

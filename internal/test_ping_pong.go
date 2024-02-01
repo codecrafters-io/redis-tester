@@ -81,7 +81,7 @@ func testPingPongMultiple(stageHarness *testerutils.StageHarness) error {
 	}
 
 	logger := stageHarness.Logger
-	client := NewRedisClient()
+	client := NewRedisClient("localhost:6379")
 
 	for i := 1; i <= 3; i++ {
 		if err := runPing(logger, client, 1); err != nil {
@@ -102,13 +102,13 @@ func testPingPongConcurrent(stageHarness *testerutils.StageHarness) error {
 	}
 
 	logger := stageHarness.Logger
-	client1 := NewRedisClient()
+	client1 := NewRedisClient("localhost:6379")
 
 	if err := runPing(logger, client1, 1); err != nil {
 		return err
 	}
 
-	client2 := NewRedisClient()
+	client2 := NewRedisClient("localhost:6379")
 	if err := runPing(logger, client2, 2); err != nil {
 		return err
 	}
@@ -126,7 +126,7 @@ func testPingPongConcurrent(stageHarness *testerutils.StageHarness) error {
 	logger.Debugf("client-%d: Success, closing connection...", 1)
 	client1.Close()
 
-	client3 := NewRedisClient()
+	client3 := NewRedisClient("localhost:6379")
 	if err := runPing(logger, client3, 3); err != nil {
 		return err
 	}

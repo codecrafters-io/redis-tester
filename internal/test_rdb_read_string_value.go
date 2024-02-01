@@ -36,7 +36,7 @@ func testRdbReadStringValue(stageHarness *testerutils.StageHarness) error {
 		return err
 	}
 
-	client := NewRedisClient()
+	client := NewRedisClient("localhost:6379")
 
 	logger.Infof(fmt.Sprintf("$ redis-cli GET %s", randomKey))
 	resp, err := client.Get(randomKey).Result()
