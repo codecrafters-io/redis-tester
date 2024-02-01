@@ -8,6 +8,7 @@ import (
 )
 
 func testReplReplicationID(stageHarness *testerutils.StageHarness) error {
+	deleteRDBfile()
 	b := NewRedisBinary(stageHarness)
 
 	if err := b.Run(); err != nil {
