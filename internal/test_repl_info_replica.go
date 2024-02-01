@@ -8,14 +8,7 @@ import (
 )
 
 func testReplInfoReplica(stageHarness *testerutils.StageHarness) error {
-	master := NewRedisBinary(stageHarness)
-	master.args = []string{
-		"--port", "6380",
-	}
-
-	if err := master.Run(); err != nil {
-		return err
-	}
+	_, _ = NewRedisConn("", "localhost:6380") // Master
 
 	replica := NewRedisBinary(stageHarness)
 	replica.args = []string{
@@ -29,7 +22,7 @@ func testReplInfoReplica(stageHarness *testerutils.StageHarness) error {
 
 	logger := stageHarness.Logger
 
-	client := NewRedisClient()
+	client := NewRedisClient("localhost:6379")
 
 	logger.Infof("$ redis-cli INFO replication")
 	resp, err := client.Info("replication").Result()

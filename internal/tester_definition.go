@@ -8,10 +8,10 @@ import (
 
 var testerDefinition = testerutils.TesterDefinition{
 	AntiCheatTestCases: []testerutils.TestCase{
-		// {
-		// 	Slug:     "anti-cheat-1",
-		// 	TestFunc: antiCheatTest,
-		// },
+		{
+			Slug:     "anti-cheat-1",
+			TestFunc: antiCheatTest,
+		},
 	},
 	ExecutableFileName: "spawn_redis_server.sh",
 	TestCases: []testerutils.TestCase{
@@ -108,9 +108,17 @@ var testerDefinition = testerutils.TesterDefinition{
 			Slug:     "repl-master-psync-rdb",
 			TestFunc: testReplMasterPsyncRdb,
 		},
-		// {
-		// 	Slug:     "repl-master-cmd-prop",
-		// 	TestFunc: testReplMasterCmdProp,
-		// },
+		{
+			Slug:     "repl-master-cmd-prop",
+			TestFunc: testReplMasterCmdProp,
+		},
+		{
+			Slug:     "repl-cmd-processing",
+			TestFunc: testReplCmdProcessing,
+		},
+		{
+			Slug:     "repl-final-boss",
+			TestFunc: testReplMultipleReplicas,
+		},
 	},
 }

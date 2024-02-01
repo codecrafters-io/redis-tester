@@ -18,7 +18,7 @@ func testExpiry(stageHarness *testerutils.StageHarness) error {
 
 	logger := stageHarness.Logger
 
-	client := NewRedisClient()
+	client := NewRedisClient("localhost:6379")
 
 	strings := [10]string{
 		"hello",

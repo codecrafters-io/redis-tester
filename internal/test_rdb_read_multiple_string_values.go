@@ -47,7 +47,7 @@ func testRdbReadMultipleStringValues(stageHarness *testerutils.StageHarness) err
 		return err
 	}
 
-	client := NewRedisClient()
+	client := NewRedisClient("localhost:6379")
 
 	for _, key := range keys {
 		logger.Infof(fmt.Sprintf("$ redis-cli GET %s", key))
