@@ -1,10 +1,12 @@
 package internal
 
 import (
+	"bufio"
 	"fmt"
 	"os"
 	"strings"
 
+	"github.com/codecrafters-io/tester-utils/logger"
 	"github.com/hdt3213/rdb/parser"
 	"github.com/smallnest/resp3"
 )
@@ -57,11 +59,26 @@ func parseInfoOutput(lines []string, seperator string) map[string]string {
 	return infoMap
 }
 
-func readRespMessage(reader *resp3.Reader) ([]string, error) {
-	resp, _, _ := reader.ReadValue()
+func readRespMessages(reader *resp3.Reader, logger *logger.Logger) ([]string, error) {
+	resp, b, e := reader.ReadValue()
+	if e != nil {
+		logger.Debugf(string(b))
+		return nil, e
+	}
 	message := resp.SmartResult()
 	slice, _ := message.([]interface{})
 	return convertToStringArray(slice)
+}
+
+func readRespString(reader *resp3.Reader, logger *logger.Logger) (string, error) {
+	resp, b, e := reader.ReadValue()
+	if e != nil {
+		logger.Debugf(string(b))
+		return "", e
+	}
+	message := resp.SmartResult()
+	slice, _ := message.(string)
+	return slice, nil
 }
 
 func deleteRDBfile() {
@@ -90,4 +107,15 @@ func processRedisObject(o parser.RedisObject) bool {
 		println(zset.Key, zset.Entries)
 	}
 	return true
+}
+
+func readAndCheckRDBFile(reader *bufio.Reader) error {
+	req := parseRESPCommand(reader, true)
+	if len(req.data) == 0 {
+		return fmt.Errorf("Couldn't read data.")
+	}
+	dataString := string(req.data)
+	stringIOReader := strings.NewReader(dataString)
+	decoder := parser.NewDecoder(stringIOReader)
+	return decoder.Parse(processRedisObject)
 }

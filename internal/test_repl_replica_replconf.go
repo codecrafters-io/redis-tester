@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"net"
+	"strings"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
 	"github.com/smallnest/resp3"
@@ -37,10 +38,7 @@ func testReplReplicaSendsReplconf(stageHarness *testerutils.StageHarness) error 
 
 	r := resp3.NewReader(conn)
 
-	resp, _, _ := r.ReadValue()
-	message := resp.SmartResult()
-	slice, _ := message.([]interface{})
-	actualMessages, _ := convertToStringArray(slice)
+	actualMessages, _ := readRespMessages(r, logger)
 	expectedMessages := []string{"PING"}
 	err = compareStringSlices(actualMessages, expectedMessages)
 	if err != nil {
@@ -51,16 +49,25 @@ func testReplReplicaSendsReplconf(stageHarness *testerutils.StageHarness) error 
 	conn.Write(arg)
 	logger.Infof("%s sent.", bytes.TrimSpace(arg))
 
-	resp, _, _ = r.ReadValue()
-	message = resp.SmartResult()
-	slice, _ = message.([]interface{})
-	actualMessages, _ = convertToStringArray(slice)
+	actualMessages, _ = readRespMessages(r, logger)
 	expectedMessages = []string{"REPLCONF", "listening-port", "6380"}
 	err = compareStringSlices(actualMessages, expectedMessages)
 	if err != nil {
 		return err
 	}
 	logger.Successf("REPLCONF listening-port 6380 received.")
+
+	arg = []byte("+OK\r\n")
+	conn.Write(arg)
+	logger.Infof("%s sent.", bytes.TrimSpace(arg))
+
+	actualMessages, _ = readRespMessages(r, logger)
+	expectedMessages = []string{"REPLCONF", "*", "*", "*", "*"}
+	err = compareStringSlices(actualMessages, expectedMessages)
+	if err != nil {
+		return err
+	}
+	logger.Successf(strings.Join(actualMessages, " ") + " received.")
 
 	return nil
 }

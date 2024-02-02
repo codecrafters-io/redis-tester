@@ -125,7 +125,7 @@ func (v Value) Encode() ([]byte, error) {
 	return []byte{}, fmt.Errorf("Encode was given an unsupported type")
 }
 
-func Decode(byteStream *bufio.Reader) (Value, error) {
+func Decode(byteStream *bufio.Reader, decodeRdb bool) (Value, error) {
 	b, err := byteStream.ReadByte()
 	if err != nil {
 		return Value{}, err
@@ -140,7 +140,7 @@ func Decode(byteStream *bufio.Reader) (Value, error) {
 	case SIMPLE_STRING:
 		return decodeSimpleString(byteStream)
 	case BULK_STRING:
-		return decodeBulkString(byteStream)
+		return decodeBulkString(byteStream, decodeRdb)
 	case ARRAY:
 		return decodeArray(byteStream)
 	case INTEGER:
@@ -221,7 +221,7 @@ func decodeError(byteStream *bufio.Reader) (Value, error) {
 	return NewErrorValue(string(t)), nil
 }
 
-func decodeBulkString(byteStream *bufio.Reader) (Value, error) {
+func decodeBulkString(byteStream *bufio.Reader, decodeRdb bool) (Value, error) {
 	t, err := readToken(byteStream)
 	if err != nil {
 		return Value{}, nil
@@ -232,7 +232,14 @@ func decodeBulkString(byteStream *bufio.Reader) (Value, error) {
 		return Value{}, err
 	}
 
-	str := make([]byte, size+2)
+	extend := 0 // RDB files when sent, don't end with \r\n, we need to reduce
+	// size for reading them.
+	if decodeRdb == true {
+		extend += 0
+	} else {
+		extend += 2
+	}
+	str := make([]byte, size+extend)
 
 	_, err = io.ReadFull(byteStream, str)
 	if err != nil {
@@ -257,7 +264,7 @@ func decodeArray(byteStream *bufio.Reader) (Value, error) {
 
 	arr := make([]Value, length)
 	for i := 0; i < len(arr); i++ {
-		v, err := Decode(byteStream)
+		v, err := Decode(byteStream, false)
 		if err != nil {
 			return Value{}, err
 		}
