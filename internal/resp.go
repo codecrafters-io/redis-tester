@@ -1,12 +1,13 @@
 package internal
 
 import (
-	"bufio"
 	"fmt"
 	"io"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/smallnest/resp3"
 )
 
 type Type struct {
@@ -125,7 +126,7 @@ func (v Value) Encode() ([]byte, error) {
 	return []byte{}, fmt.Errorf("Encode was given an unsupported type")
 }
 
-func Decode(byteStream *bufio.Reader, decodeRdb bool) (Value, error) {
+func Decode(byteStream *resp3.Reader, decodeRdb bool) (Value, error) {
 	b, err := byteStream.ReadByte()
 	if err != nil {
 		return Value{}, err
@@ -180,10 +181,11 @@ func encodeArray(v Value) ([]byte, error) {
 		}
 		res = append(res, val...)
 	}
-	return []byte(fmt.Sprintf("*%d\r\n%s\r\n", len(res), res)), nil
+	fmt.Println(res, len(res))
+	return []byte(fmt.Sprintf("*%d\r\n%s\r\n", len(v.array), res)), nil
 }
 
-func readToken(byteStream *bufio.Reader) ([]byte, error) {
+func readToken(byteStream *resp3.Reader) ([]byte, error) {
 	bytes, err := byteStream.ReadBytes('\n')
 	if err != nil {
 		return nil, err
@@ -192,7 +194,7 @@ func readToken(byteStream *bufio.Reader) ([]byte, error) {
 	return bytes[:len(bytes)-2], nil
 }
 
-func decodeSimpleString(byteStream *bufio.Reader) (Value, error) {
+func decodeSimpleString(byteStream *resp3.Reader) (Value, error) {
 	t, err := readToken(byteStream)
 	if err != nil {
 		return Value{}, err
@@ -200,7 +202,7 @@ func decodeSimpleString(byteStream *bufio.Reader) (Value, error) {
 	return NewSimpleStringValue(string(t)), nil
 }
 
-func decodeInteger(byteStream *bufio.Reader) (Value, error) {
+func decodeInteger(byteStream *resp3.Reader) (Value, error) {
 	t, err := readToken(byteStream)
 	if err != nil {
 		return Value{}, nil
@@ -213,7 +215,7 @@ func decodeInteger(byteStream *bufio.Reader) (Value, error) {
 	return NewIntegerValue(num), nil
 }
 
-func decodeError(byteStream *bufio.Reader) (Value, error) {
+func decodeError(byteStream *resp3.Reader) (Value, error) {
 	t, err := readToken(byteStream)
 	if err != nil {
 		return Value{}, err
@@ -221,7 +223,7 @@ func decodeError(byteStream *bufio.Reader) (Value, error) {
 	return NewErrorValue(string(t)), nil
 }
 
-func decodeBulkString(byteStream *bufio.Reader, decodeRdb bool) (Value, error) {
+func decodeBulkString(byteStream *resp3.Reader, decodeRdb bool) (Value, error) {
 	t, err := readToken(byteStream)
 	if err != nil {
 		return Value{}, nil
@@ -246,13 +248,20 @@ func decodeBulkString(byteStream *bufio.Reader, decodeRdb bool) (Value, error) {
 		return Value{}, err
 	}
 
+	if decodeRdb && byteStream.Buffered() > 0 {
+		return Value{}, fmt.Errorf("Unexpected CRLF at the end.")
+	}
 	// discard \r\n
+	// Assert \r\n over here, before discarding
+	if !decodeRdb && string(str[size:]) != "\r\n" {
+		return Value{}, fmt.Errorf("Expected CRLF at the end.")
+	}
 	str = str[:size]
 
 	return NewBulkStringValue(string(str)), nil
 }
 
-func decodeArray(byteStream *bufio.Reader) (Value, error) {
+func decodeArray(byteStream *resp3.Reader) (Value, error) {
 	t, err := readToken(byteStream)
 	if err != nil {
 		return Value{}, nil
