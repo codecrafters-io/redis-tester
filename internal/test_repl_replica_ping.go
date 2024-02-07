@@ -36,15 +36,5 @@ func testReplReplicaSendsPing(stageHarness *testerutils.StageHarness) error {
 
 	r := resp3.NewReader(conn)
 
-	actualMessages, err := readRespMessages(r, logger)
-	if err != nil {
-		return err
-	}
-	expectedMessages := []string{"PING"}
-	err = compareStringSlices(actualMessages, expectedMessages)
-	if err != nil {
-		return err
-	}
-	logger.Successf("PING received.")
-	return nil
+	return readAndAssertMessages(r, []string{"PING"}, logger)
 }

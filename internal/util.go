@@ -121,3 +121,48 @@ func readAndCheckRDBFile(reader *resp3.Reader) error {
 	decoder := parser.NewDecoder(stringIOReader)
 	return decoder.Parse(processRedisObject)
 }
+
+func readAndAssertMessages(reader *resp3.Reader, messages []string, logger *logger.Logger) error {
+	actualMessages, err := readRespMessages(reader, logger)
+	if err != nil {
+		return err
+	}
+	expectedMessages := []string(messages)
+	err = compareStringSlices(actualMessages, expectedMessages)
+	if err != nil {
+		return err
+	}
+	logger.Successf(strings.Join(actualMessages, " ") + " received.")
+	return nil
+}
+
+func readAndAssertMessage(reader *resp3.Reader, expectedMessage string, logger *logger.Logger) error {
+	actualMessage, err := readRespString(reader, logger)
+	if err != nil {
+		return err
+	}
+	if strings.Contains(expectedMessage, " * ") {
+		// Wildcard present, do a array comparison
+		actualMessageParts := strings.Split(actualMessage, " ")
+		expectedMessageParts := strings.Split(expectedMessage, " ")
+		err = compareStringSlices(actualMessageParts, expectedMessageParts)
+	} else {
+		if actualMessage != expectedMessage {
+			err = fmt.Errorf("Expected '%v', got '%v'", expectedMessage, actualMessage)
+		}
+	}
+	if err != nil {
+		return err
+	}
+	logger.Successf(actualMessage + " received.")
+	return nil
+}
+
+func sendAndLogMessage(writer *resp3.Writer, message string, logger *logger.Logger) error {
+	if _, err := writer.WriteString(message); err != nil {
+		return err
+	}
+	writer.Flush()
+	logger.Infof("%s sent.", strings.ReplaceAll(message, "\r\n", ""))
+	return nil
+}

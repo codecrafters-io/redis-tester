@@ -1,10 +1,8 @@
 package internal
 
 import (
-	"bytes"
 	"fmt"
 	"net"
-	"strings"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
 	"github.com/smallnest/resp3"
@@ -38,60 +36,33 @@ func testReplReplicaSendsPsync(stageHarness *testerutils.StageHarness) error {
 	}
 
 	r := resp3.NewReader(conn)
+	w := resp3.NewWriter(conn)
 
-	actualMessages, err := readRespMessages(r, logger)
+	err = readAndAssertMessages(r, []string{"PING"}, logger)
 	if err != nil {
 		return err
 	}
-	expectedMessages := []string{"PING"}
-	err = compareStringSlices(actualMessages, expectedMessages)
-	if err != nil {
-		return err
-	}
-	logger.Successf("PING received.")
-	arg := []byte("+PONG\r\n")
-	conn.Write(arg)
-	logger.Infof("%s sent.", bytes.TrimSpace(arg))
+	message := "+PONG\r\n"
+	sendAndLogMessage(w, message, logger)
 
-	actualMessages, err = readRespMessages(r, logger)
+	err = readAndAssertMessages(r, []string{"REPLCONF", "listening-port", "6380"}, logger)
 	if err != nil {
 		return err
 	}
-	expectedMessages = []string{"REPLCONF", "listening-port", "6380"}
-	err = compareStringSlices(actualMessages, expectedMessages)
-	if err != nil {
-		return err
-	}
-	logger.Successf("REPLCONF listening-port 6380 received.")
-	arg = []byte("+OK\r\n")
-	conn.Write(arg)
-	logger.Infof("%s sent.", bytes.TrimSpace(arg))
+	message = "+OK\r\n"
+	sendAndLogMessage(w, message, logger)
 
-	actualMessages, err = readRespMessages(r, logger)
+	err = readAndAssertMessages(r, []string{"REPLCONF", "*", "*", "*", "*"}, logger)
 	if err != nil {
 		return err
 	}
-	expectedMessages = []string{"REPLCONF", "*", "*", "*", "*"}
-	err = compareStringSlices(actualMessages, expectedMessages)
-	if err != nil {
-		return err
-	}
-	logger.Successf(strings.Join(actualMessages, " ") + " received.")
+	message = "+OK\r\n"
+	sendAndLogMessage(w, message, logger)
 
-	arg = []byte("+OK\r\n")
-	conn.Write(arg)
-	logger.Infof("%s sent.", bytes.TrimSpace(arg))
-
-	actualMessages, err = readRespMessages(r, logger)
+	err = readAndAssertMessages(r, []string{"PSYNC", "?", "-1"}, logger)
 	if err != nil {
 		return err
 	}
-	expectedMessages = []string{"PSYNC", "?", "-1"}
-	err = compareStringSlices(actualMessages, expectedMessages)
-	if err != nil {
-		return err
-	}
-	logger.Successf("PSYNC ? -1 received.")
 
 	return nil
 }
