@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"bufio"
 	"fmt"
 	"strings"
 
@@ -53,11 +52,34 @@ func testReplMasterPsyncRdb(stageHarness *testerutils.StageHarness) error {
 	}
 	logger.Successf("OK received.")
 
+	// logger.Infof("$ redis-cli REPLCONF capa eof")
+	// w.WriteCommand("REPLCONF", "capa", "eof")
+
+	// actualMessage, err = readRespString(r, logger)
+	// if err != nil {
+	// 	logFriendlyError(logger, err)
+	// 	return err
+	// }
+	// if actualMessage != "OK" {
+	// 	return fmt.Errorf("Expected 'OK', got %v", actualMessage)
+	// }
+	// logger.Successf("OK received.")
+
 	w.WriteCommand("PSYNC", "?", "-1")
+	// for {
+	// 	actualMessage, err = readRespString(r, logger)
+	// 	if err != nil {
+	// 		if err.Error() == "resp: invalid syntax" {
+	// 			// Redis sends 5 \n over here. Need to skip them.
+	// 			continue
+	// 		}
+	// 	} else {
+	// 		break
+	// 	}
+	// }
 	actualMessage, err = readRespString(r, logger)
-	if err != nil {
-		return err
-	}
+	// reader := bufio.NewReader(conn)
+
 	actualMessageParts := strings.Split(actualMessage, " ")
 	command, offset := actualMessageParts[0], actualMessageParts[2]
 	if command != "FULLRESYNC" {
@@ -69,13 +91,11 @@ func testReplMasterPsyncRdb(stageHarness *testerutils.StageHarness) error {
 	}
 	logger.Successf("Offset = 0 received.")
 
-	reader := bufio.NewReader(conn)
-
-	err = readAndCheckRDBFile(reader)
+	err = readAndCheckRDBFileUsingDecode(r)
 	if err != nil {
 		return fmt.Errorf("Error while parsing RDB file : %v", err)
 	}
-	logger.Successf("RDB file received from master.")
+	logger.Successf("Successfully received RDB file from master.")
 
 	return nil
 }

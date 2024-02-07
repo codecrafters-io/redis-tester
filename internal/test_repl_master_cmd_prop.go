@@ -1,13 +1,23 @@
 package internal
 
 import (
-	"bufio"
 	"fmt"
 	"strings"
+	"time"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
 	"github.com/smallnest/resp3"
 )
+
+func sendAcks(w *resp3.Writer) {
+	ticker := time.NewTicker(1 * time.Second)
+	defer ticker.Stop()
+
+	for range ticker.C {
+		w.WriteCommand("REPLCONF", "ACK", "0")
+		fmt.Println("ACK sent to master")
+	}
+}
 
 func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
 	deleteRDBfile()
@@ -56,6 +66,20 @@ func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
 	}
 	logger.Successf("OK received.")
 
+	// logger.Infof("$ redis-cli REPLCONF capa eof")
+	// w.WriteCommand("REPLCONF", "capa", "eof")
+
+	// actualMessage, err = readRespString(r, logger)
+	// if err != nil {
+	// 	logFriendlyError(logger, err)
+	// 	return err
+	// }
+	// if actualMessage != "OK" {
+	// 	return fmt.Errorf("Expected 'OK', got %v", actualMessage)
+	// }
+	// logger.Successf("OK received.")
+
+	logger.Infof("$ redis-cli PSYNC ? -1")
 	w.WriteCommand("PSYNC", "?", "-1")
 	actualMessage, err = readRespString(r, logger)
 	if err != nil {
@@ -72,13 +96,17 @@ func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
 	}
 	logger.Successf("Offset = 0 received.")
 
-	reader := bufio.NewReader(conn)
-
-	err = readAndCheckRDBFile(reader)
+	err = readAndCheckRDBFileUsingDecode(r)
 	if err != nil {
 		return fmt.Errorf("Error while parsing RDB file : %v", err)
 	}
-	logger.Successf("RDB file received from master.")
+	logger.Successf("Successfully received RDB file from master.")
+
+	// go sendAcks(w)
+	// time.Sleep(5)
+	// w.WriteCommand("REPLCONF", "ACK", "0")
+	// time.Sleep(5)
+	// reader := bufio.NewReader(conn)
 
 	key1, value1 := "foo", "123"
 	key2, value2 := "bar", "456"
@@ -96,7 +124,10 @@ func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
 
 	i := 0
 	for i < 3 {
-		req := parseRESPCommand(reader, false)
+		req, err := parseRESPCommand(r, false)
+		if err != nil {
+			return fmt.Errorf(err.Error())
+		}
 		var cmd []string
 		for _, v := range req.Array() {
 			cmd = append(cmd, v.String())

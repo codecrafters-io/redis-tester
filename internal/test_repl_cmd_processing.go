@@ -28,12 +28,10 @@ func testReplCmdProcessing(stageHarness *testerutils.StageHarness) error {
 
 	logger := stageHarness.Logger
 
-	mAddr := "localhost:6379"
-	masterClient := NewRedisClient(mAddr)
-	cAddr := "localhost:6380"
-	replicaClient := NewRedisClient(cAddr)
+	masterAddr, replicaAddr := "localhost:6379", "localhost:6380"
+	masterClient := NewRedisClient(masterAddr)
+	replicaClient := NewRedisClient(replicaAddr)
 
-	masterClient.Close()
 	key1, value1 := "foo", "123"
 	key2, value2 := "bar", "456"
 	key3, value3 := "baz", "789"
@@ -63,5 +61,6 @@ func testReplCmdProcessing(stageHarness *testerutils.StageHarness) error {
 
 	masterClient.Close()
 	replicaClient.Close()
+
 	return nil
 }

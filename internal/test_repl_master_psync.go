@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
+	"github.com/smallnest/resp3"
 )
 
 func testReplMasterPsync(stageHarness *testerutils.StageHarness) error {
@@ -19,57 +20,73 @@ func testReplMasterPsync(stageHarness *testerutils.StageHarness) error {
 
 	logger := stageHarness.Logger
 
-	client := NewRedisClient("localhost:6379")
-
-	logger.Infof("$ redis-cli PING")
-	resp, err := client.Do("PING").Result()
-
+	conn, err := NewRedisConn("", "localhost:6379")
 	if err != nil {
-		logFriendlyError(logger, err)
-		return err
+		fmt.Println("Error connecting to TCP server:", err)
 	}
 
-	if resp != "PONG" {
-		return fmt.Errorf("Expected OK from Master, received %v", resp)
+	r := resp3.NewReader(conn)
+	w := resp3.NewWriter(conn)
+
+	logger.Infof("$ redis-cli PING")
+
+	w.WriteCommand("PING")
+	actualMessage, err := readRespString(r, logger)
+	if err != nil {
+		return err
+	}
+	if actualMessage != "PONG" {
+		return fmt.Errorf("Expected 'PONG', got %v", actualMessage)
 	}
 	logger.Successf("PONG received.")
 
 	logger.Infof("$ redis-cli REPLCONF listening-port 6380")
-	resp, err = client.Do("REPLCONF", "listening-port", "6380").Result()
-
+	w.WriteCommand("REPLCONF", "listening-port", "6380")
+	actualMessage, err = readRespString(r, logger)
 	if err != nil {
-		logFriendlyError(logger, err)
 		return err
 	}
-
-	if resp != "OK" {
-		return fmt.Errorf("Expected OK from Master, received %v", resp)
+	if actualMessage != "OK" {
+		return fmt.Errorf("Expected 'OK', got %v", actualMessage)
 	}
 	logger.Successf("OK received.")
 
-	logger.Infof("$ redis-cli PSYNC ? -1")
-	resp, err = client.Do("PSYNC", "?", "-1").Result()
+	// logger.Infof("$ redis-cli REPLCONF capa eof")
+	// w.WriteCommand("REPLCONF", "capa", "eof")
 
-	if err != nil {
-		logFriendlyError(logger, err)
-		return err
-	}
+	// actualMessage, err = readRespString(r, logger)
+	// if err != nil {
+	// 	logFriendlyError(logger, err)
+	// 	return err
+	// }
+	// if actualMessage != "OK" {
+	// 	return fmt.Errorf("Expected 'OK', got %v", actualMessage)
+	// }
+	// logger.Successf("OK received.")
 
-	respStr, _ := resp.(string)
-	respParts := strings.Split(respStr, " ")
-	command := respParts[0]
-	offset := respParts[2]
-
+	w.WriteCommand("PSYNC", "?", "-1")
+	// for {
+	// 	actualMessage, err = readRespString(r, logger)
+	// 	if err != nil {
+	// 		if err.Error() == "resp: invalid syntax" {
+	// 			// Redis sends 5 \n over here. Need to skip them.
+	// 			continue
+	// 		}
+	// 	} else {
+	// 		break
+	// 	}
+	// }
+	actualMessage, err = readRespString(r, logger)
+	actualMessageParts := strings.Split(actualMessage, " ")
+	command, offset := actualMessageParts[0], actualMessageParts[2]
 	if command != "FULLRESYNC" {
-		return fmt.Errorf("Expected FULLRESYNC from Master, received %v", command)
+		return fmt.Errorf("Expected 'FULLRESYNC' from Master, got %v", command)
 	}
 	logger.Successf("FULLRESYNC received.")
-
 	if offset != "0" {
-		return fmt.Errorf("Expected offset to be 0 from Master, received %v", offset)
+		return fmt.Errorf("Expected Offset to be 0 from Master, got %v", offset)
 	}
-	logger.Successf("offset = 0 received.")
+	logger.Successf("Offset = 0 received.")
 
-	client.Close()
 	return nil
 }
