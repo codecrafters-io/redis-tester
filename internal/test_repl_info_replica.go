@@ -2,27 +2,38 @@ package internal
 
 import (
 	"fmt"
+	"net"
 	"strings"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
 )
 
 func testReplInfoReplica(stageHarness *testerutils.StageHarness) error {
-	_, _ = NewRedisConn("", "localhost:6380") // Master
+	listener, err := net.Listen("tcp", ":6379")
+	if err != nil {
+		fmt.Println("Error starting TCP server:", err)
+	}
+	defer listener.Close()
+	logger := stageHarness.Logger
+
+	logger.Infof("Server is running on port 6379")
 
 	replica := NewRedisBinary(stageHarness)
 	replica.args = []string{
-		"--port", "6379",
-		"--replicaof", "localhost", "6380",
+		"--port", "6380",
+		"--replicaof", "localhost", "6379",
 	}
 
 	if err := replica.Run(); err != nil {
 		return err
 	}
 
-	logger := stageHarness.Logger
-
-	client := NewRedisClient("localhost:6379")
+	conn, err := listener.Accept()
+	if err != nil {
+		fmt.Println("Error accepting: ", err.Error())
+		return err
+	}
+	client := NewRedisClient("localhost:6380")
 
 	logger.Infof("$ redis-cli INFO replication")
 	resp, err := client.Info("replication").Result()
@@ -45,5 +56,6 @@ func testReplInfoReplica(stageHarness *testerutils.StageHarness) error {
 	}
 
 	client.Close()
+	conn.Close()
 	return nil
 }
