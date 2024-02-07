@@ -27,26 +27,27 @@ func testReplMasterPsync(stageHarness *testerutils.StageHarness) error {
 	r := resp3.NewReader(conn)
 	w := resp3.NewWriter(conn)
 
-	logger.Infof("$ redis-cli PING")
-	w.WriteCommand("PING")
-	err = readAndAssertMessage(r, "PONG", logger)
+	replica := FakeRedisReplica{
+		Reader: r,
+		Writer: w,
+		Logger: logger,
+	}
+
+	err = replica.Ping()
 	if err != nil {
 		return err
 	}
 
-	logger.Infof("$ redis-cli REPLCONF listening-port 6380")
-	w.WriteCommand("REPLCONF", "listening-port", "6380")
-	err = readAndAssertMessage(r, "OK", logger)
+	err = replica.ReplConfPort()
 	if err != nil {
 		return err
 	}
 
-	logger.Infof("$ redis-cli PSYNC ? -1")
-	w.WriteCommand("PSYNC", "?", "-1")
-	err = readAndAssertMessage(r, "FULLRESYNC * 0", logger)
+	err = replica.Psync()
 	if err != nil {
 		return err
 	}
 
+	conn.Close()
 	return nil
 }

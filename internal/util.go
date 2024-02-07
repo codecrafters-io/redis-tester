@@ -10,6 +10,41 @@ import (
 	"github.com/smallnest/resp3"
 )
 
+type FakeRedisReplica struct {
+	Reader *resp3.Reader
+	Writer *resp3.Writer
+	Logger *logger.Logger
+}
+
+func (replica FakeRedisReplica) Send(sendMessage []string, receiveMessage string) error {
+	replica.Logger.Infof("$ redis-cli %v", strings.Join(sendMessage, " "))
+	replica.Writer.WriteCommand(sendMessage...)
+	err := readAndAssertMessage(replica.Reader, receiveMessage, replica.Logger)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (replica FakeRedisReplica) Ping() error {
+	return replica.Send([]string{"PING"}, "PONG")
+}
+func (replica FakeRedisReplica) ReplConfPort() error {
+	return replica.Send([]string{"REPLCONF", "listening-port", "6380"}, "OK")
+}
+func (replica FakeRedisReplica) Psync() error {
+	return replica.Send([]string{"PSYNC", "?", "-1"}, "FULLRESYNC * 0")
+}
+
+func (replica FakeRedisReplica) ReceiveRDB() error {
+	err := readAndCheckRDBFile(replica.Reader)
+	if err != nil {
+		return fmt.Errorf("Error while parsing RDB file : %v", err)
+	}
+	replica.Logger.Successf("Successfully received RDB file from master.")
+	return nil
+}
+
 func convertToStringArray(interfaceSlice []interface{}) ([]string, error) {
 	stringSlice := make([]string, 0, len(interfaceSlice))
 
