@@ -38,7 +38,10 @@ func testReplReplicaSendsReplconf(stageHarness *testerutils.StageHarness) error 
 
 	r := resp3.NewReader(conn)
 
-	actualMessages, _ := readRespMessages(r, logger)
+	actualMessages, err := readRespMessages(r, logger)
+	if err != nil {
+		return err
+	}
 	expectedMessages := []string{"PING"}
 	err = compareStringSlices(actualMessages, expectedMessages)
 	if err != nil {
@@ -49,7 +52,10 @@ func testReplReplicaSendsReplconf(stageHarness *testerutils.StageHarness) error 
 	conn.Write(arg)
 	logger.Infof("%s sent.", bytes.TrimSpace(arg))
 
-	actualMessages, _ = readRespMessages(r, logger)
+	actualMessages, err = readRespMessages(r, logger)
+	if err != nil {
+		return err
+	}
 	expectedMessages = []string{"REPLCONF", "listening-port", "6380"}
 	err = compareStringSlices(actualMessages, expectedMessages)
 	if err != nil {
@@ -61,7 +67,10 @@ func testReplReplicaSendsReplconf(stageHarness *testerutils.StageHarness) error 
 	conn.Write(arg)
 	logger.Infof("%s sent.", bytes.TrimSpace(arg))
 
-	actualMessages, _ = readRespMessages(r, logger)
+	actualMessages, err = readRespMessages(r, logger)
+	if err != nil {
+		return err
+	}
 	expectedMessages = []string{"REPLCONF", "*", "*", "*", "*"}
 	err = compareStringSlices(actualMessages, expectedMessages)
 	if err != nil {

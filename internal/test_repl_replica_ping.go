@@ -36,10 +36,10 @@ func testReplReplicaSendsPing(stageHarness *testerutils.StageHarness) error {
 
 	r := resp3.NewReader(conn)
 
-	resp, _, _ := r.ReadValue()
-	message := resp.SmartResult()
-	slice, _ := message.([]interface{})
-	actualMessages, _ := convertToStringArray(slice)
+	actualMessages, err := readRespMessages(r, logger)
+	if err != nil {
+		return err
+	}
 	expectedMessages := []string{"PING"}
 	err = compareStringSlices(actualMessages, expectedMessages)
 	if err != nil {
