@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"bufio"
 	"fmt"
 	"os"
 	"strings"
@@ -109,15 +108,7 @@ func processRedisObject(o parser.RedisObject) bool {
 	return true
 }
 
-func parseRESPCommandRDB(reader *resp3.Reader) (Value, error) {
-	req, err := DecodeRDB(reader)
-	if err != nil {
-		return Value{}, err
-	}
-	return req, nil
-}
-
-func readAndCheckRDBFileUsingDecode(reader *resp3.Reader) error {
+func readAndCheckRDBFile(reader *resp3.Reader) error {
 	req, err := parseRESPCommandRDB(reader)
 	if err != nil {
 		return fmt.Errorf(err.Error())
@@ -126,78 +117,6 @@ func readAndCheckRDBFileUsingDecode(reader *resp3.Reader) error {
 		return fmt.Errorf("Couldn't read data.")
 	}
 	dataString := string(req.data)
-	stringIOReader := strings.NewReader(dataString)
-	decoder := parser.NewDecoder(stringIOReader)
-	return decoder.Parse(processRedisObject)
-}
-
-func readAndCheckRDBFileRESP3(reader *resp3.Reader) error {
-	var rdb []byte
-	for {
-		byte, err := reader.ReadByte()
-		if err != nil {
-			fmt.Println(err)
-		}
-		rdb = append(rdb, byte)
-		if reader.Buffered() == 0 {
-			break
-		}
-	}
-	if len(rdb) == 0 {
-		return fmt.Errorf("Couldn't read data.")
-	}
-	dataString := string(rdb)
-	// n := len(rdb)
-	stringIOReader := strings.NewReader(dataString)
-	decoder := parser.NewDecoder(stringIOReader)
-	return decoder.Parse(processRedisObject)
-}
-
-func readAndCheckRDBFile(reader *bufio.Reader) error {
-	var rdb []byte
-	for {
-		byte, err := reader.ReadByte()
-		if err != nil {
-			fmt.Println(err)
-		}
-		rdb = append(rdb, byte)
-		if reader.Buffered() == 0 {
-			break
-		}
-	}
-	if len(rdb) == 0 {
-		return fmt.Errorf("Couldn't read data.")
-	}
-	dataString := string(rdb)
-	stringIOReader := strings.NewReader(dataString)
-	decoder := parser.NewDecoder(stringIOReader)
-	return decoder.Parse(processRedisObject)
-}
-
-func readAndCheckRDBFileNew(reader *bufio.Reader) error {
-	req, err := reader.ReadString('\n') // Read marker
-	marker := strings.Split(strings.TrimSpace(req), ":")[1]
-	// markerLength := len(marker)
-	var rdb []byte
-	for {
-		byte, err := reader.ReadByte()
-		if err != nil {
-			fmt.Println(err)
-		}
-		rdb = append(rdb, byte)
-		if strings.Contains(string(rdb), marker) {
-			break
-		}
-	}
-	rdbLenth := len(rdb)
-	if err != nil {
-		return fmt.Errorf(err.Error())
-	}
-	if len(rdb) == 0 {
-		return fmt.Errorf("Couldn't read RDB file.")
-	}
-	// fmt.Println(string(rdb))
-	dataString := string(rdb[:rdbLenth-40])
 	stringIOReader := strings.NewReader(dataString)
 	decoder := parser.NewDecoder(stringIOReader)
 	return decoder.Parse(processRedisObject)
