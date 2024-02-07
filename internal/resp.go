@@ -126,7 +126,7 @@ func (v Value) Encode() ([]byte, error) {
 	return []byte{}, fmt.Errorf("Encode was given an unsupported type")
 }
 
-func Decode(byteStream *resp3.Reader, decodeRdb bool) (Value, error) {
+func Decode(byteStream *resp3.Reader) (Value, error) {
 	b, err := byteStream.ReadByte()
 	if err != nil {
 		return Value{}, err
@@ -141,7 +141,7 @@ func Decode(byteStream *resp3.Reader, decodeRdb bool) (Value, error) {
 	case SIMPLE_STRING:
 		return decodeSimpleString(byteStream)
 	case BULK_STRING:
-		return decodeBulkString(byteStream, decodeRdb)
+		return decodeBulkString(byteStream)
 	case ARRAY:
 		return decodeArray(byteStream)
 	case INTEGER:
@@ -223,7 +223,32 @@ func decodeError(byteStream *resp3.Reader) (Value, error) {
 	return NewErrorValue(string(t)), nil
 }
 
-func decodeBulkString(byteStream *resp3.Reader, decodeRdb bool) (Value, error) {
+func decodeBulkString(byteStream *resp3.Reader) (Value, error) {
+	t, err := readToken(byteStream)
+	if err != nil {
+		return Value{}, nil
+	}
+
+	size, err := strconv.Atoi(string(t))
+	if err != nil {
+		return Value{}, err
+	}
+	str := make([]byte, size+2)
+	_, err = io.ReadFull(byteStream, str)
+	if err != nil {
+		return Value{}, err
+	}
+
+	// Assert \r\n over here, before discarding \r\n
+	if string(str[size:]) != "\r\n" {
+		return Value{}, fmt.Errorf("Expected CRLF at the end.")
+	}
+	str = str[:size]
+
+	return NewBulkStringValue(string(str)), nil
+}
+
+func decodeBulkStringRDB(byteStream *resp3.Reader) (Value, error) {
 	t, err := readToken(byteStream)
 	if err != nil {
 		return Value{}, nil
@@ -234,27 +259,17 @@ func decodeBulkString(byteStream *resp3.Reader, decodeRdb bool) (Value, error) {
 		return Value{}, err
 	}
 
-	extend := 0 // RDB files when sent, don't end with \r\n, we need to reduce
+	// RDB files when sent, don't end with \r\n, we need to reduce
 	// size for reading them.
-	if decodeRdb == true {
-		extend += 0
-	} else {
-		extend += 2
-	}
-	str := make([]byte, size+extend)
+	str := make([]byte, size)
 
 	_, err = io.ReadFull(byteStream, str)
 	if err != nil {
 		return Value{}, err
 	}
 
-	if decodeRdb && byteStream.Buffered() > 0 {
+	if byteStream.Buffered() > 0 {
 		return Value{}, fmt.Errorf("Unexpected CRLF at the end.")
-	}
-	// discard \r\n
-	// Assert \r\n over here, before discarding
-	if !decodeRdb && string(str[size:]) != "\r\n" {
-		return Value{}, fmt.Errorf("Expected CRLF at the end.")
 	}
 	str = str[:size]
 
@@ -273,7 +288,7 @@ func decodeArray(byteStream *resp3.Reader) (Value, error) {
 
 	arr := make([]Value, length)
 	for i := 0; i < len(arr); i++ {
-		v, err := Decode(byteStream, false)
+		v, err := Decode(byteStream)
 		if err != nil {
 			return Value{}, err
 		}
@@ -371,4 +386,22 @@ func Get(k Value) []byte {
 		return bytes
 	}
 	return SendNil()
+}
+
+func DecodeRDB(byteStream *resp3.Reader) (Value, error) {
+	b, err := byteStream.ReadByte()
+	if err != nil {
+		return Value{}, err
+	}
+
+	bType, err := GetType(rune(b))
+	if err != nil {
+		return Value{}, err
+	}
+
+	switch bType {
+	case BULK_STRING:
+		return decodeBulkStringRDB(byteStream)
+	}
+	return Value{}, fmt.Errorf("Decode was given an unsupported data type %c: ", bType)
 }

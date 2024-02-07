@@ -124,7 +124,7 @@ func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
 
 	i := 0
 	for i < 3 {
-		req, err := parseRESPCommand(r, false)
+		req, err := parseRESPCommand(r)
 		if err != nil {
 			return fmt.Errorf(err.Error())
 		}

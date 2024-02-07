@@ -109,8 +109,16 @@ func processRedisObject(o parser.RedisObject) bool {
 	return true
 }
 
+func parseRESPCommandRDB(reader *resp3.Reader) (Value, error) {
+	req, err := DecodeRDB(reader)
+	if err != nil {
+		return Value{}, err
+	}
+	return req, nil
+}
+
 func readAndCheckRDBFileUsingDecode(reader *resp3.Reader) error {
-	req, err := parseRESPCommand(reader, true)
+	req, err := parseRESPCommandRDB(reader)
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
