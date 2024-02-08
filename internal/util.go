@@ -1,7 +1,9 @@
 package internal
 
 import (
+	"crypto/rand"
 	"fmt"
+	"math/big"
 	"os"
 	"strings"
 
@@ -39,7 +41,37 @@ func (master FakeRedisMaster) AssertReplConfCapa() error {
 	return master.Assert([]string{"REPLCONF", "*", "*", "*", "*"}, "+OK\r\n")
 }
 func (master FakeRedisMaster) AssertPsync() error {
-	return master.Assert([]string{"PSYNC", "?", "-1"}, "+OK\r\n")
+	id, _ := RandomAlphanumericString(40)
+	response := "+FULLRESYNC " + id + " 0\r\n"
+	return master.Assert([]string{"PSYNC", "?", "-1"}, response)
+}
+
+func (master FakeRedisMaster) Handshake() error {
+	err := master.AssertPing()
+	if err != nil {
+		return err
+	}
+
+	err = master.AssertReplConfPort()
+	if err != nil {
+		return err
+	}
+
+	err = master.AssertReplConfCapa()
+	if err != nil {
+		return err
+	}
+
+	err = master.AssertPsync()
+	if err != nil {
+		return err
+	}
+
+	response := SendRDBFile()
+	master.Writer.Write(response)
+	err = master.Writer.Flush()
+	return err
+
 }
 
 type FakeRedisReplica struct {
@@ -254,4 +286,17 @@ func sendAndLogMessage(writer *resp3.Writer, message string, logger *logger.Logg
 	writer.Flush()
 	logger.Infof("%s sent.", strings.ReplaceAll(message, "\r\n", ""))
 	return nil
+}
+
+func RandomAlphanumericString(length int) (string, error) {
+	const charset = "abcdefghijklmnopqrstuvwxyz0123456789"
+	result := make([]byte, length)
+	for i := 0; i < length; i++ {
+		charIndex, err := rand.Int(rand.Reader, big.NewInt(int64(len(charset))))
+		if err != nil {
+			return "", err
+		}
+		result[i] = charset[charIndex.Int64()]
+	}
+	return string(result), nil
 }
