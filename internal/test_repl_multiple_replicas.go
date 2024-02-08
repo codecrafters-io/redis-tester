@@ -22,89 +22,64 @@ func testReplMultipleReplicas(stageHarness *testerutils.StageHarness) error {
 	logger := stageHarness.Logger
 
 	conn1, err := NewRedisConn("", "localhost:6379")
-	conn2, err := NewRedisConn("", "localhost:6379")
-	conn3, err := NewRedisConn("", "localhost:6379")
+	if err != nil {
+		fmt.Println("Error connecting to TCP server:", err)
+	}
 
+	conn2, err := NewRedisConn("", "localhost:6379")
+	if err != nil {
+		fmt.Println("Error connecting to TCP server:", err)
+	}
+
+	conn3, err := NewRedisConn("", "localhost:6379")
 	if err != nil {
 		fmt.Println("Error connecting to TCP server:", err)
 	}
 
 	client := NewRedisClient("localhost:6379")
 
-	r1 := resp3.NewReader(conn1)
-	w1 := resp3.NewWriter(conn1)
-	r2 := resp3.NewReader(conn2)
-	w2 := resp3.NewWriter(conn2)
-	r3 := resp3.NewReader(conn3)
-	w3 := resp3.NewWriter(conn3)
+	replica1 := FakeRedisReplica{
+		Reader: resp3.NewReader(conn1),
+		Writer: resp3.NewWriter(conn1),
+		Logger: logger,
+	}
 
-	logger.Infof("$ redis-cli PING")
-	writers := []*resp3.Writer{w1, w2, w3}
-	readers := []*resp3.Reader{r1, r2, r3}
+	replica2 := FakeRedisReplica{
+		Reader: resp3.NewReader(conn2),
+		Writer: resp3.NewWriter(conn2),
+		Logger: logger,
+	}
+
+	replica3 := FakeRedisReplica{
+		Reader: resp3.NewReader(conn3),
+		Writer: resp3.NewWriter(conn3),
+		Logger: logger,
+	}
+
+	replicas := []FakeRedisReplica{replica1, replica2, replica3}
 
 	for i := 0; i < 3; i++ {
-		r, w := readers[i], writers[i]
-		w.WriteCommand("PING")
-		actualMessage, err := readRespString(r, logger)
+		replica := replicas[i]
+		err = replica.Handshake()
 		if err != nil {
 			return err
 		}
-		if actualMessage != "PONG" {
-			return fmt.Errorf("Expected 'PONG', got %v", actualMessage)
-		}
-		logger.Successf("PONG received on replica : %v.", i+1)
-
-		logger.Infof("$ redis-cli REPLCONF listening-port 6380")
-		w.WriteCommand("REPLCONF", "listening-port", "6380")
-		actualMessage, err = readRespString(r, logger)
-		if err != nil {
-			return err
-		}
-		if actualMessage != "OK" {
-			return fmt.Errorf("Expected 'OK', got %v", actualMessage)
-		}
-		logger.Successf("OK received on replica : %v.", i+1)
-
-		logger.Infof("$ redis-cli PSYNC ? -1")
-		w.WriteCommand("PSYNC", "?", "-1")
-		actualMessage, err = readRespString(r, logger)
-		if err != nil {
-			return err
-		}
-		actualMessageParts := strings.Split(actualMessage, " ")
-		command, offset := actualMessageParts[0], actualMessageParts[2]
-		if command != "FULLRESYNC" {
-			return fmt.Errorf("Expected 'FULLRESYNC' from Master, got %v", command)
-		}
-		logger.Successf("FULLRESYNC received on replica : %v.", i+1)
-		if offset != "0" {
-			return fmt.Errorf("Expected Offset to be 0 from Master, got %v", offset)
-		}
-		logger.Successf("Offset = 0 received on replica : %v.", i+1)
-
-		err = readAndCheckRDBFile(r)
-		if err != nil {
-			return fmt.Errorf("Error while parsing RDB file : %v", err)
-		}
-		logger.Successf("Successfully received RDB file from master on replica : %v.", i+1)
 	}
 
-	key1, value1 := "foo", "123"
-	key2, value2 := "bar", "456"
-	key3, value3 := "baz", "789"
-	setMap := map[int][]string{
-		1: {key1, value1},
-		2: {key2, value2},
-		3: {key3, value3},
+	kvMap := map[int][]string{
+		1: {"foo", "123"},
+		2: {"bar", "456"},
+		3: {"baz", "789"},
 	}
-	for i := 1; i <= len(setMap); i++ { // We need order of commands preserved
-		key, value := setMap[i][0], setMap[i][1]
+	for i := 1; i <= len(kvMap); i++ { // We need order of commands preserved
+		key, value := kvMap[i][0], kvMap[i][1]
 		logger.Debugf("Setting key %s to %s", key, value)
 		client.Do("SET", key, value)
 	}
 
 	for j := 0; j < 3; j++ {
-		r, _ := readers[j], writers[j]
+		replica := replicas[j]
+		r := replica.Reader
 		i := 0
 		for i < 3 {
 			req, err := parseRESPCommand(r)
@@ -119,7 +94,7 @@ func testReplMultipleReplicas(stageHarness *testerutils.StageHarness) error {
 				// User might not send SELECT, but Redis will send SELECT
 				// Apart from SELECT we need 3 SETs
 				i += 1
-				key, value := setMap[i][0], setMap[i][1]
+				key, value := kvMap[i][0], kvMap[i][1]
 				err := compareStringSlices(cmd, []string{"SET", key, value})
 				if err != nil {
 					return err

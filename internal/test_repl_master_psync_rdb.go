@@ -34,22 +34,7 @@ func testReplMasterPsyncRdb(stageHarness *testerutils.StageHarness) error {
 		Logger: logger,
 	}
 
-	err = replica.Ping()
-	if err != nil {
-		return err
-	}
-
-	err = replica.ReplConfPort()
-	if err != nil {
-		return err
-	}
-
-	err = replica.Psync()
-	if err != nil {
-		return err
-	}
-
-	err = replica.ReceiveRDB()
+	err = replica.Handshake()
 	if err != nil {
 		return err
 	}

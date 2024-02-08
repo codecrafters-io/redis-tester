@@ -37,33 +37,18 @@ func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
 		Logger: logger,
 	}
 
-	err = replica.Ping()
+	err = replica.Handshake()
 	if err != nil {
 		return err
 	}
 
-	err = replica.ReplConfPort()
-	if err != nil {
-		return err
-	}
-
-	err = replica.Psync()
-	if err != nil {
-		return err
-	}
-
-	err = replica.ReceiveRDB()
-	if err != nil {
-		return err
-	}
-
-	setMap := map[int][]string{
+	kvMap := map[int][]string{
 		1: {"foo", "123"},
 		2: {"bar", "456"},
 		3: {"baz", "789"},
 	}
-	for i := 1; i <= len(setMap); i++ { // We need order of commands preserved
-		key, value := setMap[i][0], setMap[i][1]
+	for i := 1; i <= len(kvMap); i++ { // We need order of commands preserved
+		key, value := kvMap[i][0], kvMap[i][1]
 		logger.Debugf("Setting key %s to %s", key, value)
 		client.Do("SET", key, value)
 	}
@@ -82,7 +67,7 @@ func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
 			// User might not send SELECT, but Redis will send SELECT
 			// Apart from SELECT we need 3 SETs
 			i += 1
-			key, value := setMap[i][0], setMap[i][1]
+			key, value := kvMap[i][0], kvMap[i][1]
 			err := compareStringSlices(cmd, []string{"SET", key, value})
 			if err != nil {
 				return err
