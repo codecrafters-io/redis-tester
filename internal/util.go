@@ -10,6 +10,38 @@ import (
 	"github.com/smallnest/resp3"
 )
 
+type FakeRedisMaster struct {
+	Reader *resp3.Reader
+	Writer *resp3.Writer
+	Logger *logger.Logger
+}
+
+func (master FakeRedisMaster) Assert(receiveMessages []string, sendMessage string) error {
+	err := readAndAssertMessages(master.Reader, receiveMessages, master.Logger)
+	_, err = master.Writer.WriteString(sendMessage)
+	if err != nil {
+		return err
+	}
+	master.Writer.Flush()
+	master.Logger.Infof("%s sent.", strings.ReplaceAll(sendMessage, "\r\n", ""))
+	return nil
+}
+
+func (master FakeRedisMaster) AssertPing() error {
+	return master.Assert([]string{"PING"}, "+PONG\r\n")
+}
+
+func (master FakeRedisMaster) AssertReplConfPort() error {
+	return master.Assert([]string{"REPLCONF", "listening-port", "6380"}, "+OK\r\n")
+}
+
+func (master FakeRedisMaster) AssertReplConfCapa() error {
+	return master.Assert([]string{"REPLCONF", "*", "*", "*", "*"}, "+OK\r\n")
+}
+func (master FakeRedisMaster) AssertPsync() error {
+	return master.Assert([]string{"PSYNC", "?", "-1"}, "+OK\r\n")
+}
+
 type FakeRedisReplica struct {
 	Reader *resp3.Reader
 	Writer *resp3.Writer
@@ -45,6 +77,28 @@ func (replica FakeRedisReplica) ReceiveRDB() error {
 	return nil
 }
 
+func (replica FakeRedisReplica) Handshake() error {
+	err := replica.Ping()
+	if err != nil {
+		return err
+	}
+
+	err = replica.ReplConfPort()
+	if err != nil {
+		return err
+	}
+
+	err = replica.Psync()
+	if err != nil {
+		return err
+	}
+
+	err = replica.ReceiveRDB()
+	if err != nil {
+		return err
+	}
+	return nil
+}
 func convertToStringArray(interfaceSlice []interface{}) ([]string, error) {
 	stringSlice := make([]string, 0, len(interfaceSlice))
 

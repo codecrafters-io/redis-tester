@@ -14,7 +14,6 @@ func testReplReplicaSendsPsync(stageHarness *testerutils.StageHarness) error {
 	if err != nil {
 		fmt.Println("Error starting TCP server:", err)
 	}
-	defer listener.Close()
 	logger := stageHarness.Logger
 
 	logger.Infof("Server is running on port 6379")
@@ -38,31 +37,33 @@ func testReplReplicaSendsPsync(stageHarness *testerutils.StageHarness) error {
 	r := resp3.NewReader(conn)
 	w := resp3.NewWriter(conn)
 
-	err = readAndAssertMessages(r, []string{"PING"}, logger)
-	if err != nil {
-		return err
+	master := FakeRedisMaster{
+		Reader: r,
+		Writer: w,
+		Logger: logger,
 	}
-	message := "+PONG\r\n"
-	sendAndLogMessage(w, message, logger)
 
-	err = readAndAssertMessages(r, []string{"REPLCONF", "listening-port", "6380"}, logger)
-	if err != nil {
-		return err
-	}
-	message = "+OK\r\n"
-	sendAndLogMessage(w, message, logger)
-
-	err = readAndAssertMessages(r, []string{"REPLCONF", "*", "*", "*", "*"}, logger)
-	if err != nil {
-		return err
-	}
-	message = "+OK\r\n"
-	sendAndLogMessage(w, message, logger)
-
-	err = readAndAssertMessages(r, []string{"PSYNC", "?", "-1"}, logger)
+	err = master.AssertPing()
 	if err != nil {
 		return err
 	}
 
+	err = master.AssertReplConfPort()
+	if err != nil {
+		return err
+	}
+
+	err = master.AssertReplConfCapa()
+	if err != nil {
+		return err
+	}
+
+	err = master.AssertPsync()
+	if err != nil {
+		return err
+	}
+
+	conn.Close()
+	listener.Close()
 	return nil
 }

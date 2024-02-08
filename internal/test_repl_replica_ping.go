@@ -13,7 +13,6 @@ func testReplReplicaSendsPing(stageHarness *testerutils.StageHarness) error {
 	if err != nil {
 		fmt.Println("Error starting TCP server:", err)
 	}
-	defer listener.Close()
 	logger := stageHarness.Logger
 
 	logger.Infof("Server is running on port 6379.")
@@ -35,6 +34,20 @@ func testReplReplicaSendsPing(stageHarness *testerutils.StageHarness) error {
 	}
 
 	r := resp3.NewReader(conn)
+	w := resp3.NewWriter(conn)
 
-	return readAndAssertMessages(r, []string{"PING"}, logger)
+	master := FakeRedisMaster{
+		Reader: r,
+		Writer: w,
+		Logger: logger,
+	}
+
+	err = master.AssertPing()
+	if err != nil {
+		return err
+	}
+
+	conn.Close()
+	listener.Close()
+	return nil
 }
