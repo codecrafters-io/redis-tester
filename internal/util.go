@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math/big"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/codecrafters-io/tester-utils/logger"
@@ -45,6 +46,28 @@ func (master FakeRedisMaster) AssertPsync() error {
 	response := "+FULLRESYNC " + id + " 0\r\n"
 	return master.Assert([]string{"PSYNC", "?", "-1"}, response)
 }
+func (master FakeRedisMaster) GetAck(offset int) error {
+	return master.SendAndAssert([]string{"REPLCONF", "GETACK", "*"}, []string{"REPLCONF", "ACK", strconv.Itoa(offset)})
+}
+
+func (master FakeRedisMaster) SendAndAssert(sendMessage []string, receiveMessage []string) error {
+	master.Logger.Infof("$ redis-master %v", strings.Join(sendMessage, " "))
+	master.Writer.WriteCommand(sendMessage...)
+	err := readAndAssertMessages(master.Reader, receiveMessage, master.Logger)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (master FakeRedisMaster) Send(sendMessage []string) error {
+	master.Logger.Infof("$ redis-master %v", strings.Join(sendMessage, " "))
+	err := master.Writer.WriteCommand(sendMessage...)
+	if err != nil {
+		return err
+	}
+	return nil
+}
 
 func (master FakeRedisMaster) Handshake() error {
 	err := master.AssertPing()
@@ -80,7 +103,7 @@ type FakeRedisReplica struct {
 	Logger *logger.Logger
 }
 
-func (replica FakeRedisReplica) Send(sendMessage []string, receiveMessage string) error {
+func (replica FakeRedisReplica) SendAndAssert(sendMessage []string, receiveMessage string) error {
 	replica.Logger.Infof("$ redis-cli %v", strings.Join(sendMessage, " "))
 	replica.Writer.WriteCommand(sendMessage...)
 	err := readAndAssertMessage(replica.Reader, receiveMessage, replica.Logger)
@@ -91,13 +114,13 @@ func (replica FakeRedisReplica) Send(sendMessage []string, receiveMessage string
 }
 
 func (replica FakeRedisReplica) Ping() error {
-	return replica.Send([]string{"PING"}, "PONG")
+	return replica.SendAndAssert([]string{"PING"}, "PONG")
 }
 func (replica FakeRedisReplica) ReplConfPort() error {
-	return replica.Send([]string{"REPLCONF", "listening-port", "6380"}, "OK")
+	return replica.SendAndAssert([]string{"REPLCONF", "listening-port", "6380"}, "OK")
 }
 func (replica FakeRedisReplica) Psync() error {
-	return replica.Send([]string{"PSYNC", "?", "-1"}, "FULLRESYNC * 0")
+	return replica.SendAndAssert([]string{"PSYNC", "?", "-1"}, "FULLRESYNC * 0")
 }
 
 func (replica FakeRedisReplica) ReceiveRDB() error {
