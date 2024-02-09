@@ -2,7 +2,6 @@ package internal
 
 import (
 	"fmt"
-	"strings"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
 )
@@ -25,7 +24,12 @@ func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
 		fmt.Println("Error connecting to TCP server:", err)
 	}
 
-	client := NewRedisClient("localhost:6379")
+	conn1, err := NewRedisConn("", "localhost:6379")
+	if err != nil {
+		fmt.Println("Error connecting to TCP server:", err)
+	}
+
+	client := NewFakeRedisMaster(conn1, logger)
 
 	replica := NewFakeRedisReplica(conn, logger)
 
@@ -41,31 +45,27 @@ func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
 	}
 	for i := 1; i <= len(kvMap); i++ { // We need order of commands preserved
 		key, value := kvMap[i][0], kvMap[i][1]
-		logger.Debugf("Setting key %s to %s", key, value)
-		client.Do("SET", key, value)
+		logger.Infof("Setting key %s to %s", key, value)
+		client.Send([]string{"SET", key, value})
 	}
 
-	i := 0
-	for i < 3 {
-		req, err := parseRESPCommand(replica.Reader)
-		if err != nil {
-			return fmt.Errorf(err.Error())
-		}
-		var cmd []string
-		for _, v := range req.Array() {
-			cmd = append(cmd, v.String())
-		}
-		if len(cmd) > 0 && strings.ToUpper(cmd[0]) == "SET" {
-			// User might not send SELECT, but Redis will send SELECT
-			// Apart from SELECT we need 3 SETs
-			i += 1
-			key, value := kvMap[i][0], kvMap[i][1]
-			err := compareStringSlices(cmd, []string{"SET", key, value})
-			if err != nil {
-				return err
-			}
-			logger.Successf("Received %v", strings.Join(cmd, " "))
-		}
+	err, _ = readAndAssertMessages(replica.Reader, []string{"SELECT", "0"}, logger)
+	// Redis will send SELECT, but not expected from Users, err is not checked
+	// here.
+
+	err, _ = readAndAssertMessages(replica.Reader, []string{"SET", "foo", "123"}, logger)
+	if err != nil {
+		return err
+	}
+
+	err, _ = readAndAssertMessages(replica.Reader, []string{"SET", "bar", "456"}, logger)
+	if err != nil {
+		return err
+	}
+
+	err, _ = readAndAssertMessages(replica.Reader, []string{"SET", "baz", "789"}, logger)
+	if err != nil {
+		return err
 	}
 
 	conn.Close()

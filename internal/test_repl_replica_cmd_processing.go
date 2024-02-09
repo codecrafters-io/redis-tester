@@ -41,35 +41,37 @@ func testReplCmdProcessing(stageHarness *testerutils.StageHarness) error {
 		return err
 	}
 
-	replicaAddr := "localhost:6380"
-	replicaClient := NewRedisClient(replicaAddr)
+	conn1, err := NewRedisConn("", "localhost:6380")
+	if err != nil {
+		fmt.Println("Error accepting: ", err.Error())
+		return err
+	}
+	replicaClient := NewFakeRedisMaster(conn1, logger)
 
 	kvMap := map[int][]string{
 		1: {"foo", "123"},
 		2: {"bar", "456"},
 		3: {"baz", "789"},
 	}
+
 	for i := 1; i <= len(kvMap); i++ { // We need order of commands preserved
 		key, value := kvMap[i][0], kvMap[i][1]
-		logger.Debugf("Setting key %s to %s", key, value)
-		command := "*3\r\n$3\r\nSET\r\n$3\r\n" + key + "\r\n$3\r\n" + value + "\r\n"
-		sendMessage(master.Writer, command)
+		err = master.Send([]string{"SET", key, value})
+		if err != nil {
+			return err
+		}
+		// Master is propagating commands to Replica, don't expect any response back.
 	}
 
 	for i := 1; i <= len(kvMap); i++ {
 		key, value := kvMap[i][0], kvMap[i][1]
-		logger.Debugf("Getting key %s", key)
-		resp, err := replicaClient.Get(key).Result()
+		logger.Infof("Getting key %s", key)
+		err = replicaClient.SendAndAssertString([]string{"GET", key}, value)
 		if err != nil {
 			return err
 		}
-		if resp != value {
-			return fmt.Errorf("Expected %#v, got %#v", value, resp)
-		}
-		logger.Successf("Received %v", resp)
 	}
 
-	replicaClient.Close()
 	conn.Close()
 	listener.Close()
 	return nil

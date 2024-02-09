@@ -2,7 +2,6 @@ package internal
 
 import (
 	"fmt"
-	"strings"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
 )
@@ -20,28 +19,24 @@ func testReplMultipleReplicas(stageHarness *testerutils.StageHarness) error {
 
 	logger := stageHarness.Logger
 
-	conn1, err := NewRedisConn("", "localhost:6379")
+	var replicas []*FakeRedisReplica
+
+	for j := 0; j < 3; j++ {
+		conn, err := NewRedisConn("", "localhost:6379")
+		if err != nil {
+			fmt.Println("Error connecting to TCP server:", err)
+		}
+		defer conn.Close()
+		replica := NewFakeRedisReplica(conn, logger)
+		replicas = append(replicas, replica)
+	}
+
+	conn, err := NewRedisConn("", "localhost:6379")
 	if err != nil {
 		fmt.Println("Error connecting to TCP server:", err)
 	}
-
-	conn2, err := NewRedisConn("", "localhost:6379")
-	if err != nil {
-		fmt.Println("Error connecting to TCP server:", err)
-	}
-
-	conn3, err := NewRedisConn("", "localhost:6379")
-	if err != nil {
-		fmt.Println("Error connecting to TCP server:", err)
-	}
-
-	client := NewRedisClient("localhost:6379")
-
-	replica1 := NewFakeRedisReplica(conn1, logger)
-	replica2 := NewFakeRedisReplica(conn2, logger)
-	replica3 := NewFakeRedisReplica(conn3, logger)
-
-	replicas := []FakeRedisReplica{*replica1, *replica2, *replica3}
+	defer conn.Close()
+	client := NewFakeRedisMaster(conn, logger)
 
 	for i := 0; i < len(replicas); i++ {
 		replica := replicas[i]
@@ -56,42 +51,30 @@ func testReplMultipleReplicas(stageHarness *testerutils.StageHarness) error {
 		2: {"bar", "456"},
 		3: {"baz", "789"},
 	}
-	for i := 1; i <= len(kvMap); i++ { // We need order of commands preserved
+	for i := 1; i <= len(kvMap); i++ {
+		// We need order of commands preserved
 		key, value := kvMap[i][0], kvMap[i][1]
 		logger.Debugf("Setting key %s to %s", key, value)
-		client.Do("SET", key, value)
+		client.Send([]string{"SET", key, value})
 	}
 
 	for j := 0; j < 3; j++ {
 		replica := replicas[j]
-		r := replica.Reader
-		i := 0
-		for i < 3 {
-			req, err := parseRESPCommand(r)
+		logger.Infof("Testing Replica : %v", j+1)
+		err, _ = readAndAssertMessages(replica.Reader, []string{"SELECT", "0"}, logger)
+		// Redis will send SELECT, but not expected from Users, err is not checked
+		// here.
+
+		for i := 1; i <= len(kvMap); i++ {
+			// We need order of commands preserved
+			key, value := kvMap[i][0], kvMap[i][1]
+
+			err, _ = readAndAssertMessages(replica.Reader, []string{"SET", key, value}, logger)
 			if err != nil {
-				return fmt.Errorf(err.Error())
-			}
-			var cmd []string
-			for _, v := range req.Array() {
-				cmd = append(cmd, v.String())
-			}
-			if len(cmd) > 0 && strings.ToUpper(cmd[0]) == "SET" {
-				// User might not send SELECT, but Redis will send SELECT
-				// Apart from SELECT we need 3 SETs
-				i += 1
-				key, value := kvMap[i][0], kvMap[i][1]
-				err := compareStringSlices(cmd, []string{"SET", key, value})
-				if err != nil {
-					return err
-				}
-				logger.Successf("Received %v on replica : %v.", strings.Join(cmd, " "), j+1)
+				return err
 			}
 		}
 	}
-
-	conn1.Close()
-	conn2.Close()
-	conn3.Close()
 
 	return nil
 }
