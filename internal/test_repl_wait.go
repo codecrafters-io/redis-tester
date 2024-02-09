@@ -68,8 +68,9 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 	for i := 0; i < replicaCount; i++ {
 		replica := replicas[i]
 
-		err, o := readAndAssertMessages(replica.Reader, []string{"SELECT", "0"}, logger)
-		offset += o
+		// TODO(Ryan): Find a way to bring this back, and ignore specifically for Redis.
+		// err, o := readAndAssertMessages(replica.Reader, []string{"SELECT", "0"}, logger)
+		// offset += o
 
 		err, o = readAndAssertMessages(replica.Reader, []string{"SET", "foo", "123"}, logger)
 		offset += o

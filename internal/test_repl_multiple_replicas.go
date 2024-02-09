@@ -61,9 +61,11 @@ func testReplMultipleReplicas(stageHarness *testerutils.StageHarness) error {
 	for j := 0; j < 3; j++ {
 		replica := replicas[j]
 		logger.Infof("Testing Replica : %v", j+1)
-		err, _ = readAndAssertMessages(replica.Reader, []string{"SELECT", "0"}, logger)
-		// Redis will send SELECT, but not expected from Users, err is not checked
-		// here.
+
+		// TODO(Ryan): Find a way to bring this back, and ignore specifically for Redis.
+		// err, _ = readAndAssertMessages(replica.Reader, []string{"SELECT", "0"}, logger)
+		// // Redis will send SELECT, but not expected from Users, err is not checked
+		// // here.
 
 		for i := 1; i <= len(kvMap); i++ {
 			// We need order of commands preserved
