@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"fmt"
 	"math/big"
+	"net"
 	"os"
 	"strconv"
 	"strings"
@@ -19,8 +20,16 @@ type FakeRedisMaster struct {
 	Logger *logger.Logger
 }
 
+func NewFakeRedisMaster(conn net.Conn, logger *logger.Logger) *FakeRedisMaster {
+	return &FakeRedisMaster{
+		Reader: resp3.NewReader(conn),
+		Writer: resp3.NewWriter(conn),
+		Logger: logger,
+	}
+}
+
 func (master FakeRedisMaster) Assert(receiveMessages []string, sendMessage string) error {
-	err := readAndAssertMessages(master.Reader, receiveMessages, master.Logger)
+	err, _ := readAndAssertMessages(master.Reader, receiveMessages, master.Logger)
 	_, err = master.Writer.WriteString(sendMessage)
 	if err != nil {
 		return err
@@ -50,10 +59,40 @@ func (master FakeRedisMaster) GetAck(offset int) error {
 	return master.SendAndAssert([]string{"REPLCONF", "GETACK", "*"}, []string{"REPLCONF", "ACK", strconv.Itoa(offset)})
 }
 
+func (master FakeRedisMaster) Wait(replicas string, timeout string, expectedMessage int) error {
+	return master.SendAndAssertInt([]string{"WAIT", replicas, timeout}, expectedMessage)
+}
+
 func (master FakeRedisMaster) SendAndAssert(sendMessage []string, receiveMessage []string) error {
-	master.Logger.Infof("$ redis-master %v", strings.Join(sendMessage, " "))
-	master.Writer.WriteCommand(sendMessage...)
-	err := readAndAssertMessages(master.Reader, receiveMessage, master.Logger)
+	err := master.Send(sendMessage)
+	if err != nil {
+		return err
+	}
+	err, _ = readAndAssertMessages(master.Reader, receiveMessage, master.Logger)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (master FakeRedisMaster) SendAndAssertString(sendMessage []string, receiveMessage string) error {
+	err := master.Send(sendMessage)
+	if err != nil {
+		return err
+	}
+	err = readAndAssertMessage(master.Reader, receiveMessage, master.Logger)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (master FakeRedisMaster) SendAndAssertInt(sendMessage []string, receiveMessage int) error {
+	err := master.Send(sendMessage)
+	if err != nil {
+		return err
+	}
+	err = readAndAssertIntMessage(master.Reader, receiveMessage, master.Logger)
 	if err != nil {
 		return err
 	}
@@ -61,7 +100,8 @@ func (master FakeRedisMaster) SendAndAssert(sendMessage []string, receiveMessage
 }
 
 func (master FakeRedisMaster) Send(sendMessage []string) error {
-	master.Logger.Infof("$ redis-master %v", strings.Join(sendMessage, " "))
+	// Helps in logs.
+	master.Logger.Infof("$ redis-cli %v", strings.Join(sendMessage, " "))
 	err := master.Writer.WriteCommand(sendMessage...)
 	if err != nil {
 		return err
@@ -92,6 +132,7 @@ func (master FakeRedisMaster) Handshake() error {
 
 	response := SendRDBFile()
 	master.Writer.Write(response)
+	master.Logger.Infof("RDB file sent.")
 	err = master.Writer.Flush()
 	return err
 
@@ -103,7 +144,15 @@ type FakeRedisReplica struct {
 	Logger *logger.Logger
 }
 
-func (replica FakeRedisReplica) SendAndAssert(sendMessage []string, receiveMessage string) error {
+func NewFakeRedisReplica(conn net.Conn, logger *logger.Logger) *FakeRedisReplica {
+	return &FakeRedisReplica{
+		Reader: resp3.NewReader(conn),
+		Writer: resp3.NewWriter(conn),
+		Logger: logger,
+	}
+}
+
+func (replica FakeRedisReplica) SendAndAssertMessage(sendMessage []string, receiveMessage string) error {
 	replica.Logger.Infof("$ redis-cli %v", strings.Join(sendMessage, " "))
 	replica.Writer.WriteCommand(sendMessage...)
 	err := readAndAssertMessage(replica.Reader, receiveMessage, replica.Logger)
@@ -114,13 +163,13 @@ func (replica FakeRedisReplica) SendAndAssert(sendMessage []string, receiveMessa
 }
 
 func (replica FakeRedisReplica) Ping() error {
-	return replica.SendAndAssert([]string{"PING"}, "PONG")
+	return replica.SendAndAssertMessage([]string{"PING"}, "PONG")
 }
 func (replica FakeRedisReplica) ReplConfPort() error {
-	return replica.SendAndAssert([]string{"REPLCONF", "listening-port", "6380"}, "OK")
+	return replica.SendAndAssertMessage([]string{"REPLCONF", "listening-port", "6380"}, "OK")
 }
 func (replica FakeRedisReplica) Psync() error {
-	return replica.SendAndAssert([]string{"PSYNC", "?", "-1"}, "FULLRESYNC * 0")
+	return replica.SendAndAssertMessage([]string{"PSYNC", "?", "-1"}, "FULLRESYNC * 0")
 }
 
 func (replica FakeRedisReplica) ReceiveRDB() error {
@@ -224,6 +273,21 @@ func readRespString(reader *resp3.Reader, logger *logger.Logger) (string, error)
 	return slice, nil
 }
 
+func readRespInt(reader *resp3.Reader, logger *logger.Logger) (int, error) {
+	resp, b, e := reader.ReadValue()
+	if e != nil {
+		logger.Debugf(string(b))
+		return 0, e
+	}
+	message := resp.SmartResult()
+	slice, err := message.(int64)
+	if err != true {
+		logger.Debugf("Unable to convert %v", message)
+	}
+	integer := int(slice)
+	return integer, nil
+}
+
 func deleteRDBfile() {
 	fileName := "dump.rdb"
 	_, err := os.Stat(fileName)
@@ -266,18 +330,20 @@ func readAndCheckRDBFile(reader *resp3.Reader) error {
 	return decoder.Parse(processRedisObject)
 }
 
-func readAndAssertMessages(reader *resp3.Reader, messages []string, logger *logger.Logger) error {
+func readAndAssertMessages(reader *resp3.Reader, messages []string, logger *logger.Logger) (error, int) {
 	actualMessages, err := readRespMessages(reader, logger)
+	offset := GetByteOffset(messages)
 	if err != nil {
-		return err
+		return err, 0
 	}
+	// fmt.Println("ACTMSG :", actualMessages)
 	expectedMessages := []string(messages)
 	err = compareStringSlices(actualMessages, expectedMessages)
 	if err != nil {
-		return err
+		return err, 0
 	}
 	logger.Successf(strings.Join(actualMessages, " ") + " received.")
-	return nil
+	return nil, offset
 }
 
 func readAndAssertMessage(reader *resp3.Reader, expectedMessage string, logger *logger.Logger) error {
@@ -302,6 +368,21 @@ func readAndAssertMessage(reader *resp3.Reader, expectedMessage string, logger *
 	return nil
 }
 
+func readAndAssertIntMessage(reader *resp3.Reader, expectedMessage int, logger *logger.Logger) error {
+	actualMessage, err := readRespInt(reader, logger)
+	if err != nil {
+		return err
+	}
+	if actualMessage != expectedMessage {
+		err = fmt.Errorf("Expected '%v', got '%v'", expectedMessage, actualMessage)
+	}
+	if err != nil {
+		return err
+	}
+	logger.Successf(strconv.Itoa(actualMessage) + " received.")
+	return nil
+}
+
 func sendAndLogMessage(writer *resp3.Writer, message string, logger *logger.Logger) error {
 	if _, err := writer.WriteString(message); err != nil {
 		return err
@@ -322,4 +403,31 @@ func RandomAlphanumericString(length int) (string, error) {
 		result[i] = charset[charIndex.Int64()]
 	}
 	return string(result), nil
+}
+
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+func GetByteOffset(args []string) int {
+	offset := 0
+	offset += 2 * (2*len(args) + 1)
+	offset += (len(strconv.Itoa(len(args))) + 1)
+	for _, arg := range args {
+		msgLen := len(arg)
+		offset += (len(strconv.Itoa(msgLen)) + 1)
+		offset += (msgLen)
+	}
+
+	return offset
 }
