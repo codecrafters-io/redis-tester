@@ -72,7 +72,7 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 		// err, o := readAndAssertMessages(replica.Reader, []string{"SELECT", "0"}, logger)
 		// offset += o
 
-		err, o = readAndAssertMessages(replica.Reader, []string{"SET", "foo", "123"}, logger)
+		err, o := readAndAssertMessages(replica.Reader, []string{"SET", "foo", "123"}, logger)
 		offset += o
 
 		err, o = readAndAssertMessages(replica.Reader, []string{"REPLCONF", "GETACK", "*"}, logger)
