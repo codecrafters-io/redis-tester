@@ -5,7 +5,6 @@ import (
 	"net"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
-	"github.com/smallnest/resp3"
 )
 
 func testReplGetaAckNonZero(stageHarness *testerutils.StageHarness) error {
@@ -35,14 +34,7 @@ func testReplGetaAckNonZero(stageHarness *testerutils.StageHarness) error {
 		return err
 	}
 
-	r := resp3.NewReader(conn)
-	w := resp3.NewWriter(conn)
-
-	master := FakeRedisMaster{
-		Reader: r,
-		Writer: w,
-		Logger: logger,
-	}
+	master := NewFakeRedisMaster(conn, logger)
 
 	err = master.Handshake()
 	if err != nil {
@@ -68,11 +60,11 @@ func testReplGetaAckNonZero(stageHarness *testerutils.StageHarness) error {
 	}
 
 	master.Send([]string{"SET", "foo", "123"}) // 31
-	// actualMessages, err := readRespMessages(r, logger)
+	// actualMessages, err = readRespMessages(r, logger)
 	// fmt.Println(actualMessages)
 
 	master.Send([]string{"SET", "bar", "456"}) // 31
-	// actualMessages, err := readRespMessages(r, logger)
+	// actualMessages, err = readRespMessages(r, logger)
 	// fmt.Println(actualMessages)
 
 	err = master.GetAck(150)
