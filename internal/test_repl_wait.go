@@ -2,12 +2,12 @@ package internal
 
 import (
 	"fmt"
-	"math/rand"
 	"strconv"
 	"strings"
 	"time"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
+	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 )
 
 func testWait(stageHarness *testerutils.StageHarness) error {
@@ -23,8 +23,8 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 
 	logger := stageHarness.Logger
 
-	randomReplicaCount := rand.Intn(3)
-	replicaCount := 3 + randomReplicaCount // replicas can be : [3, 5]
+	// replicas can be : [3, 5]
+	replicaCount := testerutils_random.RandomInt(3, 5)
 	offset := 0
 
 	logger.Infof("Proceeding to create %v replicas.", replicaCount)
@@ -143,7 +143,7 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 
 	client.SendAndAssert([]string{"SET", "baz", "789"}, []string{"OK"})
 
-	ANSWER = min(replicaCount, rand.Intn(6))
+	ANSWER = min(replicaCount, testerutils_random.RandomInt(0, 6))
 	TIMEOUT := 2000
 	sendCount := strconv.Itoa(ANSWER + 1)
 	startTimeMilli := time.Now().UnixMilli()

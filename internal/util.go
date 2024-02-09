@@ -1,15 +1,14 @@
 package internal
 
 import (
-	"crypto/rand"
 	"fmt"
-	"math/big"
 	"net"
 	"os"
 	"strconv"
 	"strings"
 
 	"github.com/codecrafters-io/tester-utils/logger"
+	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/hdt3213/rdb/parser"
 	"github.com/smallnest/resp3"
 )
@@ -51,7 +50,7 @@ func (master FakeRedisMaster) AssertReplConfCapa() error {
 	return master.Assert([]string{"REPLCONF", "*", "*", "*", "*"}, "+OK\r\n")
 }
 func (master FakeRedisMaster) AssertPsync() error {
-	id, _ := RandomAlphanumericString(40)
+	id := RandomAlphanumericString(40)
 	response := "+FULLRESYNC " + id + " 0\r\n"
 	return master.Assert([]string{"PSYNC", "?", "-1"}, response)
 }
@@ -392,17 +391,14 @@ func sendAndLogMessage(writer *resp3.Writer, message string, logger *logger.Logg
 	return nil
 }
 
-func RandomAlphanumericString(length int) (string, error) {
+func RandomAlphanumericString(length int) string {
 	const charset = "abcdefghijklmnopqrstuvwxyz0123456789"
 	result := make([]byte, length)
 	for i := 0; i < length; i++ {
-		charIndex, err := rand.Int(rand.Reader, big.NewInt(int64(len(charset))))
-		if err != nil {
-			return "", err
-		}
-		result[i] = charset[charIndex.Int64()]
+		charIndex := testerutils_random.RandomInt(0, len(charset))
+		result[i] = charset[charIndex]
 	}
-	return string(result), nil
+	return string(result)
 }
 
 func min(a, b int) int {

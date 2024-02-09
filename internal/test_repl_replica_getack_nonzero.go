@@ -2,10 +2,10 @@ package internal
 
 import (
 	"fmt"
-	"math/rand"
 	"net"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
+	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 )
 
 func testReplGetaAckNonZero(stageHarness *testerutils.StageHarness) error {
@@ -66,16 +66,16 @@ func testReplGetaAckNonZero(stageHarness *testerutils.StageHarness) error {
 	}
 	offset += GetByteOffset([]string{"REPLCONF", "GETACK", "*"})
 
-	key, _ := RandomAlphanumericString(3 + rand.Intn(20))
-	value, _ := RandomAlphanumericString(3 + rand.Intn(20))
+	key := RandomAlphanumericString(testerutils_random.RandomInt(5, 20))
+	value := RandomAlphanumericString(testerutils_random.RandomInt(5, 20))
 	cmd = []string{"SET", key, value}
 	master.Send(cmd) // 31
 	// actualMessages, err = readRespMessages(r, logger)
 	// fmt.Println(actualMessages)
 	offset += GetByteOffset(cmd)
 
-	key, _ = RandomAlphanumericString(3 + rand.Intn(20))
-	value, _ = RandomAlphanumericString(3 + rand.Intn(20))
+	key = RandomAlphanumericString(testerutils_random.RandomInt(5, 20))
+	value = RandomAlphanumericString(testerutils_random.RandomInt(5, 20))
 	cmd = []string{"SET", key, value}
 	master.Send(cmd) // 31
 	// actualMessages, err = readRespMessages(r, logger)

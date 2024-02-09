@@ -2,10 +2,10 @@ package internal
 
 import (
 	"fmt"
-	"math/rand"
 	"strconv"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
+	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 )
 
 func testWaitZeroOffset(stageHarness *testerutils.StageHarness) error {
@@ -21,8 +21,8 @@ func testWaitZeroOffset(stageHarness *testerutils.StageHarness) error {
 
 	logger := stageHarness.Logger
 
-	randomReplicaCount := rand.Intn(7)
-	replicaCount := 3 + randomReplicaCount // replicas can be : [3, 9]
+	replicaCount := testerutils_random.RandomInt(3, 9)
+	// replicas can be : [3, 9]
 	logger.Infof("Proceeding to create %v replicas.", replicaCount)
 
 	for i := 0; i < replicaCount; i++ {
