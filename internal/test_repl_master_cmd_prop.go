@@ -42,6 +42,7 @@ func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
 		1: {"foo", "123"},
 		2: {"bar", "456"},
 		3: {"baz", "789"},
+
 	}
 	for i := 1; i <= len(kvMap); i++ { // We need order of commands preserved
 		key, value := kvMap[i][0], kvMap[i][1]
