@@ -113,12 +113,32 @@ var testerDefinition = testerutils.TesterDefinition{
 			TestFunc: testReplMasterCmdProp,
 		},
 		{
+			Slug:     "repl-multiple-replicas",
+			TestFunc: testReplMultipleReplicas,
+		},
+		{
 			Slug:     "repl-cmd-processing",
 			TestFunc: testReplCmdProcessing,
 		},
 		{
-			Slug:     "repl-final-boss",
-			TestFunc: testReplMultipleReplicas,
+			Slug:     "repl-replica-getack",
+			TestFunc: testReplGetaAckZero,
+		},
+		{
+			Slug:     "repl-replica-getack-nonzero",
+			TestFunc: testReplGetaAckNonZero,
+		},
+		{
+			Slug:     "repl-wait-zero-replicas",
+			TestFunc: testWaitZeroReplicas,
+		},
+		{
+			Slug:     "repl-wait-zero-offset",
+			TestFunc: testWaitZeroOffset,
+		},
+		{
+			Slug:     "repl-wait",
+			TestFunc: testWait,
 		},
 	},
 }

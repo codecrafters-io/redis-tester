@@ -1,12 +1,10 @@
 package internal
 
 import (
-	"bytes"
 	"fmt"
 	"net"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
-	"github.com/smallnest/resp3"
 )
 
 func testReplReplicaSendsReplconf(stageHarness *testerutils.StageHarness) error {
@@ -14,7 +12,6 @@ func testReplReplicaSendsReplconf(stageHarness *testerutils.StageHarness) error 
 	if err != nil {
 		fmt.Println("Error starting TCP server:", err)
 	}
-	defer listener.Close()
 	logger := stageHarness.Logger
 
 	logger.Infof("Server is running on port 6379")
@@ -35,32 +32,24 @@ func testReplReplicaSendsReplconf(stageHarness *testerutils.StageHarness) error 
 		return err
 	}
 
-	r := resp3.NewReader(conn)
+	master := NewFakeRedisMaster(conn, logger)
 
-	resp, _, _ := r.ReadValue()
-	message := resp.SmartResult()
-	slice, _ := message.([]interface{})
-	actualMessages, _ := convertToStringArray(slice)
-	expectedMessages := []string{"PING"}
-	err = compareStringSlices(actualMessages, expectedMessages)
+	err = master.AssertPing()
 	if err != nil {
 		return err
 	}
-	logger.Successf("PING received.")
-	arg := []byte("+PONG\r\n")
-	conn.Write(arg)
-	logger.Infof("%s sent.", bytes.TrimSpace(arg))
 
-	resp, _, _ = r.ReadValue()
-	message = resp.SmartResult()
-	slice, _ = message.([]interface{})
-	actualMessages, _ = convertToStringArray(slice)
-	expectedMessages = []string{"REPLCONF", "listening-port", "6380"}
-	err = compareStringSlices(actualMessages, expectedMessages)
+	err = master.AssertReplConfPort()
 	if err != nil {
 		return err
 	}
-	logger.Successf("REPLCONF listening-port 6380 received.")
 
+	err = master.AssertReplConfCapa()
+	if err != nil {
+		return err
+	}
+
+	conn.Close()
+	listener.Close()
 	return nil
 }

@@ -18,33 +18,23 @@ func testReplMasterReplconf(stageHarness *testerutils.StageHarness) error {
 
 	logger := stageHarness.Logger
 
-	client := NewRedisClient("localhost:6379")
-
-	logger.Infof("$ redis-cli PING")
-	resp, err := client.Do("PING").Result()
-
+	conn, err := NewRedisConn("", "localhost:6379")
 	if err != nil {
-		logFriendlyError(logger, err)
+		fmt.Println("Error connecting to TCP server:", err)
+	}
+
+	replica := NewFakeRedisReplica(conn, logger)
+
+	err = replica.Ping()
+	if err != nil {
 		return err
 	}
 
-	if resp != "PONG" {
-		return fmt.Errorf("Expected OK from Master, received %v", resp)
-	}
-	logger.Successf("PONG received.")
-
-	logger.Infof("$ redis-cli REPLCONF listening-port 6380")
-	resp, err = client.Do("REPLCONF", "listening-port", "6380").Result()
-
+	err = replica.ReplConfPort()
 	if err != nil {
-		logFriendlyError(logger, err)
 		return err
 	}
 
-	if resp != "OK" {
-		return fmt.Errorf("Expected OK from Master, received %v", resp)
-	}
-
-	client.Close()
+	conn.Close()
 	return nil
 }

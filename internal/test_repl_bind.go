@@ -2,17 +2,16 @@ package internal
 
 import (
 	"fmt"
-	"math/rand"
 	"net"
 	"strconv"
 	"time"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
+	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 )
 
 func testReplBindToCustomPort(stageHarness *testerutils.StageHarness) error {
-	randomPortOffset := rand.Intn(11)
-	port := 6380 + randomPortOffset
+	port := testerutils_random.RandomInt(6380, 6390)
 
 	b := NewRedisBinary(stageHarness)
 

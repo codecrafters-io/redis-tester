@@ -5,7 +5,6 @@ import (
 	"net"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
-	"github.com/smallnest/resp3"
 )
 
 func testReplReplicaSendsPing(stageHarness *testerutils.StageHarness) error {
@@ -13,7 +12,6 @@ func testReplReplicaSendsPing(stageHarness *testerutils.StageHarness) error {
 	if err != nil {
 		fmt.Println("Error starting TCP server:", err)
 	}
-	defer listener.Close()
 	logger := stageHarness.Logger
 
 	logger.Infof("Server is running on port 6379.")
@@ -34,17 +32,14 @@ func testReplReplicaSendsPing(stageHarness *testerutils.StageHarness) error {
 		return err
 	}
 
-	r := resp3.NewReader(conn)
+	master := NewFakeRedisMaster(conn, logger)
 
-	resp, _, _ := r.ReadValue()
-	message := resp.SmartResult()
-	slice, _ := message.([]interface{})
-	actualMessages, _ := convertToStringArray(slice)
-	expectedMessages := []string{"PING"}
-	err = compareStringSlices(actualMessages, expectedMessages)
+	err = master.AssertPing()
 	if err != nil {
 		return err
 	}
-	logger.Successf("PING received.")
+
+	conn.Close()
+	listener.Close()
 	return nil
 }

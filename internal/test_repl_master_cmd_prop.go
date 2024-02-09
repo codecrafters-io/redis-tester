@@ -1,19 +1,13 @@
 package internal
 
 import (
-	"bufio"
 	"fmt"
-	"io"
-	"net"
-	"strings"
-	"time"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
-	"github.com/hdt3213/rdb/parser"
-	"github.com/smallnest/resp3"
 )
 
 func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
+	deleteRDBfile()
 	master := NewRedisBinary(stageHarness)
 	master.args = []string{
 		"--port", "6379",
@@ -26,143 +20,54 @@ func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
 	logger := stageHarness.Logger
 
 	conn, err := NewRedisConn("", "localhost:6379")
-
 	if err != nil {
 		fmt.Println("Error connecting to TCP server:", err)
 	}
 
-	client := NewRedisClient("localhost:6379")
-
-	r := resp3.NewReader(conn)
-	w := resp3.NewWriter(conn)
-
-	logger.Infof("$ redis-cli PING")
-
-	w.WriteCommand("PING")
-	res, _, _ := r.ReadValue()
-	message := res.SmartResult()
-	respStr, _ := message.(string)
-	respParts := strings.Split(respStr, " ")
-	logger.Successf("PONG received.")
-
-	logger.Infof("$ redis-cli REPLCONF listening-port 6380")
-
-	w.WriteCommand("REPLCONF", "listening-port", "6380")
-	res, _, _ = r.ReadValue()
-	message = res.SmartResult()
-	respStr, _ = message.(string)
-	respParts = strings.Split(respStr, " ")
-	logger.Successf("OK received.")
-
-	w.WriteCommand("PSYNC", "?", "-1")
-	res, _, _ = r.ReadValue()
-	message = res.SmartResult()
-	respStr, _ = message.(string)
-	respParts = strings.Split(respStr, " ")
-	command := respParts[0]
-	offset := respParts[2]
-
-	if command != "FULLRESYNC" {
-		return fmt.Errorf("Expected FULLRESYNC from Master, received %v", command)
-	}
-	logger.Successf("FULLRESYNC received.")
-	if offset != "0" {
-		return fmt.Errorf("Expected offset to be 0 from Master, received %v", offset)
-	}
-	logger.Successf("offset = 0 received.")
-
-	reader := bufio.NewReader(conn)
-	var data []byte
-	timeout := 2 * time.Second
-	conn.SetReadDeadline(time.Now().Add(timeout))
-
-	for {
-		b, err := reader.ReadByte()
-		if err != nil {
-			if netErr, ok := err.(net.Error); ok && netErr.Timeout() {
-				break
-			}
-		}
-		data = append(data, b)
-	}
-
-	conn.SetReadDeadline(time.Time{})
-
-	// TODO(Ryan): Ensure that we're using a proper RESP parser, not relying on hand-rolled parsing
-	// First 5 chars are for RESP `$88\r\n` or similar, read until the first `\n` to discard them
-	stringIOReader := bufio.NewReader(strings.NewReader(string(data)))
-	stringIOReader.ReadBytes('\n')
-
-	decoder := parser.NewDecoder(stringIOReader)
-	err = decoder.Parse(processRedisObject)
+	conn1, err := NewRedisConn("", "localhost:6379")
 	if err != nil {
-		return fmt.Errorf("Error while parsing RDB file : %v", err)
-	}
-	logger.Successf("RDB file received from master.")
-
-	key1, value1 := "foo", "123"
-	key2, value2 := "bar", "456"
-	key3, value3 := "baz", "789"
-
-	logger.Debugf("Setting key %s to %s", key1, value1)
-	client.Do("SET", key1, value1)
-	logger.Debugf("Setting key %s to %s", key2, value2)
-	client.Do("SET", key2, value2)
-	logger.Debugf("Setting key %s to %s", key3, value3)
-	client.Do("SET", key3, value3)
-
-	var cmds [][]string
-	conn.SetReadDeadline(time.Now().Add(timeout))
-
-	for {
-		req, err := Decode(reader)
-		if err != nil {
-			if err == io.EOF {
-				continue
-			}
-			if netErr, ok := err.(net.Error); ok && netErr.Timeout() {
-				break
-			}
-			fmt.Println(err)
-			break
-		}
-
-		if len(req.Array()) == 0 {
-			continue
-		}
-
-		var cmd []string
-		for _, v := range req.Array() {
-			cmd = append(cmd, v.String())
-		}
-		cmds = append(cmds, cmd)
+		fmt.Println("Error connecting to TCP server:", err)
 	}
 
-	index := 0
-	possibleSelect := cmds[index]
-	if strings.ToUpper(possibleSelect[0]) == "SELECT" {
-		index += 1
-	}
+	client := NewFakeRedisMaster(conn1, logger)
 
-	err = (compareStringSlices(cmds[index], []string{"SET", key1, value1}))
+	replica := NewFakeRedisReplica(conn, logger)
+
+	err = replica.Handshake()
 	if err != nil {
 		return err
 	}
-	logger.Successf("Received %v", strings.Join(cmds[index], " "))
-	index += 1
 
-	err = (compareStringSlices(cmds[index], []string{"SET", key2, value2}))
+	kvMap := map[int][]string{
+		1: {"foo", "123"},
+		2: {"bar", "456"},
+		3: {"baz", "789"},
+
+	}
+	for i := 1; i <= len(kvMap); i++ { // We need order of commands preserved
+		key, value := kvMap[i][0], kvMap[i][1]
+		logger.Infof("Setting key %s to %s", key, value)
+		client.Send([]string{"SET", key, value})
+	}
+
+	err, _ = readAndAssertMessages(replica.Reader, []string{"SELECT", "0"}, logger)
+	// Redis will send SELECT, but not expected from Users, err is not checked
+	// here.
+
+	err, _ = readAndAssertMessages(replica.Reader, []string{"SET", "foo", "123"}, logger)
 	if err != nil {
 		return err
 	}
-	logger.Successf("Received %v", strings.Join(cmds[index], " "))
-	index += 1
 
-	err = (compareStringSlices(cmds[index], []string{"SET", key3, value3}))
+	err, _ = readAndAssertMessages(replica.Reader, []string{"SET", "bar", "456"}, logger)
 	if err != nil {
 		return err
 	}
-	logger.Successf("Received %v", strings.Join(cmds[index], " "))
+
+	err, _ = readAndAssertMessages(replica.Reader, []string{"SET", "baz", "789"}, logger)
+	if err != nil {
+		return err
+	}
 
 	conn.Close()
 	return nil
