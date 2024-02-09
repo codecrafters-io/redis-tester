@@ -2,6 +2,7 @@ package internal
 
 import (
 	"fmt"
+	"math/rand"
 	"net"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
@@ -43,31 +44,45 @@ func testReplGetaAckNonZero(stageHarness *testerutils.StageHarness) error {
 
 	// If I don't read ACK sent by redis replica, it's not buffered
 	// I can easily read the next ACK in the next `stage`
-	// So ideally, I can ignore the ACKs in the `SET`` stages, and then only check for explicit GETACKs
+	// So ideally, I can ignore the ACKs in the `SET`` stages,
+	// and then only check for explicit GETACKs
 
-	err = master.GetAck(0) // 37
+	offset := 0
+	err = master.GetAck(offset) // 37
 	if err != nil {
 		return err
 	}
+	offset += GetByteOffset([]string{"REPLCONF", "GETACK", "*"})
 
-	master.Send([]string{"PING"}) // 14
+	cmd := []string{"PING"}
+	master.Send(cmd) // 14
 	// actualMessages, err := readRespMessages(r, logger)
 	// fmt.Println(actualMessages)
+	offset += GetByteOffset(cmd)
 
-	err = master.GetAck(51) // 37
+	err = master.GetAck(offset) // 37
 	if err != nil {
 		return err
 	}
+	offset += GetByteOffset([]string{"REPLCONF", "GETACK", "*"})
 
-	master.Send([]string{"SET", "foo", "123"}) // 31
+	key, _ := RandomAlphanumericString(3 + rand.Intn(20))
+	value, _ := RandomAlphanumericString(3 + rand.Intn(20))
+	cmd = []string{"SET", key, value}
+	master.Send(cmd) // 31
 	// actualMessages, err = readRespMessages(r, logger)
 	// fmt.Println(actualMessages)
+	offset += GetByteOffset(cmd)
 
-	master.Send([]string{"SET", "bar", "456"}) // 31
+	key, _ = RandomAlphanumericString(3 + rand.Intn(20))
+	value, _ = RandomAlphanumericString(3 + rand.Intn(20))
+	cmd = []string{"SET", key, value}
+	master.Send(cmd) // 31
 	// actualMessages, err = readRespMessages(r, logger)
 	// fmt.Println(actualMessages)
+	offset += GetByteOffset(cmd)
 
-	err = master.GetAck(150)
+	err = master.GetAck(offset)
 	if err != nil {
 		return err
 	}

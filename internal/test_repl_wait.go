@@ -31,7 +31,7 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 
 	var replicas []*FakeRedisReplica
 	for i := 0; i < replicaCount; i++ {
-		logger.Debugf("Creating replica : %v.", i)
+		logger.Debugf("Creating replica : %v.", i+1)
 		conn, err := NewRedisConn("", "localhost:6379")
 		defer conn.Close()
 		if err != nil {
