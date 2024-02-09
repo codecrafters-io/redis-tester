@@ -5,7 +5,6 @@ import (
 	"net"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
-	"github.com/smallnest/resp3"
 )
 
 func testReplCmdProcessing(stageHarness *testerutils.StageHarness) error {
@@ -35,14 +34,7 @@ func testReplCmdProcessing(stageHarness *testerutils.StageHarness) error {
 		return err
 	}
 
-	r := resp3.NewReader(conn)
-	w := resp3.NewWriter(conn)
-
-	master := FakeRedisMaster{
-		Reader: r,
-		Writer: w,
-		Logger: logger,
-	}
+	master := NewFakeRedisMaster(conn, logger)
 
 	err = master.Handshake()
 	if err != nil {
@@ -61,7 +53,7 @@ func testReplCmdProcessing(stageHarness *testerutils.StageHarness) error {
 		key, value := kvMap[i][0], kvMap[i][1]
 		logger.Debugf("Setting key %s to %s", key, value)
 		command := "*3\r\n$3\r\nSET\r\n$3\r\n" + key + "\r\n$3\r\n" + value + "\r\n"
-		sendMessage(w, command)
+		sendMessage(master.Writer, command)
 	}
 
 	for i := 1; i <= len(kvMap); i++ {

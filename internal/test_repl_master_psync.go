@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
-	"github.com/smallnest/resp3"
 )
 
 func testReplMasterPsync(stageHarness *testerutils.StageHarness) error {
@@ -24,14 +23,7 @@ func testReplMasterPsync(stageHarness *testerutils.StageHarness) error {
 		fmt.Println("Error connecting to TCP server:", err)
 	}
 
-	r := resp3.NewReader(conn)
-	w := resp3.NewWriter(conn)
-
-	replica := FakeRedisReplica{
-		Reader: r,
-		Writer: w,
-		Logger: logger,
-	}
+	replica := NewFakeRedisReplica(conn, logger)
 
 	err = replica.Ping()
 	if err != nil {

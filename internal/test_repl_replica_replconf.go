@@ -5,7 +5,6 @@ import (
 	"net"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
-	"github.com/smallnest/resp3"
 )
 
 func testReplReplicaSendsReplconf(stageHarness *testerutils.StageHarness) error {
@@ -33,14 +32,7 @@ func testReplReplicaSendsReplconf(stageHarness *testerutils.StageHarness) error 
 		return err
 	}
 
-	r := resp3.NewReader(conn)
-	w := resp3.NewWriter(conn)
-
-	master := FakeRedisMaster{
-		Reader: r,
-		Writer: w,
-		Logger: logger,
-	}
+	master := NewFakeRedisMaster(conn, logger)
 
 	err = master.AssertPing()
 	if err != nil {

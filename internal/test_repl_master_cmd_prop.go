@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
-	"github.com/smallnest/resp3"
 )
 
 func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
@@ -28,14 +27,7 @@ func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
 
 	client := NewRedisClient("localhost:6379")
 
-	r := resp3.NewReader(conn)
-	w := resp3.NewWriter(conn)
-
-	replica := FakeRedisReplica{
-		Reader: r,
-		Writer: w,
-		Logger: logger,
-	}
+	replica := NewFakeRedisReplica(conn, logger)
 
 	err = replica.Handshake()
 	if err != nil {
@@ -55,7 +47,7 @@ func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
 
 	i := 0
 	for i < 3 {
-		req, err := parseRESPCommand(r)
+		req, err := parseRESPCommand(replica.Reader)
 		if err != nil {
 			return fmt.Errorf(err.Error())
 		}

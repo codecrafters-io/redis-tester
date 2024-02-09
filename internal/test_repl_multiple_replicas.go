@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
-	"github.com/smallnest/resp3"
 )
 
 func testReplMultipleReplicas(stageHarness *testerutils.StageHarness) error {
@@ -38,27 +37,13 @@ func testReplMultipleReplicas(stageHarness *testerutils.StageHarness) error {
 
 	client := NewRedisClient("localhost:6379")
 
-	replica1 := FakeRedisReplica{
-		Reader: resp3.NewReader(conn1),
-		Writer: resp3.NewWriter(conn1),
-		Logger: logger,
-	}
+	replica1 := NewFakeRedisReplica(conn1, logger)
+	replica2 := NewFakeRedisReplica(conn2, logger)
+	replica3 := NewFakeRedisReplica(conn3, logger)
 
-	replica2 := FakeRedisReplica{
-		Reader: resp3.NewReader(conn2),
-		Writer: resp3.NewWriter(conn2),
-		Logger: logger,
-	}
+	replicas := []FakeRedisReplica{*replica1, *replica2, *replica3}
 
-	replica3 := FakeRedisReplica{
-		Reader: resp3.NewReader(conn3),
-		Writer: resp3.NewWriter(conn3),
-		Logger: logger,
-	}
-
-	replicas := []FakeRedisReplica{replica1, replica2, replica3}
-
-	for i := 0; i < 3; i++ {
+	for i := 0; i < len(replicas); i++ {
 		replica := replicas[i]
 		err = replica.Handshake()
 		if err != nil {
