@@ -13,22 +13,44 @@ import (
 	"github.com/smallnest/resp3"
 )
 
+type FakeRedisNode struct {
+	Reader    *resp3.Reader
+	Writer    *resp3.Writer
+	Logger    *logger.Logger
+	LogPrefix string
+}
+
+func NewFakeRedisNode(conn net.Conn, logger *logger.Logger) *FakeRedisNode {
+	return &FakeRedisNode{
+		Reader:    resp3.NewReader(conn),
+		Writer:    resp3.NewWriter(conn),
+		Logger:    logger,
+		LogPrefix: "",
+	}
+}
+
 type FakeRedisMaster struct {
-	Reader *resp3.Reader
-	Writer *resp3.Writer
-	Logger *logger.Logger
+	FakeRedisNode
 }
 
 func NewFakeRedisMaster(conn net.Conn, logger *logger.Logger) *FakeRedisMaster {
 	return &FakeRedisMaster{
-		Reader: resp3.NewReader(conn),
-		Writer: resp3.NewWriter(conn),
-		Logger: logger,
+		FakeRedisNode: *NewFakeRedisNode(conn, logger),
+	}
+}
+
+type FakeRedisReplica struct {
+	FakeRedisNode
+}
+
+func NewFakeRedisReplica(conn net.Conn, logger *logger.Logger) *FakeRedisReplica {
+	return &FakeRedisReplica{
+		FakeRedisNode: *NewFakeRedisNode(conn, logger),
 	}
 }
 
 func (master FakeRedisMaster) Assert(receiveMessages []string, sendMessage string, caseSensitiveMatch bool) error {
-	err, _ := readAndAssertMessages(master.Reader, receiveMessages, master.Logger, caseSensitiveMatch)
+	err, _ := master.readAndAssertMessages(receiveMessages, caseSensitiveMatch)
 	_, err = master.Writer.WriteString(sendMessage)
 	if err != nil {
 		return err
@@ -67,7 +89,7 @@ func (master FakeRedisMaster) SendAndAssert(sendMessage []string, receiveMessage
 	if err != nil {
 		return err
 	}
-	err, _ = readAndAssertMessages(master.Reader, receiveMessage, master.Logger, false)
+	err, _ = master.readAndAssertMessages(receiveMessage, false)
 	if err != nil {
 		return err
 	}
@@ -79,7 +101,7 @@ func (master FakeRedisMaster) SendAndAssertString(sendMessage []string, receiveM
 	if err != nil {
 		return err
 	}
-	err = readAndAssertMessage(master.Reader, receiveMessage, master.Logger, caseSensitiveMatch)
+	err = master.readAndAssertMessage(receiveMessage, caseSensitiveMatch)
 	if err != nil {
 		return err
 	}
@@ -91,17 +113,7 @@ func (master FakeRedisMaster) SendAndAssertInt(sendMessage []string, receiveMess
 	if err != nil {
 		return err
 	}
-	err = readAndAssertIntMessage(master.Reader, receiveMessage, master.Logger)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (master FakeRedisMaster) Send(sendMessage []string) error {
-	// Helps in logs.
-	master.Logger.Infof("$ redis-cli %v", strings.Join(sendMessage, " "))
-	err := master.Writer.WriteCommand(sendMessage...)
+	err = master.readAndAssertIntMessage(receiveMessage)
 	if err != nil {
 		return err
 	}
@@ -137,24 +149,27 @@ func (master FakeRedisMaster) Handshake() error {
 
 }
 
-type FakeRedisReplica struct {
-	Reader *resp3.Reader
-	Writer *resp3.Writer
-	Logger *logger.Logger
+func (node FakeRedisNode) Log(message string) error {
+	node.Logger.Infof(node.LogPrefix + message)
+	return nil
 }
 
-func NewFakeRedisReplica(conn net.Conn, logger *logger.Logger) *FakeRedisReplica {
-	return &FakeRedisReplica{
-		Reader: resp3.NewReader(conn),
-		Writer: resp3.NewWriter(conn),
-		Logger: logger,
+func (node FakeRedisNode) Send(sendMessage []string) error {
+	node.Logger.Infof(node.LogPrefix+"$ redis-cli %v", strings.Join(sendMessage, " "))
+	err := node.Writer.WriteCommand(sendMessage...)
+	if err != nil {
+		return err
 	}
+	node.Writer.Flush()
+	return nil
 }
 
 func (replica FakeRedisReplica) SendAndAssertMessage(sendMessage []string, receiveMessage string, caseSensitiveMatch bool) error {
-	replica.Logger.Infof("$ redis-cli %v", strings.Join(sendMessage, " "))
-	replica.Writer.WriteCommand(sendMessage...)
-	err := readAndAssertMessage(replica.Reader, receiveMessage, replica.Logger, caseSensitiveMatch)
+	err := replica.Send(sendMessage)
+	if err != nil {
+		return err
+	}
+	err = replica.readAndAssertMessage(receiveMessage, caseSensitiveMatch)
 	if err != nil {
 		return err
 	}
@@ -174,9 +189,9 @@ func (replica FakeRedisReplica) Psync() error {
 func (replica FakeRedisReplica) ReceiveRDB() error {
 	err := readAndCheckRDBFile(replica.Reader)
 	if err != nil {
-		return fmt.Errorf("Error while parsing RDB file : %v", err)
+		return fmt.Errorf(replica.LogPrefix+"Error while parsing RDB file : %v", err)
 	}
-	replica.Logger.Successf("Successfully received RDB file from master.")
+	replica.Logger.Successf(replica.LogPrefix + "Successfully received RDB file from master.")
 	return nil
 }
 
@@ -255,10 +270,10 @@ func parseInfoOutput(lines []string, seperator string) map[string]string {
 	return infoMap
 }
 
-func readRespMessages(reader *resp3.Reader, logger *logger.Logger) ([]string, error) {
-	resp, b, e := reader.ReadValue()
+func (node FakeRedisNode) readRespMessages() ([]string, error) {
+	resp, b, e := node.Reader.ReadValue()
 	if e != nil {
-		logger.Debugf(string(b))
+		node.Logger.Debugf(string(b))
 		return nil, e
 	}
 	message := resp.SmartResult()
@@ -266,10 +281,10 @@ func readRespMessages(reader *resp3.Reader, logger *logger.Logger) ([]string, er
 	return convertToStringArray(slice)
 }
 
-func readRespString(reader *resp3.Reader, logger *logger.Logger) (string, error) {
-	resp, b, e := reader.ReadValue()
+func (node FakeRedisNode) readRespString() (string, error) {
+	resp, b, e := node.Reader.ReadValue()
 	if e != nil {
-		logger.Debugf(string(b))
+		node.Logger.Debugf(string(b))
 		return "", e
 	}
 	message := resp.SmartResult()
@@ -277,16 +292,16 @@ func readRespString(reader *resp3.Reader, logger *logger.Logger) (string, error)
 	return slice, nil
 }
 
-func readRespInt(reader *resp3.Reader, logger *logger.Logger) (int, error) {
-	resp, b, e := reader.ReadValue()
+func (node FakeRedisNode) readRespInt() (int, error) {
+	resp, b, e := node.Reader.ReadValue()
 	if e != nil {
-		logger.Debugf(string(b))
+		node.Logger.Debugf(string(b))
 		return 0, e
 	}
 	message := resp.SmartResult()
 	slice, err := message.(int64)
 	if err != true {
-		logger.Debugf("Unable to convert %v", message)
+		node.Logger.Debugf("Unable to convert %v", message)
 	}
 	integer := int(slice)
 	return integer, nil
@@ -334,8 +349,8 @@ func readAndCheckRDBFile(reader *resp3.Reader) error {
 	return decoder.Parse(processRedisObject)
 }
 
-func readAndAssertMessages(reader *resp3.Reader, messages []string, logger *logger.Logger, caseSensitiveMatch bool) (error, int) {
-	actualMessages, err := readRespMessages(reader, logger)
+func (node FakeRedisNode) readAndAssertMessages(messages []string, caseSensitiveMatch bool) (error, int) {
+	actualMessages, err := node.readRespMessages()
 	offset := GetByteOffset(messages)
 	if err != nil {
 		return err, 0
@@ -346,7 +361,7 @@ func readAndAssertMessages(reader *resp3.Reader, messages []string, logger *logg
 	if err != nil {
 		return err, 0
 	}
-	logger.Successf(strings.Join(actualMessages, " ") + " received.")
+	node.Logger.Successf(node.LogPrefix + strings.Join(actualMessages, " ") + " received.")
 	return nil, offset
 }
 
@@ -359,8 +374,8 @@ func assertMessages(actualMessages []string, expectedMessages []string, logger *
 	return nil
 }
 
-func readAndAssertMessage(reader *resp3.Reader, expectedMessage string, logger *logger.Logger, caseSensitiveMatch bool) error {
-	actualMessage, err := readRespString(reader, logger)
+func (node FakeRedisNode) readAndAssertMessage(expectedMessage string, caseSensitiveMatch bool) error {
+	actualMessage, err := node.readRespString()
 	if err != nil {
 		return err
 	}
@@ -383,12 +398,12 @@ func readAndAssertMessage(reader *resp3.Reader, expectedMessage string, logger *
 	if err != nil {
 		return err
 	}
-	logger.Successf(actualMessage + " received.")
+	node.Logger.Successf(node.LogPrefix + actualMessage + " received.")
 	return nil
 }
 
-func readAndAssertIntMessage(reader *resp3.Reader, expectedMessage int, logger *logger.Logger) error {
-	actualMessage, err := readRespInt(reader, logger)
+func (node FakeRedisNode) readAndAssertIntMessage(expectedMessage int) error {
+	actualMessage, err := node.readRespInt()
 	if err != nil {
 		return err
 	}
@@ -398,16 +413,7 @@ func readAndAssertIntMessage(reader *resp3.Reader, expectedMessage int, logger *
 	if err != nil {
 		return err
 	}
-	logger.Successf(strconv.Itoa(actualMessage) + " received.")
-	return nil
-}
-
-func sendAndLogMessage(writer *resp3.Writer, message string, logger *logger.Logger) error {
-	if _, err := writer.WriteString(message); err != nil {
-		return err
-	}
-	writer.Flush()
-	logger.Infof("%s sent.", strings.ReplaceAll(message, "\r\n", ""))
+	node.Logger.Successf(node.LogPrefix + strconv.Itoa(actualMessage) + " received.")
 	return nil
 }
 

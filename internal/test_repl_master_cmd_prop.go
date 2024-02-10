@@ -53,7 +53,7 @@ func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
 	// Redis will send SELECT, but not expected from Users.
 	var skipFirstAssert bool
 	skipFirstAssert = false
-	actualMessages, err := readRespMessages(replica.Reader, logger)
+	actualMessages, err := replica.readRespMessages()
 	if strings.ToUpper(actualMessages[0]) != "SELECT" {
 		skipFirstAssert = true
 		expectedMessages := []string{"SET", "foo", "123"}
@@ -64,18 +64,18 @@ func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
 	}
 
 	if !skipFirstAssert {
-		err, _ = readAndAssertMessages(replica.Reader, []string{"SET", "foo", "123"}, logger, true)
+		err, _ = replica.readAndAssertMessages([]string{"SET", "foo", "123"}, true)
 		if err != nil {
 			return err
 		}
 	}
 
-	err, _ = readAndAssertMessages(replica.Reader, []string{"SET", "bar", "456"}, logger, true)
+	err, _ = replica.readAndAssertMessages([]string{"SET", "bar", "456"}, true)
 	if err != nil {
 		return err
 	}
 
-	err, _ = readAndAssertMessages(replica.Reader, []string{"SET", "baz", "789"}, logger, true)
+	err, _ = replica.readAndAssertMessages([]string{"SET", "baz", "789"}, true)
 	if err != nil {
 		return err
 	}

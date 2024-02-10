@@ -64,7 +64,7 @@ func testReplMultipleReplicas(stageHarness *testerutils.StageHarness) error {
 		replica := replicas[j]
 		logger.Infof("Testing Replica : %v", j+1)
 		// Redis will send SELECT, but not expected from Users.
-		actualMessages, err := readRespMessages(replica.Reader, logger)
+		actualMessages, err := replica.readRespMessages()
 		if strings.ToUpper(actualMessages[0]) != "SELECT" {
 			startIndexSetKeyCheck += 1
 			expectedMessages := []string{"SET", "foo", "123"}
@@ -78,7 +78,7 @@ func testReplMultipleReplicas(stageHarness *testerutils.StageHarness) error {
 			// We need order of commands preserved
 			key, value := kvMap[i][0], kvMap[i][1]
 
-			err, _ = readAndAssertMessages(replica.Reader, []string{"SET", key, value}, logger, true)
+			err, _ = replica.readAndAssertMessages([]string{"SET", key, value}, true)
 			if err != nil {
 				return err
 			}

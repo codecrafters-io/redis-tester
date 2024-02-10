@@ -40,6 +40,7 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 
 		replica := NewFakeRedisReplica(conn, logger)
 		replicas = append(replicas, replica)
+		replica.LogPrefix = fmt.Sprintf("[Replica: %v] ", i+1)
 
 		err = replica.Handshake()
 		if err != nil {
@@ -54,6 +55,7 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 	}
 
 	client := NewFakeRedisMaster(conn, logger)
+	client.LogPrefix = "[Client] "
 
 	client.SendAndAssert([]string{"SET", "foo", "123"}, []string{"OK"})
 
@@ -62,7 +64,8 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 		return err
 	}
 
-	logger.Infof("Start receiving on Replicas")
+	//////////////////////////////////////////////////////
+
 	ANSWER := 1
 	// READ STREAM ON ALL REPLICAS
 	for i := 0; i < replicaCount; i++ {
@@ -70,7 +73,7 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 
 		var skipFirstAssert bool
 		skipFirstAssert = false
-		actualMessages, err := readRespMessages(replica.Reader, logger)
+		actualMessages, err := replica.readRespMessages()
 		if strings.ToUpper(actualMessages[0]) != "SELECT" {
 			skipFirstAssert = true
 			expectedMessages := []string{"SET", "foo", "123"}
@@ -82,14 +85,14 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 		}
 
 		if !skipFirstAssert {
-			err, o := readAndAssertMessages(replica.Reader, []string{"SET", "foo", "123"}, logger, true)
+			err, o := replica.readAndAssertMessages([]string{"SET", "foo", "123"}, true)
 			offset += o
 			if err != nil {
 				return err
 			}
 		}
 
-		err, o := readAndAssertMessages(replica.Reader, []string{"REPLCONF", "GETACK", "*"}, logger, true)
+		err, o := replica.readAndAssertMessages([]string{"REPLCONF", "GETACK", "*"}, true)
 		offset += o
 		if err != nil {
 			return err
@@ -98,17 +101,10 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 
 	for i := 0; i < ANSWER; i++ {
 		replica := replicas[i]
-
-		msg := []string{"REPLCONF", "ACK", strconv.Itoa(offset)}
-		err = replica.Writer.WriteCommand(msg...)
-		if err != nil {
-			return err
-		}
-		replica.Writer.Flush()
-		replica.Logger.Infof("%s sent.", strings.ReplaceAll(strings.Join(msg, " "), "\r\n", ""))
+		replica.Send([]string{"REPLCONF", "ACK", strconv.Itoa(offset)})
 	}
 
-	readAndAssertIntMessage(client.Reader, ANSWER, logger)
+	client.readAndAssertIntMessage(ANSWER)
 
 	//////////////////////////////////////////////////////
 
@@ -124,16 +120,15 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 	}
 
 	OLD_OFFSET := offset
-	logger.Infof("Start receiving on Replicas")
 	// READ STREAM ON ALL REPLICAS
 	for i := 0; i < replicaCount; i++ {
 		offset = OLD_OFFSET
 		replica := replicas[i]
 
-		err, o := readAndAssertMessages(replica.Reader, []string{"SET", "baz", "789"}, logger, true)
+		err, o := replica.readAndAssertMessages([]string{"SET", "baz", "789"}, true)
 		offset += o
 
-		err, o = readAndAssertMessages(replica.Reader, []string{"REPLCONF", "GETACK", "*"}, logger, false)
+		err, o = replica.readAndAssertMessages([]string{"REPLCONF", "GETACK", "*"}, false)
 		offset += o
 		if err != nil {
 			return err
@@ -142,22 +137,18 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 
 	for i := 0; i < ANSWER; i++ {
 		replica := replicas[i]
-
-		msg := []string{"REPLCONF", "ACK", strconv.Itoa(offset)}
-		err = replica.Writer.WriteCommand(msg...)
-		if err != nil {
-			return err
-		}
-		replica.Writer.Flush()
-		replica.Logger.Infof("%s sent.", strings.ReplaceAll(strings.Join(msg, " "), "\r\n", ""))
+		replica.Send([]string{"REPLCONF", "ACK", strconv.Itoa(offset)})
 	}
 
-	readAndAssertIntMessage(client.Reader, ANSWER, logger)
+	client.readAndAssertIntMessage(ANSWER)
+
+	//////////////////////////////////////////////////////
+
 	endTimeMilli := time.Now().UnixMilli()
 
 	DELTA := 500 // ms
 	timeElapsed := endTimeMilli - startTimeMilli
-	logger.Infof("WAIT command returned after %v ms", timeElapsed)
+	client.Log(fmt.Sprintf("WAIT command returned after %v ms", timeElapsed))
 	if timeElapsed > int64(TIMEOUT)+int64(DELTA) || timeElapsed < int64(TIMEOUT)-int64(DELTA) {
 		return fmt.Errorf("Expected WAIT to return only after %v ms timeout elapsed.", TIMEOUT)
 	}
