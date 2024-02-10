@@ -356,21 +356,19 @@ func (node FakeRedisNode) readAndAssertMessages(messages []string, caseSensitive
 		return err, 0
 	}
 	// fmt.Println("ACTMSG :", actualMessages)
-	expectedMessages := []string(messages)
-	err = compareStringSlices(actualMessages, expectedMessages, caseSensitiveMatch)
+	err = node.assertMessages(actualMessages, messages, caseSensitiveMatch)
 	if err != nil {
 		return err, 0
 	}
-	node.Logger.Successf(node.LogPrefix + strings.Join(actualMessages, " ") + " received.")
 	return nil, offset
 }
 
-func assertMessages(actualMessages []string, expectedMessages []string, logger *logger.Logger, caseSensitiveMatch bool) error {
+func (node FakeRedisNode) assertMessages(actualMessages []string, expectedMessages []string, caseSensitiveMatch bool) error {
 	err := compareStringSlices(actualMessages, expectedMessages, caseSensitiveMatch)
 	if err != nil {
 		return err
 	}
-	logger.Successf(strings.Join(actualMessages, " ") + " received.")
+	node.Logger.Successf(node.LogPrefix + strings.Join(actualMessages, " ") + " received.")
 	return nil
 }
 

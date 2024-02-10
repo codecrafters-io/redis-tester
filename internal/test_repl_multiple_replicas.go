@@ -68,7 +68,7 @@ func testReplMultipleReplicas(stageHarness *testerutils.StageHarness) error {
 		if strings.ToUpper(actualMessages[0]) != "SELECT" {
 			startIndexSetKeyCheck += 1
 			expectedMessages := []string{"SET", "foo", "123"}
-			err = assertMessages(actualMessages, expectedMessages, logger, true)
+			err = replica.assertMessages(actualMessages, expectedMessages, true)
 			if err != nil {
 				return err
 			}

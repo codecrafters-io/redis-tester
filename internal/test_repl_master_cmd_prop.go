@@ -57,7 +57,7 @@ func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
 	if strings.ToUpper(actualMessages[0]) != "SELECT" {
 		skipFirstAssert = true
 		expectedMessages := []string{"SET", "foo", "123"}
-		err = assertMessages(actualMessages, expectedMessages, logger, true)
+		err = replica.assertMessages(actualMessages, expectedMessages, true)
 		if err != nil {
 			return err
 		}

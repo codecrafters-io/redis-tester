@@ -78,7 +78,7 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 			skipFirstAssert = true
 			expectedMessages := []string{"SET", "foo", "123"}
 			offset += GetByteOffset(expectedMessages)
-			err = assertMessages(actualMessages, expectedMessages, logger, true)
+			err = replica.assertMessages(actualMessages, expectedMessages, true)
 			if err != nil {
 				return err
 			}
