@@ -39,7 +39,7 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 
 		replica := NewFakeRedisReplica(conn, logger)
 		replicas = append(replicas, replica)
-		replica.LogPrefix = fmt.Sprintf("[Replica: %v] ", i+1)
+		replica.LogPrefix = fmt.Sprintf("[replica-%v] ", i+1)
 
 		err = replica.Handshake()
 		if err != nil {
@@ -54,7 +54,7 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 	}
 
 	client := NewFakeRedisMaster(conn, logger)
-	client.LogPrefix = "[Client] "
+	client.LogPrefix = "[client] "
 
 	client.SendAndAssert([]string{"SET", "foo", "123"}, []string{"OK"})
 

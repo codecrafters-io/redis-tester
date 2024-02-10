@@ -248,6 +248,11 @@ func compareStringSlices(actual, expected []string, caseSensitiveMatch bool) err
 			// Case Insensitive matching
 			a, e = strings.ToUpper(actual[i]), strings.ToUpper(expected[i])
 		}
+		if i == 0 {
+			// First element in the array is the REDIS command
+			// That should always be comapred in a case insensitive manner
+			a, e = strings.ToUpper(actual[i]), strings.ToUpper(expected[i])
+		}
 		if a != e {
 			return fmt.Errorf("Expected: '%v' and actual: '%v' messages don't match", e, a)
 		}

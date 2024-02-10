@@ -29,7 +29,7 @@ func testReplMultipleReplicas(stageHarness *testerutils.StageHarness) error {
 		defer conn.Close()
 		replica := NewFakeRedisReplica(conn, logger)
 		replicas = append(replicas, replica)
-		replica.LogPrefix = fmt.Sprintf("[Replica: %v] ", j+1)
+		replica.LogPrefix = fmt.Sprintf("[replica-%v] ", j+1)
 	}
 
 	conn, err := NewRedisConn("", "localhost:6379")
@@ -38,7 +38,7 @@ func testReplMultipleReplicas(stageHarness *testerutils.StageHarness) error {
 	}
 	defer conn.Close()
 	client := NewFakeRedisMaster(conn, logger)
-	client.LogPrefix = "[Client] "
+	client.LogPrefix = "[client] "
 
 	for i := 0; i < len(replicas); i++ {
 		replica := replicas[i]
