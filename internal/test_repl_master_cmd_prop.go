@@ -49,22 +49,19 @@ func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
 		client.Send([]string{"SET", key, value})
 	}
 
-	// TODO(Ryan): Find a way to bring this back, and ignore specifically for Redis.
-	// err, _ = readAndAssertMessages(replica.Reader, []string{"SELECT", "0"}, logger)
-	// Redis will send SELECT, but not expected from Users, err is not checked
-	// here.
+	// Redis will send SELECT, but not expected from Users.
+	err, _ = replica.readAndAssertMessagesWithSkip([]string{"SET", "foo", "123"}, "SELECT", true)
 
-	err, _ = readAndAssertMessages(replica.Reader, []string{"SET", "foo", "123"}, logger)
 	if err != nil {
 		return err
 	}
 
-	err, _ = readAndAssertMessages(replica.Reader, []string{"SET", "bar", "456"}, logger)
+	err, _ = replica.readAndAssertMessages([]string{"SET", "bar", "456"}, true)
 	if err != nil {
 		return err
 	}
 
-	err, _ = readAndAssertMessages(replica.Reader, []string{"SET", "baz", "789"}, logger)
+	err, _ = replica.readAndAssertMessages([]string{"SET", "baz", "789"}, true)
 	if err != nil {
 		return err
 	}

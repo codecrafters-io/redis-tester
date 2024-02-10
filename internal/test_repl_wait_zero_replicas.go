@@ -25,6 +25,7 @@ func testWaitZeroReplicas(stageHarness *testerutils.StageHarness) error {
 	}
 
 	client := NewFakeRedisMaster(conn, logger)
+	client.LogPrefix = "[client] "
 
 	err = client.Wait("0", "60000", 0)
 	if err != nil {

@@ -17,7 +17,7 @@ func testReplGetaAckNonZero(stageHarness *testerutils.StageHarness) error {
 
 	logger := stageHarness.Logger
 
-	logger.Infof("Server is running on port 6379")
+	logger.Infof("Master is running on port 6379")
 
 	replica := NewRedisBinary(stageHarness)
 	replica.args = []string{
@@ -42,11 +42,6 @@ func testReplGetaAckNonZero(stageHarness *testerutils.StageHarness) error {
 		return err
 	}
 
-	// If I don't read ACK sent by redis replica, it's not buffered
-	// I can easily read the next ACK in the next `stage`
-	// So ideally, I can ignore the ACKs in the `SET`` stages,
-	// and then only check for explicit GETACKs
-
 	offset := 0
 	err = master.GetAck(offset) // 37
 	if err != nil {
@@ -56,8 +51,6 @@ func testReplGetaAckNonZero(stageHarness *testerutils.StageHarness) error {
 
 	cmd := []string{"PING"}
 	master.Send(cmd) // 14
-	// actualMessages, err := readRespMessages(r, logger)
-	// fmt.Println(actualMessages)
 	offset += GetByteOffset(cmd)
 
 	err = master.GetAck(offset) // 37
@@ -70,16 +63,12 @@ func testReplGetaAckNonZero(stageHarness *testerutils.StageHarness) error {
 	value := RandomAlphanumericString(testerutils_random.RandomInt(5, 20))
 	cmd = []string{"SET", key, value}
 	master.Send(cmd) // 31
-	// actualMessages, err = readRespMessages(r, logger)
-	// fmt.Println(actualMessages)
 	offset += GetByteOffset(cmd)
 
 	key = RandomAlphanumericString(testerutils_random.RandomInt(5, 20))
 	value = RandomAlphanumericString(testerutils_random.RandomInt(5, 20))
 	cmd = []string{"SET", key, value}
 	master.Send(cmd) // 31
-	// actualMessages, err = readRespMessages(r, logger)
-	// fmt.Println(actualMessages)
 	offset += GetByteOffset(cmd)
 
 	err = master.GetAck(offset)

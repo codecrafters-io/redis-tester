@@ -35,6 +35,7 @@ func testWaitZeroOffset(stageHarness *testerutils.StageHarness) error {
 		}
 
 		replica := NewFakeRedisReplica(conn, logger)
+		replica.LogPrefix = fmt.Sprintf("[replica-%v] ", i+1)
 		err = replica.Handshake()
 		if err != nil {
 			return err
@@ -47,6 +48,7 @@ func testWaitZeroOffset(stageHarness *testerutils.StageHarness) error {
 	}
 
 	client := NewFakeRedisMaster(conn, logger)
+	client.LogPrefix = "[client] "
 
 	diff := ((replicaCount + 3) - 3) / 3
 	safeDiff := max(1, diff) // If diff is 0, it will get stuck in an infinite loop

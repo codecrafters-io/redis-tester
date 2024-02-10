@@ -16,7 +16,7 @@ func testReplCmdProcessing(stageHarness *testerutils.StageHarness) error {
 
 	logger := stageHarness.Logger
 
-	logger.Infof("Server is running on port 6379")
+	logger.Infof("Master is running on port 6379")
 
 	replica := NewRedisBinary(stageHarness)
 	replica.args = []string{
@@ -66,7 +66,7 @@ func testReplCmdProcessing(stageHarness *testerutils.StageHarness) error {
 	for i := 1; i <= len(kvMap); i++ {
 		key, value := kvMap[i][0], kvMap[i][1]
 		logger.Infof("Getting key %s", key)
-		err = replicaClient.SendAndAssertString([]string{"GET", key}, value)
+		err = replicaClient.SendAndAssertString([]string{"GET", key}, value, true)
 		if err != nil {
 			return err
 		}

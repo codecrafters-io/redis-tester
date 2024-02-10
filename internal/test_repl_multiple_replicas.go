@@ -29,6 +29,7 @@ func testReplMultipleReplicas(stageHarness *testerutils.StageHarness) error {
 		defer conn.Close()
 		replica := NewFakeRedisReplica(conn, logger)
 		replicas = append(replicas, replica)
+		replica.LogPrefix = fmt.Sprintf("[replica-%v] ", j+1)
 	}
 
 	conn, err := NewRedisConn("", "localhost:6379")
@@ -37,6 +38,7 @@ func testReplMultipleReplicas(stageHarness *testerutils.StageHarness) error {
 	}
 	defer conn.Close()
 	client := NewFakeRedisMaster(conn, logger)
+	client.LogPrefix = "[client] "
 
 	for i := 0; i < len(replicas); i++ {
 		replica := replicas[i]
@@ -54,7 +56,7 @@ func testReplMultipleReplicas(stageHarness *testerutils.StageHarness) error {
 	for i := 1; i <= len(kvMap); i++ {
 		// We need order of commands preserved
 		key, value := kvMap[i][0], kvMap[i][1]
-		logger.Debugf("Setting key %s to %s", key, value)
+		client.Log(fmt.Sprintf("Setting key %s to %s", key, value))
 		client.Send([]string{"SET", key, value})
 	}
 
@@ -62,16 +64,17 @@ func testReplMultipleReplicas(stageHarness *testerutils.StageHarness) error {
 		replica := replicas[j]
 		logger.Infof("Testing Replica : %v", j+1)
 
-		// TODO(Ryan): Find a way to bring this back, and ignore specifically for Redis.
-		// err, _ = readAndAssertMessages(replica.Reader, []string{"SELECT", "0"}, logger)
-		// // Redis will send SELECT, but not expected from Users, err is not checked
-		// // here.
+		// Redis will send SELECT, but not expected from Users.
+		err, _ = replica.readAndAssertMessagesWithSkip([]string{"SET", "foo", "123"}, "SELECT", true)
+		if err != nil {
+			return err
+		}
 
-		for i := 1; i <= len(kvMap); i++ {
+		for i := 2; i <= len(kvMap); i++ {
 			// We need order of commands preserved
 			key, value := kvMap[i][0], kvMap[i][1]
 
-			err, _ = readAndAssertMessages(replica.Reader, []string{"SET", key, value}, logger)
+			err, _ = replica.readAndAssertMessages([]string{"SET", key, value}, true)
 			if err != nil {
 				return err
 			}

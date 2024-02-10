@@ -30,11 +30,11 @@ func testReplInfo(stageHarness *testerutils.StageHarness) error {
 	}
 
 	if infoMap[key] == "" {
-		return fmt.Errorf("Expected 'role' key in INFO replication.")
+		return fmt.Errorf("Expected: 'role' key in INFO replication.")
 	}
 
 	if role != "master" {
-		return fmt.Errorf("Expected 'role' to be 'master' in INFO replication, got %v", role)
+		return fmt.Errorf("Expected: 'role' to be 'master' in INFO replication, got %v", role)
 	}
 
 	client.Close()

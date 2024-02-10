@@ -16,7 +16,7 @@ func testReplInfoReplica(stageHarness *testerutils.StageHarness) error {
 	defer listener.Close()
 	logger := stageHarness.Logger
 
-	logger.Infof("Server is running on port 6379")
+	logger.Infof("Master is running on port 6379")
 
 	replica := NewRedisBinary(stageHarness)
 	replica.args = []string{
@@ -48,11 +48,11 @@ func testReplInfoReplica(stageHarness *testerutils.StageHarness) error {
 	}
 
 	if key != "role" {
-		return fmt.Errorf("Expected 'role' key in INFO replication, got %v", key)
+		return fmt.Errorf("Expected: 'role' and actual: '%v' keys in INFO replication don't match", key)
 	}
 
 	if role != "slave" {
-		return fmt.Errorf("Expected 'role' to be 'slave' in INFO replication, got %v", role)
+		return fmt.Errorf("Expected: 'role' and actual: '%v' roles in INFO replication don't match", role)
 	}
 
 	client.Close()

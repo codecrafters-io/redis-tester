@@ -3,7 +3,6 @@ package internal
 import (
 	"fmt"
 	"strconv"
-	"strings"
 	"time"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
@@ -40,6 +39,7 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 
 		replica := NewFakeRedisReplica(conn, logger)
 		replicas = append(replicas, replica)
+		replica.LogPrefix = fmt.Sprintf("[replica-%v] ", i+1)
 
 		err = replica.Handshake()
 		if err != nil {
@@ -54,6 +54,7 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 	}
 
 	client := NewFakeRedisMaster(conn, logger)
+	client.LogPrefix = "[client] "
 
 	client.SendAndAssert([]string{"SET", "foo", "123"}, []string{"OK"})
 
@@ -62,20 +63,20 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 		return err
 	}
 
-	logger.Infof("Start receiving on Replicas")
+	//////////////////////////////////////////////////////
+
 	ANSWER := 1
 	// READ STREAM ON ALL REPLICAS
 	for i := 0; i < replicaCount; i++ {
 		replica := replicas[i]
 
-		// TODO(Ryan): Find a way to bring this back, and ignore specifically for Redis.
-		// err, o := readAndAssertMessages(replica.Reader, []string{"SELECT", "0"}, logger)
-		// offset += o
+		// Redis will send SELECT, but not expected from Users.
+		err, _ = replica.readAndAssertMessagesWithSkip([]string{"SET", "foo", "123"}, "SELECT", true)
+		if err != nil {
+			return err
+		}
 
-		err, o := readAndAssertMessages(replica.Reader, []string{"SET", "foo", "123"}, logger)
-		offset += o
-
-		err, o = readAndAssertMessages(replica.Reader, []string{"REPLCONF", "GETACK", "*"}, logger)
+		err, o := replica.readAndAssertMessages([]string{"REPLCONF", "GETACK", "*"}, true)
 		offset += o
 		if err != nil {
 			return err
@@ -84,61 +85,10 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 
 	for i := 0; i < ANSWER; i++ {
 		replica := replicas[i]
-
-		msg := []string{"REPLCONF", "ACK", strconv.Itoa(offset)}
-		err = replica.Writer.WriteCommand(msg...)
-		if err != nil {
-			return err
-		}
-		replica.Writer.Flush()
-		replica.Logger.Infof("%s sent.", strings.ReplaceAll(strings.Join(msg, " "), "\r\n", ""))
+		replica.Send([]string{"REPLCONF", "ACK", strconv.Itoa(offset)})
 	}
 
-	readAndAssertIntMessage(client.Reader, ANSWER, logger)
-
-	//////////////////////////////////////////////////////
-
-	// client.SendAndAssert([]string{"SET", "bar", "456"}, []string{"OK"})
-
-	// err = client.Send([]string{"WAIT", "3", "500"})
-	// if err != nil {
-	// 	return err
-	// }
-
-	// OLD_OFFSET := offset
-	// fmt.Println("Start receiving on Replicas")
-	// ANSWER = 3
-	// // READ STREAM ON ALL REPLICAS
-	// for i := 0; i < replicaCount; i++ {
-	// 	offset = OLD_OFFSET
-	// 	replica := replicas[i]
-
-	// 	// err, o := readAndAssertMessages(replica.Reader, []string{"SELECT", "0"}, logger)
-	// 	// offset += o
-
-	// 	err, o := readAndAssertMessages(replica.Reader, []string{"SET", "bar", "456"}, logger)
-	// 	offset += o
-
-	// 	err, o = readAndAssertMessages(replica.Reader, []string{"REPLCONF", "GETACK", "*"}, logger)
-	// 	offset += o
-	// 	if err != nil {
-	// 		return err
-	// 	}
-	// }
-
-	// for i := 0; i < ANSWER; i++ {
-	// 	replica := replicas[i]
-
-	// 	msg := []string{"REPLCONF", "ACK", strconv.Itoa(offset)}
-	// 	err = replica.Writer.WriteCommand(msg...)
-	// 	if err != nil {
-	// 		return err
-	// 	}
-	// 	replica.Writer.Flush()
-	// 	replica.Logger.Infof("%s sent.", strings.ReplaceAll(strings.Join(msg, " "), "\r\n", ""))
-	// }
-
-	// readAndAssertIntMessage(client.Reader, ANSWER, logger)
+	client.readAndAssertIntMessage(ANSWER)
 
 	//////////////////////////////////////////////////////
 
@@ -154,16 +104,15 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 	}
 
 	OLD_OFFSET := offset
-	logger.Infof("Start receiving on Replicas")
 	// READ STREAM ON ALL REPLICAS
 	for i := 0; i < replicaCount; i++ {
 		offset = OLD_OFFSET
 		replica := replicas[i]
 
-		err, o := readAndAssertMessages(replica.Reader, []string{"SET", "baz", "789"}, logger)
+		err, o := replica.readAndAssertMessages([]string{"SET", "baz", "789"}, true)
 		offset += o
 
-		err, o = readAndAssertMessages(replica.Reader, []string{"REPLCONF", "GETACK", "*"}, logger)
+		err, o = replica.readAndAssertMessages([]string{"REPLCONF", "GETACK", "*"}, false)
 		offset += o
 		if err != nil {
 			return err
@@ -172,22 +121,18 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 
 	for i := 0; i < ANSWER; i++ {
 		replica := replicas[i]
-
-		msg := []string{"REPLCONF", "ACK", strconv.Itoa(offset)}
-		err = replica.Writer.WriteCommand(msg...)
-		if err != nil {
-			return err
-		}
-		replica.Writer.Flush()
-		replica.Logger.Infof("%s sent.", strings.ReplaceAll(strings.Join(msg, " "), "\r\n", ""))
+		replica.Send([]string{"REPLCONF", "ACK", strconv.Itoa(offset)})
 	}
 
-	readAndAssertIntMessage(client.Reader, ANSWER, logger)
+	client.readAndAssertIntMessage(ANSWER)
+
+	//////////////////////////////////////////////////////
+
 	endTimeMilli := time.Now().UnixMilli()
 
 	DELTA := 500 // ms
 	timeElapsed := endTimeMilli - startTimeMilli
-	logger.Infof("WAIT command returned after %v ms", timeElapsed)
+	client.Log(fmt.Sprintf("WAIT command returned after %v ms", timeElapsed))
 	if timeElapsed > int64(TIMEOUT)+int64(DELTA) || timeElapsed < int64(TIMEOUT)-int64(DELTA) {
 		return fmt.Errorf("Expected WAIT to return only after %v ms timeout elapsed.", TIMEOUT)
 	}
