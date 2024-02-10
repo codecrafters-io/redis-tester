@@ -349,6 +349,31 @@ func readAndCheckRDBFile(reader *resp3.Reader) error {
 	return decoder.Parse(processRedisObject)
 }
 
+func (node FakeRedisNode) readAndAssertMessagesWithSkip(messages []string, skipMessage string, caseSensitiveMatch bool) (error, int) {
+	// Reads RESP message, skips assert if the first word matches with
+	// skipMessage (case insensitive), reads next RESP runs match on it.
+	actualMessages, err := node.readRespMessages()
+	offset := 0
+	if err != nil {
+		return err, offset
+	}
+	if strings.ToUpper(actualMessages[0]) == strings.ToUpper(skipMessage) {
+		node.Logger.Successf(node.LogPrefix + strings.Join(actualMessages, " ") + " received.")
+		offset += GetByteOffset(actualMessages)
+		actualMessages, err = node.readRespMessages() // Read next message
+		if err != nil {
+			return err, offset
+		}
+	}
+
+	offset += GetByteOffset(actualMessages)
+	err = node.assertMessages(actualMessages, messages, caseSensitiveMatch)
+	if err != nil {
+		return err, offset
+	}
+	return nil, offset
+}
+
 func (node FakeRedisNode) readAndAssertMessages(messages []string, caseSensitiveMatch bool) (error, int) {
 	actualMessages, err := node.readRespMessages()
 	offset := GetByteOffset(messages)

@@ -3,7 +3,6 @@ package internal
 import (
 	"fmt"
 	"strconv"
-	"strings"
 	"time"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
@@ -71,25 +70,10 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 	for i := 0; i < replicaCount; i++ {
 		replica := replicas[i]
 
-		var skipFirstAssert bool
-		skipFirstAssert = false
-		actualMessages, err := replica.readRespMessages()
-		if strings.ToUpper(actualMessages[0]) != "SELECT" {
-			skipFirstAssert = true
-			expectedMessages := []string{"SET", "foo", "123"}
-			offset += GetByteOffset(expectedMessages)
-			err = replica.assertMessages(actualMessages, expectedMessages, true)
-			if err != nil {
-				return err
-			}
-		}
-
-		if !skipFirstAssert {
-			err, o := replica.readAndAssertMessages([]string{"SET", "foo", "123"}, true)
-			offset += o
-			if err != nil {
-				return err
-			}
+		// Redis will send SELECT, but not expected from Users.
+		err, _ = replica.readAndAssertMessagesWithSkip([]string{"SET", "foo", "123"}, "SELECT", true)
+		if err != nil {
+			return err
 		}
 
 		err, o := replica.readAndAssertMessages([]string{"REPLCONF", "GETACK", "*"}, true)

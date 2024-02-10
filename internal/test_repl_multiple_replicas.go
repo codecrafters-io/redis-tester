@@ -2,7 +2,6 @@ package internal
 
 import (
 	"fmt"
-	"strings"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
 )
@@ -60,21 +59,16 @@ func testReplMultipleReplicas(stageHarness *testerutils.StageHarness) error {
 	}
 
 	for j := 0; j < 3; j++ {
-		startIndexSetKeyCheck := 1
 		replica := replicas[j]
 		logger.Infof("Testing Replica : %v", j+1)
+
 		// Redis will send SELECT, but not expected from Users.
-		actualMessages, err := replica.readRespMessages()
-		if strings.ToUpper(actualMessages[0]) != "SELECT" {
-			startIndexSetKeyCheck += 1
-			expectedMessages := []string{"SET", "foo", "123"}
-			err = replica.assertMessages(actualMessages, expectedMessages, true)
-			if err != nil {
-				return err
-			}
+		err, _ = replica.readAndAssertMessagesWithSkip([]string{"SET", "foo", "123"}, "SELECT", true)
+		if err != nil {
+			return err
 		}
 
-		for i := startIndexSetKeyCheck; i <= len(kvMap); i++ {
+		for i := 2; i <= len(kvMap); i++ {
 			// We need order of commands preserved
 			key, value := kvMap[i][0], kvMap[i][1]
 

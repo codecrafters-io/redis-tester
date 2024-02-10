@@ -2,7 +2,6 @@ package internal
 
 import (
 	"fmt"
-	"strings"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
 )
@@ -51,23 +50,9 @@ func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
 	}
 
 	// Redis will send SELECT, but not expected from Users.
-	var skipFirstAssert bool
-	skipFirstAssert = false
-	actualMessages, err := replica.readRespMessages()
-	if strings.ToUpper(actualMessages[0]) != "SELECT" {
-		skipFirstAssert = true
-		expectedMessages := []string{"SET", "foo", "123"}
-		err = replica.assertMessages(actualMessages, expectedMessages, true)
-		if err != nil {
-			return err
-		}
-	}
-
-	if !skipFirstAssert {
-		err, _ = replica.readAndAssertMessages([]string{"SET", "foo", "123"}, true)
-		if err != nil {
-			return err
-		}
+	err, _ = replica.readAndAssertMessagesWithSkip([]string{"SET", "foo", "123"}, "SELECT", true)
+	if err != nil {
+		return err
 	}
 
 	err, _ = replica.readAndAssertMessages([]string{"SET", "bar", "456"}, true)
