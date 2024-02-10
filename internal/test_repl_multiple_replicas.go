@@ -29,6 +29,7 @@ func testReplMultipleReplicas(stageHarness *testerutils.StageHarness) error {
 		defer conn.Close()
 		replica := NewFakeRedisReplica(conn, logger)
 		replicas = append(replicas, replica)
+		replica.LogPrefix = fmt.Sprintf("[Replica: %v] ", j+1)
 	}
 
 	conn, err := NewRedisConn("", "localhost:6379")
@@ -37,6 +38,7 @@ func testReplMultipleReplicas(stageHarness *testerutils.StageHarness) error {
 	}
 	defer conn.Close()
 	client := NewFakeRedisMaster(conn, logger)
+	client.LogPrefix = "[Client] "
 
 	for i := 0; i < len(replicas); i++ {
 		replica := replicas[i]
@@ -54,7 +56,7 @@ func testReplMultipleReplicas(stageHarness *testerutils.StageHarness) error {
 	for i := 1; i <= len(kvMap); i++ {
 		// We need order of commands preserved
 		key, value := kvMap[i][0], kvMap[i][1]
-		logger.Debugf("Setting key %s to %s", key, value)
+		client.Log(fmt.Sprintf("Setting key %s to %s", key, value))
 		client.Send([]string{"SET", key, value})
 	}
 
