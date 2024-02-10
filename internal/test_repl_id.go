@@ -31,11 +31,11 @@ func testReplReplicationID(stageHarness *testerutils.StageHarness) error {
 	idKey, offsetKey = "master_replid", "master_repl_offset"
 
 	if infoMap[idKey] == "" {
-		return fmt.Errorf("Expected '%v' key in INFO replication.", idKey)
+		return fmt.Errorf("Expected: '%v' key in INFO replication.", idKey)
 	}
 
 	if infoMap[offsetKey] != "0" {
-		return fmt.Errorf("Expected 0 value for '%v' in INFO replication.", offsetKey)
+		return fmt.Errorf("Expected: 0 value for '%v' in INFO replication.", offsetKey)
 	}
 
 	client.Close()

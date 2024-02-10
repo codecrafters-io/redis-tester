@@ -234,7 +234,7 @@ func compareStringSlices(actual, expected []string, caseSensitiveMatch bool) err
 			a, e = strings.ToUpper(actual[i]), strings.ToUpper(expected[i])
 		}
 		if a != e {
-			return fmt.Errorf("Expected : '%v' and actual : '%v' messages don't match", e, a)
+			return fmt.Errorf("Expected: '%v' and actual: '%v' messages don't match", e, a)
 		}
 	}
 
@@ -377,7 +377,7 @@ func readAndAssertMessage(reader *resp3.Reader, expectedMessage string, logger *
 			a, e = strings.ToUpper(actualMessage), strings.ToUpper(expectedMessage)
 		}
 		if a != e {
-			err = fmt.Errorf("Expected '%v', got '%v'", expectedMessage, actualMessage)
+			err = fmt.Errorf("Expected: '%v' and actual: '%v' messages don't match", expectedMessage, actualMessage)
 		}
 	}
 	if err != nil {
@@ -393,7 +393,7 @@ func readAndAssertIntMessage(reader *resp3.Reader, expectedMessage int, logger *
 		return err
 	}
 	if actualMessage != expectedMessage {
-		err = fmt.Errorf("Expected '%v', got '%v'", expectedMessage, actualMessage)
+		err = fmt.Errorf("Expected: '%v' and actual: '%v' messages don't match", expectedMessage, actualMessage)
 	}
 	if err != nil {
 		return err
