@@ -27,8 +27,8 @@ func NewFakeRedisMaster(conn net.Conn, logger *logger.Logger) *FakeRedisMaster {
 	}
 }
 
-func (master FakeRedisMaster) Assert(receiveMessages []string, sendMessage string) error {
-	err, _ := readAndAssertMessages(master.Reader, receiveMessages, master.Logger)
+func (master FakeRedisMaster) Assert(receiveMessages []string, sendMessage string, caseSensitiveMatch bool) error {
+	err, _ := readAndAssertMessages(master.Reader, receiveMessages, master.Logger, caseSensitiveMatch)
 	_, err = master.Writer.WriteString(sendMessage)
 	if err != nil {
 		return err
@@ -39,20 +39,20 @@ func (master FakeRedisMaster) Assert(receiveMessages []string, sendMessage strin
 }
 
 func (master FakeRedisMaster) AssertPing() error {
-	return master.Assert([]string{"PING"}, "+PONG\r\n")
+	return master.Assert([]string{"PING"}, "+PONG\r\n", false)
 }
 
 func (master FakeRedisMaster) AssertReplConfPort() error {
-	return master.Assert([]string{"REPLCONF", "listening-port", "6380"}, "+OK\r\n")
+	return master.Assert([]string{"REPLCONF", "listening-port", "6380"}, "+OK\r\n", false)
 }
 
 func (master FakeRedisMaster) AssertReplConfCapa() error {
-	return master.Assert([]string{"REPLCONF", "*", "*", "*", "*"}, "+OK\r\n")
+	return master.Assert([]string{"REPLCONF", "*", "*", "*", "*"}, "+OK\r\n", false)
 }
 func (master FakeRedisMaster) AssertPsync() error {
 	id := RandomAlphanumericString(40)
 	response := "+FULLRESYNC " + id + " 0\r\n"
-	return master.Assert([]string{"PSYNC", "?", "-1"}, response)
+	return master.Assert([]string{"PSYNC", "?", "-1"}, response, false)
 }
 func (master FakeRedisMaster) GetAck(offset int) error {
 	return master.SendAndAssert([]string{"REPLCONF", "GETACK", "*"}, []string{"REPLCONF", "ACK", strconv.Itoa(offset)})
@@ -67,19 +67,19 @@ func (master FakeRedisMaster) SendAndAssert(sendMessage []string, receiveMessage
 	if err != nil {
 		return err
 	}
-	err, _ = readAndAssertMessages(master.Reader, receiveMessage, master.Logger)
+	err, _ = readAndAssertMessages(master.Reader, receiveMessage, master.Logger, false)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (master FakeRedisMaster) SendAndAssertString(sendMessage []string, receiveMessage string) error {
+func (master FakeRedisMaster) SendAndAssertString(sendMessage []string, receiveMessage string, caseSensitiveMatch bool) error {
 	err := master.Send(sendMessage)
 	if err != nil {
 		return err
 	}
-	err = readAndAssertMessage(master.Reader, receiveMessage, master.Logger)
+	err = readAndAssertMessage(master.Reader, receiveMessage, master.Logger, caseSensitiveMatch)
 	if err != nil {
 		return err
 	}
@@ -151,10 +151,10 @@ func NewFakeRedisReplica(conn net.Conn, logger *logger.Logger) *FakeRedisReplica
 	}
 }
 
-func (replica FakeRedisReplica) SendAndAssertMessage(sendMessage []string, receiveMessage string) error {
+func (replica FakeRedisReplica) SendAndAssertMessage(sendMessage []string, receiveMessage string, caseSensitiveMatch bool) error {
 	replica.Logger.Infof("$ redis-cli %v", strings.Join(sendMessage, " "))
 	replica.Writer.WriteCommand(sendMessage...)
-	err := readAndAssertMessage(replica.Reader, receiveMessage, replica.Logger)
+	err := readAndAssertMessage(replica.Reader, receiveMessage, replica.Logger, caseSensitiveMatch)
 	if err != nil {
 		return err
 	}
@@ -162,13 +162,13 @@ func (replica FakeRedisReplica) SendAndAssertMessage(sendMessage []string, recei
 }
 
 func (replica FakeRedisReplica) Ping() error {
-	return replica.SendAndAssertMessage([]string{"PING"}, "PONG")
+	return replica.SendAndAssertMessage([]string{"PING"}, "PONG", false)
 }
 func (replica FakeRedisReplica) ReplConfPort() error {
-	return replica.SendAndAssertMessage([]string{"REPLCONF", "listening-port", "6380"}, "OK")
+	return replica.SendAndAssertMessage([]string{"REPLCONF", "listening-port", "6380"}, "OK", false)
 }
 func (replica FakeRedisReplica) Psync() error {
-	return replica.SendAndAssertMessage([]string{"PSYNC", "?", "-1"}, "FULLRESYNC * 0")
+	return replica.SendAndAssertMessage([]string{"PSYNC", "?", "-1"}, "FULLRESYNC * 0", false)
 }
 
 func (replica FakeRedisReplica) ReceiveRDB() error {
@@ -216,7 +216,7 @@ func convertToStringArray(interfaceSlice []interface{}) ([]string, error) {
 	return stringSlice, nil
 }
 
-func compareStringSlices(actual, expected []string) error {
+func compareStringSlices(actual, expected []string, caseSensitiveMatch bool) error {
 	if len(actual) != len(expected) {
 		return fmt.Errorf("Length mismatch between actual message and expected message.")
 	}
@@ -226,8 +226,13 @@ func compareStringSlices(actual, expected []string) error {
 		if expected[i] == "*" {
 			continue
 		}
-
-		a, e := strings.ToUpper(actual[i]), strings.ToUpper(expected[i])
+		var a, e string
+		if caseSensitiveMatch {
+			a, e = actual[i], expected[i]
+		} else {
+			// Case Insensitive matching
+			a, e = strings.ToUpper(actual[i]), strings.ToUpper(expected[i])
+		}
 		if a != e {
 			return fmt.Errorf("Expected : '%v' and actual : '%v' messages don't match", e, a)
 		}
@@ -329,7 +334,7 @@ func readAndCheckRDBFile(reader *resp3.Reader) error {
 	return decoder.Parse(processRedisObject)
 }
 
-func readAndAssertMessages(reader *resp3.Reader, messages []string, logger *logger.Logger) (error, int) {
+func readAndAssertMessages(reader *resp3.Reader, messages []string, logger *logger.Logger, caseSensitiveMatch bool) (error, int) {
 	actualMessages, err := readRespMessages(reader, logger)
 	offset := GetByteOffset(messages)
 	if err != nil {
@@ -337,7 +342,7 @@ func readAndAssertMessages(reader *resp3.Reader, messages []string, logger *logg
 	}
 	// fmt.Println("ACTMSG :", actualMessages)
 	expectedMessages := []string(messages)
-	err = compareStringSlices(actualMessages, expectedMessages)
+	err = compareStringSlices(actualMessages, expectedMessages, caseSensitiveMatch)
 	if err != nil {
 		return err, 0
 	}
@@ -345,7 +350,16 @@ func readAndAssertMessages(reader *resp3.Reader, messages []string, logger *logg
 	return nil, offset
 }
 
-func readAndAssertMessage(reader *resp3.Reader, expectedMessage string, logger *logger.Logger) error {
+func assertMessages(actualMessages []string, expectedMessages []string, logger *logger.Logger, caseSensitiveMatch bool) error {
+	err := compareStringSlices(actualMessages, expectedMessages, caseSensitiveMatch)
+	if err != nil {
+		return err
+	}
+	logger.Successf(strings.Join(actualMessages, " ") + " received.")
+	return nil
+}
+
+func readAndAssertMessage(reader *resp3.Reader, expectedMessage string, logger *logger.Logger, caseSensitiveMatch bool) error {
 	actualMessage, err := readRespString(reader, logger)
 	if err != nil {
 		return err
@@ -354,9 +368,15 @@ func readAndAssertMessage(reader *resp3.Reader, expectedMessage string, logger *
 		// Wildcard present, do a array comparison
 		actualMessageParts := strings.Split(actualMessage, " ")
 		expectedMessageParts := strings.Split(expectedMessage, " ")
-		err = compareStringSlices(actualMessageParts, expectedMessageParts)
+		err = compareStringSlices(actualMessageParts, expectedMessageParts, caseSensitiveMatch)
 	} else {
-		if actualMessage != expectedMessage {
+		var a, e string
+		if caseSensitiveMatch {
+			a, e = actualMessage, expectedMessage
+		} else {
+			a, e = strings.ToUpper(actualMessage), strings.ToUpper(expectedMessage)
+		}
+		if a != e {
 			err = fmt.Errorf("Expected '%v', got '%v'", expectedMessage, actualMessage)
 		}
 	}
