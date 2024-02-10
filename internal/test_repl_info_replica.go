@@ -16,7 +16,7 @@ func testReplInfoReplica(stageHarness *testerutils.StageHarness) error {
 	defer listener.Close()
 	logger := stageHarness.Logger
 
-	logger.Infof("Server is running on port 6379")
+	logger.Infof("Master is running on port 6379")
 
 	replica := NewRedisBinary(stageHarness)
 	replica.args = []string{
