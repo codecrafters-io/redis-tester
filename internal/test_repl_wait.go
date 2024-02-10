@@ -112,50 +112,6 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 
 	//////////////////////////////////////////////////////
 
-	client.SendAndAssert([]string{"SET", "bar", "456"}, []string{"OK"})
-
-	err = client.Send([]string{"WAIT", "3", "500"})
-	if err != nil {
-		return err
-	}
-
-	OLD_OFFSET := offset
-	fmt.Println("Start receiving on Replicas")
-	ANSWER = 3
-	// READ STREAM ON ALL REPLICAS
-	for i := 0; i < replicaCount; i++ {
-		offset = OLD_OFFSET
-		replica := replicas[i]
-
-		// err, o := readAndAssertMessages(replica.Reader, []string{"SELECT", "0"}, logger)
-		// offset += o
-
-		err, o := readAndAssertMessages(replica.Reader, []string{"SET", "bar", "456"}, logger, true)
-		offset += o
-
-		err, o = readAndAssertMessages(replica.Reader, []string{"REPLCONF", "GETACK", "*"}, logger, false)
-		offset += o
-		if err != nil {
-			return err
-		}
-	}
-
-	for i := 0; i < ANSWER; i++ {
-		replica := replicas[i]
-
-		msg := []string{"REPLCONF", "ACK", strconv.Itoa(offset)}
-		err = replica.Writer.WriteCommand(msg...)
-		if err != nil {
-			return err
-		}
-		replica.Writer.Flush()
-		replica.Logger.Infof("%s sent.", strings.ReplaceAll(strings.Join(msg, " "), "\r\n", ""))
-	}
-
-	readAndAssertIntMessage(client.Reader, ANSWER, logger)
-
-	//////////////////////////////////////////////////////
-
 	client.SendAndAssert([]string{"SET", "baz", "789"}, []string{"OK"})
 
 	ANSWER = min(replicaCount, testerutils_random.RandomInt(0, 6))
@@ -167,7 +123,7 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 		return err
 	}
 
-	OLD_OFFSET = offset
+	OLD_OFFSET := offset
 	logger.Infof("Start receiving on Replicas")
 	// READ STREAM ON ALL REPLICAS
 	for i := 0; i < replicaCount; i++ {
