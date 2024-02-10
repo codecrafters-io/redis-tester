@@ -69,17 +69,17 @@ Debug = true
 [33m[stage-7] [0m[94mRunning tests for Stage #7: expiry[0m
 [33m[stage-7] [0m[94m$ ./spawn_redis_server.sh[0m
 [33m[stage-7] [0m[94m$ redis-cli set grapes apples px 100[0m
-[33m[stage-7] [0m[92mReceived OK (at 16:17:26.764)[0m
-[33m[stage-7] [0m[94m$ redis-cli get grapes (sent at 16:17:26.764, key should not be expired)[0m
+[33m[stage-7] [0m[92mReceived OK (at 10:49:25.125)[0m
+[33m[stage-7] [0m[94m$ redis-cli get grapes (sent at 10:49:25.125, key should not be expired)[0m
 [33m[stage-7] [0m[92mReceived "apples"[0m
 [33m[stage-7] [0m[36mSleeping for 101ms[0m
-[33m[stage-7] [0m[94m$ redis-cli get grapes (sent at 16:17:26.865, key should be expired)[0m
+[33m[stage-7] [0m[94m$ redis-cli get grapes (sent at 10:49:25.227, key should be expired)[0m
 [33m[stage-7] [0m[92mTest passed.[0m
 [33m[stage-7] [0m[36mTerminating program[0m
 [33m[stage-7] [0m[36mProgram terminated successfully[0m
 
 [33m[stage-8] [0m[94mRunning tests for Stage #8: rdb-config[0m
-[33m[stage-8] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdbfiles4200796523 --dbfilename banana.rdb[0m
+[33m[stage-8] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdbfiles1347588020 --dbfilename banana.rdb[0m
 [33m[stage-8] [0m[94m$ redis-cli CONFIG GET dir[0m
 [33m[stage-8] [0m[92mTest passed.[0m
 [33m[stage-8] [0m[36mTerminating program[0m
@@ -87,7 +87,7 @@ Debug = true
 
 [33m[stage-9] [0m[94mRunning tests for Stage #9: rdb-read-key[0m
 [33m[stage-9] [0m[94mCreated RDB file with single key: "pear"[0m
-[33m[stage-9] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdbfiles2712970255 --dbfilename blueberry.rdb[0m
+[33m[stage-9] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdbfiles316610407 --dbfilename blueberry.rdb[0m
 [33m[stage-9] [0m[94m$ redis-cli KEYS *[0m
 [33m[stage-9] [0m[92mTest passed.[0m
 [33m[stage-9] [0m[36mTerminating program[0m
@@ -95,7 +95,7 @@ Debug = true
 
 [33m[stage-10] [0m[94mRunning tests for Stage #10: rdb-read-string-value[0m
 [33m[stage-10] [0m[94mCreated RDB file with single key-value pair: strawberry="apple"[0m
-[33m[stage-10] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdbfiles2632135272 --dbfilename banana.rdb[0m
+[33m[stage-10] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdbfiles4200246040 --dbfilename banana.rdb[0m
 [33m[stage-10] [0m[94m$ redis-cli GET strawberry[0m
 [33m[stage-10] [0m[92mTest passed.[0m
 [33m[stage-10] [0m[36mTerminating program[0m
@@ -103,7 +103,7 @@ Debug = true
 
 [33m[stage-11] [0m[94mRunning tests for Stage #11: rdb-read-multiple-keys[0m
 [33m[stage-11] [0m[94mCreated RDB file with 5 keys: ["orange" "blueberry" "strawberry" "pineapple" "banana"][0m
-[33m[stage-11] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdbfiles2447921142 --dbfilename pear.rdb[0m
+[33m[stage-11] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdbfiles3333836963 --dbfilename pear.rdb[0m
 [33m[stage-11] [0m[94m$ redis-cli KEYS *[0m
 [33m[stage-11] [0m[92mTest passed.[0m
 [33m[stage-11] [0m[36mTerminating program[0m
@@ -111,7 +111,7 @@ Debug = true
 
 [33m[stage-12] [0m[94mRunning tests for Stage #12: rdb-read-multiple-string-values[0m
 [33m[stage-12] [0m[94mCreated RDB file with key-value pairs: "orange"="grape", "mango"="pear", "grape"="blueberry", "pear"="pineapple"[0m
-[33m[stage-12] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdbfiles2160114247 --dbfilename apple.rdb[0m
+[33m[stage-12] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdbfiles1759190986 --dbfilename apple.rdb[0m
 [33m[stage-12] [0m[94m$ redis-cli GET orange[0m
 [33m[stage-12] [0m[94m$ redis-cli GET mango[0m
 [33m[stage-12] [0m[94m$ redis-cli GET grape[0m
@@ -121,7 +121,7 @@ Debug = true
 [33m[stage-12] [0m[36mError terminating program: 'program failed to exit in 2 seconds after receiving sigterm'[0m
 
 [33m[stage-13] [0m[94mRunning tests for Stage #13: rdb-read-value-with-expiry[0m
-[33m[stage-13] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdbfiles2706930852 --dbfilename apple.rdb[0m
+[33m[stage-13] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdbfiles486567807 --dbfilename apple.rdb[0m
 [33m[stage-13] [0m[94m$ redis-cli GET pineapple[0m
 [33m[stage-13] [0m[94m$ redis-cli GET raspberry[0m
 [33m[stage-13] [0m[94m$ redis-cli GET blueberry[0m
@@ -146,7 +146,7 @@ Debug = true
 [33m[stage-15] [0m[36mProgram terminated successfully[0m
 
 [33m[stage-16] [0m[94mRunning tests for Stage #16: repl-info-replica[0m
-[33m[stage-16] [0m[94mServer is running on port 6379[0m
+[33m[stage-16] [0m[94mMaster is running on port 6379[0m
 [33m[stage-16] [0m[94m$ ./spawn_redis_server.sh --port 6380 --replicaof localhost 6379[0m
 [33m[stage-16] [0m[94m$ redis-cli INFO replication[0m
 [33m[stage-16] [0m[92mTest passed.[0m
