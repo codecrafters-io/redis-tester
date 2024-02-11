@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 	"strings"
+	"time"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
 )
@@ -28,8 +29,17 @@ func testReplInfoReplica(stageHarness *testerutils.StageHarness) error {
 		return err
 	}
 
-	conn, err := listener.Accept()
+	timeout := 2 * time.Second
+	err = listener.(*net.TCPListener).SetDeadline(time.Now().Add(timeout))
 	if err != nil {
+		fmt.Println("Error setting deadline:", err.Error())
+		return err
+	}
+
+	conn, err := listener.Accept()
+	if opErr, ok := err.(*net.OpError); ok && opErr.Timeout() {
+		// Connecting to master in this stage is optional.
+	} else if err != nil {
 		fmt.Println("Error accepting: ", err.Error())
 		return err
 	}
