@@ -51,6 +51,23 @@ func NewFakeRedisReplica(conn net.Conn, logger *logger.Logger) *FakeRedisReplica
 
 func (master FakeRedisMaster) Assert(receiveMessages []string, sendMessage string, caseSensitiveMatch bool) error {
 	err, _ := master.readAndAssertMessages(receiveMessages, caseSensitiveMatch)
+	if err != nil {
+		return err
+	}
+	_, err = master.Writer.WriteString(sendMessage)
+	if err != nil {
+		return err
+	}
+	master.Writer.Flush()
+	master.Logger.Infof("%s sent.", strings.ReplaceAll(sendMessage, "\r\n", ""))
+	return nil
+}
+
+func (master FakeRedisMaster) AssertWithOr(receiveMessages [][]string, sendMessage string, caseSensitiveMatch bool) error {
+	err, _ := master.readAndAssertMessagesWithOr(receiveMessages, caseSensitiveMatch)
+	if err != nil {
+		return err
+	}
 	_, err = master.Writer.WriteString(sendMessage)
 	if err != nil {
 		return err
@@ -69,7 +86,7 @@ func (master FakeRedisMaster) AssertReplConfPort() error {
 }
 
 func (master FakeRedisMaster) AssertReplConfCapa() error {
-	return master.Assert([]string{"REPLCONF", "*", "*", "*", "*"}, "+OK\r\n", false)
+	return master.AssertWithOr([][]string{{"REPLCONF", "capa", "*"}, {"REPLCONF", "capa", "*", "capa", "*"}}, "+OK\r\n", false)
 }
 func (master FakeRedisMaster) AssertPsync() error {
 	id := RandomAlphanumericString(40)
@@ -261,6 +278,23 @@ func compareStringSlices(actual, expected []string, caseSensitiveMatch bool) err
 	return nil
 }
 
+func compareStringSlicesWithOr(actual []string, expected [][]string, caseSensitiveMatch bool) error {
+	var foundMatch bool
+	var e error
+
+	for _, exp := range expected {
+		e := compareStringSlices(actual, exp, caseSensitiveMatch)
+		if e == nil {
+			foundMatch = true
+		}
+	}
+
+	if foundMatch == true {
+		return nil
+	}
+	return e // Will return last error. Will accordingly call assert.
+}
+
 func parseInfoOutput(lines []string, seperator string) map[string]string {
 	infoMap := make(map[string]string)
 	for _, line := range lines {
@@ -393,6 +427,20 @@ func (node FakeRedisNode) readAndAssertMessages(messages []string, caseSensitive
 	return nil, offset
 }
 
+func (node FakeRedisNode) readAndAssertMessagesWithOr(messages [][]string, caseSensitiveMatch bool) (error, int) {
+	actualMessages, err := node.readRespMessages()
+	offset := GetByteOffset(actualMessages)
+	if err != nil {
+		return err, 0
+	}
+
+	err = node.assertMessagesWithOr(actualMessages, messages, caseSensitiveMatch)
+	if err != nil {
+		return err, 0
+	}
+	return nil, offset
+}
+
 func (node FakeRedisNode) assertMessages(actualMessages []string, expectedMessages []string, caseSensitiveMatch bool) error {
 	err := compareStringSlices(actualMessages, expectedMessages, caseSensitiveMatch)
 	if err != nil {
@@ -402,6 +450,14 @@ func (node FakeRedisNode) assertMessages(actualMessages []string, expectedMessag
 	return nil
 }
 
+func (node FakeRedisNode) assertMessagesWithOr(actualMessages []string, expectedMessages [][]string, caseSensitiveMatch bool) error {
+	err := compareStringSlicesWithOr(actualMessages, expectedMessages, caseSensitiveMatch)
+	if err != nil {
+		return err
+	}
+	node.Logger.Successf(node.LogPrefix + strings.Join(actualMessages, " ") + " received.")
+	return nil
+}
 func (node FakeRedisNode) readAndAssertMessage(expectedMessage string, caseSensitiveMatch bool) error {
 	actualMessage, err := node.readRespString()
 	if err != nil {
