@@ -22,6 +22,7 @@ func testWaitZeroReplicas(stageHarness *testerutils.StageHarness) error {
 	conn, err := NewRedisConn("", "localhost:6379")
 	if err != nil {
 		fmt.Println("Error connecting to TCP server:", err)
+		return err
 	}
 
 	client := NewFakeRedisMaster(conn, logger)

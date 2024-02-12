@@ -22,11 +22,13 @@ func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
 	conn, err := NewRedisConn("", "localhost:6379")
 	if err != nil {
 		fmt.Println("Error connecting to TCP server:", err)
+		return err
 	}
 
 	conn1, err := NewRedisConn("", "localhost:6379")
 	if err != nil {
 		fmt.Println("Error connecting to TCP server:", err)
+		return err
 	}
 
 	client := NewFakeRedisMaster(conn1, logger)

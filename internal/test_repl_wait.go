@@ -32,10 +32,11 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 	for i := 0; i < replicaCount; i++ {
 		logger.Debugf("Creating replica : %v.", i+1)
 		conn, err := NewRedisConn("", "localhost:6379")
-		defer conn.Close()
 		if err != nil {
 			fmt.Println("Error connecting to TCP server:", err)
+			return err
 		}
+		defer conn.Close()
 
 		replica := NewFakeRedisReplica(conn, logger)
 		replicas = append(replicas, replica)
@@ -48,10 +49,11 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 	}
 
 	conn, err := NewRedisConn("", "localhost:6379")
-	defer conn.Close()
 	if err != nil {
 		fmt.Println("Error connecting to TCP server:", err)
+		return err
 	}
+	defer conn.Close()
 
 	client := NewFakeRedisMaster(conn, logger)
 	client.LogPrefix = "[client] "
@@ -62,8 +64,6 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 	if err != nil {
 		return err
 	}
-
-	//////////////////////////////////////////////////////
 
 	ANSWER := 1
 	// READ STREAM ON ALL REPLICAS
@@ -88,13 +88,14 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 		replica.Send([]string{"REPLCONF", "ACK", strconv.Itoa(offset)})
 	}
 
-	client.readAndAssertIntMessage(ANSWER)
-
-	//////////////////////////////////////////////////////
+	err = client.readAndAssertIntMessage(ANSWER)
+	if err != nil {
+		return err
+	}
 
 	client.SendAndAssert([]string{"SET", "baz", "789"}, []string{"OK"})
 
-	ANSWER = min(replicaCount, testerutils_random.RandomInt(0, 6))
+	ANSWER = min(replicaCount, testerutils_random.RandomInt(2, 6))
 	TIMEOUT := 2000
 	sendCount := strconv.Itoa(ANSWER + 1)
 	startTimeMilli := time.Now().UnixMilli()
@@ -117,16 +118,16 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 		if err != nil {
 			return err
 		}
+
+		if i < ANSWER {
+			replica.Send([]string{"REPLCONF", "ACK", strconv.Itoa(offset)})
+		}
 	}
 
-	for i := 0; i < ANSWER; i++ {
-		replica := replicas[i]
-		replica.Send([]string{"REPLCONF", "ACK", strconv.Itoa(offset)})
+	err = client.readAndAssertIntMessage(ANSWER)
+	if err != nil {
+		return err
 	}
-
-	client.readAndAssertIntMessage(ANSWER)
-
-	//////////////////////////////////////////////////////
 
 	endTimeMilli := time.Now().UnixMilli()
 
