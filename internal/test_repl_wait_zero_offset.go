@@ -28,11 +28,11 @@ func testWaitZeroOffset(stageHarness *testerutils.StageHarness) error {
 	for i := 0; i < replicaCount; i++ {
 		logger.Debugf("Creating replica : %v.", i)
 		conn, err := NewRedisConn("", "localhost:6379")
-		defer conn.Close()
-
 		if err != nil {
 			fmt.Println("Error connecting to TCP server:", err)
+			return err
 		}
+		defer conn.Close()
 
 		replica := NewFakeRedisReplica(conn, logger)
 		replica.LogPrefix = fmt.Sprintf("[replica-%v] ", i+1)
@@ -45,6 +45,7 @@ func testWaitZeroOffset(stageHarness *testerutils.StageHarness) error {
 	conn, err := NewRedisConn("", "localhost:6379")
 	if err != nil {
 		fmt.Println("Error connecting to TCP server:", err)
+		return err
 	}
 
 	client := NewFakeRedisMaster(conn, logger)

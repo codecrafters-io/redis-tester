@@ -25,6 +25,7 @@ func testReplMultipleReplicas(stageHarness *testerutils.StageHarness) error {
 		conn, err := NewRedisConn("", "localhost:6379")
 		if err != nil {
 			fmt.Println("Error connecting to TCP server:", err)
+			return err
 		}
 		defer conn.Close()
 		replica := NewFakeRedisReplica(conn, logger)
@@ -35,6 +36,7 @@ func testReplMultipleReplicas(stageHarness *testerutils.StageHarness) error {
 	conn, err := NewRedisConn("", "localhost:6379")
 	if err != nil {
 		fmt.Println("Error connecting to TCP server:", err)
+		return err
 	}
 	defer conn.Close()
 	client := NewFakeRedisMaster(conn, logger)
