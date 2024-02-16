@@ -13,6 +13,7 @@ func testReplInfoReplica(stageHarness *testerutils.StageHarness) error {
 	listener, err := net.Listen("tcp", ":6379")
 	if err != nil {
 		fmt.Println("Error starting TCP server:", err)
+		return err
 	}
 	defer listener.Close()
 	logger := stageHarness.Logger
