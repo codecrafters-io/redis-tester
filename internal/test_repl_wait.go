@@ -66,26 +66,28 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 	}
 
 	ANSWER := 1
+	OLD_OFFSET := offset
 	// READ STREAM ON ALL REPLICAS
 	for i := 0; i < replicaCount; i++ {
+		offset = OLD_OFFSET
 		replica := replicas[i]
 
 		// Redis will send SELECT, but not expected from Users.
-		err, _ = replica.readAndAssertMessagesWithSkip([]string{"SET", "foo", "123"}, "SELECT", true)
-		if err != nil {
-			return err
-		}
-
-		err, o := replica.readAndAssertMessages([]string{"REPLCONF", "GETACK", "*"}, true)
+		err, o := replica.readAndAssertMessagesWithSkip([]string{"SET", "foo", "123"}, "SELECT", true)
 		offset += o
 		if err != nil {
 			return err
 		}
-	}
 
-	for i := 0; i < ANSWER; i++ {
-		replica := replicas[i]
-		replica.Send([]string{"REPLCONF", "ACK", strconv.Itoa(offset)})
+		err, o = replica.readAndAssertMessages([]string{"REPLCONF", "GETACK", "*"}, true)
+		offset += o
+		if err != nil {
+			return err
+		}
+
+		if i < ANSWER {
+			replica.Send([]string{"REPLCONF", "ACK", strconv.Itoa(offset)})
+		}
 	}
 
 	err = client.readAndAssertIntMessage(ANSWER)
@@ -104,7 +106,7 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 		return err
 	}
 
-	OLD_OFFSET := offset
+	OLD_OFFSET = offset
 	// READ STREAM ON ALL REPLICAS
 	for i := 0; i < replicaCount; i++ {
 		offset = OLD_OFFSET
