@@ -7,7 +7,6 @@ import (
 	"time"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
-	"github.com/codecrafters-io/tester-utils/logger"
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 )
 
@@ -46,9 +45,25 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 
 	logger.Infof("Creating %v replicas.", replicaCount)
 
-	replicas, err := spawnReplicas(replicaCount, logger)
-	if err != nil {
-		return err
+	var replicas []*FakeRedisReplica
+
+	for i := 0; i < replicaCount; i++ {
+		logger.Debugf("Creating replica : %v.", i+1)
+		conn, err := NewRedisConn("", "localhost:6379")
+		if err != nil {
+			fmt.Println("Error connecting to TCP server:", err)
+			return err
+		}
+		defer conn.Close()
+
+		replica := NewFakeRedisReplica(conn, logger)
+		replicas = append(replicas, replica)
+		replica.LogPrefix = fmt.Sprintf("[replica-%v] ", i+1)
+
+		err = replica.Handshake()
+		if err != nil {
+			return err
+		}
 	}
 
 	// Step 3.1: Connect to master and issue a write command
@@ -149,28 +164,6 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 	if math.Abs(float64(timeElapsed-int64(timeout))) > float64(threshold) {
 		return fmt.Errorf("Expected WAIT to return only after %v ms timeout elapsed.", timeout)
 	}
+
 	return nil
-}
-
-func spawnReplicas(replicaCount int, logger *logger.Logger) ([]*FakeRedisReplica, error) {
-	var replicas []*FakeRedisReplica
-
-	for i := 0; i < replicaCount; i++ {
-		logger.Debugf("Creating replica : %v.", i+1)
-		conn, err := NewRedisConn("", "localhost:6379")
-		if err != nil {
-			fmt.Println("Error connecting to TCP server:", err)
-			return nil, err
-		}
-
-		replica := NewFakeRedisReplica(conn, logger)
-		replicas = append(replicas, replica)
-		replica.LogPrefix = fmt.Sprintf("[replica-%v] ", i+1)
-
-		err = replica.Handshake()
-		if err != nil {
-			return nil, err
-		}
-	}
-	return replicas, nil
 }
