@@ -236,6 +236,13 @@ func TestStages(t *testing.T) {
 			StdoutFixturePath:   "./test_helpers/fixtures/streams-type/pass",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
+		"streams_xadd": {
+			UntilStageSlug:      "streams-xadd",
+			CodePath:            "./test_helpers/pass_all",
+			ExpectedExitCode:    0,
+			StdoutFixturePath:   "./test_helpers/fixtures/streams-type/pass",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
 	}
 
 	tester_utils_testing.TestTesterOutput(t, testerDefinition, testCases)
