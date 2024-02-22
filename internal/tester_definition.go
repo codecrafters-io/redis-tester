@@ -140,5 +140,9 @@ var testerDefinition = testerutils.TesterDefinition{
 			Slug:     "repl-wait",
 			TestFunc: testWait,
 		},
+		{
+			Slug:     "streams-type",
+			TestFunc: testStreamsType,
+		},
 	},
 }
