@@ -14,6 +14,7 @@ import (
 )
 
 type FakeRedisNode struct {
+	Conn      net.Conn
 	Reader    *resp3.Reader
 	Writer    *resp3.Writer
 	Logger    *logger.Logger
@@ -22,10 +23,21 @@ type FakeRedisNode struct {
 
 func NewFakeRedisNode(conn net.Conn, logger *logger.Logger) *FakeRedisNode {
 	return &FakeRedisNode{
+		Conn:      conn,
 		Reader:    resp3.NewReader(conn),
 		Writer:    resp3.NewWriter(conn),
 		Logger:    logger,
 		LogPrefix: "",
+	}
+}
+
+type FakeRedisClient struct {
+	FakeRedisNode
+}
+
+func NewFakeRedisClient(conn net.Conn, logger *logger.Logger) *FakeRedisClient {
+	return &FakeRedisClient{
+		FakeRedisNode: *NewFakeRedisNode(conn, logger),
 	}
 }
 
@@ -101,7 +113,7 @@ func (master FakeRedisMaster) Wait(replicas string, timeout string, expectedMess
 	return master.SendAndAssertInt([]string{"WAIT", replicas, timeout}, expectedMessage)
 }
 
-func (master FakeRedisMaster) SendAndAssert(sendMessage []string, receiveMessage []string) error {
+func (master FakeRedisNode) SendAndAssert(sendMessage []string, receiveMessage []string) error {
 	err := master.Send(sendMessage)
 	if err != nil {
 		return err
@@ -113,7 +125,7 @@ func (master FakeRedisMaster) SendAndAssert(sendMessage []string, receiveMessage
 	return nil
 }
 
-func (master FakeRedisMaster) SendAndAssertString(sendMessage []string, receiveMessage string, caseSensitiveMatch bool) error {
+func (master FakeRedisNode) SendAndAssertString(sendMessage []string, receiveMessage string, caseSensitiveMatch bool) error {
 	err := master.Send(sendMessage)
 	if err != nil {
 		return err

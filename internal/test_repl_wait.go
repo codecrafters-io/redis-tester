@@ -7,6 +7,7 @@ import (
 	"time"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
+	"github.com/codecrafters-io/tester-utils/logger"
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 )
 
@@ -41,29 +42,12 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 
 	// Step 2: Spawn multiple replicas and have each perform a handshake
 	replicaCount := testerutils_random.RandomInt(3, 5)
-	offset := 0
 
 	logger.Infof("Creating %v replicas.", replicaCount)
 
-	var replicas []*FakeRedisReplica
-
-	for i := 0; i < replicaCount; i++ {
-		logger.Debugf("Creating replica : %v.", i+1)
-		conn, err := NewRedisConn("", "localhost:6379")
-		if err != nil {
-			fmt.Println("Error connecting to TCP server:", err)
-			return err
-		}
-		defer conn.Close()
-
-		replica := NewFakeRedisReplica(conn, logger)
-		replicas = append(replicas, replica)
-		replica.LogPrefix = fmt.Sprintf("[replica-%v] ", i+1)
-
-		err = replica.Handshake()
-		if err != nil {
-			return err
-		}
+	replicas, err := spawnReplicas(replicaCount, logger)
+	if err != nil {
+		return err
 	}
 
 	// Step 3.1: Connect to master and issue a write command
@@ -74,7 +58,7 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 	}
 	defer conn.Close()
 
-	client := NewFakeRedisMaster(conn, logger)
+	client := NewFakeRedisClient(conn, logger)
 	client.LogPrefix = "[client] "
 
 	client.SendAndAssert([]string{"SET", "foo", "123"}, []string{"OK"})
@@ -85,29 +69,13 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 		return err
 	}
 
+	masterOffset := 0
 	replicaAcksCount := 1
-	masterOffset := offset
+
 	// Step 3.3: Read propagated command on replicas + respond to subset of GETACKs
-	for i := 0; i < replicaCount; i++ {
-		offset = masterOffset
-		replica := replicas[i]
-
-		// Redis will send SELECT, but not expected from Users.
-		err, o := replica.readAndAssertMessagesWithSkip([]string{"SET", "foo", "123"}, "SELECT", true)
-		offset += o
-		if err != nil {
-			return err
-		}
-
-		err, o = replica.readAndAssertMessages([]string{"REPLCONF", "GETACK", "*"}, true)
-		offset += o
-		if err != nil {
-			return err
-		}
-
-		if i < replicaAcksCount {
-			replica.Send([]string{"REPLCONF", "ACK", strconv.Itoa(offset)})
-		}
+	masterOffset, err = consumeReplicationStreamAndSendPartialAcks(replicas, replicaAcksCount, masterOffset, []string{"SET", "foo", "123"}, []string{"REPLCONF", "GETACK", "*"})
+	if err != nil {
+		return err
 	}
 
 	// Step 3.4: Assert response of WAIT command is 1
@@ -121,32 +89,18 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 
 	// Step 4.2: Issue a WAIT command with a subset as the expected number of replicas
 	replicaAcksCount = testerutils_random.RandomInt(2, replicaCount)
-	timeout := 2000
-	replicaAcksWaitCount := strconv.Itoa(replicaAcksCount + 1)
+	waitCommandAcksCount := strconv.Itoa(replicaAcksCount + 1)
 	startTimeMilli := time.Now().UnixMilli()
-	err = client.Send([]string{"WAIT", replicaAcksWaitCount, strconv.Itoa(timeout)})
+	timeout := 2000
+	err = client.Send([]string{"WAIT", waitCommandAcksCount, strconv.Itoa(timeout)})
 	if err != nil {
 		return err
 	}
 
-	masterOffset = offset
 	// Step 4.3: Read propagated command on replicas + respond to subset of GETACKs
-	for i := 0; i < replicaCount; i++ {
-		offset = masterOffset
-		replica := replicas[i]
-
-		err, o := replica.readAndAssertMessages([]string{"SET", "baz", "789"}, true)
-		offset += o
-
-		err, o = replica.readAndAssertMessages([]string{"REPLCONF", "GETACK", "*"}, false)
-		offset += o
-		if err != nil {
-			return err
-		}
-
-		if i < replicaAcksCount {
-			replica.Send([]string{"REPLCONF", "ACK", strconv.Itoa(offset)})
-		}
+	masterOffset, err = consumeReplicationStreamAndSendPartialAcks(replicas, replicaAcksCount, masterOffset, []string{"SET", "baz", "789"}, []string{"REPLCONF", "GETACK", "*"})
+	if err != nil {
+		return err
 	}
 
 	// Step 4.4: Assert response of WAIT command is replicaAcksCount
@@ -159,11 +113,65 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 	endTimeMilli := time.Now().UnixMilli()
 
 	threshold := 500 // ms
-	timeElapsed := endTimeMilli - startTimeMilli
-	client.Log(fmt.Sprintf("WAIT command returned after %v ms", timeElapsed))
-	if math.Abs(float64(timeElapsed-int64(timeout))) > float64(threshold) {
-		return fmt.Errorf("Expected WAIT to return only after %v ms timeout elapsed.", timeout)
+	elapsedTimeMilli := endTimeMilli - startTimeMilli
+	client.Log(fmt.Sprintf("WAIT command returned after %v ms", elapsedTimeMilli))
+	if math.Abs(float64(elapsedTimeMilli-int64(timeout))) > float64(threshold) {
+		return fmt.Errorf("Expected WAIT to return exactly after %v ms timeout elapsed.", timeout)
+	}
+
+	for _, replica := range replicas {
+		replica.Conn.Close()
 	}
 
 	return nil
+}
+
+func spawnReplicas(replicaCount int, logger *logger.Logger) ([]*FakeRedisReplica, error) {
+	var replicas []*FakeRedisReplica
+
+	for i := 0; i < replicaCount; i++ {
+		logger.Debugf("Creating replica : %v.", i+1)
+		conn, err := NewRedisConn("", "localhost:6379")
+		if err != nil {
+			fmt.Println("Error connecting to TCP server:", err)
+			return nil, err
+		}
+
+		replica := NewFakeRedisReplica(conn, logger)
+		replicas = append(replicas, replica)
+		replica.LogPrefix = fmt.Sprintf("[replica-%v] ", i+1)
+
+		err = replica.Handshake()
+		if err != nil {
+			return nil, err
+		}
+	}
+	return replicas, nil
+}
+
+func consumeReplicationStreamAndSendPartialAcks(replicas []*FakeRedisReplica, replicaAcksCount int, previousMasterOffset int, firstCommand []string, secondCommand []string) (newMasterOffset int, err error) {
+	for i := 0; i < len(replicas); i++ {
+		replica := replicas[i]
+
+		// Redis will send SELECT, but not expected from Users.
+		// We skip the SELECT command, IF received.
+		// Then check the next received command.
+		err, offsetDeltaFromSetCommand := replica.readAndAssertMessagesWithSkip(firstCommand, "SELECT", true)
+		if err != nil {
+			return 0, err
+		}
+
+		err, offsetDeltaFromGetAckCommand := replica.readAndAssertMessages(secondCommand, false)
+		if err != nil {
+			return 0, err
+		}
+
+		newMasterOffset = previousMasterOffset + offsetDeltaFromSetCommand + offsetDeltaFromGetAckCommand
+
+		if i < replicaAcksCount {
+			replica.Send([]string{"REPLCONF", "ACK", strconv.Itoa(newMasterOffset)})
+		}
+	}
+
+	return newMasterOffset, nil
 }
