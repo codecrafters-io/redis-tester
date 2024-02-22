@@ -240,7 +240,7 @@ func TestStages(t *testing.T) {
 			UntilStageSlug:      "streams-xadd",
 			CodePath:            "./test_helpers/pass_all",
 			ExpectedExitCode:    0,
-			StdoutFixturePath:   "./test_helpers/fixtures/streams-type/pass",
+			StdoutFixturePath:   "./test_helpers/fixtures/streams-xadd/pass",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 	}
