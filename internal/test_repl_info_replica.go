@@ -3,6 +3,7 @@ package internal
 import (
 	"fmt"
 	"net"
+	"regexp"
 	"strings"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
@@ -10,14 +11,22 @@ import (
 )
 
 func testReplInfoReplica(stageHarness *testerutils.StageHarness) error {
-	listener, err := net.Listen("tcp", ":6379")
-	if err != nil {
-		fmt.Println("Error starting TCP server:", err)
-		return err
-	}
-	defer listener.Close()
 	logger := stageHarness.Logger
 
+	listener, err := net.Listen("tcp", ":6379")
+	if err != nil {
+		errorString := "bind: address already in use"
+		regex, _ := regexp.Compile(errorString)
+		if regex.MatchString(err.Error()) {
+			logger.Errorf("Error binding to port 6379.\nThis failure most likely means that your server didn't use the SO_REUSEADDR socket option while starting the server in the previous stage. That option is set in order to immediately reuse previous sockets which were bound on the same address and remained in TIME_WAIT state. Retry this stage after adding the SO_REUSEADDR to your socket options.")
+			return err
+		} else {
+			logger.Errorf("Error starting TCP server: %v", err)
+			return err
+		}
+	}
+
+	defer listener.Close()
 	logger.Infof("Master is running on port 6379")
 
 	replica := NewRedisBinary(stageHarness)
