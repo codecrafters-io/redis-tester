@@ -9,13 +9,15 @@ import (
 
 func testReplCmdProcessing(stageHarness *testerutils.StageHarness) error {
 	deleteRDBfile()
-	listener, err := net.Listen("tcp", ":6379")
-	if err != nil {
-		fmt.Println("Error starting TCP server:", err)
-		return err
-	}
 
 	logger := stageHarness.Logger
+
+	listener, err := net.Listen("tcp", ":6379")
+	if err != nil {
+		logger.Errorf("Error starting TCP server: %v", err)
+		logFriendlyBindError(logger, err)
+		return err
+	}
 
 	logger.Infof("Master is running on port 6379")
 

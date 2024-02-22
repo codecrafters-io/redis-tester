@@ -1,8 +1,9 @@
 package internal
 
 import (
-	"github.com/codecrafters-io/tester-utils/logger"
 	"strings"
+
+	"github.com/codecrafters-io/tester-utils/logger"
 )
 
 func logFriendlyError(logger *logger.Logger, err error) {
@@ -19,5 +20,11 @@ func logFriendlyError(logger *logger.Logger, err error) {
 	if strings.Contains(err.Error(), "reply is empty") {
 		logger.Infof("Hint: 'reply is empty' usually means that your program sent an additional `\\n` in the response.")
 		logger.Infof("       A common reason for this is using methods like `Println` that append a newline charater.")
+	}
+}
+
+func logFriendlyBindError(logger *logger.Logger, err error) {
+	if strings.Contains(err.Error(), "bind: address already in use") {
+		logger.Errorf("This failure most likely means that your server didn't use the SO_REUSEADDR socket option while starting the server in the previous stage. That option is set in order to immediately reuse previous sockets which were bound on the same address and remained in TIME_WAIT state. Retry this stage after adding the SO_REUSEADDR to your socket options.")
 	}
 }

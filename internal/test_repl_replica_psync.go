@@ -9,12 +9,15 @@ import (
 
 func testReplReplicaSendsPsync(stageHarness *testerutils.StageHarness) error {
 	deleteRDBfile()
+
+	logger := stageHarness.Logger
+
 	listener, err := net.Listen("tcp", ":6379")
 	if err != nil {
-		fmt.Println("Error starting TCP server:", err)
+		logger.Errorf("Error starting TCP server: %v", err)
+		logFriendlyBindError(logger, err)
 		return err
 	}
-	logger := stageHarness.Logger
 
 	logger.Infof("Master is running on port 6379")
 
