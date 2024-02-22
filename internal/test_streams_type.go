@@ -36,8 +36,8 @@ func testStreamsType(stageHarness *testerutils.StageHarness) error {
 		return err
 	}
 
-	if resp != "foo" {
-		return fmt.Errorf("Expected \"foo\", got %#v", resp)
+	if resp != "string" {
+		return fmt.Errorf("Expected \"string\", got %#v", resp)
 	}
 
 	logger.Debugln("Sending type command with missing key")
