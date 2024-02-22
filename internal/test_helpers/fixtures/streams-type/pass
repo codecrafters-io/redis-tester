@@ -1,0 +1,506 @@
+Debug = true
+
+[33m[stage-1] [0m[94mRunning tests for Stage #1: init[0m
+[33m[stage-1] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[stage-1] [0m[94mConnecting to port 6379...[0m
+[33m[stage-1] [0m[36mConnection successful[0m
+[33m[stage-1] [0m[92mTest passed.[0m
+[33m[stage-1] [0m[36mTerminating program[0m
+[33m[stage-1] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-2] [0m[94mRunning tests for Stage #2: ping-pong[0m
+[33m[stage-2] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[stage-2] [0m[36mConnection established, sending PING command (*1\r\n$4\r\nping\r\n)[0m
+[33m[stage-2] [0m[94m$ redis-cli ping[0m
+[33m[stage-2] [0m[36mReading response...[0m
+[33m[stage-2] [0m[92mTest passed.[0m
+[33m[stage-2] [0m[36mTerminating program[0m
+[33m[stage-2] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-3] [0m[94mRunning tests for Stage #3: ping-pong-multiple[0m
+[33m[stage-3] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[stage-3] [0m[94mclient-1: Sending ping command...[0m
+[33m[stage-3] [0m[92mclient-1: Received PONG.[0m
+[33m[stage-3] [0m[94mclient-1: Sending ping command...[0m
+[33m[stage-3] [0m[92mclient-1: Received PONG.[0m
+[33m[stage-3] [0m[94mclient-1: Sending ping command...[0m
+[33m[stage-3] [0m[92mclient-1: Received PONG.[0m
+[33m[stage-3] [0m[36mSuccess, closing connection...[0m
+[33m[stage-3] [0m[92mTest passed.[0m
+[33m[stage-3] [0m[36mTerminating program[0m
+[33m[stage-3] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-4] [0m[94mRunning tests for Stage #4: concurrent-clients[0m
+[33m[stage-4] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[stage-4] [0m[94mclient-1: Sending ping command...[0m
+[33m[stage-4] [0m[92mclient-1: Received PONG.[0m
+[33m[stage-4] [0m[94mclient-2: Sending ping command...[0m
+[33m[stage-4] [0m[92mclient-2: Received PONG.[0m
+[33m[stage-4] [0m[94mclient-1: Sending ping command...[0m
+[33m[stage-4] [0m[92mclient-1: Received PONG.[0m
+[33m[stage-4] [0m[94mclient-1: Sending ping command...[0m
+[33m[stage-4] [0m[92mclient-1: Received PONG.[0m
+[33m[stage-4] [0m[94mclient-2: Sending ping command...[0m
+[33m[stage-4] [0m[92mclient-2: Received PONG.[0m
+[33m[stage-4] [0m[36mclient-1: Success, closing connection...[0m
+[33m[stage-4] [0m[94mclient-3: Sending ping command...[0m
+[33m[stage-4] [0m[92mclient-3: Received PONG.[0m
+[33m[stage-4] [0m[36mclient-2: Success, closing connection...[0m
+[33m[stage-4] [0m[36mclient-3: Success, closing connection...[0m
+[33m[stage-4] [0m[92mTest passed.[0m
+[33m[stage-4] [0m[36mTerminating program[0m
+[33m[stage-4] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-5] [0m[94mRunning tests for Stage #5: echo[0m
+[33m[stage-5] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[stage-5] [0m[36mSending command: echo apples[0m
+[33m[stage-5] [0m[92mTest passed.[0m
+[33m[stage-5] [0m[36mTerminating program[0m
+[33m[stage-5] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-6] [0m[94mRunning tests for Stage #6: set_get[0m
+[33m[stage-6] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[stage-6] [0m[36mSetting key world to horses[0m
+[33m[stage-6] [0m[36mGetting key world[0m
+[33m[stage-6] [0m[92mTest passed.[0m
+[33m[stage-6] [0m[36mTerminating program[0m
+[33m[stage-6] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-7] [0m[94mRunning tests for Stage #7: expiry[0m
+[33m[stage-7] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[stage-7] [0m[94m$ redis-cli set grapes apples px 100[0m
+[33m[stage-7] [0m[92mReceived OK (at 10:04:50.185)[0m
+[33m[stage-7] [0m[94m$ redis-cli get grapes (sent at 10:04:50.185, key should not be expired)[0m
+[33m[stage-7] [0m[92mReceived "apples"[0m
+[33m[stage-7] [0m[36mSleeping for 101ms[0m
+[33m[stage-7] [0m[94m$ redis-cli get grapes (sent at 10:04:50.287, key should be expired)[0m
+[33m[stage-7] [0m[92mTest passed.[0m
+[33m[stage-7] [0m[36mTerminating program[0m
+[33m[stage-7] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-8] [0m[94mRunning tests for Stage #8: rdb-config[0m
+[33m[stage-8] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdbfiles1316382629 --dbfilename banana.rdb[0m
+[33m[stage-8] [0m[94m$ redis-cli CONFIG GET dir[0m
+[33m[stage-8] [0m[92mTest passed.[0m
+[33m[stage-8] [0m[36mTerminating program[0m
+[33m[stage-8] [0m[36mError terminating program: 'program failed to exit in 2 seconds after receiving sigterm'[0m
+
+[33m[stage-9] [0m[94mRunning tests for Stage #9: rdb-read-key[0m
+[33m[stage-9] [0m[94mCreated RDB file with single key: "pear"[0m
+[33m[stage-9] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdbfiles843922551 --dbfilename blueberry.rdb[0m
+[33m[stage-9] [0m[94m$ redis-cli KEYS *[0m
+[33m[stage-9] [0m[92mTest passed.[0m
+[33m[stage-9] [0m[36mTerminating program[0m
+[33m[stage-9] [0m[36mError terminating program: 'program failed to exit in 2 seconds after receiving sigterm'[0m
+
+[33m[stage-10] [0m[94mRunning tests for Stage #10: rdb-read-string-value[0m
+[33m[stage-10] [0m[94mCreated RDB file with single key-value pair: strawberry="apple"[0m
+[33m[stage-10] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdbfiles352831209 --dbfilename banana.rdb[0m
+[33m[stage-10] [0m[94m$ redis-cli GET strawberry[0m
+[33m[stage-10] [0m[92mTest passed.[0m
+[33m[stage-10] [0m[36mTerminating program[0m
+[33m[stage-10] [0m[36mError terminating program: 'program failed to exit in 2 seconds after receiving sigterm'[0m
+
+[33m[stage-11] [0m[94mRunning tests for Stage #11: rdb-read-multiple-keys[0m
+[33m[stage-11] [0m[94mCreated RDB file with 5 keys: ["orange" "blueberry" "strawberry" "pineapple" "banana"][0m
+[33m[stage-11] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdbfiles3349129548 --dbfilename pear.rdb[0m
+[33m[stage-11] [0m[94m$ redis-cli KEYS *[0m
+[33m[stage-11] [0m[92mTest passed.[0m
+[33m[stage-11] [0m[36mTerminating program[0m
+[33m[stage-11] [0m[36mError terminating program: 'program failed to exit in 2 seconds after receiving sigterm'[0m
+
+[33m[stage-12] [0m[94mRunning tests for Stage #12: rdb-read-multiple-string-values[0m
+[33m[stage-12] [0m[94mCreated RDB file with key-value pairs: "orange"="grape", "mango"="pear", "grape"="blueberry", "pear"="pineapple"[0m
+[33m[stage-12] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdbfiles1558145424 --dbfilename apple.rdb[0m
+[33m[stage-12] [0m[94m$ redis-cli GET orange[0m
+[33m[stage-12] [0m[94m$ redis-cli GET mango[0m
+[33m[stage-12] [0m[94m$ redis-cli GET grape[0m
+[33m[stage-12] [0m[94m$ redis-cli GET pear[0m
+[33m[stage-12] [0m[92mTest passed.[0m
+[33m[stage-12] [0m[36mTerminating program[0m
+[33m[stage-12] [0m[36mError terminating program: 'program failed to exit in 2 seconds after receiving sigterm'[0m
+
+[33m[stage-13] [0m[94mRunning tests for Stage #13: rdb-read-value-with-expiry[0m
+[33m[stage-13] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdbfiles1292951173 --dbfilename apple.rdb[0m
+[33m[stage-13] [0m[94m$ redis-cli GET pineapple[0m
+[33m[stage-13] [0m[94m$ redis-cli GET raspberry[0m
+[33m[stage-13] [0m[94m$ redis-cli GET blueberry[0m
+[33m[stage-13] [0m[94m$ redis-cli GET grape[0m
+[33m[stage-13] [0m[92mTest passed.[0m
+[33m[stage-13] [0m[36mTerminating program[0m
+[33m[stage-13] [0m[36mError terminating program: 'program failed to exit in 2 seconds after receiving sigterm'[0m
+
+[33m[stage-14] [0m[94mRunning tests for Stage #14: repl-custom-port[0m
+[33m[stage-14] [0m[94m$ ./spawn_redis_server.sh --port 6389[0m
+[33m[stage-14] [0m[94mConnecting to port 6389...[0m
+[33m[stage-14] [0m[36mConnection successful[0m
+[33m[stage-14] [0m[92mTest passed.[0m
+[33m[stage-14] [0m[36mTerminating program[0m
+[33m[stage-14] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-15] [0m[94mRunning tests for Stage #15: repl-info[0m
+[33m[stage-15] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[stage-15] [0m[94m$ redis-cli INFO replication[0m
+[33m[stage-15] [0m[92mTest passed.[0m
+[33m[stage-15] [0m[36mTerminating program[0m
+[33m[stage-15] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-16] [0m[94mRunning tests for Stage #16: repl-info-replica[0m
+[33m[stage-16] [0m[94mMaster is running on port 6379[0m
+[33m[stage-16] [0m[94m$ ./spawn_redis_server.sh --port 6380 --replicaof localhost 6379[0m
+[33m[stage-16] [0m[94m$ redis-cli INFO replication[0m
+[33m[stage-16] [0m[92mTest passed.[0m
+[33m[stage-16] [0m[36mTerminating program[0m
+[33m[stage-16] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-17] [0m[94mRunning tests for Stage #17: repl-id[0m
+[33m[stage-17] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[stage-17] [0m[94m$ redis-cli INFO replication[0m
+[33m[stage-17] [0m[92mTest passed.[0m
+[33m[stage-17] [0m[36mTerminating program[0m
+[33m[stage-17] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-18] [0m[94mRunning tests for Stage #18: repl-replica-ping[0m
+[33m[stage-18] [0m[94mMaster is running on port 6379.[0m
+[33m[stage-18] [0m[94m$ ./spawn_redis_server.sh --port 6380 --replicaof localhost 6379[0m
+[33m[stage-18] [0m[92mPING received.[0m
+[33m[stage-18] [0m[94m+PONG sent.[0m
+[33m[stage-18] [0m[92mTest passed.[0m
+[33m[stage-18] [0m[36mTerminating program[0m
+[33m[stage-18] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-19] [0m[94mRunning tests for Stage #19: repl-replica-replconf[0m
+[33m[stage-19] [0m[94mMaster is running on port 6379[0m
+[33m[stage-19] [0m[94m$ ./spawn_redis_server.sh --port 6380 --replicaof localhost 6379[0m
+[33m[stage-19] [0m[92mPING received.[0m
+[33m[stage-19] [0m[94m+PONG sent.[0m
+[33m[stage-19] [0m[92mREPLCONF listening-port 6380 received.[0m
+[33m[stage-19] [0m[94m+OK sent.[0m
+[33m[stage-19] [0m[92mREPLCONF capa eof capa psync2 received.[0m
+[33m[stage-19] [0m[94m+OK sent.[0m
+[33m[stage-19] [0m[92mTest passed.[0m
+[33m[stage-19] [0m[36mTerminating program[0m
+[33m[stage-19] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-20] [0m[94mRunning tests for Stage #20: repl-replica-psync[0m
+[33m[stage-20] [0m[94mMaster is running on port 6379[0m
+[33m[stage-20] [0m[94m$ ./spawn_redis_server.sh --port 6380 --replicaof localhost 6379[0m
+[33m[stage-20] [0m[92mPING received.[0m
+[33m[stage-20] [0m[94m+PONG sent.[0m
+[33m[stage-20] [0m[92mREPLCONF listening-port 6380 received.[0m
+[33m[stage-20] [0m[94m+OK sent.[0m
+[33m[stage-20] [0m[92mREPLCONF capa eof capa psync2 received.[0m
+[33m[stage-20] [0m[94m+OK sent.[0m
+[33m[stage-20] [0m[92mPSYNC ? -1 received.[0m
+[33m[stage-20] [0m[94m+FULLRESYNC toaww545pepe0fpfdqujg57mpqkqpyemvrym9rdf 0 sent.[0m
+[33m[stage-20] [0m[92mTest passed.[0m
+[33m[stage-20] [0m[36mTerminating program[0m
+[33m[stage-20] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-21] [0m[94mRunning tests for Stage #21: repl-master-replconf[0m
+[33m[stage-21] [0m[94m$ ./spawn_redis_server.sh --port 6379[0m
+[33m[stage-21] [0m[94m$ redis-cli PING[0m
+[33m[stage-21] [0m[92mPONG received.[0m
+[33m[stage-21] [0m[94m$ redis-cli REPLCONF listening-port 6380[0m
+[33m[stage-21] [0m[92mOK received.[0m
+[33m[stage-21] [0m[92mTest passed.[0m
+[33m[stage-21] [0m[36mTerminating program[0m
+[33m[stage-21] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-22] [0m[94mRunning tests for Stage #22: repl-master-psync[0m
+[33m[stage-22] [0m[94m$ ./spawn_redis_server.sh --port 6379[0m
+[33m[stage-22] [0m[94m$ redis-cli PING[0m
+[33m[stage-22] [0m[92mPONG received.[0m
+[33m[stage-22] [0m[94m$ redis-cli REPLCONF listening-port 6380[0m
+[33m[stage-22] [0m[92mOK received.[0m
+[33m[stage-22] [0m[94m$ redis-cli PSYNC ? -1[0m
+[33m[stage-22] [0m[92mFULLRESYNC 4650dc6a6678a269be7f0e2cfc849b1a0c5d5f50 0 received.[0m
+[33m[stage-22] [0m[92mTest passed.[0m
+[33m[stage-22] [0m[36mTerminating program[0m
+[33m[stage-22] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-23] [0m[94mRunning tests for Stage #23: repl-master-psync-rdb[0m
+[33m[stage-23] [0m[94m$ ./spawn_redis_server.sh --port 6379[0m
+[33m[stage-23] [0m[94m$ redis-cli PING[0m
+[33m[stage-23] [0m[92mPONG received.[0m
+[33m[stage-23] [0m[94m$ redis-cli REPLCONF listening-port 6380[0m
+[33m[stage-23] [0m[92mOK received.[0m
+[33m[stage-23] [0m[94m$ redis-cli PSYNC ? -1[0m
+[33m[stage-23] [0m[92mFULLRESYNC 905418c9d85bfd09ab58a44b41dc077d5d54f63f 0 received.[0m
+[33m[stage-23] [0m[92mSuccessfully received RDB file from master.[0m
+[33m[stage-23] [0m[92mTest passed.[0m
+[33m[stage-23] [0m[36mTerminating program[0m
+[33m[stage-23] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-24] [0m[94mRunning tests for Stage #24: repl-master-cmd-prop[0m
+[33m[stage-24] [0m[94m$ ./spawn_redis_server.sh --port 6379[0m
+[33m[stage-24] [0m[94m$ redis-cli PING[0m
+[33m[stage-24] [0m[92mPONG received.[0m
+[33m[stage-24] [0m[94m$ redis-cli REPLCONF listening-port 6380[0m
+[33m[stage-24] [0m[92mOK received.[0m
+[33m[stage-24] [0m[94m$ redis-cli PSYNC ? -1[0m
+[33m[stage-24] [0m[92mFULLRESYNC 45a681b75d93ebfc9d4a511d6327717c5e3b5699 0 received.[0m
+[33m[stage-24] [0m[92mSuccessfully received RDB file from master.[0m
+[33m[stage-24] [0m[94mSetting key foo to 123[0m
+[33m[stage-24] [0m[94m$ redis-cli SET foo 123[0m
+[33m[stage-24] [0m[94mSetting key bar to 456[0m
+[33m[stage-24] [0m[94m$ redis-cli SET bar 456[0m
+[33m[stage-24] [0m[94mSetting key baz to 789[0m
+[33m[stage-24] [0m[94m$ redis-cli SET baz 789[0m
+[33m[stage-24] [0m[92mSELECT 0 received.[0m
+[33m[stage-24] [0m[92mSET foo 123 received.[0m
+[33m[stage-24] [0m[92mSET bar 456 received.[0m
+[33m[stage-24] [0m[92mSET baz 789 received.[0m
+[33m[stage-24] [0m[92mTest passed.[0m
+[33m[stage-24] [0m[36mTerminating program[0m
+[33m[stage-24] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-25] [0m[94mRunning tests for Stage #25: repl-multiple-replicas[0m
+[33m[stage-25] [0m[94m$ ./spawn_redis_server.sh --port 6379[0m
+[33m[stage-25] [0m[94m[replica-1] $ redis-cli PING[0m
+[33m[stage-25] [0m[92m[replica-1] PONG received.[0m
+[33m[stage-25] [0m[94m[replica-1] $ redis-cli REPLCONF listening-port 6380[0m
+[33m[stage-25] [0m[92m[replica-1] OK received.[0m
+[33m[stage-25] [0m[94m[replica-1] $ redis-cli PSYNC ? -1[0m
+[33m[stage-25] [0m[92m[replica-1] FULLRESYNC 89afe2e6544adaf2bcb5ccb0e6a2c235aecf9f0c 0 received.[0m
+[33m[stage-25] [0m[92m[replica-1] Successfully received RDB file from master.[0m
+[33m[stage-25] [0m[94m[replica-2] $ redis-cli PING[0m
+[33m[stage-25] [0m[92m[replica-2] PONG received.[0m
+[33m[stage-25] [0m[94m[replica-2] $ redis-cli REPLCONF listening-port 6380[0m
+[33m[stage-25] [0m[92m[replica-2] OK received.[0m
+[33m[stage-25] [0m[94m[replica-2] $ redis-cli PSYNC ? -1[0m
+[33m[stage-25] [0m[92m[replica-2] FULLRESYNC 89afe2e6544adaf2bcb5ccb0e6a2c235aecf9f0c 0 received.[0m
+[33m[stage-25] [0m[92m[replica-2] Successfully received RDB file from master.[0m
+[33m[stage-25] [0m[94m[replica-3] $ redis-cli PING[0m
+[33m[stage-25] [0m[92m[replica-3] PONG received.[0m
+[33m[stage-25] [0m[94m[replica-3] $ redis-cli REPLCONF listening-port 6380[0m
+[33m[stage-25] [0m[92m[replica-3] OK received.[0m
+[33m[stage-25] [0m[94m[replica-3] $ redis-cli PSYNC ? -1[0m
+[33m[stage-25] [0m[92m[replica-3] FULLRESYNC 89afe2e6544adaf2bcb5ccb0e6a2c235aecf9f0c 0 received.[0m
+[33m[stage-25] [0m[92m[replica-3] Successfully received RDB file from master.[0m
+[33m[stage-25] [0m[94m[client] Setting key foo to 123[0m
+[33m[stage-25] [0m[94m[client] $ redis-cli SET foo 123[0m
+[33m[stage-25] [0m[94m[client] Setting key bar to 456[0m
+[33m[stage-25] [0m[94m[client] $ redis-cli SET bar 456[0m
+[33m[stage-25] [0m[94m[client] Setting key baz to 789[0m
+[33m[stage-25] [0m[94m[client] $ redis-cli SET baz 789[0m
+[33m[stage-25] [0m[94mTesting Replica : 1[0m
+[33m[stage-25] [0m[92m[replica-1] SELECT 0 received.[0m
+[33m[stage-25] [0m[92m[replica-1] SET foo 123 received.[0m
+[33m[stage-25] [0m[92m[replica-1] SET bar 456 received.[0m
+[33m[stage-25] [0m[92m[replica-1] SET baz 789 received.[0m
+[33m[stage-25] [0m[94mTesting Replica : 2[0m
+[33m[stage-25] [0m[92m[replica-2] SELECT 0 received.[0m
+[33m[stage-25] [0m[92m[replica-2] SET foo 123 received.[0m
+[33m[stage-25] [0m[92m[replica-2] SET bar 456 received.[0m
+[33m[stage-25] [0m[92m[replica-2] SET baz 789 received.[0m
+[33m[stage-25] [0m[94mTesting Replica : 3[0m
+[33m[stage-25] [0m[92m[replica-3] SELECT 0 received.[0m
+[33m[stage-25] [0m[92m[replica-3] SET foo 123 received.[0m
+[33m[stage-25] [0m[92m[replica-3] SET bar 456 received.[0m
+[33m[stage-25] [0m[92m[replica-3] SET baz 789 received.[0m
+[33m[stage-25] [0m[92mTest passed.[0m
+[33m[stage-25] [0m[36mTerminating program[0m
+[33m[stage-25] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-26] [0m[94mRunning tests for Stage #26: repl-cmd-processing[0m
+[33m[stage-26] [0m[94mMaster is running on port 6379[0m
+[33m[stage-26] [0m[94m$ ./spawn_redis_server.sh --port 6380 --replicaof localhost 6379[0m
+[33m[stage-26] [0m[92mPING received.[0m
+[33m[stage-26] [0m[94m+PONG sent.[0m
+[33m[stage-26] [0m[92mREPLCONF listening-port 6380 received.[0m
+[33m[stage-26] [0m[94m+OK sent.[0m
+[33m[stage-26] [0m[92mREPLCONF capa eof capa psync2 received.[0m
+[33m[stage-26] [0m[94m+OK sent.[0m
+[33m[stage-26] [0m[92mPSYNC ? -1 received.[0m
+[33m[stage-26] [0m[94m+FULLRESYNC jvlugbetwxp9j5n1rimrcc7sekzl3lv3gnfybl3e 0 sent.[0m
+[33m[stage-26] [0m[94mRDB file sent.[0m
+[33m[stage-26] [0m[94m$ redis-cli SET foo 123[0m
+[33m[stage-26] [0m[94m$ redis-cli SET bar 456[0m
+[33m[stage-26] [0m[94m$ redis-cli SET baz 789[0m
+[33m[stage-26] [0m[94mGetting key foo[0m
+[33m[stage-26] [0m[94m$ redis-cli GET foo[0m
+[33m[stage-26] [0m[92m123 received.[0m
+[33m[stage-26] [0m[94mGetting key bar[0m
+[33m[stage-26] [0m[94m$ redis-cli GET bar[0m
+[33m[stage-26] [0m[92m456 received.[0m
+[33m[stage-26] [0m[94mGetting key baz[0m
+[33m[stage-26] [0m[94m$ redis-cli GET baz[0m
+[33m[stage-26] [0m[92m789 received.[0m
+[33m[stage-26] [0m[92mTest passed.[0m
+[33m[stage-26] [0m[36mTerminating program[0m
+[33m[stage-26] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-27] [0m[94mRunning tests for Stage #27: repl-replica-getack[0m
+[33m[stage-27] [0m[94mMaster is running on port 6379[0m
+[33m[stage-27] [0m[94m$ ./spawn_redis_server.sh --port 6380 --replicaof localhost 6379[0m
+[33m[stage-27] [0m[92mPING received.[0m
+[33m[stage-27] [0m[94m+PONG sent.[0m
+[33m[stage-27] [0m[92mREPLCONF listening-port 6380 received.[0m
+[33m[stage-27] [0m[94m+OK sent.[0m
+[33m[stage-27] [0m[92mREPLCONF capa eof capa psync2 received.[0m
+[33m[stage-27] [0m[94m+OK sent.[0m
+[33m[stage-27] [0m[92mPSYNC ? -1 received.[0m
+[33m[stage-27] [0m[94m+FULLRESYNC 37nphpuvaf6xx6wn7a9ohog1bmg9ibhpikkhmtr9 0 sent.[0m
+[33m[stage-27] [0m[94mRDB file sent.[0m
+[33m[stage-27] [0m[94m$ redis-cli REPLCONF GETACK *[0m
+[33m[stage-27] [0m[92mREPLCONF ACK 0 received.[0m
+[33m[stage-27] [0m[92mTest passed.[0m
+[33m[stage-27] [0m[36mTerminating program[0m
+[33m[stage-27] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-28] [0m[94mRunning tests for Stage #28: repl-replica-getack-nonzero[0m
+[33m[stage-28] [0m[94mMaster is running on port 6379[0m
+[33m[stage-28] [0m[94m$ ./spawn_redis_server.sh --port 6380 --replicaof localhost 6379[0m
+[33m[stage-28] [0m[92mPING received.[0m
+[33m[stage-28] [0m[94m+PONG sent.[0m
+[33m[stage-28] [0m[92mREPLCONF listening-port 6380 received.[0m
+[33m[stage-28] [0m[94m+OK sent.[0m
+[33m[stage-28] [0m[92mREPLCONF capa eof capa psync2 received.[0m
+[33m[stage-28] [0m[94m+OK sent.[0m
+[33m[stage-28] [0m[92mPSYNC ? -1 received.[0m
+[33m[stage-28] [0m[94m+FULLRESYNC nva872qjcyc9x2nr05gyntwlkwcbwjzrikxq29ya 0 sent.[0m
+[33m[stage-28] [0m[94mRDB file sent.[0m
+[33m[stage-28] [0m[94m$ redis-cli REPLCONF GETACK *[0m
+[33m[stage-28] [0m[92mREPLCONF ACK 0 received.[0m
+[33m[stage-28] [0m[94m$ redis-cli PING[0m
+[33m[stage-28] [0m[94m$ redis-cli REPLCONF GETACK *[0m
+[33m[stage-28] [0m[92mREPLCONF ACK 51 received.[0m
+[33m[stage-28] [0m[94m$ redis-cli SET 2lzk6sl3zm6fr8k0 1neo85mamg[0m
+[33m[stage-28] [0m[94m$ redis-cli SET 1t3opy bottjn7crua7i6b[0m
+[33m[stage-28] [0m[94m$ redis-cli REPLCONF GETACK *[0m
+[33m[stage-28] [0m[92mREPLCONF ACK 188 received.[0m
+[33m[stage-28] [0m[92mTest passed.[0m
+[33m[stage-28] [0m[36mTerminating program[0m
+[33m[stage-28] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-29] [0m[94mRunning tests for Stage #29: repl-wait-zero-replicas[0m
+[33m[stage-29] [0m[94m$ ./spawn_redis_server.sh --port 6379[0m
+[33m[stage-29] [0m[94m[client] $ redis-cli WAIT 0 60000[0m
+[33m[stage-29] [0m[92m[client] 0 received.[0m
+[33m[stage-29] [0m[92mTest passed.[0m
+[33m[stage-29] [0m[36mTerminating program[0m
+[33m[stage-29] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-30] [0m[94mRunning tests for Stage #30: repl-wait-zero-offset[0m
+[33m[stage-30] [0m[94m$ ./spawn_redis_server.sh --port 6379[0m
+[33m[stage-30] [0m[94mProceeding to create 5 replicas.[0m
+[33m[stage-30] [0m[36mCreating replica : 0.[0m
+[33m[stage-30] [0m[94m[replica-1] $ redis-cli PING[0m
+[33m[stage-30] [0m[92m[replica-1] PONG received.[0m
+[33m[stage-30] [0m[94m[replica-1] $ redis-cli REPLCONF listening-port 6380[0m
+[33m[stage-30] [0m[92m[replica-1] OK received.[0m
+[33m[stage-30] [0m[94m[replica-1] $ redis-cli PSYNC ? -1[0m
+[33m[stage-30] [0m[92m[replica-1] FULLRESYNC ae1e2935d9be422b23701afe0da627284c54b563 0 received.[0m
+[33m[stage-30] [0m[92m[replica-1] Successfully received RDB file from master.[0m
+[33m[stage-30] [0m[36mCreating replica : 1.[0m
+[33m[stage-30] [0m[94m[replica-2] $ redis-cli PING[0m
+[33m[stage-30] [0m[92m[replica-2] PONG received.[0m
+[33m[stage-30] [0m[94m[replica-2] $ redis-cli REPLCONF listening-port 6380[0m
+[33m[stage-30] [0m[92m[replica-2] OK received.[0m
+[33m[stage-30] [0m[94m[replica-2] $ redis-cli PSYNC ? -1[0m
+[33m[stage-30] [0m[92m[replica-2] FULLRESYNC ae1e2935d9be422b23701afe0da627284c54b563 0 received.[0m
+[33m[stage-30] [0m[92m[replica-2] Successfully received RDB file from master.[0m
+[33m[stage-30] [0m[36mCreating replica : 2.[0m
+[33m[stage-30] [0m[94m[replica-3] $ redis-cli PING[0m
+[33m[stage-30] [0m[92m[replica-3] PONG received.[0m
+[33m[stage-30] [0m[94m[replica-3] $ redis-cli REPLCONF listening-port 6380[0m
+[33m[stage-30] [0m[92m[replica-3] OK received.[0m
+[33m[stage-30] [0m[94m[replica-3] $ redis-cli PSYNC ? -1[0m
+[33m[stage-30] [0m[92m[replica-3] FULLRESYNC ae1e2935d9be422b23701afe0da627284c54b563 0 received.[0m
+[33m[stage-30] [0m[92m[replica-3] Successfully received RDB file from master.[0m
+[33m[stage-30] [0m[36mCreating replica : 3.[0m
+[33m[stage-30] [0m[94m[replica-4] $ redis-cli PING[0m
+[33m[stage-30] [0m[92m[replica-4] PONG received.[0m
+[33m[stage-30] [0m[94m[replica-4] $ redis-cli REPLCONF listening-port 6380[0m
+[33m[stage-30] [0m[92m[replica-4] OK received.[0m
+[33m[stage-30] [0m[94m[replica-4] $ redis-cli PSYNC ? -1[0m
+[33m[stage-30] [0m[92m[replica-4] FULLRESYNC ae1e2935d9be422b23701afe0da627284c54b563 0 received.[0m
+[33m[stage-30] [0m[92m[replica-4] Successfully received RDB file from master.[0m
+[33m[stage-30] [0m[36mCreating replica : 4.[0m
+[33m[stage-30] [0m[94m[replica-5] $ redis-cli PING[0m
+[33m[stage-30] [0m[92m[replica-5] PONG received.[0m
+[33m[stage-30] [0m[94m[replica-5] $ redis-cli REPLCONF listening-port 6380[0m
+[33m[stage-30] [0m[92m[replica-5] OK received.[0m
+[33m[stage-30] [0m[94m[replica-5] $ redis-cli PSYNC ? -1[0m
+[33m[stage-30] [0m[92m[replica-5] FULLRESYNC ae1e2935d9be422b23701afe0da627284c54b563 0 received.[0m
+[33m[stage-30] [0m[92m[replica-5] Successfully received RDB file from master.[0m
+[33m[stage-30] [0m[94m[client] $ redis-cli WAIT 3 500[0m
+[33m[stage-30] [0m[92m[client] 5 received.[0m
+[33m[stage-30] [0m[94m[client] $ redis-cli WAIT 4 500[0m
+[33m[stage-30] [0m[92m[client] 5 received.[0m
+[33m[stage-30] [0m[94m[client] $ redis-cli WAIT 5 500[0m
+[33m[stage-30] [0m[92m[client] 5 received.[0m
+[33m[stage-30] [0m[94m[client] $ redis-cli WAIT 6 500[0m
+[33m[stage-30] [0m[92m[client] 5 received.[0m
+[33m[stage-30] [0m[94m[client] $ redis-cli WAIT 7 500[0m
+[33m[stage-30] [0m[92m[client] 5 received.[0m
+[33m[stage-30] [0m[92mTest passed.[0m
+[33m[stage-30] [0m[36mTerminating program[0m
+[33m[stage-30] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-31] [0m[94mRunning tests for Stage #31: repl-wait[0m
+[33m[stage-31] [0m[94m$ ./spawn_redis_server.sh --port 6379[0m
+[33m[stage-31] [0m[94mProceeding to create 3 replicas.[0m
+[33m[stage-31] [0m[36mCreating replica : 1.[0m
+[33m[stage-31] [0m[94m[replica-1] $ redis-cli PING[0m
+[33m[stage-31] [0m[92m[replica-1] PONG received.[0m
+[33m[stage-31] [0m[94m[replica-1] $ redis-cli REPLCONF listening-port 6380[0m
+[33m[stage-31] [0m[92m[replica-1] OK received.[0m
+[33m[stage-31] [0m[94m[replica-1] $ redis-cli PSYNC ? -1[0m
+[33m[stage-31] [0m[92m[replica-1] FULLRESYNC ddb8af80ad40ff2e32854e2dfdfa3c24733da26b 0 received.[0m
+[33m[stage-31] [0m[92m[replica-1] Successfully received RDB file from master.[0m
+[33m[stage-31] [0m[36mCreating replica : 2.[0m
+[33m[stage-31] [0m[94m[replica-2] $ redis-cli PING[0m
+[33m[stage-31] [0m[92m[replica-2] PONG received.[0m
+[33m[stage-31] [0m[94m[replica-2] $ redis-cli REPLCONF listening-port 6380[0m
+[33m[stage-31] [0m[92m[replica-2] OK received.[0m
+[33m[stage-31] [0m[94m[replica-2] $ redis-cli PSYNC ? -1[0m
+[33m[stage-31] [0m[92m[replica-2] FULLRESYNC ddb8af80ad40ff2e32854e2dfdfa3c24733da26b 0 received.[0m
+[33m[stage-31] [0m[92m[replica-2] Successfully received RDB file from master.[0m
+[33m[stage-31] [0m[36mCreating replica : 3.[0m
+[33m[stage-31] [0m[94m[replica-3] $ redis-cli PING[0m
+[33m[stage-31] [0m[92m[replica-3] PONG received.[0m
+[33m[stage-31] [0m[94m[replica-3] $ redis-cli REPLCONF listening-port 6380[0m
+[33m[stage-31] [0m[92m[replica-3] OK received.[0m
+[33m[stage-31] [0m[94m[replica-3] $ redis-cli PSYNC ? -1[0m
+[33m[stage-31] [0m[92m[replica-3] FULLRESYNC ddb8af80ad40ff2e32854e2dfdfa3c24733da26b 0 received.[0m
+[33m[stage-31] [0m[92m[replica-3] Successfully received RDB file from master.[0m
+[33m[stage-31] [0m[94m[client] $ redis-cli SET foo 123[0m
+[33m[stage-31] [0m[94m[client] $ redis-cli WAIT 1 500[0m
+[33m[stage-31] [0m[92m[replica-1] SELECT 0 received.[0m
+[33m[stage-31] [0m[92m[replica-1] SET foo 123 received.[0m
+[33m[stage-31] [0m[92m[replica-1] REPLCONF GETACK * received.[0m
+[33m[stage-31] [0m[92m[replica-2] SELECT 0 received.[0m
+[33m[stage-31] [0m[92m[replica-2] SET foo 123 received.[0m
+[33m[stage-31] [0m[92m[replica-2] REPLCONF GETACK * received.[0m
+[33m[stage-31] [0m[92m[replica-3] SELECT 0 received.[0m
+[33m[stage-31] [0m[92m[replica-3] SET foo 123 received.[0m
+[33m[stage-31] [0m[92m[replica-3] REPLCONF GETACK * received.[0m
+[33m[stage-31] [0m[94m[replica-1] $ redis-cli REPLCONF ACK 111[0m
+[33m[stage-31] [0m[92m[client] 1 received.[0m
+[33m[stage-31] [0m[94m[client] $ redis-cli SET baz 789[0m
+[33m[stage-31] [0m[94m[client] $ redis-cli WAIT 4 2000[0m
+[33m[stage-31] [0m[92m[replica-1] SET baz 789 received.[0m
+[33m[stage-31] [0m[92m[replica-1] REPLCONF GETACK * received.[0m
+[33m[stage-31] [0m[94m[replica-1] $ redis-cli REPLCONF ACK 179[0m
+[33m[stage-31] [0m[92m[replica-2] SET baz 789 received.[0m
+[33m[stage-31] [0m[92m[replica-2] REPLCONF GETACK * received.[0m
+[33m[stage-31] [0m[94m[replica-2] $ redis-cli REPLCONF ACK 179[0m
+[33m[stage-31] [0m[92m[replica-3] SET baz 789 received.[0m
+[33m[stage-31] [0m[92m[replica-3] REPLCONF GETACK * received.[0m
+[33m[stage-31] [0m[94m[replica-3] $ redis-cli REPLCONF ACK 179[0m
+[33m[stage-31] [0m[92m[client] 3 received.[0m
+[33m[stage-31] [0m[94m[client] WAIT command returned after 2073 ms[0m
+[33m[stage-31] [0m[92mTest passed.[0m
+[33m[stage-31] [0m[36mTerminating program[0m
+[33m[stage-31] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-32] [0m[94mRunning tests for Stage #32: streams-type[0m
+[33m[stage-32] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[stage-32] [0m[36mSetting key some_key to foo[0m
+[33m[stage-32] [0m[36mSending type command with existing key[0m
+[33m[stage-32] [0m[36mSending type command with missing key[0m
+[33m[stage-32] [0m[92mTest passed.[0m
+[33m[stage-32] [0m[36mTerminating program[0m
+[33m[stage-32] [0m[36mProgram terminated successfully[0m
