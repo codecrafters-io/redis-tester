@@ -28,7 +28,7 @@ func testStreamsType(stageHarness *testerutils.StageHarness) error {
 		return fmt.Errorf("Expected \"OK\", got %#v", resp)
 	}
 
-	logger.Debugln("Sending type command")
+	logger.Debugln("Sending type command with existing key")
 	resp, err = client.Type("some_key").Result()
 
 	if err != nil {
@@ -38,6 +38,18 @@ func testStreamsType(stageHarness *testerutils.StageHarness) error {
 
 	if resp != "foo" {
 		return fmt.Errorf("Expected \"foo\", got %#v", resp)
+	}
+
+	logger.Debugln("Sending type command with missing key")
+	resp, err = client.Type("missing_key").Result()
+
+	if err != nil {
+		logFriendlyError(logger, err)
+		return err
+	}
+
+	if resp != "none" {
+		return fmt.Errorf("Expected \"none\", got %#v", resp)
 	}
 
 	return nil
