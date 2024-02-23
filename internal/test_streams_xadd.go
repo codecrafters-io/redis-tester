@@ -5,9 +5,10 @@ import (
 	"math/rand"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
+	"github.com/go-redis/redis"
 )
 
-func testStreamsType(stageHarness *testerutils.StageHarness) error {
+func testStreamsXadd(stageHarness *testerutils.StageHarness) error {
 	b := NewRedisBinary(stageHarness)
 	if err := b.Run(); err != nil {
 		return err
@@ -31,18 +32,24 @@ func testStreamsType(stageHarness *testerutils.StageHarness) error {
 	}
 
 	randomKey := strings[rand.Intn(10)]
-	randomValue := strings[rand.Intn(10)]
 
-	logger.Infof("$ redis-cli set %s %s", randomKey, randomValue)
-	resp, err := client.Set(randomKey, randomValue, 0).Result()
+	logger.Infof("$ redis-cli xadd %s 0-1 foo bar", randomKey)
+
+	resp, err := client.XAdd(&redis.XAddArgs{
+		Stream: randomKey,
+		ID:     "0-1",
+		Values: map[string]interface{}{
+			"foo": "bar",
+		},
+	}).Result()
 
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
 	}
 
-	if resp != "OK" {
-		return fmt.Errorf("Expected \"OK\", got %#v", resp)
+	if resp != "0-1" {
+		return fmt.Errorf("Expected \"0-1\", got %#v", resp)
 	}
 
 	logger.Infof("$ redis-cli type %s", randomKey)
@@ -53,20 +60,8 @@ func testStreamsType(stageHarness *testerutils.StageHarness) error {
 		return err
 	}
 
-	if resp != "string" {
-		return fmt.Errorf("Expected \"string\", got %#v", resp)
-	}
-
-	logger.Infof("$ redis-cli type %s", "missing_key"+"_"+randomValue)
-	resp, err = client.Type("missing_key" + "_" + randomValue).Result()
-
-	if err != nil {
-		logFriendlyError(logger, err)
-		return err
-	}
-
-	if resp != "none" {
-		return fmt.Errorf("Expected \"none\", got %#v", resp)
+	if resp != "stream" {
+		return fmt.Errorf("Expected \"stream\", got %#v", resp)
 	}
 
 	return nil
