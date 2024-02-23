@@ -1,0 +1,76 @@
+package internal
+
+import (
+	"fmt"
+	"math/rand"
+	"strconv"
+
+	testerutils "github.com/codecrafters-io/tester-utils"
+	"github.com/go-redis/redis"
+)
+
+func testStreamsXrange(stageHarness *testerutils.StageHarness) error {
+	b := NewRedisBinary(stageHarness)
+	if err := b.Run(); err != nil {
+		return err
+	}
+
+	logger := stageHarness.Logger
+
+	client := NewRedisClient("localhost:6379")
+
+	strings := [10]string{
+		"hello",
+		"world",
+		"mangos",
+		"apples",
+		"oranges",
+		"watermelons",
+		"grapes",
+		"pears",
+		"horses",
+		"elephants",
+	}
+
+	randomKey := strings[rand.Intn(10)]
+
+	max := 5
+	min := 3
+	randomNumber := rand.Intn(max-min+1) + min
+
+	for i := 1; i <= randomNumber; i++ {
+		id := "0-" + strconv.Itoa(i)
+
+		logger.Infof("$ redis-cli xadd %s %s foo bar", randomKey, id)
+
+		resp, err := client.XAdd(&redis.XAddArgs{
+			Stream: randomKey,
+			ID:     id,
+			Values: map[string]interface{}{
+				"foo": "bar",
+			},
+		}).Result()
+
+		if err != nil {
+			logFriendlyError(logger, err)
+			return err
+		}
+
+		if resp != id {
+			return fmt.Errorf("Expected \"%s\", got %#v", id, resp)
+		}
+	}
+
+	maxId := "0-" + strconv.Itoa(randomNumber)
+
+	logger.Infof("$ redis-cli xrange %s 0-1 %s", randomKey, maxId)
+	resp, err := client.XRange(randomKey, "0-1", maxId).Result()
+
+	if err != nil {
+		logFriendlyError(logger, err)
+		return err
+	}
+
+	logger.Infof("Response: %#v", resp)
+	return nil
+}
