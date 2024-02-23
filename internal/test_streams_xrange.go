@@ -3,6 +3,7 @@ package internal
 import (
 	"fmt"
 	"math/rand"
+	"reflect"
 	"strconv"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
@@ -37,6 +38,7 @@ func testStreamsXrange(stageHarness *testerutils.StageHarness) error {
 	max := 5
 	min := 3
 	randomNumber := rand.Intn(max-min+1) + min
+	expected := []redis.XMessage{}
 
 	for i := 1; i <= randomNumber; i++ {
 		id := "0-" + strconv.Itoa(i)
@@ -59,6 +61,13 @@ func testStreamsXrange(stageHarness *testerutils.StageHarness) error {
 		if resp != id {
 			return fmt.Errorf("Expected \"%s\", got %#v", id, resp)
 		}
+
+		expected = append(expected, redis.XMessage{
+			ID: id,
+			Values: map[string]interface{}{
+				"foo": "bar",
+			},
+		})
 	}
 
 	maxId := "0-" + strconv.Itoa(randomNumber)
@@ -69,6 +78,10 @@ func testStreamsXrange(stageHarness *testerutils.StageHarness) error {
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
+	}
+
+	if !reflect.DeepEqual(resp, expected) {
+		return fmt.Errorf("Expected %#v, got %#v", expected, resp)
 	}
 
 	logger.Infof("Response: %#v", resp)
