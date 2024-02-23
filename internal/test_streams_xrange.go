@@ -84,6 +84,5 @@ func testStreamsXrange(stageHarness *testerutils.StageHarness) error {
 		return fmt.Errorf("Expected %#v, got %#v", expected, resp)
 	}
 
-	logger.Infof("Response: %#v", resp)
 	return nil
 }
