@@ -2,6 +2,7 @@ package internal
 
 import (
 	"fmt"
+	"math/rand"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
 )
@@ -16,8 +17,24 @@ func testStreamsType(stageHarness *testerutils.StageHarness) error {
 
 	client := NewRedisClient("localhost:6379")
 
-	logger.Debugln("Setting key some_key to foo")
-	resp, err := client.Set("some_key", "foo", 0).Result()
+	strings := [10]string{
+		"hello",
+		"world",
+		"mangos",
+		"apples",
+		"oranges",
+		"watermelons",
+		"grapes",
+		"pears",
+		"horses",
+		"elephants",
+	}
+
+	randomKey := strings[rand.Intn(10)]
+	randomValue := strings[rand.Intn(10)]
+
+	logger.Infof("$ redis-cli set %s %s", randomKey, randomValue)
+	resp, err := client.Set(randomKey, randomValue, 0).Result()
 
 	if err != nil {
 		logFriendlyError(logger, err)
@@ -28,8 +45,8 @@ func testStreamsType(stageHarness *testerutils.StageHarness) error {
 		return fmt.Errorf("Expected \"OK\", got %#v", resp)
 	}
 
-	logger.Debugln("Sending type command with existing key")
-	resp, err = client.Type("some_key").Result()
+	logger.Infof("$ redis-cli type %s", randomKey)
+	resp, err = client.Type(randomKey).Result()
 
 	if err != nil {
 		logFriendlyError(logger, err)
@@ -40,8 +57,8 @@ func testStreamsType(stageHarness *testerutils.StageHarness) error {
 		return fmt.Errorf("Expected \"string\", got %#v", resp)
 	}
 
-	logger.Debugln("Sending type command with missing key")
-	resp, err = client.Type("missing_key").Result()
+	logger.Infof("$ redis-cli type %s", "missing_key"+"_"+randomValue)
+	resp, err = client.Type("missing_key" + "_" + randomValue).Result()
 
 	if err != nil {
 		logFriendlyError(logger, err)
