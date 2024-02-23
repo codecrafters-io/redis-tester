@@ -61,13 +61,6 @@ func testStreamsXrangeMinId(stageHarness *testerutils.StageHarness) error {
 		if resp != id {
 			return fmt.Errorf("Expected \"%s\", got %#v", id, resp)
 		}
-
-		expected = append(expected, redis.XMessage{
-			ID: id,
-			Values: map[string]interface{}{
-				"foo": "bar",
-			},
-		})
 	}
 
 	maxId := "0-" + strconv.Itoa(randomNumber-1)
