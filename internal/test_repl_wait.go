@@ -11,19 +11,31 @@ import (
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 )
 
+type WaitTest struct {
+	// WriteCommand is the command we'll issue to the master
+	WriteCommand []string
+
+	// WaitReplicaCount is the number of replicas we'll specify in the WAIT command
+	WaitReplicaCount int
+
+	// WaitTimeoutMilli is the timeout we'll specify in the WAIT command
+	WaitTimeoutMilli int
+
+	// ActualNumberOfAcks is the number of ACKs we'll send back to the master
+	ActualNumberOfAcks int
+
+	ShouldVerifyTimeout bool
+}
+
 // In this stage, we:
 //  1. Boot the user's code as a Redis master.
 //  2. Spawn multiple replicas and have each perform a handshake with the master.
-//  3. Issue a write command, test WAIT 1 500
-//     3.1. Issue a write command to the master
-//     3.2. Issue a WAIT command with 1 as the expected number of replicas
-//     3.3. Read propagated command on replicas + respond to subset of GETACKs
-//     3.4. Assert response of WAIT command is 1
-//  4. Issue another write command, test WAIT <REPLICA_COUNT+1> 2000
+//  3. Connect to Master, and execute RunWaitTest
+//  4. RunWaitTest :
 //     4.1. Issue a write command to the master
-//     4.2. Issue a WAIT command with a subset as the expected number of replicas
+//     4.2. Issue a WAIT command with WaitReplicaCount as the expected number of replicas
 //     4.3. Read propagated command on replicas + respond to subset of GETACKs
-//     4.4. Assert response of WAIT command is acks count
+//     4.4. Assert response of WAIT command is ActualNumberOfAcks
 //     4.5. Assert that the WAIT command returned after the timeout
 func testWait(stageHarness *testerutils.StageHarness) error {
 	deleteRDBfile()
@@ -50,7 +62,7 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 		return err
 	}
 
-	// Step 3.1: Connect to master and issue a write command
+	// Step 3: Connect to master
 	conn, err := NewRedisConn("", "localhost:6379")
 	if err != nil {
 		fmt.Println("Error connecting to TCP server:", err)
@@ -60,63 +72,28 @@ func testWait(stageHarness *testerutils.StageHarness) error {
 
 	client := NewFakeRedisClient(conn, logger)
 	client.LogPrefix = "[client] "
+	var masterOffset int
 
-	client.SendAndAssert([]string{"SET", "foo", "123"}, []string{"OK"})
-
-	// Step 3.2: Issue a WAIT command with 1 as the expected number of replicas
-	err = client.Send([]string{"WAIT", "1", "500"})
-	if err != nil {
+	replicaSubsetCount := 1
+	if masterOffset, err = RunWaitTest(client, replicas, 0, WaitTest{
+		WriteCommand:        []string{"SET", "foo", "123"},
+		WaitReplicaCount:    replicaSubsetCount,
+		ActualNumberOfAcks:  replicaSubsetCount,
+		WaitTimeoutMilli:    500,
+		ShouldVerifyTimeout: false,
+	}); err != nil {
 		return err
 	}
 
-	masterOffset := 0
-	replicaAcksCount := 1
-
-	// Step 3.3: Read propagated command on replicas + respond to subset of GETACKs
-	masterOffset, err = consumeReplicationStreamAndSendPartialAcks(replicas, replicaAcksCount, masterOffset, []string{"SET", "foo", "123"}, []string{"REPLCONF", "GETACK", "*"})
-	if err != nil {
+	replicaSubsetCount = testerutils_random.RandomInt(2, replicaCount)
+	if masterOffset, err = RunWaitTest(client, replicas, masterOffset, WaitTest{
+		WriteCommand:        []string{"SET", "baz", "789"},
+		WaitReplicaCount:    replicaSubsetCount + 1,
+		ActualNumberOfAcks:  replicaSubsetCount,
+		WaitTimeoutMilli:    2000,
+		ShouldVerifyTimeout: true,
+	}); err != nil {
 		return err
-	}
-
-	// Step 3.4: Assert response of WAIT command is 1
-	err = client.readAndAssertIntMessage(replicaAcksCount)
-	if err != nil {
-		return err
-	}
-
-	// Step 4.1: Issue another write command
-	client.SendAndAssert([]string{"SET", "baz", "789"}, []string{"OK"})
-
-	// Step 4.2: Issue a WAIT command with a subset as the expected number of replicas
-	replicaAcksCount = testerutils_random.RandomInt(2, replicaCount)
-	waitCommandAcksCount := strconv.Itoa(replicaAcksCount + 1)
-	startTimeMilli := time.Now().UnixMilli()
-	timeout := 2000
-	err = client.Send([]string{"WAIT", waitCommandAcksCount, strconv.Itoa(timeout)})
-	if err != nil {
-		return err
-	}
-
-	// Step 4.3: Read propagated command on replicas + respond to subset of GETACKs
-	masterOffset, err = consumeReplicationStreamAndSendPartialAcks(replicas, replicaAcksCount, masterOffset, []string{"SET", "baz", "789"}, []string{"REPLCONF", "GETACK", "*"})
-	if err != nil {
-		return err
-	}
-
-	// Step 4.4: Assert response of WAIT command is replicaAcksCount
-	err = client.readAndAssertIntMessage(replicaAcksCount)
-	if err != nil {
-		return err
-	}
-
-	// Step 4.5: Assert that the WAIT command returned after the timeout
-	endTimeMilli := time.Now().UnixMilli()
-
-	threshold := 500 // ms
-	elapsedTimeMilli := endTimeMilli - startTimeMilli
-	client.Log(fmt.Sprintf("WAIT command returned after %v ms", elapsedTimeMilli))
-	if math.Abs(float64(elapsedTimeMilli-int64(timeout))) > float64(threshold) {
-		return fmt.Errorf("Expected WAIT to return exactly after %v ms timeout elapsed.", timeout)
 	}
 
 	for _, replica := range replicas {
@@ -174,4 +151,42 @@ func consumeReplicationStreamAndSendPartialAcks(replicas []*FakeRedisReplica, re
 	}
 
 	return newMasterOffset, nil
+}
+
+func RunWaitTest(client *FakeRedisClient, replicas []*FakeRedisReplica, replicationOffset int, waitTest WaitTest) (newReplicationOffset int, err error) {
+	// Step 1: Issue a write command
+	client.SendAndAssert(waitTest.WriteCommand, []string{"OK"})
+
+	// Step 2: Issue a WAIT command with a subset as the expected number of replicas
+	startTimeMilli := time.Now().UnixMilli()
+	err = client.Send([]string{"WAIT", strconv.Itoa(waitTest.WaitReplicaCount), strconv.Itoa(waitTest.WaitTimeoutMilli)})
+	if err != nil {
+		return 0, err
+	}
+
+	// Step 3: Read propagated command on replicas + respond to subset of GETACKs
+	newReplicationOffset, err = consumeReplicationStreamAndSendPartialAcks(replicas, waitTest.ActualNumberOfAcks, replicationOffset, waitTest.WriteCommand, []string{"REPLCONF", "GETACK", "*"})
+	if err != nil {
+		return 0, err
+	}
+
+	// Step 4: Assert response of WAIT command is replicaAcksCount
+	err = client.readAndAssertIntMessage(waitTest.ActualNumberOfAcks)
+	if err != nil {
+		return 0, err
+	}
+
+	endTimeMilli := time.Now().UnixMilli()
+
+	// Step 5: If shouldVerifyTimeout is true : Assert that the WAIT command
+	// returned after the timeout
+	if waitTest.ShouldVerifyTimeout {
+		threshold := 500 // ms
+		elapsedTimeMilli := endTimeMilli - startTimeMilli
+		client.Log(fmt.Sprintf("WAIT command returned after %v ms", elapsedTimeMilli))
+		if math.Abs(float64(elapsedTimeMilli-int64(waitTest.WaitTimeoutMilli))) > float64(threshold) {
+			return 0, fmt.Errorf("Expected WAIT to return exactly after %v ms timeout elapsed.", waitTest.WaitTimeoutMilli)
+		}
+	}
+	return newReplicationOffset, nil
 }
