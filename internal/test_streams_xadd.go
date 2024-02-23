@@ -2,6 +2,7 @@ package internal
 
 import (
 	"fmt"
+	"math/rand"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
 	"github.com/go-redis/redis"
@@ -17,11 +18,25 @@ func testStreamsXadd(stageHarness *testerutils.StageHarness) error {
 
 	client := NewRedisClient("localhost:6379")
 
-	logger.Debugln("Sending XADD command")
-	logger.Infoln("$ redis-cli xadd stream_key 0-1 foo bar")
+	strings := [10]string{
+		"hello",
+		"world",
+		"mangos",
+		"apples",
+		"oranges",
+		"watermelons",
+		"grapes",
+		"pears",
+		"horses",
+		"elephants",
+	}
+
+	randomKey := strings[rand.Intn(10)]
+
+	logger.Infof("$ redis-cli xadd %s 0-1 foo bar", randomKey)
 
 	resp, err := client.XAdd(&redis.XAddArgs{
-		Stream: "stream_key",
+		Stream: randomKey,
 		ID:     "0-1",
 		Values: map[string]interface{}{
 			"foo": "bar",
@@ -37,9 +52,8 @@ func testStreamsXadd(stageHarness *testerutils.StageHarness) error {
 		return fmt.Errorf("Expected \"0-1\", got %#v", resp)
 	}
 
-	logger.Debugln("Sending type command with added stream key")
-	logger.Infoln("$ redis-cli type stream_key")
-	resp, err = client.Type("stream_key").Result()
+	logger.Infof("$ redis-cli type %s", randomKey)
+	resp, err = client.Type(randomKey).Result()
 
 	if err != nil {
 		logFriendlyError(logger, err)
