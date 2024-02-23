@@ -148,5 +148,9 @@ var testerDefinition = testerutils.TesterDefinition{
 			Slug:     "streams-xadd",
 			TestFunc: testStreamsXadd,
 		},
+		{
+			Slug:     "streams-xrange-min-id",
+			TestFunc: testStreamsXRangeMinID,
+		},
 	},
 }
