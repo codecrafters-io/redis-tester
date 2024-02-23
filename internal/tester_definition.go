@@ -150,7 +150,7 @@ var testerDefinition = testerutils.TesterDefinition{
 		},
 		{
 			Slug:     "streams-xrange-min-id",
-			TestFunc: testStreamsXRangeMinID,
+			TestFunc: testStreamsXrangeMinId,
 		},
 	},
 }
