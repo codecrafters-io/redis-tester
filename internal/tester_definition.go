@@ -144,5 +144,9 @@ var testerDefinition = testerutils.TesterDefinition{
 			Slug:     "streams-type",
 			TestFunc: testStreamsType,
 		},
+		{
+			Slug:     "streams-xadd",
+			TestFunc: testStreamsXadd,
+		},
 	},
 }
