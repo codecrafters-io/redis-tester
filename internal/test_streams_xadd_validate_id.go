@@ -81,7 +81,7 @@ func testStreamsXaddValidateId(stageHarness *testerutils.StageHarness) error {
 		},
 	}).Result()
 
-	expectedErr := "ERR The ID specified in XADD is equal or smaller than the target ID"
+	expectedErr := "ERR The ID specified in XADD is equal or smaller than the target stream top item"
 
 	if err.Error() != expectedErr {
 		return fmt.Errorf("Expected %#v, got %#v", expectedErr, err.Error())
@@ -111,7 +111,7 @@ func testStreamsXaddValidateId(stageHarness *testerutils.StageHarness) error {
 		},
 	}).Result()
 
-	expectedErr = "ERR The ID specified in XADD must be greated than 0-0"
+	expectedErr = "ERR The ID specified in XADD must be greater than 0-0"
 
 	if err.Error() != expectedErr {
 		return fmt.Errorf("Expected %#v, got %#v", expectedErr, err.Error())
