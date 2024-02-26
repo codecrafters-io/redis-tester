@@ -14,9 +14,8 @@ func testReplReplicaSendsPsync(stageHarness *testerutils.StageHarness) error {
 
 	listener, err := net.Listen("tcp", ":6379")
 	if err != nil {
-		logger.Errorf("Error starting TCP server: %v", err)
 		logFriendlyBindError(logger, err)
-		return err
+		return fmt.Errorf("Error starting TCP server: %v", err)
 	}
 
 	logger.Infof("Master is running on port 6379")

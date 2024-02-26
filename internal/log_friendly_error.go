@@ -25,6 +25,6 @@ func logFriendlyError(logger *logger.Logger, err error) {
 
 func logFriendlyBindError(logger *logger.Logger, err error) {
 	if strings.Contains(err.Error(), "bind: address already in use") {
-		logger.Errorf("This failure most likely means that your server didn't use the SO_REUSEADDR socket option while starting the server in the previous stage. That option is set in order to immediately reuse previous sockets which were bound on the same address and remained in TIME_WAIT state. Retry this stage after adding the SO_REUSEADDR to your socket options.")
+		logger.Errorf("This failure most likely means that your server didn't use the SO_REUSEADDR socket option while starting the server in the previous stage. SO_REUSEADDR is required to reuse previous sockets which were bound on the same address. Try setting the SO_REUSEADDR flag when creating your TCP server.")
 	}
 }

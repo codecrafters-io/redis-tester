@@ -63,23 +63,11 @@ func (master FakeRedisMaster) AssertPsync() error {
 	return master.Assert([]string{"PSYNC", "?", "-1"}, response, false)
 }
 func (master FakeRedisMaster) GetAck(offset int) error {
-	return master.SendAndAssert([]string{"REPLCONF", "GETACK", "*"}, []string{"REPLCONF", "ACK", strconv.Itoa(offset)})
+	return master.SendAndAssertStringArray([]string{"REPLCONF", "GETACK", "*"}, []string{"REPLCONF", "ACK", strconv.Itoa(offset)})
 }
 
 func (master FakeRedisMaster) Wait(replicas string, timeout string, expectedMessage int) error {
 	return master.SendAndAssertInt([]string{"WAIT", replicas, timeout}, expectedMessage)
-}
-
-func (master FakeRedisMaster) SendAndAssertInt(sendMessage []string, receiveMessage int) error {
-	err := master.Send(sendMessage)
-	if err != nil {
-		return err
-	}
-	err = master.readAndAssertIntMessage(receiveMessage)
-	if err != nil {
-		return err
-	}
-	return nil
 }
 
 func (master FakeRedisMaster) Handshake() error {

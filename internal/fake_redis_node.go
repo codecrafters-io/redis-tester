@@ -44,24 +44,36 @@ func (node FakeRedisNode) Send(sendMessage []string) error {
 	return nil
 }
 
-func (master FakeRedisNode) SendAndAssert(sendMessage []string, receiveMessage []string) error {
-	err := master.Send(sendMessage)
+func (node FakeRedisNode) SendAndAssertStringArray(sendMessage []string, receiveMessage []string) error {
+	err := node.Send(sendMessage)
 	if err != nil {
 		return err
 	}
-	err, _ = master.readAndAssertMessages(receiveMessage, false)
+	err, _ = node.readAndAssertMessages(receiveMessage, false)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (master FakeRedisNode) SendAndAssertString(sendMessage []string, receiveMessage string, caseSensitiveMatch bool) error {
-	err := master.Send(sendMessage)
+func (node FakeRedisNode) SendAndAssertString(sendMessage []string, receiveMessage string, caseSensitiveMatch bool) error {
+	err := node.Send(sendMessage)
 	if err != nil {
 		return err
 	}
-	err = master.readAndAssertMessage(receiveMessage, caseSensitiveMatch)
+	err = node.readAndAssertMessage(receiveMessage, caseSensitiveMatch)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (node FakeRedisNode) SendAndAssertInt(sendMessage []string, receiveMessage int) error {
+	err := node.Send(sendMessage)
+	if err != nil {
+		return err
+	}
+	err = node.readAndAssertIntMessage(receiveMessage)
 	if err != nil {
 		return err
 	}

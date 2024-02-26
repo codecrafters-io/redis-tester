@@ -155,7 +155,7 @@ func consumeReplicationStreamAndSendPartialAcks(replicas []*FakeRedisReplica, re
 
 func RunWaitTest(client *FakeRedisClient, replicas []*FakeRedisReplica, replicationOffset int, waitTest WaitTest) (newReplicationOffset int, err error) {
 	// Step 1: Issue a write command
-	client.SendAndAssert(waitTest.WriteCommand, []string{"OK"})
+	client.SendAndAssertStringArray(waitTest.WriteCommand, []string{"OK"})
 
 	// Step 2: Issue a WAIT command with a subset as the expected number of replicas
 	startTimeMilli := time.Now().UnixMilli()
