@@ -2,7 +2,9 @@ package internal
 
 import (
 	"fmt"
+	"net"
 	"strings"
+	"time"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
 )
@@ -13,24 +15,49 @@ func antiCheatTest(stageHarness *testerutils.StageHarness) error {
 		return err
 	}
 
-	client := NewRedisClient("localhost:6379")
 	logger := stageHarness.Logger
-
-	result := client.Info("server")
-	if result.Err() != nil {
-		return nil
-	}
-
-	str, err := result.Result()
+	conn, err := NewRedisConn("", "localhost:6379")
 	if err != nil {
+		logger.Debugf("Error connecting to TCP server: %v", err)
+		return err
+	}
+	defer conn.Close()
+
+	if err := conn.SetReadDeadline(time.Now().Add(2 * time.Second)); err != nil {
+		return fmt.Errorf("Error setting read deadline: %w", err)
+	}
+
+	client := NewFakeRedisClient(conn, logger)
+	if err := client.Send([]string{"MEMORY", "DOCTOR"}); err != nil {
+		return fmt.Errorf("Error sending command to Redis: %w", err)
+	}
+
+	actualMessage, err := client.readRespString()
+	if err != nil {
+		if netErr, ok := err.(net.Error); ok && netErr.Timeout() {
+			return nil // Read timed out. No data received from client.
+		}
 		return nil
 	}
 
-	if !strings.HasPrefix(str, "# Server") {
-		return nil
+	if messageDetected(actualMessage) {
+		logger.Criticalf("anti-cheat (ac1) failed.")
+		logger.Criticalf("Are you sure you aren't running this against the actual Redis?")
+		return fmt.Errorf("anti-cheat (ac1) failed")
 	}
+	return nil
+}
 
-	logger.Criticalf("anti-cheat (ac1) failed.")
-	logger.Criticalf("Are you sure you aren't running this against the actual Redis?")
-	return fmt.Errorf("anti-cheat (ac1) failed")
+func messageDetected(actualMessage string) bool {
+	var possibleMessages = []string{
+		"Hi Sam, I can't find any memory issue in your instance.",
+		"Hi Sam, this instance is empty or is using very little memory",
+		"Sam, I detected a few issues in this Redis instance memory implants",
+	}
+	for _, message := range possibleMessages {
+		if strings.Contains(actualMessage, message) {
+			return true
+		}
+	}
+	return false
 }
