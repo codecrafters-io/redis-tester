@@ -26,17 +26,17 @@ func testXadd(client *redis.Client, logger *logger.Logger, test XADDTest) error 
 		Values: test.values,
 	}).Result()
 
-	if err != nil {
+	if err != nil && test.expectedError == "" {
 		logFriendlyError(logger, err)
 		return err
-	} else {
-		if test.expectedError == "" {
-			return err
-		}
+	}
 
+	if err != nil && test.expectedError != "" {
 		if err.Error() != test.expectedError {
 			return fmt.Errorf("Expected %#v, got %#v", test.expectedError, err.Error())
 		}
+
+		return err
 	}
 
 	logger.Infof("Received response: %s", resp)
@@ -76,9 +76,10 @@ func testStreamsXadd(stageHarness *testerutils.StageHarness) error {
 	randomKey := strings[rand.Intn(10)]
 
 	testXadd(client, logger, XADDTest{
-		streamKey: randomKey,
-		id:        "0-1",
-		values:    map[string]interface{}{"foo": "bar"},
+		streamKey:        randomKey,
+		id:               "0-1",
+		values:           map[string]interface{}{"foo": "bar"},
+		expectedResponse: "0-1",
 	})
 
 	logger.Infof("$ redis-cli type %s", randomKey)
