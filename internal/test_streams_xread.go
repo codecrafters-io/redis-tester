@@ -54,7 +54,14 @@ func testStreamsXread(stageHarness *testerutils.StageHarness) error {
 
 	logger.Infof("Received response: \"%v\"", resp)
 
-	expectedResp := map[string]interface{}{randomKey: []redis.XMessage{{ID: "0-1", Values: map[string]interface{}{"foo": "bar"}}}}
+	expectedResp := map[string]interface{}{
+		randomKey: []redis.XMessage{
+			{
+				ID:     "0-1",
+				Values: map[string]interface{}{"foo": "bar"},
+			},
+		},
+	}
 
 	if !reflect.DeepEqual(resp, expectedResp) {
 		return fmt.Errorf("Expected %#v, got %#v", expectedResp, resp)
