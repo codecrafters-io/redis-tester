@@ -1,9 +1,7 @@
 package internal
 
 import (
-	"fmt"
 	"math/rand"
-	"reflect"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
 	"github.com/go-redis/redis"
@@ -62,17 +60,6 @@ func testStreamsXreadMultiple(stageHarness *testerutils.StageHarness) error {
 		expectedResponse: "0-2",
 	})
 
-	logger.Infof("$ redis-cli xread streams %s %s 0-0 0-1", randomKey, otherRandomKey)
-
-	resp, err := client.XRead(&redis.XReadArgs{
-		Streams: []string{randomKey, otherRandomKey, "0-0", "0-1"},
-	}).Result()
-
-	if err != nil {
-		logFriendlyError(logger, err)
-		return err
-	}
-
 	expectedResp := []redis.XStream{
 		{
 			Stream: randomKey,
@@ -94,9 +81,10 @@ func testStreamsXreadMultiple(stageHarness *testerutils.StageHarness) error {
 		},
 	}
 
-	if !(reflect.DeepEqual(resp, expectedResp)) {
-		return fmt.Errorf("Expected %#v, got %#v", expectedResp, resp)
-	}
+	testXread(client, logger, XREADTest{
+		streams:          []string{randomKey, otherRandomKey, "0-0", "0-1"},
+		expectedResponse: expectedResp,
+	})
 
 	return nil
 }
