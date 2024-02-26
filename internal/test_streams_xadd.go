@@ -39,7 +39,7 @@ func testXadd(client *redis.Client, logger *logger.Logger, test XADDTest) error 
 		return err
 	}
 
-	logger.Infof("Received response: %s", resp)
+	logger.Infof("Received response: \"%s\"", resp)
 
 	if resp != test.expectedResponse {
 		return fmt.Errorf("Expected %#v, got %#v", test.expectedResponse, resp)
