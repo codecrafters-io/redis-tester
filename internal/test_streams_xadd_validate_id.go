@@ -5,8 +5,46 @@ import (
 	"math/rand"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
+	"github.com/codecrafters-io/tester-utils/logger"
 	"github.com/go-redis/redis"
 )
+
+type XADDTest struct {
+	streamKey        string
+	id               string
+	values           map[string]interface{}
+	expectedResponse string
+	expectedError    string
+}
+
+func testXADD(client *redis.Client, logger *logger.Logger, test XADDTest) error {
+	logger.Infof("$ redis-cli xadd %s %s %s", test.streamKey, test.id, test.values)
+
+	resp, err := client.XAdd(&redis.XAddArgs{
+		Stream: test.streamKey,
+		ID:     test.id,
+		Values: test.values,
+	}).Result()
+
+	if err != nil {
+		logFriendlyError(logger, err)
+		return err
+	} else {
+		if test.expectedError == "" {
+			return err
+		}
+
+		if err.Error() != test.expectedError {
+			return fmt.Errorf("Expected %#v, got %#v", test.expectedError, err.Error())
+		}
+	}
+
+	if resp != test.expectedResponse {
+		return fmt.Errorf("Expected %#v, got %#v", test.expectedResponse, resp)
+	}
+
+	return nil
+}
 
 func testStreamsXaddValidateId(stageHarness *testerutils.StageHarness) error {
 	b := NewRedisBinary(stageHarness)
@@ -33,88 +71,16 @@ func testStreamsXaddValidateId(stageHarness *testerutils.StageHarness) error {
 
 	randomKey := strings[rand.Intn(10)]
 
-	logger.Infof("$ redis-cli xadd %s 1-1 foo bar", randomKey)
-
-	resp, err := client.XAdd(&redis.XAddArgs{
-		Stream: randomKey,
-		ID:     "1-1",
-		Values: map[string]interface{}{
-			"foo": "bar",
-		},
-	}).Result()
-
-	if err != nil {
-		logFriendlyError(logger, err)
-		return err
+	tests := []XADDTest{
+		{streamKey: randomKey, id: "1-1", values: map[string]interface{}{"foo": "bar"}, expectedResponse: "1-1", expectedError: ""},
+		{streamKey: randomKey, id: "1-2", values: map[string]interface{}{"bar": "baz"}, expectedResponse: "1-2", expectedError: ""},
+		{streamKey: randomKey, id: "1-2", values: map[string]interface{}{"baz": "foo"}, expectedResponse: "", expectedError: "ERR The ID specified in XADD is equal or smaller than the target stream top item"},
+		{streamKey: randomKey, id: "0-3", values: map[string]interface{}{"baz": "foo"}, expectedResponse: "", expectedError: "ERR The ID specified in XADD is equal or smaller than the target stream top item"},
+		{streamKey: randomKey, id: "0-0", values: map[string]interface{}{"baz": "foo"}, expectedResponse: "", expectedError: "ERR The ID specified in XADD must be greater than 0-0"},
 	}
 
-	if resp != "1-1" {
-		return fmt.Errorf("Expected \"1-1\", got %#v", resp)
-	}
-
-	logger.Infof("$ redis-cli xadd %s 1-2 bar baz", randomKey)
-
-	resp, err = client.XAdd(&redis.XAddArgs{
-		Stream: randomKey,
-		ID:     "1-2",
-		Values: map[string]interface{}{
-			"bar": "baz",
-		},
-	}).Result()
-
-	if err != nil {
-		logFriendlyError(logger, err)
-		return err
-	}
-
-	if resp != "1-2" {
-		return fmt.Errorf("Expected \"1-2\", got %#v", resp)
-	}
-
-	logger.Infof("$ redis-cli xadd %s 1-2 baz foo", randomKey)
-
-	resp, err = client.XAdd(&redis.XAddArgs{
-		Stream: randomKey,
-		ID:     "1-2",
-		Values: map[string]interface{}{
-			"baz": "foo",
-		},
-	}).Result()
-
-	expectedErr := "ERR The ID specified in XADD is equal or smaller than the target stream top item"
-
-	if err.Error() != expectedErr {
-		return fmt.Errorf("Expected %#v, got %#v", expectedErr, err.Error())
-	}
-
-	logger.Infof("$ redis-cli xadd %s 0-3 baz foo", randomKey)
-
-	resp, err = client.XAdd(&redis.XAddArgs{
-		Stream: randomKey,
-		ID:     "0-3",
-		Values: map[string]interface{}{
-			"baz": "foo",
-		},
-	}).Result()
-
-	if err.Error() != expectedErr {
-		return fmt.Errorf("Expected %#v, got %#v", expectedErr, err.Error())
-	}
-
-	logger.Infof("$ redis-cli xadd %s 0-0 baz foo", randomKey)
-
-	resp, err = client.XAdd(&redis.XAddArgs{
-		Stream: randomKey,
-		ID:     "0-0",
-		Values: map[string]interface{}{
-			"baz": "foo",
-		},
-	}).Result()
-
-	expectedErr = "ERR The ID specified in XADD must be greater than 0-0"
-
-	if err.Error() != expectedErr {
-		return fmt.Errorf("Expected %#v, got %#v", expectedErr, err.Error())
+	for _, test := range tests {
+		testXADD(client, logger, test)
 	}
 
 	return nil
