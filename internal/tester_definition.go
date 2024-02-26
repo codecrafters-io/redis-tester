@@ -152,5 +152,9 @@ var testerDefinition = testerutils.TesterDefinition{
 			Slug:     "streams-xadd-validate-id",
 			TestFunc: testStreamsXaddValidateId,
 		},
+		{
+			Slug:     "streams-xadd-partial-autoid",
+			TestFunc: testStreamsXaddPartialAutoid,
+		},
 	},
 }
