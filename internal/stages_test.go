@@ -76,7 +76,7 @@ func TestStages(t *testing.T) {
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 		"streams_pass": {
-			UntilStageSlug:      "streams-xadd-partial-autoid",
+			UntilStageSlug:      "streams-xadd-full-autoid",
 			CodePath:            "./test_helpers/pass_all",
 			ExpectedExitCode:    0,
 			StdoutFixturePath:   "./test_helpers/fixtures/streams/pass",
@@ -94,6 +94,7 @@ func normalizeTesterOutput(testerOutput []byte) []byte {
 		"timestamp":      {regexp.MustCompile("\\d{2}:\\d{2}:\\d{2}\\.\\d{3}")},
 		"replication_id": {regexp.MustCompile("FULLRESYNC [A-Za-z0-9]+ 0 received.")},
 		"wait_timeout":   {regexp.MustCompile("WAIT command returned after [0-9]+ ms")},
+		"xadd_id":        {regexp.MustCompile("\\d{13}-\\d+")},
 	}
 
 	for replacement, regexes := range replacements {
