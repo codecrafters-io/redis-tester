@@ -61,11 +61,13 @@ func testStreamsXaddFullAutoid(stageHarness *testerutils.StageHarness) error {
 
 	timeStr, sequenceNumber := parts[0], parts[1]
 	timeInt64, _ := strconv.ParseInt(timeStr, 10, 64)
-	now := time.Now().Unix() + 1000
+	now := time.Now().Unix() * 1000
+	oneSecondAgo := now - 1000
+	oneSecondLater := now + 1000
 
 	if len(timeStr) != 13 {
 		return fmt.Errorf("Expected the first part of the ID to be a unix timestamp (%d characters), got %d characters", len(strconv.FormatInt(now, 10)), len(timeStr))
-	} else if !(timeInt64 > 0 && timeInt64 < now) {
+	} else if !(timeInt64 > oneSecondAgo && timeInt64 < oneSecondLater) {
 		return fmt.Errorf("Expected the first part of the ID to be a valid unix timestamp, got %s", timeStr)
 	} else {
 		logger.Successf("The first part of the ID is a valid unix milliseconds timestamp")

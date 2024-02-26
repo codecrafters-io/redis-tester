@@ -69,29 +69,17 @@ Debug = true
 [33m[stage-7] [0m[94mRunning tests for Stage #7: expiry[0m
 [33m[stage-7] [0m[94m$ ./spawn_redis_server.sh[0m
 [33m[stage-7] [0m[94m$ redis-cli set grapes apples px 100[0m
-<<<<<<< HEAD
-[33m[stage-7] [0m[92mReceived OK (at 15:49:00.988)[0m
-[33m[stage-7] [0m[94m$ redis-cli get grapes (sent at 15:49:00.988, key should not be expired)[0m
+[33m[stage-7] [0m[92mReceived OK (at 21:23:49.858)[0m
+[33m[stage-7] [0m[94m$ redis-cli get grapes (sent at 21:23:49.858, key should not be expired)[0m
 [33m[stage-7] [0m[92mReceived "apples"[0m
 [33m[stage-7] [0m[36mSleeping for 101ms[0m
-[33m[stage-7] [0m[94m$ redis-cli get grapes (sent at 15:49:01.090, key should be expired)[0m
-=======
-[33m[stage-7] [0m[92mReceived OK (at 20:34:54.215)[0m
-[33m[stage-7] [0m[94m$ redis-cli get grapes (sent at 20:34:54.215, key should not be expired)[0m
-[33m[stage-7] [0m[92mReceived "apples"[0m
-[33m[stage-7] [0m[36mSleeping for 101ms[0m
-[33m[stage-7] [0m[94m$ redis-cli get grapes (sent at 20:34:54.318, key should be expired)[0m
->>>>>>> main
+[33m[stage-7] [0m[94m$ redis-cli get grapes (sent at 21:23:49.960, key should be expired)[0m
 [33m[stage-7] [0m[92mTest passed.[0m
 [33m[stage-7] [0m[36mTerminating program[0m
 [33m[stage-7] [0m[36mProgram terminated successfully[0m
 
 [33m[stage-8] [0m[94mRunning tests for Stage #8: rdb-config[0m
-<<<<<<< HEAD
-[33m[stage-8] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles4282846664 --dbfilename banana.rdb[0m
-=======
-[33m[stage-8] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles3465319553 --dbfilename banana.rdb[0m
->>>>>>> main
+[33m[stage-8] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles35901439 --dbfilename banana.rdb[0m
 [33m[stage-8] [0m[94m$ redis-cli CONFIG GET dir[0m
 [33m[stage-8] [0m[92mTest passed.[0m
 [33m[stage-8] [0m[36mTerminating program[0m
@@ -99,11 +87,7 @@ Debug = true
 
 [33m[stage-9] [0m[94mRunning tests for Stage #9: rdb-read-key[0m
 [33m[stage-9] [0m[94mCreated RDB file with single key: "pear"[0m
-<<<<<<< HEAD
-[33m[stage-9] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles2158933104 --dbfilename blueberry.rdb[0m
-=======
-[33m[stage-9] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles1327420692 --dbfilename blueberry.rdb[0m
->>>>>>> main
+[33m[stage-9] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles3015330748 --dbfilename blueberry.rdb[0m
 [33m[stage-9] [0m[94m$ redis-cli KEYS *[0m
 [33m[stage-9] [0m[92mTest passed.[0m
 [33m[stage-9] [0m[36mTerminating program[0m
@@ -111,11 +95,7 @@ Debug = true
 
 [33m[stage-10] [0m[94mRunning tests for Stage #10: rdb-read-string-value[0m
 [33m[stage-10] [0m[94mCreated RDB file with single key-value pair: strawberry="apple"[0m
-<<<<<<< HEAD
-[33m[stage-10] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles2529365360 --dbfilename banana.rdb[0m
-=======
-[33m[stage-10] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles2351416775 --dbfilename banana.rdb[0m
->>>>>>> main
+[33m[stage-10] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles3225522597 --dbfilename banana.rdb[0m
 [33m[stage-10] [0m[94m$ redis-cli GET strawberry[0m
 [33m[stage-10] [0m[92mTest passed.[0m
 [33m[stage-10] [0m[36mTerminating program[0m
@@ -123,11 +103,7 @@ Debug = true
 
 [33m[stage-11] [0m[94mRunning tests for Stage #11: rdb-read-multiple-keys[0m
 [33m[stage-11] [0m[94mCreated RDB file with 5 keys: ["orange" "blueberry" "strawberry" "pineapple" "banana"][0m
-<<<<<<< HEAD
-[33m[stage-11] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles2614545386 --dbfilename pear.rdb[0m
-=======
-[33m[stage-11] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles244491320 --dbfilename pear.rdb[0m
->>>>>>> main
+[33m[stage-11] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles2042539410 --dbfilename pear.rdb[0m
 [33m[stage-11] [0m[94m$ redis-cli KEYS *[0m
 [33m[stage-11] [0m[92mTest passed.[0m
 [33m[stage-11] [0m[36mTerminating program[0m
@@ -135,11 +111,7 @@ Debug = true
 
 [33m[stage-12] [0m[94mRunning tests for Stage #12: rdb-read-multiple-string-values[0m
 [33m[stage-12] [0m[94mCreated RDB file with key-value pairs: "orange"="grape", "mango"="pear", "grape"="blueberry", "pear"="pineapple"[0m
-<<<<<<< HEAD
-[33m[stage-12] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles4003491691 --dbfilename apple.rdb[0m
-=======
-[33m[stage-12] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles120026109 --dbfilename apple.rdb[0m
->>>>>>> main
+[33m[stage-12] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles3914784574 --dbfilename apple.rdb[0m
 [33m[stage-12] [0m[94m$ redis-cli GET orange[0m
 [33m[stage-12] [0m[94m$ redis-cli GET mango[0m
 [33m[stage-12] [0m[94m$ redis-cli GET grape[0m
@@ -149,11 +121,7 @@ Debug = true
 [33m[stage-12] [0m[36mError terminating program: 'program failed to exit in 2 seconds after receiving sigterm'[0m
 
 [33m[stage-13] [0m[94mRunning tests for Stage #13: rdb-read-value-with-expiry[0m
-<<<<<<< HEAD
-[33m[stage-13] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles2922431269 --dbfilename apple.rdb[0m
-=======
-[33m[stage-13] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles3098405367 --dbfilename apple.rdb[0m
->>>>>>> main
+[33m[stage-13] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles411863310 --dbfilename apple.rdb[0m
 [33m[stage-13] [0m[94m$ redis-cli GET pineapple[0m
 [33m[stage-13] [0m[94m$ redis-cli GET raspberry[0m
 [33m[stage-13] [0m[94m$ redis-cli GET blueberry[0m
@@ -246,11 +214,7 @@ Debug = true
 [33m[stage-22] [0m[94m$ redis-cli REPLCONF listening-port 6380[0m
 [33m[stage-22] [0m[92mOK received.[0m
 [33m[stage-22] [0m[94m$ redis-cli PSYNC ? -1[0m
-<<<<<<< HEAD
-[33m[stage-22] [0m[92mFULLRESYNC ec60d758210d5fd41e2edd623f76b57ca6579ecc 0 received.[0m
-=======
-[33m[stage-22] [0m[92mFULLRESYNC 268397dd17d5215d16a0154cf96fcba1e701d4be 0 received.[0m
->>>>>>> main
+[33m[stage-22] [0m[92mFULLRESYNC 9cd342b44fe13e447cc78e59fafe13e398bc87a7 0 received.[0m
 [33m[stage-22] [0m[92mTest passed.[0m
 [33m[stage-22] [0m[36mTerminating program[0m
 [33m[stage-22] [0m[36mProgram terminated successfully[0m
@@ -262,11 +226,7 @@ Debug = true
 [33m[stage-23] [0m[94m$ redis-cli REPLCONF listening-port 6380[0m
 [33m[stage-23] [0m[92mOK received.[0m
 [33m[stage-23] [0m[94m$ redis-cli PSYNC ? -1[0m
-<<<<<<< HEAD
-[33m[stage-23] [0m[92mFULLRESYNC ebc1ef19503d628e7a3568f2e0dcb0cac302b24c 0 received.[0m
-=======
-[33m[stage-23] [0m[92mFULLRESYNC 3ccf4f6d3668fde79dfacaaf5401a48ade68358d 0 received.[0m
->>>>>>> main
+[33m[stage-23] [0m[92mFULLRESYNC d8465a34096c049fa436ba725a226b281cbb5ba9 0 received.[0m
 [33m[stage-23] [0m[92mSuccessfully received RDB file from master.[0m
 [33m[stage-23] [0m[92mTest passed.[0m
 [33m[stage-23] [0m[36mTerminating program[0m
@@ -279,11 +239,7 @@ Debug = true
 [33m[stage-24] [0m[94m$ redis-cli REPLCONF listening-port 6380[0m
 [33m[stage-24] [0m[92mOK received.[0m
 [33m[stage-24] [0m[94m$ redis-cli PSYNC ? -1[0m
-<<<<<<< HEAD
-[33m[stage-24] [0m[92mFULLRESYNC cc80d4025f137d307b93a7c956ac730320a5465a 0 received.[0m
-=======
-[33m[stage-24] [0m[92mFULLRESYNC 39e716e49a0aa67333b2fee857b35170b9e372d2 0 received.[0m
->>>>>>> main
+[33m[stage-24] [0m[92mFULLRESYNC 165ef754d031e1baa2a3402eb73fe330cf0a738e 0 received.[0m
 [33m[stage-24] [0m[92mSuccessfully received RDB file from master.[0m
 [33m[stage-24] [0m[94mSetting key foo to 123[0m
 [33m[stage-24] [0m[94m$ redis-cli SET foo 123[0m
@@ -306,33 +262,21 @@ Debug = true
 [33m[stage-25] [0m[94m[replica-1] $ redis-cli REPLCONF listening-port 6380[0m
 [33m[stage-25] [0m[92m[replica-1] OK received.[0m
 [33m[stage-25] [0m[94m[replica-1] $ redis-cli PSYNC ? -1[0m
-<<<<<<< HEAD
-[33m[stage-25] [0m[92m[replica-1] FULLRESYNC e87e28fdf47dd45a53a5c32a4dfd43df09a6f0e1 0 received.[0m
-=======
-[33m[stage-25] [0m[92m[replica-1] FULLRESYNC 34e253e8a249da814906ebc87b9637565c92de9b 0 received.[0m
->>>>>>> main
+[33m[stage-25] [0m[92m[replica-1] FULLRESYNC 3b0db81d91c259752b1659aed9db9b4d8b16a36c 0 received.[0m
 [33m[stage-25] [0m[92m[replica-1] Successfully received RDB file from master.[0m
 [33m[stage-25] [0m[94m[replica-2] $ redis-cli PING[0m
 [33m[stage-25] [0m[92m[replica-2] PONG received.[0m
 [33m[stage-25] [0m[94m[replica-2] $ redis-cli REPLCONF listening-port 6380[0m
 [33m[stage-25] [0m[92m[replica-2] OK received.[0m
 [33m[stage-25] [0m[94m[replica-2] $ redis-cli PSYNC ? -1[0m
-<<<<<<< HEAD
-[33m[stage-25] [0m[92m[replica-2] FULLRESYNC e87e28fdf47dd45a53a5c32a4dfd43df09a6f0e1 0 received.[0m
-=======
-[33m[stage-25] [0m[92m[replica-2] FULLRESYNC 34e253e8a249da814906ebc87b9637565c92de9b 0 received.[0m
->>>>>>> main
+[33m[stage-25] [0m[92m[replica-2] FULLRESYNC 3b0db81d91c259752b1659aed9db9b4d8b16a36c 0 received.[0m
 [33m[stage-25] [0m[92m[replica-2] Successfully received RDB file from master.[0m
 [33m[stage-25] [0m[94m[replica-3] $ redis-cli PING[0m
 [33m[stage-25] [0m[92m[replica-3] PONG received.[0m
 [33m[stage-25] [0m[94m[replica-3] $ redis-cli REPLCONF listening-port 6380[0m
 [33m[stage-25] [0m[92m[replica-3] OK received.[0m
 [33m[stage-25] [0m[94m[replica-3] $ redis-cli PSYNC ? -1[0m
-<<<<<<< HEAD
-[33m[stage-25] [0m[92m[replica-3] FULLRESYNC e87e28fdf47dd45a53a5c32a4dfd43df09a6f0e1 0 received.[0m
-=======
-[33m[stage-25] [0m[92m[replica-3] FULLRESYNC 34e253e8a249da814906ebc87b9637565c92de9b 0 received.[0m
->>>>>>> main
+[33m[stage-25] [0m[92m[replica-3] FULLRESYNC 3b0db81d91c259752b1659aed9db9b4d8b16a36c 0 received.[0m
 [33m[stage-25] [0m[92m[replica-3] Successfully received RDB file from master.[0m
 [33m[stage-25] [0m[94m[client] Setting key foo to 123[0m
 [33m[stage-25] [0m[94m[client] $ redis-cli SET foo 123[0m
@@ -447,7 +391,7 @@ Debug = true
 [33m[stage-30] [0m[94m[replica-1] $ redis-cli REPLCONF listening-port 6380[0m
 [33m[stage-30] [0m[92m[replica-1] OK received.[0m
 [33m[stage-30] [0m[94m[replica-1] $ redis-cli PSYNC ? -1[0m
-[33m[stage-30] [0m[92m[replica-1] FULLRESYNC ed1bd4cd012c8c3eb14f9b2371bbe2f67cd78d3f 0 received.[0m
+[33m[stage-30] [0m[92m[replica-1] FULLRESYNC e70488938792eec301947121f1b80ad2c2919f97 0 received.[0m
 [33m[stage-30] [0m[92m[replica-1] Successfully received RDB file from master.[0m
 [33m[stage-30] [0m[36mCreating replica : 1.[0m
 [33m[stage-30] [0m[94m[replica-2] $ redis-cli PING[0m
@@ -455,7 +399,7 @@ Debug = true
 [33m[stage-30] [0m[94m[replica-2] $ redis-cli REPLCONF listening-port 6380[0m
 [33m[stage-30] [0m[92m[replica-2] OK received.[0m
 [33m[stage-30] [0m[94m[replica-2] $ redis-cli PSYNC ? -1[0m
-[33m[stage-30] [0m[92m[replica-2] FULLRESYNC ed1bd4cd012c8c3eb14f9b2371bbe2f67cd78d3f 0 received.[0m
+[33m[stage-30] [0m[92m[replica-2] FULLRESYNC e70488938792eec301947121f1b80ad2c2919f97 0 received.[0m
 [33m[stage-30] [0m[92m[replica-2] Successfully received RDB file from master.[0m
 [33m[stage-30] [0m[36mCreating replica : 2.[0m
 [33m[stage-30] [0m[94m[replica-3] $ redis-cli PING[0m
@@ -463,7 +407,7 @@ Debug = true
 [33m[stage-30] [0m[94m[replica-3] $ redis-cli REPLCONF listening-port 6380[0m
 [33m[stage-30] [0m[92m[replica-3] OK received.[0m
 [33m[stage-30] [0m[94m[replica-3] $ redis-cli PSYNC ? -1[0m
-[33m[stage-30] [0m[92m[replica-3] FULLRESYNC ed1bd4cd012c8c3eb14f9b2371bbe2f67cd78d3f 0 received.[0m
+[33m[stage-30] [0m[92m[replica-3] FULLRESYNC e70488938792eec301947121f1b80ad2c2919f97 0 received.[0m
 [33m[stage-30] [0m[92m[replica-3] Successfully received RDB file from master.[0m
 [33m[stage-30] [0m[36mCreating replica : 3.[0m
 [33m[stage-30] [0m[94m[replica-4] $ redis-cli PING[0m
@@ -471,7 +415,7 @@ Debug = true
 [33m[stage-30] [0m[94m[replica-4] $ redis-cli REPLCONF listening-port 6380[0m
 [33m[stage-30] [0m[92m[replica-4] OK received.[0m
 [33m[stage-30] [0m[94m[replica-4] $ redis-cli PSYNC ? -1[0m
-[33m[stage-30] [0m[92m[replica-4] FULLRESYNC ed1bd4cd012c8c3eb14f9b2371bbe2f67cd78d3f 0 received.[0m
+[33m[stage-30] [0m[92m[replica-4] FULLRESYNC e70488938792eec301947121f1b80ad2c2919f97 0 received.[0m
 [33m[stage-30] [0m[92m[replica-4] Successfully received RDB file from master.[0m
 [33m[stage-30] [0m[36mCreating replica : 4.[0m
 [33m[stage-30] [0m[94m[replica-5] $ redis-cli PING[0m
@@ -479,7 +423,7 @@ Debug = true
 [33m[stage-30] [0m[94m[replica-5] $ redis-cli REPLCONF listening-port 6380[0m
 [33m[stage-30] [0m[92m[replica-5] OK received.[0m
 [33m[stage-30] [0m[94m[replica-5] $ redis-cli PSYNC ? -1[0m
-[33m[stage-30] [0m[92m[replica-5] FULLRESYNC ed1bd4cd012c8c3eb14f9b2371bbe2f67cd78d3f 0 received.[0m
+[33m[stage-30] [0m[92m[replica-5] FULLRESYNC e70488938792eec301947121f1b80ad2c2919f97 0 received.[0m
 [33m[stage-30] [0m[92m[replica-5] Successfully received RDB file from master.[0m
 [33m[stage-30] [0m[94m[client] $ redis-cli WAIT 3 500[0m
 [33m[stage-30] [0m[92m[client] 5 received.[0m
@@ -504,7 +448,7 @@ Debug = true
 [33m[stage-31] [0m[94m[replica-1] $ redis-cli REPLCONF listening-port 6380[0m
 [33m[stage-31] [0m[92m[replica-1] OK received.[0m
 [33m[stage-31] [0m[94m[replica-1] $ redis-cli PSYNC ? -1[0m
-[33m[stage-31] [0m[92m[replica-1] FULLRESYNC 7b97aa5c09039bc73ec42e2c279c4223a490ba0b 0 received.[0m
+[33m[stage-31] [0m[92m[replica-1] FULLRESYNC 0fcef38328d2e4808d46a24cbb4a2be24914affc 0 received.[0m
 [33m[stage-31] [0m[92m[replica-1] Successfully received RDB file from master.[0m
 [33m[stage-31] [0m[36mCreating replica : 2.[0m
 [33m[stage-31] [0m[94m[replica-2] $ redis-cli PING[0m
@@ -512,7 +456,7 @@ Debug = true
 [33m[stage-31] [0m[94m[replica-2] $ redis-cli REPLCONF listening-port 6380[0m
 [33m[stage-31] [0m[92m[replica-2] OK received.[0m
 [33m[stage-31] [0m[94m[replica-2] $ redis-cli PSYNC ? -1[0m
-[33m[stage-31] [0m[92m[replica-2] FULLRESYNC 7b97aa5c09039bc73ec42e2c279c4223a490ba0b 0 received.[0m
+[33m[stage-31] [0m[92m[replica-2] FULLRESYNC 0fcef38328d2e4808d46a24cbb4a2be24914affc 0 received.[0m
 [33m[stage-31] [0m[92m[replica-2] Successfully received RDB file from master.[0m
 [33m[stage-31] [0m[36mCreating replica : 3.[0m
 [33m[stage-31] [0m[94m[replica-3] $ redis-cli PING[0m
@@ -520,7 +464,7 @@ Debug = true
 [33m[stage-31] [0m[94m[replica-3] $ redis-cli REPLCONF listening-port 6380[0m
 [33m[stage-31] [0m[92m[replica-3] OK received.[0m
 [33m[stage-31] [0m[94m[replica-3] $ redis-cli PSYNC ? -1[0m
-[33m[stage-31] [0m[92m[replica-3] FULLRESYNC 7b97aa5c09039bc73ec42e2c279c4223a490ba0b 0 received.[0m
+[33m[stage-31] [0m[92m[replica-3] FULLRESYNC 0fcef38328d2e4808d46a24cbb4a2be24914affc 0 received.[0m
 [33m[stage-31] [0m[92m[replica-3] Successfully received RDB file from master.[0m
 [33m[stage-31] [0m[94m[client] $ redis-cli SET foo 123[0m
 [33m[stage-31] [0m[94m[client] $ redis-cli WAIT 1 500[0m
@@ -545,9 +489,8 @@ Debug = true
 [33m[stage-31] [0m[94m[replica-2] $ redis-cli REPLCONF ACK 159[0m
 [33m[stage-31] [0m[92m[replica-3] SET baz 789 received.[0m
 [33m[stage-31] [0m[92m[replica-3] REPLCONF GETACK * received.[0m
-[33m[stage-31] [0m[94m[replica-3] $ redis-cli REPLCONF ACK 179[0m
-[33m[stage-31] [0m[92m[client] 3 received.[0m
-[33m[stage-31] [0m[94m[client] WAIT command returned after 2018 ms[0m
+[33m[stage-31] [0m[92m[client] 2 received.[0m
+[33m[stage-31] [0m[94m[client] WAIT command returned after 2017 ms[0m
 [33m[stage-31] [0m[92mTest passed.[0m
 [33m[stage-31] [0m[36mTerminating program[0m
 [33m[stage-31] [0m[36mProgram terminated successfully[0m
@@ -570,9 +513,37 @@ Debug = true
 [33m[stage-33] [0m[36mTerminating program[0m
 [33m[stage-33] [0m[36mProgram terminated successfully[0m
 
-[33m[stage-34] [0m[94mRunning tests for Stage #34: streams-xadd-full-autoid[0m
+[33m[stage-34] [0m[94mRunning tests for Stage #34: streams-xadd-validate-id[0m
 [33m[stage-34] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[stage-34] [0m[94m$ redis-cli xadd mangos * foo bar[0m
+[33m[stage-34] [0m[94m$ redis-cli xadd mangos 1-1 map[foo:bar][0m
+[33m[stage-34] [0m[92mReceived response: "1-1"[0m
+[33m[stage-34] [0m[94m$ redis-cli xadd mangos 1-2 map[bar:baz][0m
+[33m[stage-34] [0m[92mReceived response: "1-2"[0m
+[33m[stage-34] [0m[94m$ redis-cli xadd mangos 1-2 map[baz:foo][0m
+[33m[stage-34] [0m[94m$ redis-cli xadd mangos 0-3 map[baz:foo][0m
+[33m[stage-34] [0m[94m$ redis-cli xadd mangos 0-0 map[baz:foo][0m
 [33m[stage-34] [0m[92mTest passed.[0m
 [33m[stage-34] [0m[36mTerminating program[0m
 [33m[stage-34] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-35] [0m[94mRunning tests for Stage #35: streams-xadd-partial-autoid[0m
+[33m[stage-35] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[stage-35] [0m[94m$ redis-cli xadd oranges 0-* map[foo:bar][0m
+[33m[stage-35] [0m[92mReceived response: "0-1"[0m
+[33m[stage-35] [0m[94m$ redis-cli xadd oranges 1-* map[foo:bar][0m
+[33m[stage-35] [0m[92mReceived response: "1-0"[0m
+[33m[stage-35] [0m[94m$ redis-cli xadd oranges 1-* map[bar:baz][0m
+[33m[stage-35] [0m[92mReceived response: "1-1"[0m
+[33m[stage-35] [0m[92mTest passed.[0m
+[33m[stage-35] [0m[36mTerminating program[0m
+[33m[stage-35] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-36] [0m[94mRunning tests for Stage #36: streams-xadd-full-autoid[0m
+[33m[stage-36] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[stage-36] [0m[94m$ redis-cli xadd pears * foo bar[0m
+[33m[stage-36] [0m[94mReceived response: "1708953850625-0"[0m
+[33m[stage-36] [0m[92mThe first part of the ID is a valid unix milliseconds timestamp[0m
+[33m[stage-36] [0m[92mThe second part of the ID is a valid sequence number[0m
+[33m[stage-36] [0m[92mTest passed.[0m
+[33m[stage-36] [0m[36mTerminating program[0m
+[33m[stage-36] [0m[36mProgram terminated successfully[0m
