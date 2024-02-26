@@ -157,6 +157,14 @@ var testerDefinition = testerutils.TesterDefinition{
 			TestFunc: testStreamsXaddPartialAutoid,
 		},
 		{
+			Slug:     "streams-xread",
+			TestFunc: testStreamsXread,
+		},
+		{
+			Slug:     "streams-xread-multiple",
+			TestFunc: testStreamsXreadMultiple,
+		},
+		{
 			Slug:     "streams-xread-block",
 			TestFunc: testStreamsXreadBlock,
 		},
