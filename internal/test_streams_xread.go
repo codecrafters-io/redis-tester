@@ -4,10 +4,41 @@ import (
 	"fmt"
 	"math/rand"
 	"reflect"
+	"strings"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
+	"github.com/codecrafters-io/tester-utils/logger"
 	"github.com/go-redis/redis"
 )
+
+type XREADTest struct {
+	streams          []string
+	block            *int
+	expectedResponse []redis.XStream
+	expectedError    error
+}
+
+func testXread(client *redis.Client, logger *logger.Logger, test XREADTest) error {
+	logger.Infof("$ redis-cli xread streams %s", strings.Join(test.streams, " "))
+
+	resp, err := client.XRead(&redis.XReadArgs{
+		Streams: test.streams,
+	}).Result()
+
+	if err != nil {
+		logFriendlyError(logger, err)
+		return err
+	}
+
+	if !reflect.DeepEqual(resp, test.expectedResponse) {
+		logger.Infof("Received response: \"%v\"", resp)
+		return fmt.Errorf("Expected %#v, got %#v", test.expectedResponse, resp)
+	} else {
+		logger.Successf("Received response: \"%v\"", resp)
+	}
+
+	return nil
+}
 
 func testStreamsXread(stageHarness *testerutils.StageHarness) error {
 	b := NewRedisBinary(stageHarness)
@@ -41,19 +72,6 @@ func testStreamsXread(stageHarness *testerutils.StageHarness) error {
 		expectedResponse: "0-1",
 	})
 
-	logger.Infof("$ redis-cli xread streams %s 0-0", randomKey)
-
-	resp, err := client.XRead(&redis.XReadArgs{
-		Streams: []string{randomKey, "0-0"},
-	}).Result()
-
-	if err != nil {
-		logFriendlyError(logger, err)
-		return err
-	}
-
-	logger.Infof("Received response: \"%v\"", resp)
-
 	expectedResp := []redis.XStream{
 		{
 			Stream: randomKey,
@@ -66,9 +84,10 @@ func testStreamsXread(stageHarness *testerutils.StageHarness) error {
 		},
 	}
 
-	if !reflect.DeepEqual(resp, expectedResp) {
-		return fmt.Errorf("Expected %#v, got %#v", expectedResp, resp)
-	}
+	testXread(client, logger, XREADTest{
+		streams:          []string{randomKey, "0-0"},
+		expectedResponse: expectedResp,
+	})
 
 	return nil
 }
