@@ -156,5 +156,9 @@ var testerDefinition = testerutils.TesterDefinition{
 			Slug:     "streams-xadd-partial-autoid",
 			TestFunc: testStreamsXaddPartialAutoid,
 		},
+		{
+			Slug:     "streams-xread-multiple",
+			TestFunc: testStreamsXreadMultiple,
+		},
 	},
 }
