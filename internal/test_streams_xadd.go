@@ -39,13 +39,12 @@ func testXadd(client *redis.Client, logger *logger.Logger, test XADDTest) error 
 		return err
 	}
 
-	logger.Infof("Received response: \"%s\"", resp)
-
 	if resp != test.expectedResponse {
+    logger.Infof("Received response: \"%s\"", resp)
 		return fmt.Errorf("Expected %#v, got %#v", test.expectedResponse, resp)
-	}
-
-	logger.Successf("Successfully added entry to stream")
+	} else {
+    logger.Successf("Received response: \"%s\"", resp)
+  }
 
 	return nil
 }
