@@ -26,6 +26,8 @@ func testXADD(client *redis.Client, logger *logger.Logger, test XADDTest) error 
 		Values: test.values,
 	}).Result()
 
+	logger.Infof("Received response: %s", resp)
+
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
@@ -42,6 +44,8 @@ func testXADD(client *redis.Client, logger *logger.Logger, test XADDTest) error 
 	if resp != test.expectedResponse {
 		return fmt.Errorf("Expected %#v, got %#v", test.expectedResponse, resp)
 	}
+
+	logger.Successf("Successfully added entry to stream")
 
 	return nil
 }
