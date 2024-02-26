@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"encoding/hex"
 	"fmt"
 	"io"
 	"strconv"
@@ -152,15 +153,6 @@ func decodeArray(byteStream *resp3.Reader) (Value, error) {
 	return NewArrayValue(arr), nil
 }
 
-func SendError(err error) []byte {
-	e := NewErrorValue("ERR - " + err.Error())
-	return encodeError(e)
-}
-
-func SendNil() []byte {
-	return []byte("$-1\r\n")
-}
-
 func parseRESPCommandRDB(reader *resp3.Reader) (Value, error) {
 	req, err := DecodeRDB(reader)
 	if err != nil {
@@ -175,4 +167,24 @@ func parseRESPCommand(reader *resp3.Reader) (Value, error) {
 		return Value{}, err
 	}
 	return req, nil
+}
+
+func SendError(err error) []byte {
+	e := NewErrorValue("ERR - " + err.Error())
+	return encodeError(e)
+}
+
+func SendNil() []byte {
+	return []byte("$-1\r\n")
+}
+
+func SendRDBFile() []byte {
+	hexStr := "524544495330303131fa0972656469732d76657205372e322e30fa0a72656469732d62697473c040fa056374696d65c26d08bc65fa08757365642d6d656dc2b0c41000fa08616f662d62617365c000fff06e3bfec0ff5aa2"
+	bytes, err := hex.DecodeString(hexStr)
+	if err != nil {
+		fmt.Printf("Encountered %s while deconding hex string", err.Error())
+		return SendError(err)
+	}
+	resp := []byte("$" + strconv.Itoa(len(bytes)) + "\r\n")
+	return (append(resp, bytes...))
 }
