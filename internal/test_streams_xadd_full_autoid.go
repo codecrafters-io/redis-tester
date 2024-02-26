@@ -3,7 +3,9 @@ package internal
 import (
 	"fmt"
 	"math/rand"
+	"strconv"
 	"strings"
+	"time"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
 	"github.com/go-redis/redis"
@@ -49,20 +51,30 @@ func testStreamsXaddFullAutoid(stageHarness *testerutils.StageHarness) error {
 		return err
 	}
 
+	logger.Infof("Received response: \"%s\"", resp)
+
 	parts := strings.Split(resp, "-")
 
 	if len(parts) != 2 {
-		return fmt.Errorf("Expected 2 parts, got %d", len(parts))
+		return fmt.Errorf("Expected a string in the form \"<millisecondsTime>-<sequenceNumber>\", got %s", resp)
 	}
 
-	time, sequenceNumber := parts[0], parts[1]
+	timeStr, sequenceNumber := parts[0], parts[1]
+	timeInt64, _ := strconv.ParseInt(timeStr, 10, 64)
+	now := time.Now().Unix() + 1000
 
-	if len(time) != 13 {
-		return fmt.Errorf("Expected 13 characters, got %d", len(time))
+	if len(timeStr) != 13 {
+		return fmt.Errorf("Expected the first part of the ID to be a unix timestamp (%d characters), got %d characters", len(strconv.FormatInt(now, 10)), len(timeStr))
+	} else if !(timeInt64 > 0 && timeInt64 < now) {
+		return fmt.Errorf("Expected the first part of the ID to be a valid unix timestamp, got %s", timeStr)
+	} else {
+		logger.Successf("The first part of the ID is a valid unix milliseconds timestamp")
 	}
 
 	if sequenceNumber != "0" {
-		return fmt.Errorf("Expected \"0\", got %#v", sequenceNumber)
+		return fmt.Errorf("Expected the second part of the ID to be a sequence number with a value of \"0\", got %#v", sequenceNumber)
+	} else {
+		logger.Successf("The second part of the ID is a valid sequence number")
 	}
 
 	return nil
