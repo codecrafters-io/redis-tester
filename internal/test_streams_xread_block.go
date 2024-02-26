@@ -1,9 +1,7 @@
 package internal
 
 import (
-	"fmt"
 	"math/rand"
-	"reflect"
 	"time"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
@@ -53,18 +51,6 @@ func testStreamsXreadBlock(stageHarness *testerutils.StageHarness) error {
 		})
 	}()
 
-	logger.Infof("$ redis-cli xread block 1000 streams %s 0-1", randomKey)
-
-	resp, err := client.XRead(&redis.XReadArgs{
-		Block:   1000 * time.Millisecond,
-		Streams: []string{randomKey, "0-1"},
-	}).Result()
-
-	if err != nil {
-		logFriendlyError(logger, err)
-		return err
-	}
-
 	expectedResp := []redis.XStream{
 		{
 			Stream: randomKey,
@@ -77,29 +63,26 @@ func testStreamsXreadBlock(stageHarness *testerutils.StageHarness) error {
 		},
 	}
 
-	if !reflect.DeepEqual(resp, expectedResp) {
-		logger.Infof("Received response: %#v", resp)
-		return fmt.Errorf("Expected %#v, got %#v", expectedResp, resp)
-	} else {
-		logger.Successf("Received response: %#v", resp)
-	}
+	blockDuration := 1000 * time.Millisecond
 
-	resp, err = client.XRead(&redis.XReadArgs{
-		Block:   1000 * time.Millisecond,
-		Streams: []string{randomKey, "0-2"},
-	}).Result()
+	testXread(client, logger, XREADTest{
+		streams:          []string{randomKey, "0-1"},
+		block:            &blockDuration,
+		expectedResponse: expectedResp,
+	})
 
-	if err.Error() != "redis: nil" {
-		logFriendlyError(logger, err)
-		return err
-	}
+	testXread(client, logger, XREADTest{
+		streams:          []string{randomKey, "0-1"},
+		block:            &blockDuration,
+		expectedResponse: expectedResp,
+	})
 
-	if resp != nil {
-		logger.Infof("this is a test")
-		return fmt.Errorf("Expected %#v, got %#v", []redis.XStream{}, resp)
-	} else {
-		logger.Successf("Received response: %#v", resp)
-	}
+	testXread(client, logger, XREADTest{
+		streams:          []string{randomKey, "0-2"},
+		block:            &blockDuration,
+		expectedResponse: []redis.XStream(nil),
+		expectedError:    "redis: nil",
+	})
 
 	return nil
 }

@@ -5,6 +5,7 @@ import (
 	"math/rand"
 	"reflect"
 	"strings"
+	"time"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
 	"github.com/codecrafters-io/tester-utils/logger"
@@ -13,9 +14,9 @@ import (
 
 type XREADTest struct {
 	streams          []string
-	block            *int
+	block            *time.Duration
 	expectedResponse []redis.XStream
-	expectedError    error
+	expectedError    string
 }
 
 func testXread(client *redis.Client, logger *logger.Logger, test XREADTest) error {
@@ -24,6 +25,13 @@ func testXread(client *redis.Client, logger *logger.Logger, test XREADTest) erro
 	resp, err := client.XRead(&redis.XReadArgs{
 		Streams: test.streams,
 	}).Result()
+
+	if test.expectedError != "" {
+		if err.Error() != test.expectedError {
+			logFriendlyError(logger, err)
+			return err
+		}
+	}
 
 	if err != nil {
 		logFriendlyError(logger, err)
