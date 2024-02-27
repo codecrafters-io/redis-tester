@@ -43,24 +43,12 @@ func testStreamsXrange(stageHarness *testerutils.StageHarness) error {
 	for i := 1; i <= randomNumber; i++ {
 		id := "0-" + strconv.Itoa(i)
 
-		logger.Infof("$ redis-cli xadd %s %s foo bar", randomKey, id)
-
-		resp, err := client.XAdd(&redis.XAddArgs{
-			Stream: randomKey,
-			ID:     id,
-			Values: map[string]interface{}{
-				"foo": "bar",
-			},
-		}).Result()
-
-		if err != nil {
-			logFriendlyError(logger, err)
-			return err
-		}
-
-		if resp != id {
-			return fmt.Errorf("Expected \"%s\", got %#v", id, resp)
-		}
+		testXadd(client, logger, XADDTest{
+			streamKey:        randomKey,
+			id:               id,
+			values:           map[string]interface{}{"foo": "bar"},
+			expectedResponse: id,
+		})
 
 		expected = append(expected, redis.XMessage{
 			ID: id,
@@ -71,9 +59,10 @@ func testStreamsXrange(stageHarness *testerutils.StageHarness) error {
 	}
 
 	maxId := "0-" + strconv.Itoa(randomNumber)
+	expected = expected[1:]
 
-	logger.Infof("$ redis-cli xrange %s 0-1 %s", randomKey, maxId)
-	resp, err := client.XRange(randomKey, "0-1", maxId).Result()
+	logger.Infof("$ redis-cli xrange %s 0-2 %s", randomKey, maxId)
+	resp, err := client.XRange(randomKey, "0-2", maxId).Result()
 
 	if err != nil {
 		logFriendlyError(logger, err)
@@ -81,7 +70,10 @@ func testStreamsXrange(stageHarness *testerutils.StageHarness) error {
 	}
 
 	if !reflect.DeepEqual(resp, expected) {
+		logger.Infof("Received response: \"%s\"", resp)
 		return fmt.Errorf("Expected %#v, got %#v", expected, resp)
+	} else {
+		logger.Successf("Received response: \"%s\"", resp)
 	}
 
 	return nil
