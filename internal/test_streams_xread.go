@@ -20,11 +20,23 @@ type XREADTest struct {
 }
 
 func testXread(client *redis.Client, logger *logger.Logger, test XREADTest) error {
-	logger.Infof("$ redis-cli xread streams %s", strings.Join(test.streams, " "))
+	var resp []redis.XStream
+	var err error
 
-	resp, err := client.XRead(&redis.XReadArgs{
-		Streams: test.streams,
-	}).Result()
+	if test.block == nil {
+		logger.Infof("$ redis-cli xread streams %s", strings.Join(test.streams, " "))
+
+		resp, err = client.XRead(&redis.XReadArgs{
+			Streams: test.streams,
+		}).Result()
+	} else {
+		logger.Infof("$ redis-cli block %v xread streams %s", test.block, strings.Join(test.streams, " "))
+
+		resp, err = client.XRead(&redis.XReadArgs{
+			Streams: test.streams,
+			Block:   *test.block,
+		}).Result()
+	}
 
 	if test.expectedError != "" {
 		if err.Error() != test.expectedError {
