@@ -170,7 +170,7 @@ var testerDefinition = testerutils.TesterDefinition{
 		},
 		{
 			Slug:     "streams-xread-block-no-timeout",
-			TestFunc: testStreamsXreadBlock,
+			TestFunc: testStreamsXreadBlockNoTimeout,
 		},
 	},
 }

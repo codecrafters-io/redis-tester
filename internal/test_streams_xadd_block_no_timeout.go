@@ -2,6 +2,7 @@ package internal
 
 import (
 	"math/rand"
+	"sync"
 	"time"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
@@ -40,6 +41,9 @@ func testStreamsXreadBlockNoTimeout(stageHarness *testerutils.StageHarness) erro
 		expectedResponse: "0-1",
 	})
 
+	var wg sync.WaitGroup
+	wg.Add(1)
+
 	blockDuration := 0 * time.Millisecond
 
 	expectedResp := []redis.XStream{
@@ -55,6 +59,8 @@ func testStreamsXreadBlockNoTimeout(stageHarness *testerutils.StageHarness) erro
 	}
 
 	go func() {
+		defer wg.Done()
+
 		testXread(client, logger, XREADTest{
 			streams:          []string{randomKey, "0-1"},
 			block:            &blockDuration,
@@ -62,11 +68,15 @@ func testStreamsXreadBlockNoTimeout(stageHarness *testerutils.StageHarness) erro
 		})
 	}()
 
+	time.Sleep(1000 * time.Millisecond)
+
 	testXadd(client, logger, XADDTest{
 		streamKey:        randomKey,
 		id:               "0-2",
 		values:           map[string]interface{}{"bar": "baz"},
 		expectedResponse: "0-2",
 	})
+
+	wg.Wait()
 	return nil
 }

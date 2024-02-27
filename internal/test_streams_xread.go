@@ -22,9 +22,19 @@ type XREADTest struct {
 func testXread(client *redis.Client, logger *logger.Logger, test XREADTest) error {
 	logger.Infof("$ redis-cli xread streams %s", strings.Join(test.streams, " "))
 
-	resp, err := client.XRead(&redis.XReadArgs{
-		Streams: test.streams,
-	}).Result()
+	var resp []redis.XStream
+	var err error
+
+	if test.block == nil {
+		resp, err = client.XRead(&redis.XReadArgs{
+			Streams: test.streams,
+		}).Result()
+	} else {
+		resp, err = client.XRead(&redis.XReadArgs{
+			Streams: test.streams,
+			Block:   *test.block,
+		}).Result()
+	}
 
 	if test.expectedError != "" {
 		if err.Error() != test.expectedError {
