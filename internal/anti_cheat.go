@@ -23,7 +23,7 @@ func antiCheatTest(stageHarness *testerutils.StageHarness) error {
 	}
 	defer conn.Close()
 
-	if err := conn.SetReadDeadline(time.Now().Add(2 * time.Second)); err != nil {
+	if err := conn.SetReadDeadline(time.Now().Add(100 * time.Millisecond)); err != nil {
 		return fmt.Errorf("Error setting read deadline: %w", err)
 	}
 
@@ -40,24 +40,11 @@ func antiCheatTest(stageHarness *testerutils.StageHarness) error {
 		return nil
 	}
 
-	if messageDetected(actualMessage) {
-		logger.Criticalf("anti-cheat (ac1) failed.")
-		logger.Criticalf("Are you sure you aren't running this against the actual Redis?")
-		return fmt.Errorf("anti-cheat (ac1) failed")
+	if !strings.Contains(actualMessage, "memory") {
+		return nil
 	}
-	return nil
-}
 
-func messageDetected(actualMessage string) bool {
-	var possibleMessages = []string{
-		"Hi Sam, I can't find any memory issue in your instance.",
-		"Hi Sam, this instance is empty or is using very little memory",
-		"Sam, I detected a few issues in this Redis instance memory implants",
-	}
-	for _, message := range possibleMessages {
-		if strings.Contains(actualMessage, message) {
-			return true
-		}
-	}
-	return false
+	logger.Criticalf("anti-cheat (ac1) failed.")
+	logger.Criticalf("Are you sure you aren't running this against the actual Redis?")
+	return fmt.Errorf("anti-cheat (ac1) failed")
 }
