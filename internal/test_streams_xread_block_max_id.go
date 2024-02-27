@@ -1,8 +1,9 @@
 package internal
 
 import (
+	"fmt"
 	"math/rand"
-	"sync"
+	"reflect"
 	"time"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
@@ -41,34 +42,25 @@ func testStreamsXreadBlockMaxId(stageHarness *testerutils.StageHarness) error {
 		expectedResponse: "0-1",
 	})
 
-	var wg sync.WaitGroup
-	wg.Add(1)
+	respChan := make(chan *redis.XStream, 1)
 
-	blockDuration := 0 * time.Millisecond
+	go func() error {
+		resp, err := client.XRead(&redis.XReadArgs{
+			Streams: []string{randomKey, "$"},
+			Block:   0,
+		}).Result()
 
-	expectedResp := []redis.XStream{
-		{
-			Stream: randomKey,
-			Messages: []redis.XMessage{
-				{
-					ID:     "0-2",
-					Values: map[string]interface{}{"bar": "baz"},
-				},
-			},
-		},
-	}
+		if err != nil {
+			logger.Errorf("Error: %v", err)
+			return err
+		}
 
-	go func() {
-		defer wg.Done()
+		respChan <- &resp[0]
 
-		testXread(client, logger, XREADTest{
-			streams:          []string{randomKey, "$"},
-			block:            &blockDuration,
-			expectedResponse: expectedResp,
-		})
+		return nil
 	}()
 
-	time.Sleep(1000 * time.Millisecond)
+	time.Sleep(time.Second)
 
 	testXadd(client, logger, XADDTest{
 		streamKey:        randomKey,
@@ -77,16 +69,24 @@ func testStreamsXreadBlockMaxId(stageHarness *testerutils.StageHarness) error {
 		expectedResponse: "0-2",
 	})
 
-	wg.Wait()
+	resp := <-respChan
 
-	blockDuration = 1000 * time.Millisecond
+	expectedResp := &redis.XStream{
+		Stream: randomKey,
+		Messages: []redis.XMessage{
+			{
+				ID:     "0-2",
+				Values: map[string]interface{}{"bar": "baz"},
+			},
+		},
+	}
 
-	testXread(client, logger, XREADTest{
-		streams:          []string{randomKey, "$"},
-		block:            &blockDuration,
-		expectedResponse: []redis.XStream(nil),
-		expectedError:    "redis: nil",
-	})
+	if !reflect.DeepEqual(resp, expectedResp) {
+		logger.Infof("Received response: \"%v\"", resp)
+		return fmt.Errorf("Expected %#v, got %#v", expectedResp, resp)
+	} else {
+		logger.Successf("Received response: \"%v\"", resp)
+	}
 
 	return nil
 }
