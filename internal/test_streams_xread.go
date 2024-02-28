@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"encoding/json"
 	"fmt"
 	"math/rand"
 	"reflect"
@@ -30,11 +31,25 @@ func (t *XREADTest) Run(client *redis.Client, logger *logger.Logger) error {
 		return err
 	}
 
+	expectedRespJson, err := json.MarshalIndent(t.expectedResponse, "", "  ")
+
+	if err != nil {
+		logFriendlyError(logger, err)
+		return err
+	}
+
+	respJson, err := json.MarshalIndent(resp, "", "  ")
+
+	if err != nil {
+		logFriendlyError(logger, err)
+		return err
+	}
+
 	if !reflect.DeepEqual(resp, t.expectedResponse) {
-		logger.Infof("Received response: \"%v\"", resp)
-		return fmt.Errorf("Expected %#v, got %#v", t.expectedResponse, resp)
+		logger.Infof("Received response: \"%v\"", string(respJson))
+		return fmt.Errorf("Expected %#v, got %#v", string(expectedRespJson), string(respJson))
 	} else {
-		logger.Successf("Received response: \"%v\"", resp)
+		logger.Successf("Received response: \"%v\"", string(respJson))
 	}
 
 	return nil
