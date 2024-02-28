@@ -1,9 +1,8 @@
 package internal
 
 import (
-	"math/rand"
-
 	testerutils "github.com/codecrafters-io/tester-utils"
+	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 )
 
 func testStreamsXaddValidateId(stageHarness *testerutils.StageHarness) error {
@@ -13,23 +12,9 @@ func testStreamsXaddValidateId(stageHarness *testerutils.StageHarness) error {
 	}
 
 	logger := stageHarness.Logger
-
 	client := NewRedisClient("localhost:6379")
 
-	strings := [10]string{
-		"hello",
-		"world",
-		"mangos",
-		"apples",
-		"oranges",
-		"watermelons",
-		"grapes",
-		"pears",
-		"horses",
-		"elephants",
-	}
-
-	randomKey := strings[rand.Intn(10)]
+	randomKey := testerutils_random.RandomWord()
 
 	tests := []XADDTest{
 		{streamKey: randomKey, id: "1-1", values: map[string]interface{}{"foo": "bar"}, expectedResponse: "1-1", expectedError: ""},

@@ -1631,6 +1631,357 @@ stages:
     marketing_md: |
       In this stage, you'll enhance the `XADD` command by adding the option to use * as the sequence number.
 
+  - slug: "streams-xadd-full-autoid"
+    primary_extension_slug: "streams"
+    name: "Full auto-generated IDs"
+    difficulty: easy
+    description_md: |
+      In this stage, you'll enhance the `XADD` command by adding the option to use `*` as the entry ID.
+
+      ### Specifying entry IDs in `XADD` (Continued)
+
+      As a recap, there are multiple formats in which the ID can be specified in the `XADD` command:
+      - Explicit ("1526919030474-0") (Previous stages)
+      - Auto-generate only sequence number ("1526919030473-*") (Previous stages)
+      - Auto-generate time part and sequence number ("*") (This stage)
+
+      We'll now handle the third case.
+
+      When `*` is used with the `XADD` command, Redis takes care of generating a unique incrementing ID for the message being appended to the stream.
+
+      Redis defaults to using the current unix time in milliseconds and 0 for the sequence number. If the time already exists in the stream, the sequence number for that record incremented by one will be used.
+
+      ### Tests
+
+      The tester will execute your program like this:
+
+      ```bash
+      $ ./spawn_redis_server.sh
+      ```
+
+      It'll create an entry with `*` as the ID.
+
+      ```bash
+      $ redis-cli xadd stream_key * foo bar
+      ```
+
+      Your server should respond with `$13\r\n<milliseconds>-0\r\n`, which is `<milliseconds>-0` encoded as a RESP bulk string.
+    marketing_md: |
+      In this stage, you'll enhance the `XADD` command by adding the option to use `*` as the entry ID.
+
+  - slug: "streams-xrange"
+    primary_extension_slug: "streams"
+    name: "Query entries from stream"
+    difficulty: medium
+    description_md: |
+      In this stage, you'll add support for querying data from a stream using the `XRANGE` command.
+
+      ### The XRANGE command
+
+      `XRANGE` is the command is used for retrieving a range of entries from a stream within defined start and end IDs.
+
+      Here's how it works:
+      We'll use our previous example for entries existing in a stream.
+
+      ```bash
+      - 1526985054069-0 # (ID of the first entry)
+        temperature: 36 # (A key value pair in the first entry)
+        humidity: 95 # (Another key value pair in the first entry)
+
+      - 1526985054079-0 # (ID of the second entry)
+        temperature: 37 # (A key value pair in the first entry)
+        humidity: 94 # (Another key value pair in the first entry)
+
+      # ... (and so on)
+      ```
+
+      This is what the command looks like:
+
+      ```bash
+      $ redis-cli xadd some_key 1526985054069-0 temperature 36 humidity 95
+      "1526985054069-0"
+      $ redis-cli xadd some_key 1526985054079-0 temperature 37 humidity 94
+      "1526985054079-0"
+      $ redis-cli xrange some_key 1526985054069 1526985054079
+      1) 1) 1526985054069-0
+        2) 1) temperature
+            2) 36
+            3) humidity
+            4) 95
+      2) 1) 1526985054079-0
+        2) 1) temperature
+            2) 37
+            3) humidity
+            4) 94
+      ```
+
+      The sequence number doesn't need to be included in the start and end IDs provided to the command. If not provided, the it defaults to a sequence number of 0 for the start and the maximum sequence number for the end.
+
+      The start and end IDs are inclusive, which means that the response includes entries with IDs matching both the start and end. The only way to get a single value from a stream is through the `XRANGE` command with the same value for the start and end IDs.
+
+      The return value of the command is not exactly what is shown in the example above. This is already formatted by the CLI. What is instead returned is actually a [list](https://redis.io/docs/reference/protocol-spec/#arrays) of an array of two items. The items being the ID and a list of key value pairs.
+
+      The return value of the example above is actually something like this:
+
+      ```bash
+      [
+        [
+          "1526985054069-0",
+          [
+            "temperature",
+            "36",
+            "humidity",
+            "95"
+          ]
+        ],
+        [
+          "1526985054079-0",
+          [
+            "temperature",
+            "37",
+            "humidity",
+            "94"
+          ]
+        ],
+      ]
+      ```
+
+      When encoded as a RESP list, it looks like this:
+
+      ```bash
+      *2\r\n
+      *2\r\n
+      $15\r\n1526985054069-0\r\n
+      *4\r\n
+      $11\r\ntemperature\r\n
+      $2\r\n36\r\n
+      $8\r\nhumidity\r\n
+      $2\r\n95\r\n
+      $15\r\n1526985054079-0\r\n
+      *4\r\n
+      $11\r\ntemperature\r\n
+      $2\r\n37\r\n
+      $8\r\nhumidity\r\n
+      $2\r\n94\r\n
+      ```
+
+      The lines are separated into new lines for readability. The return value is just one value.
+
+      ### Tests
+
+      The tester will execute your program like this:
+
+      ```bash
+      $ ./spawn_redis_server.sh
+      ```
+
+      First, it'll add a few entries.
+
+      ```bash
+      $ redis-cli xadd stream_key 0-1 foo bar
+      $ redis-cli xadd stream_key 0-2 bar baz
+      $ redis-cli xadd stream_key 0-3 baz foo
+      ```
+
+      Then, it'll send an `XRANGE` command to your server.
+
+      ```bash
+      $ redis-cli xrange stream_key 0-2 0-3
+      ```
+
+      Your server should respond with the following:
+
+      ```bash
+      *2\r\n
+      *2\r\n
+      $3\r\n0-2\r\n
+      *2\r\n
+      $3\r\nbar\r\n
+      $3\r\nbaz\r\n
+      *2\r\n
+      $3\r\n0-3\r\n
+      *2\r\n
+      $3\r\nbaz\r\n
+      $3\r\nfoo\r\n
+      ```
+
+      This is the RESP encoded representation of `[["0-2", ["bar", "baz"]], ["0-3", ["baz", "foo"]]]`. 
+
+      ### Notes
+      - In the response, the items are separated onto new lines for readability. The tester expects all of these to be in one line.
+    marketing_md: |
+      In this stage, you'll add support for querying data from a stream using the `XRANGE` command.
+
+  - slug: "streams-xrange-min-id"
+    primary_extension_slug: "streams"
+    name: "Query with -"
+    difficulty: easy
+    description_md: |
+      In this stage, you'll extend support for `XRANGE` to allow querying using `-`.
+
+      ### Using XRANGE with -
+      
+      In the previous stage, we saw that `XRANGE` takes `start` and `end` as arguments.
+
+      In addition to accepting an explicit entry ID, `start` can also be specified as `-`. When `-` is used, `XRANGE` retrieves entries from the beginning of the stream.
+
+      Here's an example of how that works:
+      We'll use our previous example for entries existing in a stream.
+
+      ```bash
+      - 1526985054069-0 # (ID of the first entry)
+        temperature: 36 # (A key value pair in the first entry)
+        humidity: 95 # (Another key value pair in the first entry)
+
+      - 1526985054079-0 # (ID of the second entry)
+        temperature: 37 # (A key value pair in the first entry)
+        humidity: 94 # (Another key value pair in the first entry)
+
+      # ... (and so on)
+      ```
+
+      ```bash
+      $ redis-cli xadd some_key 1526985054069-0 temperature 36 humidity 95
+      "1526985054069-0"
+      $ redis-cli xadd some_key 1526985054079-0 temperature 37 humidity 94
+      "1526985054079-0"
+      $ redis-cli xrange some_key - 1526985054079
+      1) 1) 1526985054069-0
+        2) 1) temperature
+            2) 36
+            3) humidity
+            4) 95
+      2) 1) 1526985054079-0
+        2) 1) temperature
+            2) 37
+            3) humidity
+            4) 94
+      ```
+
+      ### Tests
+
+      The tester will execute your program like this:
+
+      ```bash
+      $ ./spawn_redis_server.sh
+      ```
+
+      It'll then create a few entries.
+
+      ```bash
+      $ redis-cli xadd stream_key 0-1 foo bar
+      $ redis-cli xadd stream_key 0-2 bar baz
+      $ redis-cli xadd stream_key 0-3 baz foo
+      ```
+
+      It'll then send an `XRANGE` command to your server.
+
+      ```bash
+      $ redis-cli xrange stream_key - 0-2
+      ```
+
+      Your server should respond with the following:
+
+      ```bash
+      *2\r\n
+      *2\r\n
+      $3\r\n0-1\r\n
+      *2\r\n
+      $3\r\nfoo\r\n
+      $3\r\nbar\r\n
+      *2\r\n
+      $3\r\n0-2\r\n
+      *2\r\n
+      $3\r\nbar\r\n
+      $3\r\nbaz\r\n
+      ```
+
+      This is the RESP encoded representation of `[["0-1", ["foo", "bar"]], ["0-2", ["bar", "baz"]]]`.
+
+      ### Notes
+      - In the response, the items are separated onto new lines for readability. The tester expects all of these to be in one line.
+    marketing_md: |
+      In this stage, you'll extend support for `XRANGE` to allow querying using `-`.
+
+  - slug: "streams-xrange-max-id"
+    primary_extension_slug: "streams"
+    name: "Query with +"
+    difficulty: easy
+    description_md: |
+      In this stage, you'll extend support for `XRANGE` to allow querying using `+`.
+
+      ### Using XRANGE with +
+      
+      In the previous stage, we saw that `XRANGE` takes `start` and `end` as arguments.
+
+      In addition to accepting an explicit entry ID, `end` can also be specified as `+`. When `+` is used, `XRANGE` retrieves entries until the end of the stream.
+
+      Here's an example of how that works:
+      We'll use our previous example for entries existing in a stream.
+
+      ```bash
+      $ redis-cli xadd some_key 1526985054069-0 temperature 36 humidity 95
+      "1526985054069-0"
+      $ redis-cli xadd some_key 1526985054079-0 temperature 37 humidity 94
+      "1526985054079-0"
+      $ redis-cli xrange some_key 1526985054069 +
+      1) 1) 1526985054069-0
+        2) 1) temperature
+            2) 36
+            3) humidity
+            4) 95
+      2) 1) 1526985054079-0
+        2) 1) temperature
+            2) 37
+            3) humidity
+            4) 94
+      ```
+
+      ### Tests
+
+      The tester will execute your program like this:
+
+      ```bash
+      $ ./spawn_redis_server.sh
+      ```
+
+      It'll then create a few entries.
+
+      ```bash
+      $ redis-cli xadd stream_key 0-1 foo bar
+      $ redis-cli xadd stream_key 0-2 bar baz
+      $ redis-cli xadd stream_key 0-3 baz foo
+      ```
+
+      It'll then send an `XRANGE` command to your server.
+
+      ```bash
+      $ redis-cli xrange stream_key 0-2 +
+      ```
+
+      Your server should respond with the following:
+
+      ```bash
+      *2\r\n
+      *2\r\n
+      $3\r\n0-2\r\n
+      *2\r\n
+      $3\r\nbar\r\n
+      $3\r\nbaz\r\n
+      *2\r\n
+      $3\r\n0-3\r\n
+      *2\r\n
+      $3\r\nbaz\r\n
+      $3\r\nfoo\r\n
+      ```
+
+      This is the RESP encoded representation of [["0-2", ["bar", "baz"]], ["0-3", ["baz", "foo"]]].
+
+      ### Notes
+      - In the response, the items are separated onto new lines for readability. The tester expects all of these to be in one line.
+    marketing_md: |
+      In this stage, you'll extend support for `XRANGE` to allow querying using `+`.
+
   - slug: "streams-xread"
     primary_extension_slug: "streams"
     name: "Query single stream using XREAD"
@@ -1723,7 +2074,7 @@ stages:
       First, an entry will be added.
 
       ```bash
-      $ redis-cli xadd stream_key 0-1 foo bar
+      $ redis-cli xadd stream_key 0-1 temperature 96
       ```
 
       It'll then send an `XREAD` command to your server.
@@ -1741,11 +2092,11 @@ stages:
       *2\r\n
       $3\r\n0-1\r\n
       *2\r\n
-      $3\r\nfoo\r\n
-      $3\r\nbar\r\n
+      $11\r\ntemperature\r\n
+      $2\r\n96\r\n
       ```
 
-      This is the RESP encoded representation of `{ "stream_key": [["0-1", ["foo", "bar"]]] }`.
+      This is the RESP encoded representation of `{ "stream_key": [["0-1", ["temperature", "96"]]] }`.
 
       ### Notes
       - In the response, the items are separated onto new lines for readability. The tester expects all of these to be in one line.
@@ -1770,8 +2121,8 @@ stages:
       First, an entry will be added to a couple of streams.
 
       ```bash
-      $ redis-cli xadd stream_key 0-1 foo bar
-      $ redis-cli xadd other_stream_key 0-2 bar baz
+      $ redis-cli xadd stream_key 0-1 temperature 95
+      $ redis-cli xadd other_stream_key 0-2 humidity 97
       ```
 
       It'll then send an `XREAD` command to your server with multiple streams.
@@ -1788,14 +2139,14 @@ stages:
       *2\r\n
       $3\r\n0-1\r\n
       *2\r\n
-      $3\r\nfoo\r\n
-      $3\r\nbar\r\n
+      $11\r\ntemperature\r\n
+      $2\r\n95\r\n
       $14\r\nother_stream_key\r\n
       *2\r\n
       $3\r\n0-2\r\n
       *2\r\n
-      $3\r\nbar\r\n
-      $3\r\nbaz\r\n
+      $8\r\nhumidity\r\n
+      $2\r\n97\r\n
       ```
 
       This is the RESP encoded representation of `{ "stream_key": [["0-1", ["foo", "bar"]]], "other_stream_key": [["0-2", ["bar", "baz"]]] }`.

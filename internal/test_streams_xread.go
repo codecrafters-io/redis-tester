@@ -1,14 +1,15 @@
 package internal
 
 import (
+	"encoding/json"
 	"fmt"
-	"math/rand"
 	"reflect"
 	"strings"
 	"time"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
 	"github.com/codecrafters-io/tester-utils/logger"
+	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/go-redis/redis"
 )
 
@@ -19,29 +20,33 @@ type XREADTest struct {
 	expectedError    string
 }
 
-func testXread(client *redis.Client, logger *logger.Logger, test XREADTest) error {
+func (t *XREADTest) Run(client *redis.Client, logger *logger.Logger) error {
 	var resp []redis.XStream
 	var err error
 
-	if test.block == nil {
-		logger.Infof("$ redis-cli xread streams %s", strings.Join(test.streams, " "))
+	if t.block == nil {
+		logger.Infof("$ redis-cli xread streams %s", strings.Join(t.streams, " "))
 
 		resp, err = client.XRead(&redis.XReadArgs{
-			Streams: test.streams,
+			Streams: t.streams,
 		}).Result()
 	} else {
-		logger.Infof("$ redis-cli block %v xread streams %s", test.block, strings.Join(test.streams, " "))
+		logger.Infof("$ redis-cli block %v xread streams %s", t.block.Milliseconds(), strings.Join(t.streams, " "))
 
 		resp, err = client.XRead(&redis.XReadArgs{
-			Streams: test.streams,
-			Block:   *test.block,
+			Streams: t.streams,
+			Block:   *t.block,
 		}).Result()
 	}
 
-	if test.expectedError != "" {
-		if err.Error() != test.expectedError {
+	if t.expectedError != "" {
+		if err.Error() != t.expectedError {
 			logFriendlyError(logger, err)
 			return err
+		} else {
+			logFriendlyError(logger, err)
+			logger.Successf("Received error: \"%v\"", err.Error())
+			return nil
 		}
 	}
 
@@ -50,11 +55,25 @@ func testXread(client *redis.Client, logger *logger.Logger, test XREADTest) erro
 		return err
 	}
 
-	if !reflect.DeepEqual(resp, test.expectedResponse) {
-		logger.Infof("Received response: \"%v\"", resp)
-		return fmt.Errorf("Expected %#v, got %#v", test.expectedResponse, resp)
+	expectedRespJson, err := json.MarshalIndent(t.expectedResponse, "", "  ")
+
+	if err != nil {
+		logFriendlyError(logger, err)
+		return err
+	}
+
+	respJson, err := json.MarshalIndent(resp, "", "  ")
+
+	if err != nil {
+		logFriendlyError(logger, err)
+		return err
+	}
+
+	if !reflect.DeepEqual(resp, t.expectedResponse) {
+		logger.Infof("Received response: \"%v\"", string(respJson))
+		return fmt.Errorf("Expected %#v, got %#v", string(expectedRespJson), string(respJson))
 	} else {
-		logger.Successf("Received response: \"%v\"", resp)
+		logger.Successf("Received response: \"%v\"", string(respJson))
 	}
 
 	return nil
@@ -67,28 +86,15 @@ func testStreamsXread(stageHarness *testerutils.StageHarness) error {
 	}
 
 	logger := stageHarness.Logger
-
 	client := NewRedisClient("localhost:6379")
 
-	strings := [10]string{
-		"hello",
-		"world",
-		"mangos",
-		"apples",
-		"oranges",
-		"watermelons",
-		"grapes",
-		"pears",
-		"horses",
-		"elephants",
-	}
-
-	randomKey := strings[rand.Intn(10)]
+	randomKey := testerutils_random.RandomWord()
+	randomInt := testerutils_random.RandomInt(1, 100)
 
 	testXadd(client, logger, XADDTest{
 		streamKey:        randomKey,
 		id:               "0-1",
-		values:           map[string]interface{}{"foo": "bar"},
+		values:           map[string]interface{}{"temperature": randomInt},
 		expectedResponse: "0-1",
 	})
 
@@ -98,16 +104,16 @@ func testStreamsXread(stageHarness *testerutils.StageHarness) error {
 			Messages: []redis.XMessage{
 				{
 					ID:     "0-1",
-					Values: map[string]interface{}{"foo": "bar"},
+					Values: map[string]interface{}{"temperature": randomInt},
 				},
 			},
 		},
 	}
 
-	testXread(client, logger, XREADTest{
+	(&XREADTest{
 		streams:          []string{randomKey, "0-0"},
 		expectedResponse: expectedResp,
-	})
+	}).Run(client, logger)
 
 	return nil
 }
