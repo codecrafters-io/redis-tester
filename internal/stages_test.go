@@ -76,7 +76,7 @@ func TestStages(t *testing.T) {
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 		"streams_pass": {
-			UntilStageSlug:      "streams-xread-multiple",
+			UntilStageSlug:      "streams-xread-block-max-id",
 			CodePath:            "./test_helpers/pass_all",
 			ExpectedExitCode:    0,
 			StdoutFixturePath:   "./test_helpers/fixtures/streams/pass",

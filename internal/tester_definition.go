@@ -180,5 +180,17 @@ var testerDefinition = testerutils.TesterDefinition{
 			Slug:     "streams-xread-multiple",
 			TestFunc: testStreamsXreadMultiple,
 		},
+		{
+			Slug:     "streams-xread-block",
+			TestFunc: testStreamsXreadBlock,
+		},
+		{
+			Slug:     "streams-xread-block-no-timeout",
+			TestFunc: testStreamsXreadBlockNoTimeout,
+		},
+		{
+			Slug:     "streams-xread-block-max-id",
+			TestFunc: testStreamsXreadBlockMaxId,
+		},
 	},
 }

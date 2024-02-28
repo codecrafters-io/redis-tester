@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"reflect"
 	"strings"
+	"time"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
 	"github.com/codecrafters-io/tester-utils/logger"
@@ -14,17 +15,28 @@ import (
 
 type XREADTest struct {
 	streams          []string
-	block            *int
+	block            *time.Duration
 	expectedResponse []redis.XStream
-	expectedError    error
 }
 
 func (t *XREADTest) Run(client *redis.Client, logger *logger.Logger) error {
-	logger.Infof("$ redis-cli xread streams %s", strings.Join(t.streams, " "))
+	var resp []redis.XStream
+	var err error
 
-	resp, err := client.XRead(&redis.XReadArgs{
-		Streams: t.streams,
-	}).Result()
+	if t.block == nil {
+		logger.Infof("$ redis-cli xread streams %s", strings.Join(t.streams, " "))
+
+		resp, err = client.XRead(&redis.XReadArgs{
+			Streams: t.streams,
+		}).Result()
+	} else {
+		logger.Infof("$ redis-cli xread block %v streams %s", t.block.Milliseconds(), strings.Join(t.streams, " "))
+
+		resp, err = client.XRead(&redis.XReadArgs{
+			Streams: t.streams,
+			Block:   *t.block,
+		}).Result()
+	}
 
 	if err != nil {
 		logFriendlyError(logger, err)
