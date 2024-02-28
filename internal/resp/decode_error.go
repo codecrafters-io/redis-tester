@@ -31,10 +31,14 @@ func getReaderOffset(reader *bytes.Reader) int {
 }
 
 func readBytesFromReader(reader *bytes.Reader) []byte {
+	previousOffset := getReaderOffset(reader)
+	defer reader.Seek(int64(previousOffset), 0)
+
 	reader.Seek(0, 0)
 	bytes := make([]byte, reader.Len())
 
 	if reader.Len() == 0 {
+
 		return bytes
 	}
 

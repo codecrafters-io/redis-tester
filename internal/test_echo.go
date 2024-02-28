@@ -1,8 +1,10 @@
 package internal
 
 import (
-	"fmt"
-	"math/rand"
+	"github.com/codecrafters-io/redis-tester/internal/command_test"
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_redis_client"
+	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+	"github.com/codecrafters-io/tester-utils/random"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
 )
@@ -16,32 +18,22 @@ func testEcho(stageHarness *testerutils.StageHarness) error {
 
 	logger := stageHarness.Logger
 
-	client := NewRedisClient("localhost:6379")
-
-	strings := [10]string{
-		"hello",
-		"world",
-		"mangos",
-		"apples",
-		"oranges",
-		"watermelons",
-		"grapes",
-		"pears",
-		"horses",
-		"elephants",
-	}
-
-	randomString := strings[rand.Intn(10)]
-	logger.Debugf("Sending command: echo %s", randomString)
-	resp, err := client.Echo(randomString).Result()
+	client, err := instrumented_redis_client.NewInstrumentedRedisClient(stageHarness, "localhost:6379", "")
 	if err != nil {
-		logger.Errorf(err.Error())
-		logFriendlyError(logger, err)
 		return err
 	}
 
-	if resp != randomString {
-		return fmt.Errorf("Expected %#v, got %#v", randomString, resp)
+	randomWord := random.RandomWord()
+
+	commandTestCase := command_test.CommandTestCase{
+		Command:   "echo",
+		Args:      []string{randomWord},
+		Assertion: resp_assertions.NewStringValueAssertion(randomWord),
+	}
+
+	if err := commandTestCase.Run(client, logger); err != nil {
+		logFriendlyError(logger, err)
+		return err
 	}
 
 	client.Close()
