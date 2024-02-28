@@ -1,9 +1,8 @@
 package internal
 
 import (
-	"math/rand"
-
 	testerutils "github.com/codecrafters-io/tester-utils"
+	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/go-redis/redis"
 )
 
@@ -14,37 +13,10 @@ func testStreamsXreadMultiple(stageHarness *testerutils.StageHarness) error {
 	}
 
 	logger := stageHarness.Logger
-
 	client := NewRedisClient("localhost:6379")
 
-	strings := [10]string{
-		"hello",
-		"world",
-		"mangos",
-		"apples",
-		"oranges",
-		"watermelons",
-		"grapes",
-		"pears",
-		"horses",
-		"elephants",
-	}
-
-	otherStrings := [10]string{
-		"bananas",
-		"kiwis",
-		"cherries",
-		"strawberries",
-		"blueberries",
-		"raspberries",
-		"pineapples",
-		"coconuts",
-		"peaches",
-		"plums",
-	}
-
-	randomKey := strings[rand.Intn(10)]
-	otherRandomKey := otherStrings[rand.Intn(10)]
+	randomKey := testerutils_random.RandomWord()
+	otherRandomKey := testerutils_random.RandomWord()
 
 	testXadd(client, logger, XADDTest{
 		streamKey:        randomKey,
@@ -81,10 +53,10 @@ func testStreamsXreadMultiple(stageHarness *testerutils.StageHarness) error {
 		},
 	}
 
-	testXread(client, logger, XREADTest{
+	(&XREADTest{
 		streams:          []string{randomKey, otherRandomKey, "0-0", "0-1"},
 		expectedResponse: expectedResp,
-	})
+	}).Run(client, logger)
 
 	return nil
 }
