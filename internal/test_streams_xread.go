@@ -31,7 +31,7 @@ func (t *XREADTest) Run(client *redis.Client, logger *logger.Logger) error {
 			Streams: t.streams,
 		}).Result()
 	} else {
-		logger.Infof("$ redis-cli block %v xread streams %s", t.block.Milliseconds(), strings.Join(t.streams, " "))
+		logger.Infof("$ redis-cli xread block %v streams %s", t.block.Milliseconds(), strings.Join(t.streams, " "))
 
 		resp, err = client.XRead(&redis.XReadArgs{
 			Streams: t.streams,
