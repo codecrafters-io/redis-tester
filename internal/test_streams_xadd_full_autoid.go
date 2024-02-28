@@ -2,12 +2,12 @@ package internal
 
 import (
 	"fmt"
-	"math/rand"
 	"strconv"
 	"strings"
 	"time"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
+	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/go-redis/redis"
 )
 
@@ -18,23 +18,9 @@ func testStreamsXaddFullAutoid(stageHarness *testerutils.StageHarness) error {
 	}
 
 	logger := stageHarness.Logger
-
 	client := NewRedisClient("localhost:6379")
 
-	stringsList := [10]string{
-		"hello",
-		"world",
-		"mangos",
-		"apples",
-		"oranges",
-		"watermelons",
-		"grapes",
-		"pears",
-		"horses",
-		"elephants",
-	}
-
-	randomKey := stringsList[rand.Intn(10)]
+	randomKey := testerutils_random.RandomWord()
 
 	logger.Infof("$ redis-cli xadd %s * foo bar", randomKey)
 

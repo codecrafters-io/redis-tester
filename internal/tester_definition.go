@@ -176,5 +176,9 @@ var testerDefinition = testerutils.TesterDefinition{
 			Slug:     "streams-xread",
 			TestFunc: testStreamsXread,
 		},
+		{
+			Slug:     "streams-xread-multiple",
+			TestFunc: testStreamsXreadMultiple,
+		},
 	},
 }
