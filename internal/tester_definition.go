@@ -164,5 +164,9 @@ var testerDefinition = testerutils.TesterDefinition{
 			Slug:     "streams-xrange",
 			TestFunc: testStreamsXrange,
 		},
+		{
+			Slug:     "streams-xrange-min-id",
+			TestFunc: testStreamsXrangeMinId,
+		},
 	},
 }
