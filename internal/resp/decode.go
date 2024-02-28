@@ -6,9 +6,15 @@ import (
 	"io"
 )
 
-func Decode(data []byte) (Value, error) {
+func Decode(data []byte) (value Value, readBytesCount int, err error) {
 	reader := bytes.NewReader(data)
-	return doDecodeValue(reader)
+
+	value, err = doDecodeValue(reader)
+	if err != nil {
+		return Value{}, 0, err
+	}
+
+	return value, len(data) - reader.Len(), nil
 }
 
 func doDecodeValue(reader *bytes.Reader) (Value, error) {
@@ -45,7 +51,7 @@ func decodeSimpleString(reader *bytes.Reader) (Value, error) {
 	if err == io.EOF {
 		return Value{}, IncompleteRESPError{
 			Reader:  reader,
-			Message: "Expected CRLF at the end of a simple string.",
+			Message: `Expected \r\n at the end of a simple string.`,
 		}
 	}
 

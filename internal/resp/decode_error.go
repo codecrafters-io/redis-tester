@@ -19,16 +19,10 @@ type InvalidRESPError struct {
 func (e IncompleteRESPError) DetailedError() string {
 	lines := []string{}
 
-	oldOffset := getReaderOffset(e.Reader)
-	e.Reader.Seek(0, 0)
-	bytes, err := e.Reader.Read(make([]byte, e.Reader.Len()))
-	if err != nil {
-		panic(fmt.Sprintf("Error reading from reader: %s", err)) // This should never happen
-	}
-	e.Reader.Seek(int64(oldOffset), 0)
+	receivedBytes := readBytesFromReader(e.Reader)
 
+	lines = append(lines, fmt.Sprintf("Received: %q", string(receivedBytes)))
 	lines = append(lines, e.Message)
-	lines = append(lines, fmt.Sprintf("%q", bytes))
 
 	return strings.Join(lines, "\n")
 }
@@ -41,15 +35,9 @@ func (e IncompleteRESPError) Error() string {
 func (e InvalidRESPError) DetailedError() string {
 	lines := []string{}
 
-	e.Reader.Seek(0, 0)
-	bytes := make([]byte, e.Reader.Len())
+	receivedBytes := readBytesFromReader(e.Reader)
 
-	n, err := e.Reader.Read(bytes)
-	if err != nil || n != len(bytes) {
-		panic(fmt.Sprintf("Error reading from reader: %s", err)) // This should never happen
-	}
-
-	lines = append(lines, fmt.Sprintf("Received: %q", string(bytes)))
+	lines = append(lines, fmt.Sprintf("Received: %q", string(receivedBytes)))
 	lines = append(lines, e.Message)
 
 	return strings.Join(lines, "\n")
@@ -61,4 +49,18 @@ func (e InvalidRESPError) Error() string {
 
 func getReaderOffset(reader *bytes.Reader) int {
 	return int(reader.Size()) - reader.Len()
+}
+
+func readBytesFromReader(reader *bytes.Reader) []byte {
+	reader.Seek(0, 0)
+	bytes := make([]byte, reader.Len())
+	n, err := reader.Read(bytes)
+	if err != nil {
+		panic(fmt.Sprintf("Error reading from reader: %s", err)) // This should never happen
+	}
+	if n != len(bytes) {
+		panic(fmt.Sprintf("Expected to read %d bytes, but only read %d", len(bytes), n)) // This should never happen
+	}
+
+	return bytes
 }
