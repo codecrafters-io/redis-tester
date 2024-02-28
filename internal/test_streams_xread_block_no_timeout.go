@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"reflect"
+	"strconv"
 	"strings"
 	"time"
 
@@ -22,18 +23,19 @@ func testStreamsXreadBlockNoTimeout(stageHarness *testerutils.StageHarness) erro
 	client := NewRedisClient("localhost:6379")
 
 	randomKey := testerutils_random.RandomWord()
+	randomInt := testerutils_random.RandomInt(1, 100)
 
 	testXadd(client, logger, XADDTest{
 		streamKey:        randomKey,
 		id:               "0-1",
-		values:           map[string]interface{}{"foo": "bar"},
+		values:           map[string]interface{}{"temperature": randomInt},
 		expectedResponse: "0-1",
 	})
 
 	respChan := make(chan *[]redis.XStream, 1)
 
 	go func() error {
-		logger.Infof("$ redis-cli block %v xread streams %s", 0, strings.Join([]string{randomKey, "0-1"}, " "))
+		logger.Infof("$ redis-cli xread block %v streams %s", 0, strings.Join([]string{randomKey, "0-1"}, " "))
 
 		resp, err := client.XRead(&redis.XReadArgs{
 			Streams: []string{randomKey, "0-1"},
@@ -55,7 +57,7 @@ func testStreamsXreadBlockNoTimeout(stageHarness *testerutils.StageHarness) erro
 	testXadd(client, logger, XADDTest{
 		streamKey:        randomKey,
 		id:               "0-2",
-		values:           map[string]interface{}{"bar": "baz"},
+		values:           map[string]interface{}{"temperature": randomInt},
 		expectedResponse: "0-2",
 	})
 
@@ -67,7 +69,7 @@ func testStreamsXreadBlockNoTimeout(stageHarness *testerutils.StageHarness) erro
 			Messages: []redis.XMessage{
 				{
 					ID:     "0-2",
-					Values: map[string]interface{}{"bar": "baz"},
+					Values: map[string]interface{}{"temperature": strconv.Itoa(randomInt)},
 				},
 			},
 		},
