@@ -3,13 +3,13 @@ package internal
 import (
 	"encoding/json"
 	"fmt"
-	"math/rand"
 	"reflect"
 	"strings"
 	"time"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
 	"github.com/codecrafters-io/tester-utils/logger"
+	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/go-redis/redis"
 )
 
@@ -86,28 +86,15 @@ func testStreamsXread(stageHarness *testerutils.StageHarness) error {
 	}
 
 	logger := stageHarness.Logger
-
 	client := NewRedisClient("localhost:6379")
 
-	strings := [10]string{
-		"hello",
-		"world",
-		"mangos",
-		"apples",
-		"oranges",
-		"watermelons",
-		"grapes",
-		"pears",
-		"horses",
-		"elephants",
-	}
-
-	randomKey := strings[rand.Intn(10)]
+	randomKey := testerutils_random.RandomWord()
+	randomInt := testerutils_random.RandomInt(1, 100)
 
 	testXadd(client, logger, XADDTest{
 		streamKey:        randomKey,
 		id:               "0-1",
-		values:           map[string]interface{}{"foo": "bar"},
+		values:           map[string]interface{}{"temperature": randomInt},
 		expectedResponse: "0-1",
 	})
 
@@ -117,7 +104,7 @@ func testStreamsXread(stageHarness *testerutils.StageHarness) error {
 			Messages: []redis.XMessage{
 				{
 					ID:     "0-1",
-					Values: map[string]interface{}{"foo": "bar"},
+					Values: map[string]interface{}{"temperature": randomInt},
 				},
 			},
 		},

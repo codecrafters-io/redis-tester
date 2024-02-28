@@ -2,9 +2,9 @@ package internal
 
 import (
 	"fmt"
-	"math/rand"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
+	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 )
 
 func testStreamsType(stageHarness *testerutils.StageHarness) error {
@@ -17,21 +17,8 @@ func testStreamsType(stageHarness *testerutils.StageHarness) error {
 
 	client := NewRedisClient("localhost:6379")
 
-	strings := [10]string{
-		"hello",
-		"world",
-		"mangos",
-		"apples",
-		"oranges",
-		"watermelons",
-		"grapes",
-		"pears",
-		"horses",
-		"elephants",
-	}
-
-	randomKey := strings[rand.Intn(10)]
-	randomValue := strings[rand.Intn(10)]
+	randomKey := testerutils_random.RandomWord()
+	randomValue := testerutils_random.RandomWord()
 
 	logger.Infof("$ redis-cli set %s %s", randomKey, randomValue)
 	resp, err := client.Set(randomKey, randomValue, 0).Result()

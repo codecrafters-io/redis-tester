@@ -497,42 +497,42 @@ Debug = true
 
 [33m[stage-32] [0m[94mRunning tests for Stage #32: streams-type[0m
 [33m[stage-32] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[stage-32] [0m[94m$ redis-cli set horses elephants[0m
-[33m[stage-32] [0m[94m$ redis-cli type horses[0m
-[33m[stage-32] [0m[94m$ redis-cli type missing_key_elephants[0m
+[33m[stage-32] [0m[94m$ redis-cli set raspberry blueberry[0m
+[33m[stage-32] [0m[94m$ redis-cli type raspberry[0m
+[33m[stage-32] [0m[94m$ redis-cli type missing_key_blueberry[0m
 [33m[stage-32] [0m[92mTest passed.[0m
 [33m[stage-32] [0m[36mTerminating program[0m
 [33m[stage-32] [0m[36mProgram terminated successfully[0m
 
 [33m[stage-33] [0m[94mRunning tests for Stage #33: streams-xadd[0m
 [33m[stage-33] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[stage-33] [0m[94m$ redis-cli xadd hello 0-1 foo bar[0m
+[33m[stage-33] [0m[94m$ redis-cli xadd apple 0-1 foo bar[0m
 [33m[stage-33] [0m[92mReceived response: "0-1"[0m
-[33m[stage-33] [0m[94m$ redis-cli type hello[0m
+[33m[stage-33] [0m[94m$ redis-cli type apple[0m
 [33m[stage-33] [0m[92mTest passed.[0m
 [33m[stage-33] [0m[36mTerminating program[0m
 [33m[stage-33] [0m[36mProgram terminated successfully[0m
 
 [33m[stage-34] [0m[94mRunning tests for Stage #34: streams-xadd-validate-id[0m
 [33m[stage-34] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[stage-34] [0m[94m$ redis-cli xadd mangos 1-1 foo bar[0m
+[33m[stage-34] [0m[94m$ redis-cli xadd banana 1-1 foo bar[0m
 [33m[stage-34] [0m[92mReceived response: "1-1"[0m
-[33m[stage-34] [0m[94m$ redis-cli xadd mangos 1-2 bar baz[0m
+[33m[stage-34] [0m[94m$ redis-cli xadd banana 1-2 bar baz[0m
 [33m[stage-34] [0m[92mReceived response: "1-2"[0m
-[33m[stage-34] [0m[94m$ redis-cli xadd mangos 1-2 baz foo[0m
-[33m[stage-34] [0m[94m$ redis-cli xadd mangos 0-3 baz foo[0m
-[33m[stage-34] [0m[94m$ redis-cli xadd mangos 0-0 baz foo[0m
+[33m[stage-34] [0m[94m$ redis-cli xadd banana 1-2 baz foo[0m
+[33m[stage-34] [0m[94m$ redis-cli xadd banana 0-3 baz foo[0m
+[33m[stage-34] [0m[94m$ redis-cli xadd banana 0-0 baz foo[0m
 [33m[stage-34] [0m[92mTest passed.[0m
 [33m[stage-34] [0m[36mTerminating program[0m
 [33m[stage-34] [0m[36mProgram terminated successfully[0m
 
 [33m[stage-35] [0m[94mRunning tests for Stage #35: streams-xadd-partial-autoid[0m
 [33m[stage-35] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[stage-35] [0m[94m$ redis-cli xadd oranges 0-* foo bar[0m
+[33m[stage-35] [0m[94m$ redis-cli xadd grape 0-* foo bar[0m
 [33m[stage-35] [0m[92mReceived response: "0-1"[0m
-[33m[stage-35] [0m[94m$ redis-cli xadd oranges 1-* foo bar[0m
+[33m[stage-35] [0m[94m$ redis-cli xadd grape 1-* foo bar[0m
 [33m[stage-35] [0m[92mReceived response: "1-0"[0m
-[33m[stage-35] [0m[94m$ redis-cli xadd oranges 1-* bar baz[0m
+[33m[stage-35] [0m[94m$ redis-cli xadd grape 1-* bar baz[0m
 [33m[stage-35] [0m[92mReceived response: "1-1"[0m
 [33m[stage-35] [0m[92mTest passed.[0m
 [33m[stage-35] [0m[36mTerminating program[0m
@@ -550,32 +550,30 @@ Debug = true
 
 [33m[stage-37] [0m[94mRunning tests for Stage #37: streams-xrange[0m
 [33m[stage-37] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[stage-37] [0m[94m$ redis-cli xadd horses 0-1 foo bar[0m
+[33m[stage-37] [0m[94m$ redis-cli xadd raspberry 0-1 foo bar[0m
 [33m[stage-37] [0m[92mReceived response: "0-1"[0m
-[33m[stage-37] [0m[94m$ redis-cli xadd horses 0-2 foo bar[0m
+[33m[stage-37] [0m[94m$ redis-cli xadd raspberry 0-2 foo bar[0m
 [33m[stage-37] [0m[92mReceived response: "0-2"[0m
-[33m[stage-37] [0m[94m$ redis-cli xadd horses 0-3 foo bar[0m
+[33m[stage-37] [0m[94m$ redis-cli xadd raspberry 0-3 foo bar[0m
 [33m[stage-37] [0m[92mReceived response: "0-3"[0m
-[33m[stage-37] [0m[94m$ redis-cli xadd horses 0-4 foo bar[0m
+[33m[stage-37] [0m[94m$ redis-cli xadd raspberry 0-4 foo bar[0m
 [33m[stage-37] [0m[92mReceived response: "0-4"[0m
-[33m[stage-37] [0m[94m$ redis-cli xadd horses 0-5 foo bar[0m
-[33m[stage-37] [0m[92mReceived response: "0-5"[0m
-[33m[stage-37] [0m[92mReceived response: "[{0-2 map[foo:bar]} {0-3 map[foo:bar]} {0-4 map[foo:bar]} {0-5 map[foo:bar]}]"[0m
+[33m[stage-37] [0m[92mReceived response: "[{0-2 map[foo:bar]} {0-3 map[foo:bar]} {0-4 map[foo:bar]}]"[0m
 [33m[stage-37] [0m[92mTest passed.[0m
 [33m[stage-37] [0m[36mTerminating program[0m
 [33m[stage-37] [0m[36mProgram terminated successfully[0m
 
 [33m[stage-38] [0m[94mRunning tests for Stage #38: streams-xrange-min-id[0m
 [33m[stage-38] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[stage-38] [0m[94m$ redis-cli xadd horses 0-1 foo bar[0m
+[33m[stage-38] [0m[94m$ redis-cli xadd raspberry 0-1 foo bar[0m
 [33m[stage-38] [0m[92mReceived response: "0-1"[0m
-[33m[stage-38] [0m[94m$ redis-cli xadd horses 0-2 foo bar[0m
+[33m[stage-38] [0m[94m$ redis-cli xadd raspberry 0-2 foo bar[0m
 [33m[stage-38] [0m[92mReceived response: "0-2"[0m
-[33m[stage-38] [0m[94m$ redis-cli xadd horses 0-3 foo bar[0m
+[33m[stage-38] [0m[94m$ redis-cli xadd raspberry 0-3 foo bar[0m
 [33m[stage-38] [0m[92mReceived response: "0-3"[0m
-[33m[stage-38] [0m[94m$ redis-cli xadd horses 0-4 foo bar[0m
+[33m[stage-38] [0m[94m$ redis-cli xadd raspberry 0-4 foo bar[0m
 [33m[stage-38] [0m[92mReceived response: "0-4"[0m
-[33m[stage-38] [0m[94m$ redis-cli xrange horses - 0-3[0m
+[33m[stage-38] [0m[94m$ redis-cli xrange raspberry - 0-3[0m
 [33m[stage-38] [0m[92mReceived response: "[{0-1 map[foo:bar]} {0-2 map[foo:bar]} {0-3 map[foo:bar]}]"[0m
 [33m[stage-38] [0m[92mTest passed.[0m
 [33m[stage-38] [0m[36mTerminating program[0m
@@ -583,15 +581,15 @@ Debug = true
 
 [33m[stage-39] [0m[94mRunning tests for Stage #39: streams-xrange-max-id[0m
 [33m[stage-39] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[stage-39] [0m[94m$ redis-cli xadd elephants 0-1 foo bar[0m
+[33m[stage-39] [0m[94m$ redis-cli xadd blueberry 0-1 foo bar[0m
 [33m[stage-39] [0m[92mReceived response: "0-1"[0m
-[33m[stage-39] [0m[94m$ redis-cli xadd elephants 0-2 foo bar[0m
+[33m[stage-39] [0m[94m$ redis-cli xadd blueberry 0-2 foo bar[0m
 [33m[stage-39] [0m[92mReceived response: "0-2"[0m
-[33m[stage-39] [0m[94m$ redis-cli xadd elephants 0-3 foo bar[0m
+[33m[stage-39] [0m[94m$ redis-cli xadd blueberry 0-3 foo bar[0m
 [33m[stage-39] [0m[92mReceived response: "0-3"[0m
-[33m[stage-39] [0m[94m$ redis-cli xadd elephants 0-4 foo bar[0m
+[33m[stage-39] [0m[94m$ redis-cli xadd blueberry 0-4 foo bar[0m
 [33m[stage-39] [0m[92mReceived response: "0-4"[0m
-[33m[stage-39] [0m[94m$ redis-cli xrange elephants 0-2 +[0m
+[33m[stage-39] [0m[94m$ redis-cli xrange blueberry 0-2 +[0m
 [33m[stage-39] [0m[92mReceived response: "[{0-2 map[foo:bar]} {0-3 map[foo:bar]} {0-4 map[foo:bar]}]"[0m
 [33m[stage-39] [0m[92mTest passed.[0m
 [33m[stage-39] [0m[36mTerminating program[0m
@@ -599,22 +597,22 @@ Debug = true
 
 [33m[stage-40] [0m[94mRunning tests for Stage #40: streams-xread[0m
 [33m[stage-40] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[stage-40] [0m[94m$ redis-cli xadd mangos 0-1 foo bar[0m
+[33m[stage-40] [0m[94m$ redis-cli xadd banana 0-1 temperature 61[0m
 [33m[stage-40] [0m[92mReceived response: "0-1"[0m
-[33m[stage-40] [0m[94m$ redis-cli xread streams mangos 0-0[0m
-[33m[stage-40] [0m[92mReceived response: "[[0m
-[33m[stage-40] [0m[92m  {[0m
-[33m[stage-40] [0m[92m    "Stream": "mangos",[0m
-[33m[stage-40] [0m[92m    "Messages": [[0m
-[33m[stage-40] [0m[92m      {[0m
-[33m[stage-40] [0m[92m        "ID": "0-1",[0m
-[33m[stage-40] [0m[92m        "Values": {[0m
-[33m[stage-40] [0m[92m          "foo": "bar"[0m
-[33m[stage-40] [0m[92m        }[0m
-[33m[stage-40] [0m[92m      }[0m
-[33m[stage-40] [0m[92m    ][0m
-[33m[stage-40] [0m[92m  }[0m
-[33m[stage-40] [0m[92m]"[0m
+[33m[stage-40] [0m[94m$ redis-cli xread streams banana 0-0[0m
+[33m[stage-40] [0m[94mReceived response: "[[0m
+[33m[stage-40] [0m[94m  {[0m
+[33m[stage-40] [0m[94m    "Stream": "banana",[0m
+[33m[stage-40] [0m[94m    "Messages": [[0m
+[33m[stage-40] [0m[94m      {[0m
+[33m[stage-40] [0m[94m        "ID": "0-1",[0m
+[33m[stage-40] [0m[94m        "Values": {[0m
+[33m[stage-40] [0m[94m          "temperature": "61"[0m
+[33m[stage-40] [0m[94m        }[0m
+[33m[stage-40] [0m[94m      }[0m
+[33m[stage-40] [0m[94m    ][0m
+[33m[stage-40] [0m[94m  }[0m
+[33m[stage-40] [0m[94m]"[0m
 [33m[stage-40] [0m[92mTest passed.[0m
 [33m[stage-40] [0m[36mTerminating program[0m
 [33m[stage-40] [0m[36mProgram terminated successfully[0m
