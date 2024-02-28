@@ -94,20 +94,30 @@ Debug = true
 
 [33m[stage-6] [0m[94mRunning tests for Stage #6: set_get[0m
 [33m[stage-6] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[stage-6] [0m[36mSetting key world to horses[0m
-[33m[stage-6] [0m[36mGetting key world[0m
+[33m[stage-6] [0m[36mSetting key orange to pear[0m
+[33m[stage-6] [0m[94m$ redis-cli set orange pear[0m
+[33m[stage-6] [0m[36mSent bytes: "*3\r\n$3\r\nset\r\n$6\r\norange\r\n$4\r\npear\r\n"[0m
+[33m[stage-6] [0m[36mReading response...[0m
+[33m[stage-6] [0m[36mReceived RESP value: "OK"[0m
+[33m[stage-6] [0m[92mReceived "OK"[0m
+[33m[stage-6] [0m[36mGetting key orange[0m
+[33m[stage-6] [0m[94m$ redis-cli get orange[0m
+[33m[stage-6] [0m[36mSent bytes: "*2\r\n$3\r\nget\r\n$6\r\norange\r\n"[0m
+[33m[stage-6] [0m[36mReading response...[0m
+[33m[stage-6] [0m[36mReceived RESP value: "pear"[0m
+[33m[stage-6] [0m[92mReceived "pear"[0m
 [33m[stage-6] [0m[92mTest passed.[0m
 [33m[stage-6] [0m[36mTerminating program[0m
 [33m[stage-6] [0m[36mProgram terminated successfully[0m
 
 [33m[stage-7] [0m[94mRunning tests for Stage #7: expiry[0m
 [33m[stage-7] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[stage-7] [0m[94m$ redis-cli set grapes apples px 100[0m
-[33m[stage-7] [0m[92mReceived OK (at 23:27:56.654)[0m
-[33m[stage-7] [0m[94m$ redis-cli get grapes (sent at 23:27:56.655, key should not be expired)[0m
-[33m[stage-7] [0m[92mReceived "apples"[0m
+[33m[stage-7] [0m[94m$ redis-cli set oranges hello px 100[0m
+[33m[stage-7] [0m[92mReceived OK (at 23:31:45.800)[0m
+[33m[stage-7] [0m[94m$ redis-cli get oranges (sent at 23:31:45.800, key should not be expired)[0m
+[33m[stage-7] [0m[92mReceived "hello"[0m
 [33m[stage-7] [0m[36mSleeping for 101ms[0m
-[33m[stage-7] [0m[94m$ redis-cli get grapes (sent at 23:27:56.757, key should be expired)[0m
+[33m[stage-7] [0m[94m$ redis-cli get oranges (sent at 23:31:45.902, key should be expired)[0m
 [33m[stage-7] [0m[92mTest passed.[0m
 [33m[stage-7] [0m[36mTerminating program[0m
 [33m[stage-7] [0m[36mProgram terminated successfully[0m
