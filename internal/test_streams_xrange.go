@@ -61,7 +61,6 @@ func testStreamsXrange(stageHarness *testerutils.StageHarness) error {
 	maxId := "0-" + strconv.Itoa(randomNumber)
 	expected = expected[1:]
 
-	logger.Infof("$ redis-cli xrange %s 0-2 %s", randomKey, maxId)
 	resp, err := client.XRange(randomKey, "0-2", maxId).Result()
 
 	if err != nil {
