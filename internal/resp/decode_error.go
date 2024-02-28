@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"fmt"
 	"strings"
+
+	inspectable_byte_string "github.com/codecrafters-io/redis-tester/internal/inspectable_byte_string"
 )
 
 type IncompleteRESPError struct {
@@ -17,34 +19,19 @@ type InvalidRESPError struct {
 }
 
 func (e IncompleteRESPError) DetailedError() string {
-	lines := []string{}
-
-	receivedBytes := readBytesFromReader(e.Reader)
-
-	lines = append(lines, fmt.Sprintf("Received: %q", string(receivedBytes)))
-	lines = append(lines, e.Message)
-
-	return strings.Join(lines, "\n")
+	return formatDetailedError(e.Reader, e.Message)
 }
 
 func (e IncompleteRESPError) Error() string {
-	// TODO: Make this more readable
-	return fmt.Sprintf("Incomplete RESP: %s.", e.Message)
+	return "Incomplete RESP"
 }
 
 func (e InvalidRESPError) DetailedError() string {
-	lines := []string{}
-
-	receivedBytes := readBytesFromReader(e.Reader)
-
-	lines = append(lines, fmt.Sprintf("Received: %q", string(receivedBytes)))
-	lines = append(lines, e.Message)
-
-	return strings.Join(lines, "\n")
+	return formatDetailedError(e.Reader, e.Message)
 }
 
 func (e InvalidRESPError) Error() string {
-	return fmt.Sprintf("Invalid RESP: %s", e.Message)
+	return "Invalid RESP"
 }
 
 func getReaderOffset(reader *bytes.Reader) int {
@@ -63,4 +50,22 @@ func readBytesFromReader(reader *bytes.Reader) []byte {
 	}
 
 	return bytes
+}
+
+func formatDetailedError(reader *bytes.Reader, message string) string {
+	lines := []string{}
+
+	offset := getReaderOffset(reader)
+	receivedBytes := readBytesFromReader(reader)
+	receivedByteString := inspectable_byte_string.NewInspectableByteString(receivedBytes)
+
+	lines = append(lines, fmt.Sprintf("Received: %s", receivedByteString.FormattedString()))
+	lines = append(lines, offsetPointerString(len("Received: ")+receivedByteString.GetOffsetInFormattedString(offset)))
+	lines = append(lines, message)
+
+	return strings.Join(lines, "\n")
+}
+
+func offsetPointerString(offset int) string {
+	return strings.Repeat(" ", offset) + "^"
 }

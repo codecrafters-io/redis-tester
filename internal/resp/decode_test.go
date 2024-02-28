@@ -31,6 +31,7 @@ func TestDecodeIncompleteSimpleStringFailure(t *testing.T) {
 
 	assert.Equal(t, strings.TrimSpace(`
 Received: "+OK"
+              ^
 Expected \r\n at the end of a simple string.
 	`), incompleteRespErr.DetailedError())
 }
@@ -43,6 +44,7 @@ func TestDecodeInvalidSimpleStringFailure(t *testing.T) {
 
 	assert.Equal(t, strings.TrimSpace(`
 Received: "OK\r\n"
+           ^
 "O" is not a valid start of a new RESP value (expected +, -, :, $, or *)
 	`), invalidRespErr.DetailedError())
 }

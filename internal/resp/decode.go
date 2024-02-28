@@ -19,7 +19,6 @@ func Decode(data []byte) (value Value, readBytesCount int, err error) {
 
 func doDecodeValue(reader *bytes.Reader) (Value, error) {
 	firstByte, err := reader.ReadByte()
-
 	if err == io.EOF {
 		return Value{}, IncompleteRESPError{
 			Reader:  reader,
@@ -39,6 +38,8 @@ func doDecodeValue(reader *bytes.Reader) (Value, error) {
 	// case '*':
 	// 	return decodeArray(reader)
 	default:
+		reader.UnreadByte() // Ensure the error points to the correct byte
+
 		return Value{}, InvalidRESPError{
 			Reader:  reader,
 			Message: fmt.Sprintf("%q is not a valid start of a new RESP value (expected +, -, :, $, or *)", string(firstByte)),
