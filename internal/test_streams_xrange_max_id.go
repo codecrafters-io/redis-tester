@@ -43,24 +43,12 @@ func testStreamsXrangeMaxId(stageHarness *testerutils.StageHarness) error {
 	for i := 1; i <= randomNumber; i++ {
 		id := "0-" + strconv.Itoa(i)
 
-		logger.Infof("$ redis-cli xadd %s %s foo bar", randomKey, id)
-
-		resp, err := client.XAdd(&redis.XAddArgs{
-			Stream: randomKey,
-			ID:     id,
-			Values: map[string]interface{}{
-				"foo": "bar",
-			},
-		}).Result()
-
-		if err != nil {
-			logFriendlyError(logger, err)
-			return err
-		}
-
-		if resp != id {
-			return fmt.Errorf("Expected \"%s\", got %#v", id, resp)
-		}
+		testXadd(client, logger, XADDTest{
+			streamKey:        randomKey,
+			id:               id,
+			values:           map[string]interface{}{"foo": "bar"},
+			expectedResponse: id,
+		})
 	}
 
 	for i := 2; i <= randomNumber; i++ {
@@ -83,7 +71,10 @@ func testStreamsXrangeMaxId(stageHarness *testerutils.StageHarness) error {
 	}
 
 	if !reflect.DeepEqual(resp, expected) {
+		logger.Infof("Received response: \"%s\"", resp)
 		return fmt.Errorf("Expected %#v, got %#v", expected, resp)
+	} else {
+		logger.Successf("Received response: \"%s\"", resp)
 	}
 
 	return nil
