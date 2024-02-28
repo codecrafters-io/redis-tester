@@ -2,11 +2,11 @@ package internal
 
 import (
 	"fmt"
-	"math/rand"
 	"reflect"
 	"strconv"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
+	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/go-redis/redis"
 )
 
@@ -17,27 +17,13 @@ func testStreamsXrangeMaxId(stageHarness *testerutils.StageHarness) error {
 	}
 
 	logger := stageHarness.Logger
-
 	client := NewRedisClient("localhost:6379")
 
-	strings := [10]string{
-		"hello",
-		"world",
-		"mangos",
-		"apples",
-		"oranges",
-		"watermelons",
-		"grapes",
-		"pears",
-		"horses",
-		"elephants",
-	}
-
-	randomKey := strings[rand.Intn(10)]
+	randomKey := testerutils_random.RandomWord()
 
 	max := 5
 	min := 3
-	randomNumber := rand.Intn(max-min+1) + min
+	randomNumber := testerutils_random.RandomInt(min, max)
 	expected := []redis.XMessage{}
 
 	for i := 1; i <= randomNumber; i++ {
