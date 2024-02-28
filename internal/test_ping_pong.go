@@ -40,8 +40,8 @@ func testPingPongOnce(stageHarness *testerutils.StageHarness) error {
 		return err
 	}
 
-	if client.ReadBuffer.Len() > 0 {
-		return fmt.Errorf("Found extra data: %q", client.ReadBuffer.String())
+	if client.UnreadBuffer.Len() > 0 {
+		return fmt.Errorf("Found extra data: %q", string(client.LastValueBytes)+client.UnreadBuffer.String())
 	}
 
 	return nil

@@ -31,9 +31,12 @@ type RedisClient struct {
 	// Conn is the underlying connection to the Redis server.
 	Conn net.Conn
 
-	// ReadBuffer contains bytes that have been read but not decoded as a value yet.
+	// UnreadBuffer contains bytes that have been read but not decoded as a value yet.
 	// It can be used to check whether there are any bytes left in the buffer after reading a value.
-	ReadBuffer bytes.Buffer
+	UnreadBuffer bytes.Buffer
+
+	// LastValueBytes contains the bytes of the last value that was decoded.
+	LastValueBytes []byte
 
 	// Callbacks is a set of functions that are called at various points in the client's lifecycle.
 	Callbacks RedisClientCallbacks
@@ -48,7 +51,7 @@ func NewRedisClient(addr string) (*RedisClient, error) {
 
 	return &RedisClient{
 		Conn:       conn,
-		ReadBuffer: bytes.Buffer{},
+		UnreadBuffer: bytes.Buffer{},
 	}, nil
 }
 
@@ -61,7 +64,7 @@ func NewRedisClientWithCallbacks(addr string, callbacks RedisClientCallbacks) (*
 
 	return &RedisClient{
 		Conn:       conn,
-		ReadBuffer: bytes.Buffer{},
+		UnreadBuffer: bytes.Buffer{},
 		Callbacks:  callbacks,
 	}, nil
 }
@@ -116,10 +119,10 @@ func (c *RedisClient) ReadValueWithTimeout(timeout time.Duration) (resp.Value, e
 			continue // Let's swallow these errors and try reading again anyway
 		}
 
-		c.ReadBuffer.Write(buf[:n])
+		c.UnreadBuffer.Write(buf[:n])
 
 		// Let's try to decode the value at this point.
-		_, _, err = resp.Decode(c.ReadBuffer.Bytes())
+		_, _, err = resp.Decode(c.UnreadBuffer.Bytes())
 
 		if err == nil {
 			break // We were able to read a value!
@@ -130,13 +133,14 @@ func (c *RedisClient) ReadValueWithTimeout(timeout time.Duration) (resp.Value, e
 		}
 	}
 
-	value, readBytesCount, err := resp.Decode(c.ReadBuffer.Bytes())
+	value, readBytesCount, err := resp.Decode(c.UnreadBuffer.Bytes())
 	if err != nil {
 		return resp.Value{}, err
 	}
 
 	// We've read a value! Let's remove the bytes we've read from the buffer
-	c.ReadBuffer = *bytes.NewBuffer(c.ReadBuffer.Bytes()[readBytesCount:])
+	c.LastValueBytes = c.UnreadBuffer.Bytes()[:readBytesCount]
+	c.UnreadBuffer = *bytes.NewBuffer(c.UnreadBuffer.Bytes()[readBytesCount:])
 	return value, nil
 }
 
