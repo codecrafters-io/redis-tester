@@ -65,24 +65,18 @@ func testStreamsXreadBlock(stageHarness *testerutils.StageHarness) error {
 
 	blockDuration := 1000 * time.Millisecond
 
-	testXread(client, logger, XREADTest{
+	(&XREADTest{
 		streams:          []string{randomKey, "0-1"},
 		block:            &blockDuration,
 		expectedResponse: expectedResp,
-	})
+	}).Run(client, logger)
 
-	testXread(client, logger, XREADTest{
-		streams:          []string{randomKey, "0-1"},
-		block:            &blockDuration,
-		expectedResponse: expectedResp,
-	})
-
-	testXread(client, logger, XREADTest{
+	(&XREADTest{
 		streams:          []string{randomKey, "0-2"},
 		block:            &blockDuration,
 		expectedResponse: []redis.XStream(nil),
 		expectedError:    "redis: nil",
-	})
+	}).Run(client, logger)
 
 	return nil
 }
