@@ -6,7 +6,7 @@ import (
 	"net"
 	"time"
 
-	resp "github.com/codecrafters-io/redis-tester/internal/resp"
+	"github.com/codecrafters-io/redis-tester/internal/resp"
 )
 
 type RedisClientCallbacks struct {
@@ -67,6 +67,10 @@ func NewRedisClientWithCallbacks(addr string, callbacks RedisClientCallbacks) (*
 		UnreadBuffer: bytes.Buffer{},
 		Callbacks:    callbacks,
 	}, nil
+}
+
+func (c *RedisClient) Close() error {
+	return c.Conn.Close()
 }
 
 func (c *RedisClient) SendCommand(command string, args ...string) error {

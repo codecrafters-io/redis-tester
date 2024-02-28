@@ -1,13 +1,12 @@
 package internal
 
 import (
-	"fmt"
-
+	"github.com/codecrafters-io/redis-tester/internal/command_test"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_redis_client"
+	"github.com/codecrafters-io/redis-tester/internal/redis_client"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	testerutils "github.com/codecrafters-io/tester-utils"
 	logger "github.com/codecrafters-io/tester-utils/logger"
-	"github.com/go-redis/redis"
 )
 
 func testPingPongOnce(stageHarness *testerutils.StageHarness) error {
@@ -18,36 +17,23 @@ func testPingPongOnce(stageHarness *testerutils.StageHarness) error {
 
 	logger := stageHarness.Logger
 
-	client, err := instrumented_redis_client.NewInstrumentedRedisClient(stageHarness, "localhost:6379")
+	client, err := instrumented_redis_client.NewInstrumentedRedisClient(stageHarness, "localhost:6379", "")
 	if err != nil {
 		return err
 	}
 
 	logger.Debugln("Connection established, sending ping command...")
-	if err := client.SendCommand("ping"); err != nil {
+
+	commandTestCase := command_test.CommandTestCase{
+		Command:   "ping",
+		Args:      []string{},
+		Assertion: resp_assertions.NewStringValueAssertion("PONG"),
+	}
+
+	if err := commandTestCase.Run(client, logger); err != nil {
 		logFriendlyError(logger, err)
 		return err
 	}
-
-	logger.Debugln("Reading response...")
-
-	value, err := client.ReadValue()
-	if err != nil {
-		logFriendlyError(logger, err)
-		return err
-	}
-
-	if err = resp_assertions.NewStringValueAssertion("PONG").Run(value); err != nil {
-		return err
-	}
-
-	client.ReadIntoBuffer() // Let's make sure there's no extra data
-
-	if client.UnreadBuffer.Len() > 0 {
-		return fmt.Errorf("Found extra data: %q", string(client.LastValueBytes)+client.UnreadBuffer.String())
-	}
-
-	logger.Successf("Received %s", value.FormattedString())
 
 	return nil
 }
@@ -59,10 +45,13 @@ func testPingPongMultiple(stageHarness *testerutils.StageHarness) error {
 	}
 
 	logger := stageHarness.Logger
-	client := NewRedisClient("localhost:6379")
+	client, err := instrumented_redis_client.NewInstrumentedRedisClient(stageHarness, "localhost:6379", "client-1")
+	if err != nil {
+		return err
+	}
 
 	for i := 1; i <= 3; i++ {
-		if err := runPing(logger, client, 1); err != nil {
+		if err := runPing(logger, client); err != nil {
 			return err
 		}
 	}
@@ -80,32 +69,43 @@ func testPingPongConcurrent(stageHarness *testerutils.StageHarness) error {
 	}
 
 	logger := stageHarness.Logger
-	client1 := NewRedisClient("localhost:6379")
-
-	if err := runPing(logger, client1, 1); err != nil {
+	client1, err := instrumented_redis_client.NewInstrumentedRedisClient(stageHarness, "localhost:6379", "client-1")
+	if err != nil {
 		return err
 	}
 
-	client2 := NewRedisClient("localhost:6379")
-	if err := runPing(logger, client2, 2); err != nil {
+	if err := runPing(logger, client1); err != nil {
 		return err
 	}
 
-	if err := runPing(logger, client1, 1); err != nil {
+	client2, err := instrumented_redis_client.NewInstrumentedRedisClient(stageHarness, "localhost:6379", "client-2")
+	if err != nil {
 		return err
 	}
-	if err := runPing(logger, client1, 1); err != nil {
+
+	if err := runPing(logger, client2); err != nil {
 		return err
 	}
-	if err := runPing(logger, client2, 2); err != nil {
+
+	if err := runPing(logger, client1); err != nil {
+		return err
+	}
+	if err := runPing(logger, client1); err != nil {
+		return err
+	}
+	if err := runPing(logger, client2); err != nil {
 		return err
 	}
 
 	logger.Debugf("client-%d: Success, closing connection...", 1)
 	client1.Close()
 
-	client3 := NewRedisClient("localhost:6379")
-	if err := runPing(logger, client3, 3); err != nil {
+	client3, err := instrumented_redis_client.NewInstrumentedRedisClient(stageHarness, "localhost:6379", "client-3")
+	if err != nil {
+		return err
+	}
+
+	if err := runPing(logger, client3); err != nil {
 		return err
 	}
 
@@ -117,20 +117,17 @@ func testPingPongConcurrent(stageHarness *testerutils.StageHarness) error {
 	return nil
 }
 
-func runPing(logger *logger.Logger, client *redis.Client, clientNum int) error {
-	logger.Infof("client-%d: Sending ping command...", clientNum)
-	pong, err := client.Ping().Result()
-	if err != nil {
+func runPing(logger *logger.Logger, client *redis_client.RedisClient) error {
+	commandTestCase := command_test.CommandTestCase{
+		Command:   "ping",
+		Args:      []string{},
+		Assertion: resp_assertions.NewStringValueAssertion("PONG"),
+	}
+
+	if err := commandTestCase.Run(client, logger); err != nil {
 		logFriendlyError(logger, err)
 		return err
 	}
-
-	if pong != "PONG" {
-		logger.Debugf("client-%d: Received response.", clientNum)
-		return fmt.Errorf("client-%d: Expected \"PONG\", got %#v", clientNum, pong)
-	}
-
-	logger.Successf("client-%d: Received PONG.", clientNum)
 
 	return nil
 }
