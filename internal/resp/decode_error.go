@@ -18,20 +18,12 @@ type InvalidRESPError struct {
 	Message string
 }
 
-func (e IncompleteRESPError) DetailedError() string {
-	return formatDetailedError(e.Reader, e.Message)
-}
-
 func (e IncompleteRESPError) Error() string {
-	return "Incomplete RESP"
-}
-
-func (e InvalidRESPError) DetailedError() string {
 	return formatDetailedError(e.Reader, e.Message)
 }
 
 func (e InvalidRESPError) Error() string {
-	return "Invalid RESP"
+	return formatDetailedError(e.Reader, e.Message)
 }
 
 func getReaderOffset(reader *bytes.Reader) int {
@@ -61,11 +53,11 @@ func formatDetailedError(reader *bytes.Reader, message string) string {
 
 	lines = append(lines, fmt.Sprintf("Received: %s", receivedByteString.FormattedString()))
 	lines = append(lines, offsetPointerString(len("Received: ")+receivedByteString.GetOffsetInFormattedString(offset)))
-	lines = append(lines, message)
+	lines = append(lines, fmt.Sprintf("Error: %s", message))
 
 	return strings.Join(lines, "\n")
 }
 
 func offsetPointerString(offset int) string {
-	return strings.Repeat(" ", offset) + "^"
+	return strings.Repeat(" ", offset) + "^ error"
 }

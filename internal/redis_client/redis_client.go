@@ -54,7 +54,12 @@ func (c *RedisClient) ReadMessageWithTimeout(timeout time.Duration) (resp.Value,
 		return resp.Value{}, err
 	}
 
-	return resp.Decode(c.ReadBuffer[:n])
+	value, _, err := resp.Decode(c.ReadBuffer[:n])
+	if err != nil {
+		return resp.Value{}, err
+	}
+
+	return value, nil
 }
 
 func newRedisConn(address string) (net.Conn, error) {

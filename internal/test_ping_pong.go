@@ -2,9 +2,9 @@ package internal
 
 import (
 	"fmt"
-	"net"
-	"time"
 
+	redis_client "github.com/codecrafters-io/redis-tester/internal/redis_client"
+	resp "github.com/codecrafters-io/redis-tester/internal/resp"
 	testerutils "github.com/codecrafters-io/tester-utils"
 	logger "github.com/codecrafters-io/tester-utils/logger"
 	"github.com/go-redis/redis"
@@ -18,57 +18,31 @@ func testPingPongOnce(stageHarness *testerutils.StageHarness) error {
 
 	logger := stageHarness.Logger
 
-	retries := 0
-	var err error
-	var conn net.Conn
-
-	for {
-		conn, err = net.Dial("tcp", "localhost:6379")
-		if err != nil && retries > 15 {
-			logger.Infof("All retries failed.")
-			return err
-		}
-
-		if err != nil {
-			// Don't print errors in the first second
-			if retries > 2 {
-				logger.Infof("Failed to connect to port 6379, retrying in 1s")
-			}
-
-			retries += 1
-			time.Sleep(1000 * time.Millisecond)
-		} else {
-			break
-		}
-	}
-
-	logger.Debugln("Connection established, sending PING command (*1\\r\\n$4\\r\\nping\\r\\n)")
-	logger.Infof("$ redis-cli ping")
-
-	_, err = conn.Write([]byte("*1\r\n$4\r\nping\r\n"))
+	client, err := redis_client.NewRedisClient("localhost:6379")
 	if err != nil {
-		logFriendlyError(logger, err)
 		return err
 	}
 
-	time.Sleep(100 * time.Millisecond) // Ensure we aren't reading partial responses
+	logger.Debugln("Connection established, sending ping command...")
+	if err := client.SendCommand("ping"); err != nil {
+		logFriendlyError(logger, err)
+		return err
+	}
 
 	logger.Debugln("Reading response...")
 
-	var readBytes = make([]byte, 16)
-
-	numberOfBytesRead, err := conn.Read(readBytes)
+	message, err := client.ReadMessage()
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
 	}
 
-	actual := string(readBytes[:numberOfBytesRead])
-	expected1 := "+PONG\r\n"
-	expected2 := "$4\r\nPONG\r\n"
+	if message.Type != resp.SIMPLE_STRING {
+		return fmt.Errorf("Expected simple string, got %#v", message.Type)
+	}
 
-	if actual != expected1 && actual != expected2 {
-		return fmt.Errorf("expected response to be either %#v (%d bytes) or %#v (%d bytes), got %#v (%d bytes)", expected1, len(expected1), expected2, len(expected2), actual, len(actual))
+	if message.String() != "PONG" {
+		return fmt.Errorf("Expected \"PONG\", got %#v", message.String())
 	}
 
 	return nil
