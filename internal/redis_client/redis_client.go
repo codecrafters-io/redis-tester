@@ -1,6 +1,7 @@
 package redis_client
 
 import (
+	"bytes"
 	"errors"
 	"net"
 	"time"
@@ -32,7 +33,7 @@ type RedisClient struct {
 
 	// ReadBuffer contains bytes that have been read but not decoded as a value yet.
 	// It can be used to check whether there are any bytes left in the buffer after reading a value.
-	ReadBuffer []byte
+	ReadBuffer bytes.Buffer
 
 	// Callbacks is a set of functions that are called at various points in the client's lifecycle.
 	Callbacks RedisClientCallbacks
@@ -47,7 +48,7 @@ func NewRedisClient(addr string) (*RedisClient, error) {
 
 	return &RedisClient{
 		Conn:       conn,
-		ReadBuffer: make([]byte, 1024),
+		ReadBuffer: bytes.Buffer{},
 	}, nil
 }
 
@@ -60,7 +61,7 @@ func NewRedisClientWithCallbacks(addr string, callbacks RedisClientCallbacks) (*
 
 	return &RedisClient{
 		Conn:       conn,
-		ReadBuffer: make([]byte, 1024),
+		ReadBuffer: bytes.Buffer{},
 		Callbacks:  callbacks,
 	}, nil
 }
@@ -92,23 +93,50 @@ func (c *RedisClient) SendRaw(bytes []byte) error {
 	return nil
 }
 
-func (c *RedisClient) ReadMessage() (resp.Value, error) {
-	return c.ReadMessageWithTimeout(2 * time.Second)
+func (c *RedisClient) ReadValue() (resp.Value, error) {
+	return c.ReadValueWithTimeout(2 * time.Second)
 }
 
-func (c *RedisClient) ReadMessageWithTimeout(timeout time.Duration) (resp.Value, error) {
-	c.Conn.SetReadDeadline(time.Now().Add(timeout))
+func (c *RedisClient) ReadValueWithTimeout(timeout time.Duration) (resp.Value, error) {
+	deadline := time.Now().Add(timeout)
 
-	n, err := c.Conn.Read(c.ReadBuffer)
+	for {
+		if time.Now().After(deadline) {
+			break
+		}
+
+		// Ensure we allow enough time for a read to complete
+		c.Conn.SetReadDeadline(time.Now().Add(100 * time.Millisecond))
+
+		buf := make([]byte, 1024)
+
+		// fmt.Println("Reading")
+		n, err := c.Conn.Read(buf)
+		if err != nil {
+			continue // Let's swallow these errors and try reading again anyway
+		}
+
+		c.ReadBuffer.Write(buf[:n])
+
+		// Let's try to decode the value at this point.
+		_, _, err = resp.Decode(c.ReadBuffer.Bytes())
+
+		if err == nil {
+			break // We were able to read a value!
+		}
+
+		if _, ok := err.(resp.InvalidRESPError); ok {
+			break // We've read an invalid value, we can stop reading immediately
+		}
+	}
+
+	value, readBytesCount, err := resp.Decode(c.ReadBuffer.Bytes())
 	if err != nil {
 		return resp.Value{}, err
 	}
 
-	value, _, err := resp.Decode(c.ReadBuffer[:n])
-	if err != nil {
-		return resp.Value{}, err
-	}
-
+	// We've read a value! Let's remove the bytes we've read from the buffer
+	c.ReadBuffer = *bytes.NewBuffer(c.ReadBuffer.Bytes()[readBytesCount:])
 	return value, nil
 }
 

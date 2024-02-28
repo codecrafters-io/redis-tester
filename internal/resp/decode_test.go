@@ -46,5 +46,5 @@ func TestDecodeInvalidSimpleStringFailure(t *testing.T) {
 Received: "OK\r\n"
            ^
 "O" is not a valid start of a new RESP value (expected +, -, :, $, or *)
-	`), invalidRespErr.DetailedError())
+	`), invalidRespErr.Error())
 }

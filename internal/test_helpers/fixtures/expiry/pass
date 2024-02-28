@@ -10,8 +10,9 @@ Debug = true
 
 [33m[stage-2] [0m[94mRunning tests for Stage #2: ping-pong[0m
 [33m[stage-2] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[stage-2] [0m[36mConnection established, sending PING command (*1\r\n$4\r\nping\r\n)[0m
+[33m[stage-2] [0m[36mConnection established, sending ping command...[0m
 [33m[stage-2] [0m[94m$ redis-cli ping[0m
+[33m[stage-2] [0m[36mSent bytes: "*1\r\n$4\r\nping\r\n"[0m
 [33m[stage-2] [0m[36mReading response...[0m
 [33m[stage-2] [0m[92mTest passed.[0m
 [33m[stage-2] [0m[36mTerminating program[0m
@@ -69,11 +70,11 @@ Debug = true
 [33m[stage-7] [0m[94mRunning tests for Stage #7: expiry[0m
 [33m[stage-7] [0m[94m$ ./spawn_redis_server.sh[0m
 [33m[stage-7] [0m[94m$ redis-cli set grapes apples px 100[0m
-[33m[stage-7] [0m[92mReceived OK (at 21:51:33.704)[0m
-[33m[stage-7] [0m[94m$ redis-cli get grapes (sent at 21:51:33.704, key should not be expired)[0m
+[33m[stage-7] [0m[92mReceived OK (at 22:25:36.770)[0m
+[33m[stage-7] [0m[94m$ redis-cli get grapes (sent at 22:25:36.771, key should not be expired)[0m
 [33m[stage-7] [0m[92mReceived "apples"[0m
 [33m[stage-7] [0m[36mSleeping for 101ms[0m
-[33m[stage-7] [0m[94m$ redis-cli get grapes (sent at 21:51:33.807, key should be expired)[0m
+[33m[stage-7] [0m[94m$ redis-cli get grapes (sent at 22:25:36.873, key should be expired)[0m
 [33m[stage-7] [0m[92mTest passed.[0m
 [33m[stage-7] [0m[36mTerminating program[0m
 [33m[stage-7] [0m[36mProgram terminated successfully[0m

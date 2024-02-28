@@ -1,6 +1,6 @@
 module github.com/codecrafters-io/redis-tester
 
-go 1.17
+go 1.21
 
 require (
 	github.com/codecrafters-io/tester-utils v0.2.12

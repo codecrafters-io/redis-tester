@@ -33,6 +33,11 @@ func getReaderOffset(reader *bytes.Reader) int {
 func readBytesFromReader(reader *bytes.Reader) []byte {
 	reader.Seek(0, 0)
 	bytes := make([]byte, reader.Len())
+
+	if reader.Len() == 0 {
+		return bytes
+	}
+
 	n, err := reader.Read(bytes)
 	if err != nil {
 		panic(fmt.Sprintf("Error reading from reader: %s", err)) // This should never happen
@@ -50,6 +55,7 @@ func formatDetailedError(reader *bytes.Reader, message string) string {
 	offset := getReaderOffset(reader)
 	receivedBytes := readBytesFromReader(reader)
 	receivedByteString := inspectable_byte_string.NewInspectableByteString(receivedBytes)
+	receivedByteString = receivedByteString.TruncateAroundOffset(offset)
 
 	lines = append(lines, fmt.Sprintf("Received: %s", receivedByteString.FormattedString()))
 	lines = append(lines, offsetPointerString(len("Received: ")+receivedByteString.GetOffsetInFormattedString(offset)))

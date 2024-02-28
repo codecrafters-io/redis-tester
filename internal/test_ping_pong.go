@@ -3,7 +3,7 @@ package internal
 import (
 	"fmt"
 
-	resp "github.com/codecrafters-io/redis-tester/internal/resp"
+	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	testerutils "github.com/codecrafters-io/tester-utils"
 	logger "github.com/codecrafters-io/tester-utils/logger"
 	"github.com/go-redis/redis"
@@ -30,18 +30,18 @@ func testPingPongOnce(stageHarness *testerutils.StageHarness) error {
 
 	logger.Debugln("Reading response...")
 
-	message, err := client.ReadMessage()
+	value, err := client.ReadValue()
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
 	}
 
-	if message.Type != resp.SIMPLE_STRING {
-		return fmt.Errorf("Expected simple string, got %#v", message.Type)
+	if err = resp_assertions.NewStringValueAssertion("PONG").Run(value); err != nil {
+		return err
 	}
 
-	if message.String() != "PONG" {
-		return fmt.Errorf("Expected \"PONG\", got %#v", message.String())
+	if client.ReadBuffer.Len() > 0 {
+		return fmt.Errorf("Found extra data: %q", client.ReadBuffer.String())
 	}
 
 	return nil
