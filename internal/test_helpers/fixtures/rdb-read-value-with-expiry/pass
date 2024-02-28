@@ -1,9 +1,10 @@
 Debug = true
 
-[33m[stage-1] [0m[94mRunning tests for Stage #1: init[0m
-[33m[stage-1] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[stage-1] [0m[94mConnecting to port 6379...[0m
-[33m[stage-1] [0m[36mConnection successful[0m
+[33m[stage-1] [0m[94mRunning tests for Stage #1: rdb-read-value-with-expiry[0m
+[33m[stage-1] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles2703349944 --dbfilename pear.rdb[0m
+[33m[stage-1] [0m[94m$ redis-cli GET orange[0m
+[33m[stage-1] [0m[94m$ redis-cli GET mango[0m
+[33m[stage-1] [0m[94m$ redis-cli GET pineapple[0m
 [33m[stage-1] [0m[92mTest passed.[0m
 [33m[stage-1] [0m[36mTerminating program[0m
 [33m[stage-1] [0m[36mProgram terminated successfully[0m

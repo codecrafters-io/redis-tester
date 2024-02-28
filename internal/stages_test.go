@@ -62,14 +62,16 @@ func TestStages(t *testing.T) {
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 		"rdb_pass": {
-			UntilStageSlug:      "rdb-read-value-with-expiry",
+			// UntilStageSlug:      "rdb-read-value-with-expiry",
+			StageSlugs:          []string{"rdb-read-value-with-expiry"},
 			CodePath:            "./test_helpers/pass_all",
 			ExpectedExitCode:    0,
 			StdoutFixturePath:   "./test_helpers/fixtures/rdb-read-value-with-expiry/pass",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 		"repl_pass": {
-			UntilStageSlug:      "repl-wait",
+			// UntilStageSlug:      "repl-wait",
+			StageSlugs:          []string{"repl-wait"},
 			CodePath:            "./test_helpers/pass_all",
 			ExpectedExitCode:    0,
 			StdoutFixturePath:   "./test_helpers/fixtures/repl-wait/pass",
@@ -94,6 +96,7 @@ func normalizeTesterOutput(testerOutput []byte) []byte {
 		"timestamp":      {regexp.MustCompile("\\d{2}:\\d{2}:\\d{2}\\.\\d{3}")},
 		"replication_id": {regexp.MustCompile("FULLRESYNC [A-Za-z0-9]+ 0 received.")},
 		"wait_timeout":   {regexp.MustCompile("WAIT command returned after [0-9]+ ms")},
+		"xadd_id":        {regexp.MustCompile("\\d{13}-\\d+")},
 	}
 
 	for replacement, regexes := range replacements {

@@ -1,9 +1,71 @@
 Debug = true
 
-[33m[stage-1] [0m[94mRunning tests for Stage #1: init[0m
-[33m[stage-1] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[stage-1] [0m[94mConnecting to port 6379...[0m
-[33m[stage-1] [0m[36mConnection successful[0m
+[33m[stage-1] [0m[94mRunning tests for Stage #1: repl-wait[0m
+[33m[stage-1] [0m[94m$ ./spawn_redis_server.sh --port 6379[0m
+[33m[stage-1] [0m[94mCreating 4 replicas.[0m
+[33m[stage-1] [0m[36mCreating replica : 1.[0m
+[33m[stage-1] [0m[94m[replica-1] $ redis-cli PING[0m
+[33m[stage-1] [0m[92m[replica-1] PONG received.[0m
+[33m[stage-1] [0m[94m[replica-1] $ redis-cli REPLCONF listening-port 6380[0m
+[33m[stage-1] [0m[92m[replica-1] OK received.[0m
+[33m[stage-1] [0m[94m[replica-1] $ redis-cli PSYNC ? -1[0m
+[33m[stage-1] [0m[92m[replica-1] FULLRESYNC 547f40e63e6ffd903f163057c5ddca1e19616027 0 received.[0m
+[33m[stage-1] [0m[92m[replica-1] Successfully received RDB file from master.[0m
+[33m[stage-1] [0m[36mCreating replica : 2.[0m
+[33m[stage-1] [0m[94m[replica-2] $ redis-cli PING[0m
+[33m[stage-1] [0m[92m[replica-2] PONG received.[0m
+[33m[stage-1] [0m[94m[replica-2] $ redis-cli REPLCONF listening-port 6380[0m
+[33m[stage-1] [0m[92m[replica-2] OK received.[0m
+[33m[stage-1] [0m[94m[replica-2] $ redis-cli PSYNC ? -1[0m
+[33m[stage-1] [0m[92m[replica-2] FULLRESYNC 547f40e63e6ffd903f163057c5ddca1e19616027 0 received.[0m
+[33m[stage-1] [0m[92m[replica-2] Successfully received RDB file from master.[0m
+[33m[stage-1] [0m[36mCreating replica : 3.[0m
+[33m[stage-1] [0m[94m[replica-3] $ redis-cli PING[0m
+[33m[stage-1] [0m[92m[replica-3] PONG received.[0m
+[33m[stage-1] [0m[94m[replica-3] $ redis-cli REPLCONF listening-port 6380[0m
+[33m[stage-1] [0m[92m[replica-3] OK received.[0m
+[33m[stage-1] [0m[94m[replica-3] $ redis-cli PSYNC ? -1[0m
+[33m[stage-1] [0m[92m[replica-3] FULLRESYNC 547f40e63e6ffd903f163057c5ddca1e19616027 0 received.[0m
+[33m[stage-1] [0m[92m[replica-3] Successfully received RDB file from master.[0m
+[33m[stage-1] [0m[36mCreating replica : 4.[0m
+[33m[stage-1] [0m[94m[replica-4] $ redis-cli PING[0m
+[33m[stage-1] [0m[92m[replica-4] PONG received.[0m
+[33m[stage-1] [0m[94m[replica-4] $ redis-cli REPLCONF listening-port 6380[0m
+[33m[stage-1] [0m[92m[replica-4] OK received.[0m
+[33m[stage-1] [0m[94m[replica-4] $ redis-cli PSYNC ? -1[0m
+[33m[stage-1] [0m[92m[replica-4] FULLRESYNC 547f40e63e6ffd903f163057c5ddca1e19616027 0 received.[0m
+[33m[stage-1] [0m[92m[replica-4] Successfully received RDB file from master.[0m
+[33m[stage-1] [0m[94m[client] $ redis-cli SET foo 123[0m
+[33m[stage-1] [0m[94m[client] $ redis-cli WAIT 1 500[0m
+[33m[stage-1] [0m[92m[replica-1] SELECT 0 received.[0m
+[33m[stage-1] [0m[92m[replica-1] SET foo 123 received.[0m
+[33m[stage-1] [0m[92m[replica-1] REPLCONF GETACK * received.[0m
+[33m[stage-1] [0m[94m[replica-1] $ redis-cli REPLCONF ACK 91[0m
+[33m[stage-1] [0m[92m[replica-2] SELECT 0 received.[0m
+[33m[stage-1] [0m[92m[replica-2] SET foo 123 received.[0m
+[33m[stage-1] [0m[92m[replica-2] REPLCONF GETACK * received.[0m
+[33m[stage-1] [0m[92m[replica-3] SELECT 0 received.[0m
+[33m[stage-1] [0m[92m[replica-3] SET foo 123 received.[0m
+[33m[stage-1] [0m[92m[replica-3] REPLCONF GETACK * received.[0m
+[33m[stage-1] [0m[92m[replica-4] SELECT 0 received.[0m
+[33m[stage-1] [0m[92m[replica-4] SET foo 123 received.[0m
+[33m[stage-1] [0m[92m[replica-4] REPLCONF GETACK * received.[0m
+[33m[stage-1] [0m[92m[client] 1 received.[0m
+[33m[stage-1] [0m[94m[client] $ redis-cli SET baz 789[0m
+[33m[stage-1] [0m[94m[client] $ redis-cli WAIT 4 2000[0m
+[33m[stage-1] [0m[92m[replica-1] SET baz 789 received.[0m
+[33m[stage-1] [0m[92m[replica-1] REPLCONF GETACK * received.[0m
+[33m[stage-1] [0m[94m[replica-1] $ redis-cli REPLCONF ACK 159[0m
+[33m[stage-1] [0m[92m[replica-2] SET baz 789 received.[0m
+[33m[stage-1] [0m[92m[replica-2] REPLCONF GETACK * received.[0m
+[33m[stage-1] [0m[94m[replica-2] $ redis-cli REPLCONF ACK 159[0m
+[33m[stage-1] [0m[92m[replica-3] SET baz 789 received.[0m
+[33m[stage-1] [0m[92m[replica-3] REPLCONF GETACK * received.[0m
+[33m[stage-1] [0m[94m[replica-3] $ redis-cli REPLCONF ACK 159[0m
+[33m[stage-1] [0m[92m[replica-4] SET baz 789 received.[0m
+[33m[stage-1] [0m[92m[replica-4] REPLCONF GETACK * received.[0m
+[33m[stage-1] [0m[92m[client] 3 received.[0m
+[33m[stage-1] [0m[94m[client] WAIT command returned after 2019 ms[0m
 [33m[stage-1] [0m[92mTest passed.[0m
 [33m[stage-1] [0m[36mTerminating program[0m
 [33m[stage-1] [0m[36mProgram terminated successfully[0m
