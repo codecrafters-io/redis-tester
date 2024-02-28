@@ -42,7 +42,7 @@ func testStreamsXreadBlock(stageHarness *testerutils.StageHarness) error {
 
 		resp, err = client.XRead(&redis.XReadArgs{
 			Streams: []string{randomKey, "0-1"},
-			Block:   1000,
+			Block:   1000 * time.Millisecond,
 		}).Result()
 
 		if err != nil {
@@ -102,7 +102,7 @@ func testStreamsXreadBlock(stageHarness *testerutils.StageHarness) error {
 
 	resp, err = client.XRead(&redis.XReadArgs{
 		Streams: []string{randomKey, "0-2"},
-		Block:   1000,
+		Block:   1000 * time.Millisecond,
 	}).Result()
 
 	if err != redis.Nil {
@@ -113,6 +113,8 @@ func testStreamsXreadBlock(stageHarness *testerutils.StageHarness) error {
 
 		logFriendlyError(logger, err)
 		return err
+	} else {
+		logger.Successf("Received nil response")
 	}
 
 	return nil
