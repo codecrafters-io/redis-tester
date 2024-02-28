@@ -31,7 +31,7 @@ func (t *XREADTest) Run(client *redis.Client, logger *logger.Logger) error {
 			Streams: t.streams,
 		}).Result()
 	} else {
-		logger.Infof("$ redis-cli block %v xread streams %s", t.block, strings.Join(t.streams, " "))
+		logger.Infof("$ redis-cli block %v xread streams %s", t.block.Milliseconds(), strings.Join(t.streams, " "))
 
 		resp, err = client.XRead(&redis.XReadArgs{
 			Streams: t.streams,
@@ -43,6 +43,10 @@ func (t *XREADTest) Run(client *redis.Client, logger *logger.Logger) error {
 		if err.Error() != t.expectedError {
 			logFriendlyError(logger, err)
 			return err
+		} else {
+			logFriendlyError(logger, err)
+			logger.Successf("Received error: \"%v\"", err.Error())
+			return nil
 		}
 	}
 
