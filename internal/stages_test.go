@@ -78,7 +78,7 @@ func TestStages(t *testing.T) {
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 		"streams_pass": {
-			UntilStageSlug:      "streams-xrange-min-id",
+			UntilStageSlug:      "streams-xrange-max-id",
 			CodePath:            "./test_helpers/pass_all",
 			ExpectedExitCode:    0,
 			StdoutFixturePath:   "./test_helpers/fixtures/streams/pass",
