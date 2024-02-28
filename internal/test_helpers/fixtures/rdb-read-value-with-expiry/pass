@@ -69,17 +69,29 @@ Debug = true
 [33m[stage-7] [0m[94mRunning tests for Stage #7: expiry[0m
 [33m[stage-7] [0m[94m$ ./spawn_redis_server.sh[0m
 [33m[stage-7] [0m[94m$ redis-cli set grapes apples px 100[0m
+<<<<<<< HEAD
 [33m[stage-7] [0m[92mReceived OK (at 17:09:18.350)[0m
 [33m[stage-7] [0m[94m$ redis-cli get grapes (sent at 17:09:18.350, key should not be expired)[0m
 [33m[stage-7] [0m[92mReceived "apples"[0m
 [33m[stage-7] [0m[36mSleeping for 101ms[0m
 [33m[stage-7] [0m[94m$ redis-cli get grapes (sent at 17:09:18.452, key should be expired)[0m
+=======
+[33m[stage-7] [0m[92mReceived OK (at 18:38:18.962)[0m
+[33m[stage-7] [0m[94m$ redis-cli get grapes (sent at 18:38:18.962, key should not be expired)[0m
+[33m[stage-7] [0m[92mReceived "apples"[0m
+[33m[stage-7] [0m[36mSleeping for 101ms[0m
+[33m[stage-7] [0m[94m$ redis-cli get grapes (sent at 18:38:19.064, key should be expired)[0m
+>>>>>>> CC-986-blocking-xread
 [33m[stage-7] [0m[92mTest passed.[0m
 [33m[stage-7] [0m[36mTerminating program[0m
 [33m[stage-7] [0m[36mProgram terminated successfully[0m
 
 [33m[stage-8] [0m[94mRunning tests for Stage #8: rdb-config[0m
+<<<<<<< HEAD
 [33m[stage-8] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles363376964 --dbfilename banana.rdb[0m
+=======
+[33m[stage-8] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles1080568834 --dbfilename banana.rdb[0m
+>>>>>>> CC-986-blocking-xread
 [33m[stage-8] [0m[94m$ redis-cli CONFIG GET dir[0m
 [33m[stage-8] [0m[92mTest passed.[0m
 [33m[stage-8] [0m[36mTerminating program[0m
@@ -87,7 +99,11 @@ Debug = true
 
 [33m[stage-9] [0m[94mRunning tests for Stage #9: rdb-read-key[0m
 [33m[stage-9] [0m[94mCreated RDB file with single key: "pear"[0m
+<<<<<<< HEAD
 [33m[stage-9] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles921831806 --dbfilename blueberry.rdb[0m
+=======
+[33m[stage-9] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles1823364455 --dbfilename blueberry.rdb[0m
+>>>>>>> CC-986-blocking-xread
 [33m[stage-9] [0m[94m$ redis-cli KEYS *[0m
 [33m[stage-9] [0m[92mTest passed.[0m
 [33m[stage-9] [0m[36mTerminating program[0m
@@ -95,7 +111,11 @@ Debug = true
 
 [33m[stage-10] [0m[94mRunning tests for Stage #10: rdb-read-string-value[0m
 [33m[stage-10] [0m[94mCreated RDB file with single key-value pair: strawberry="apple"[0m
+<<<<<<< HEAD
 [33m[stage-10] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles2327786764 --dbfilename banana.rdb[0m
+=======
+[33m[stage-10] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles2857280780 --dbfilename banana.rdb[0m
+>>>>>>> CC-986-blocking-xread
 [33m[stage-10] [0m[94m$ redis-cli GET strawberry[0m
 [33m[stage-10] [0m[92mTest passed.[0m
 [33m[stage-10] [0m[36mTerminating program[0m
@@ -103,7 +123,11 @@ Debug = true
 
 [33m[stage-11] [0m[94mRunning tests for Stage #11: rdb-read-multiple-keys[0m
 [33m[stage-11] [0m[94mCreated RDB file with 5 keys: ["orange" "blueberry" "strawberry" "pineapple" "banana"][0m
+<<<<<<< HEAD
 [33m[stage-11] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles2289160888 --dbfilename pear.rdb[0m
+=======
+[33m[stage-11] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles1915112043 --dbfilename pear.rdb[0m
+>>>>>>> CC-986-blocking-xread
 [33m[stage-11] [0m[94m$ redis-cli KEYS *[0m
 [33m[stage-11] [0m[92mTest passed.[0m
 [33m[stage-11] [0m[36mTerminating program[0m

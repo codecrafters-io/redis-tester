@@ -12,7 +12,7 @@ import (
 	"github.com/go-redis/redis"
 )
 
-func testStreamsXreadBlock(stageHarness *testerutils.StageHarness) error {
+func testStreamsXreadBlockNoTimeout(stageHarness *testerutils.StageHarness) error {
 	b := NewRedisBinary(stageHarness)
 	if err := b.Run(); err != nil {
 		return err
@@ -30,29 +30,27 @@ func testStreamsXreadBlock(stageHarness *testerutils.StageHarness) error {
 		expectedResponse: "0-1",
 	})
 
-	var resp []redis.XStream
-	var err error
-
-	done := make(chan bool)
+	respChan := make(chan *[]redis.XStream, 1)
 
 	go func() error {
-		logger.Infof("$ redis-cli block %v xread streams %s", 1000, strings.Join([]string{randomKey, "0-1"}, " "))
+		logger.Infof("$ redis-cli block %v xread streams %s", 0, strings.Join([]string{randomKey, "0-1"}, " "))
 
-		resp, err = client.XRead(&redis.XReadArgs{
+		resp, err := client.XRead(&redis.XReadArgs{
 			Streams: []string{randomKey, "0-1"},
-			Block:   1000,
+			Block:   0,
 		}).Result()
 
 		if err != nil {
-			logFriendlyError(logger, err)
+			logger.Errorf("Error: %v", err)
 			return err
 		}
 
-		done <- true
+		respChan <- &resp
+
 		return nil
 	}()
 
-	time.Sleep(500 * time.Millisecond)
+	time.Sleep(1000 * time.Millisecond)
 
 	testXadd(client, logger, XADDTest{
 		streamKey:        randomKey,
@@ -61,9 +59,9 @@ func testStreamsXreadBlock(stageHarness *testerutils.StageHarness) error {
 		expectedResponse: "0-2",
 	})
 
-	<-done
+	resp := <-respChan
 
-	expectedResp := []redis.XStream{
+	expectedResp := &[]redis.XStream{
 		{
 			Stream: randomKey,
 			Messages: []redis.XMessage{
@@ -95,15 +93,6 @@ func testStreamsXreadBlock(stageHarness *testerutils.StageHarness) error {
 	} else {
 		logger.Successf("Received response: \"%v\"", string(respJson))
 	}
-
-	blockDuration := 1000 * time.Millisecond
-
-	(&XREADTest{
-		streams:          []string{randomKey, "0-2"},
-		block:            &blockDuration,
-		expectedResponse: []redis.XStream(nil),
-		expectedError:    "redis: nil",
-	}).Run(client, logger)
 
 	return nil
 }
