@@ -172,5 +172,9 @@ var testerDefinition = testerutils.TesterDefinition{
 			Slug:     "streams-xrange-max-id",
 			TestFunc: testStreamsXrangeMaxId,
 		},
+		{
+			Slug:     "streams-xread",
+			TestFunc: testStreamsXread,
+		},
 	},
 }
