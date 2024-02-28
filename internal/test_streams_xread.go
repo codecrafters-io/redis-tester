@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"encoding/json"
 	"fmt"
 	"math/rand"
 	"reflect"
@@ -18,11 +19,11 @@ type XREADTest struct {
 	expectedError    error
 }
 
-func testXread(client *redis.Client, logger *logger.Logger, test XREADTest) error {
-	logger.Infof("$ redis-cli xread streams %s", strings.Join(test.streams, " "))
+func (t *XREADTest) Run(client *redis.Client, logger *logger.Logger) error {
+	logger.Infof("$ redis-cli xread streams %s", strings.Join(t.streams, " "))
 
 	resp, err := client.XRead(&redis.XReadArgs{
-		Streams: test.streams,
+		Streams: t.streams,
 	}).Result()
 
 	if err != nil {
@@ -30,11 +31,25 @@ func testXread(client *redis.Client, logger *logger.Logger, test XREADTest) erro
 		return err
 	}
 
-	if !reflect.DeepEqual(resp, test.expectedResponse) {
-		logger.Infof("Received response: \"%v\"", resp)
-		return fmt.Errorf("Expected %#v, got %#v", test.expectedResponse, resp)
+	expectedRespJson, err := json.MarshalIndent(t.expectedResponse, "", "  ")
+
+	if err != nil {
+		logFriendlyError(logger, err)
+		return err
+	}
+
+	respJson, err := json.MarshalIndent(resp, "", "  ")
+
+	if err != nil {
+		logFriendlyError(logger, err)
+		return err
+	}
+
+	if !reflect.DeepEqual(resp, t.expectedResponse) {
+		logger.Infof("Received response: \"%v\"", string(respJson))
+		return fmt.Errorf("Expected %#v, got %#v", string(expectedRespJson), string(respJson))
 	} else {
-		logger.Successf("Received response: \"%v\"", resp)
+		logger.Successf("Received response: \"%v\"", string(respJson))
 	}
 
 	return nil
@@ -84,10 +99,10 @@ func testStreamsXread(stageHarness *testerutils.StageHarness) error {
 		},
 	}
 
-	testXread(client, logger, XREADTest{
+	(&XREADTest{
 		streams:          []string{randomKey, "0-0"},
 		expectedResponse: expectedResp,
-	})
+	}).Run(client, logger)
 
 	return nil
 }

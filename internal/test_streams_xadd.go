@@ -3,6 +3,7 @@ package internal
 import (
 	"fmt"
 	"math/rand"
+	"strings"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
 	"github.com/codecrafters-io/tester-utils/logger"
@@ -18,7 +19,13 @@ type XADDTest struct {
 }
 
 func testXadd(client *redis.Client, logger *logger.Logger, test XADDTest) error {
-	logger.Infof("$ redis-cli xadd %s %s %s", test.streamKey, test.id, test.values)
+	var values []string
+
+	for key, value := range test.values {
+		values = append(values, key, fmt.Sprintf("%v", value))
+	}
+
+	logger.Infof("$ redis-cli xadd %s %s %s", test.streamKey, test.id, strings.Join(values, " "))
 
 	resp, err := client.XAdd(&redis.XAddArgs{
 		Stream: test.streamKey,
@@ -40,11 +47,11 @@ func testXadd(client *redis.Client, logger *logger.Logger, test XADDTest) error 
 	}
 
 	if resp != test.expectedResponse {
-    logger.Infof("Received response: \"%s\"", resp)
+		logger.Infof("Received response: \"%s\"", resp)
 		return fmt.Errorf("Expected %#v, got %#v", test.expectedResponse, resp)
 	} else {
-    logger.Successf("Received response: \"%s\"", resp)
-  }
+		logger.Successf("Received response: \"%s\"", resp)
+	}
 
 	return nil
 }

@@ -506,7 +506,7 @@ Debug = true
 
 [33m[stage-33] [0m[94mRunning tests for Stage #33: streams-xadd[0m
 [33m[stage-33] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[stage-33] [0m[94m$ redis-cli xadd hello 0-1 map[foo:bar][0m
+[33m[stage-33] [0m[94m$ redis-cli xadd hello 0-1 foo bar[0m
 [33m[stage-33] [0m[92mReceived response: "0-1"[0m
 [33m[stage-33] [0m[94m$ redis-cli type hello[0m
 [33m[stage-33] [0m[92mTest passed.[0m
@@ -515,35 +515,35 @@ Debug = true
 
 [33m[stage-34] [0m[94mRunning tests for Stage #34: streams-xadd-validate-id[0m
 [33m[stage-34] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[stage-34] [0m[94m$ redis-cli xadd mangos 1-1 map[foo:bar][0m
+[33m[stage-34] [0m[94m$ redis-cli xadd mangos 1-1 foo bar[0m
 [33m[stage-34] [0m[92mReceived response: "1-1"[0m
-[33m[stage-34] [0m[94m$ redis-cli xadd mangos 1-2 map[bar:baz][0m
+[33m[stage-34] [0m[94m$ redis-cli xadd mangos 1-2 bar baz[0m
 [33m[stage-34] [0m[92mReceived response: "1-2"[0m
-[33m[stage-34] [0m[94m$ redis-cli xadd mangos 1-2 map[baz:foo][0m
-[33m[stage-34] [0m[94m$ redis-cli xadd mangos 0-3 map[baz:foo][0m
-[33m[stage-34] [0m[94m$ redis-cli xadd mangos 0-0 map[baz:foo][0m
+[33m[stage-34] [0m[94m$ redis-cli xadd mangos 1-2 baz foo[0m
+[33m[stage-34] [0m[94m$ redis-cli xadd mangos 0-3 baz foo[0m
+[33m[stage-34] [0m[94m$ redis-cli xadd mangos 0-0 baz foo[0m
 [33m[stage-34] [0m[92mTest passed.[0m
 [33m[stage-34] [0m[36mTerminating program[0m
 [33m[stage-34] [0m[36mProgram terminated successfully[0m
 
 [33m[stage-35] [0m[94mRunning tests for Stage #35: streams-xadd-partial-autoid[0m
 [33m[stage-35] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[stage-35] [0m[94m$ redis-cli xadd oranges 0-* map[foo:bar][0m
+[33m[stage-35] [0m[94m$ redis-cli xadd oranges 0-* foo bar[0m
 [33m[stage-35] [0m[92mReceived response: "0-1"[0m
-[33m[stage-35] [0m[94m$ redis-cli xadd oranges 1-* map[foo:bar][0m
+[33m[stage-35] [0m[94m$ redis-cli xadd oranges 1-* foo bar[0m
 [33m[stage-35] [0m[92mReceived response: "1-0"[0m
-[33m[stage-35] [0m[94m$ redis-cli xadd oranges 1-* map[bar:baz][0m
+[33m[stage-35] [0m[94m$ redis-cli xadd oranges 1-* bar baz[0m
 [33m[stage-35] [0m[92mReceived response: "1-1"[0m
 [33m[stage-35] [0m[92mTest passed.[0m
 [33m[stage-35] [0m[36mTerminating program[0m
 [33m[stage-35] [0m[36mProgram terminated successfully[0m
 
-[33m[stage-36] [0m[94mRunning tests for Stage #36: streams-xread[0m
+[33m[stage-36] [0m[94mRunning tests for Stage #36: streams-xadd-full-autoid[0m
 [33m[stage-36] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[stage-36] [0m[94m$ redis-cli xadd pears 0-1 map[foo:bar][0m
-[33m[stage-36] [0m[92mReceived response: "0-1"[0m
-[33m[stage-36] [0m[94m$ redis-cli xread streams pears 0-0[0m
-[33m[stage-36] [0m[92mReceived response: "[{pears [{0-1 map[foo:bar]}]}]"[0m
+[33m[stage-36] [0m[94m$ redis-cli xadd pears * foo bar[0m
+[33m[stage-36] [0m[94mReceived response: "1709100767452-0"[0m
+[33m[stage-36] [0m[92mThe first part of the ID is a valid unix milliseconds timestamp[0m
+[33m[stage-36] [0m[92mThe second part of the ID is a valid sequence number[0m
 [33m[stage-36] [0m[92mTest passed.[0m
 [33m[stage-36] [0m[36mTerminating program[0m
 [33m[stage-36] [0m[36mProgram terminated successfully[0m
