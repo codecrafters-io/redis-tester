@@ -1,4 +1,4 @@
-package internal
+package instrumented_redis_client
 
 import (
 	"strings"
