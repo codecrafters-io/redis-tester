@@ -27,7 +27,7 @@ func NewRedisClient(addr string) (*RedisClient, error) {
 }
 
 func (c *RedisClient) SendCommand(command string, args ...string) error {
-	encodedValue := resp.EncodeValue(resp.NewStringArrayValue(append([]string{command}, args...)))
+	encodedValue := resp.Encode(resp.NewStringArrayValue(append([]string{command}, args...)))
 
 	n, err := c.Conn.Write(encodedValue)
 	if err != nil {
@@ -43,10 +43,10 @@ func (c *RedisClient) SendCommand(command string, args ...string) error {
 }
 
 func (c *RedisClient) ReadMessage() (resp.Value, error) {
-	return c.ReadMessageWithCustomTimeout(2 * time.Second)
+	return c.ReadMessageWithTimeout(2 * time.Second)
 }
 
-func (c *RedisClient) ReadMessageWithCustomTimeout(timeout time.Duration) (resp.Value, error) {
+func (c *RedisClient) ReadMessageWithTimeout(timeout time.Duration) (resp.Value, error) {
 	c.Conn.SetReadDeadline(time.Now().Add(timeout))
 
 	n, err := c.Conn.Read(c.ReadBuffer)
@@ -54,7 +54,7 @@ func (c *RedisClient) ReadMessageWithCustomTimeout(timeout time.Duration) (resp.
 		return resp.Value{}, err
 	}
 
-	return resp.DecodeValue(c.ReadBuffer[:n])
+	return resp.Decode(c.ReadBuffer[:n])
 }
 
 func newRedisConn(address string) (net.Conn, error) {
