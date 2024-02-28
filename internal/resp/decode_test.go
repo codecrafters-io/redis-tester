@@ -33,7 +33,7 @@ func TestDecodeIncompleteSimpleStringFailure(t *testing.T) {
 Received: "+OK"
               ^
 Expected \r\n at the end of a simple string.
-	`), incompleteRespErr.DetailedError())
+	`), incompleteRespErr.Error())
 }
 
 func TestDecodeInvalidSimpleStringFailure(t *testing.T) {

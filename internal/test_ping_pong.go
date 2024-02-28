@@ -3,7 +3,6 @@ package internal
 import (
 	"fmt"
 
-	redis_client "github.com/codecrafters-io/redis-tester/internal/redis_client"
 	resp "github.com/codecrafters-io/redis-tester/internal/resp"
 	testerutils "github.com/codecrafters-io/tester-utils"
 	logger "github.com/codecrafters-io/tester-utils/logger"
@@ -18,7 +17,7 @@ func testPingPongOnce(stageHarness *testerutils.StageHarness) error {
 
 	logger := stageHarness.Logger
 
-	client, err := redis_client.NewRedisClient("localhost:6379")
+	client, err := NewInstrumentedRedisClient(stageHarness, "localhost:6379")
 	if err != nil {
 		return err
 	}
