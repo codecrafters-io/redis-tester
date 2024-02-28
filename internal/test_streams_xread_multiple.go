@@ -17,18 +17,20 @@ func testStreamsXreadMultiple(stageHarness *testerutils.StageHarness) error {
 
 	randomKey := testerutils_random.RandomWord()
 	otherRandomKey := testerutils_random.RandomWord()
+	randomInt := testerutils_random.RandomInt(1, 100)
+	otherRandomInt := testerutils_random.RandomInt(1, 100)
 
 	testXadd(client, logger, XADDTest{
 		streamKey:        randomKey,
 		id:               "0-1",
-		values:           map[string]interface{}{"foo": "bar"},
+		values:           map[string]interface{}{"temperature": randomInt},
 		expectedResponse: "0-1",
 	})
 
 	testXadd(client, logger, XADDTest{
 		streamKey:        otherRandomKey,
 		id:               "0-2",
-		values:           map[string]interface{}{"bar": "baz"},
+		values:           map[string]interface{}{"humidity": otherRandomInt},
 		expectedResponse: "0-2",
 	})
 
@@ -38,7 +40,7 @@ func testStreamsXreadMultiple(stageHarness *testerutils.StageHarness) error {
 			Messages: []redis.XMessage{
 				{
 					ID:     "0-1",
-					Values: map[string]interface{}{"foo": "bar"},
+					Values: map[string]interface{}{"temperature": randomInt},
 				},
 			},
 		},
@@ -47,7 +49,7 @@ func testStreamsXreadMultiple(stageHarness *testerutils.StageHarness) error {
 			Messages: []redis.XMessage{
 				{
 					ID:     "0-2",
-					Values: map[string]interface{}{"bar": "baz"},
+					Values: map[string]interface{}{"humidity": otherRandomInt},
 				},
 			},
 		},
