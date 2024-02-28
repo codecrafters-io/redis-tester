@@ -98,14 +98,22 @@ func testStreamsXreadBlock(stageHarness *testerutils.StageHarness) error {
 		logger.Successf("Received response: \"%v\"", string(respJson))
 	}
 
-	blockDuration := 1000 * time.Millisecond
+	logger.Infof("$ redis-cli xread block %v streams %s", 1000, strings.Join([]string{randomKey, "0-2"}, " "))
 
-	(&XREADTest{
-		streams:          []string{randomKey, "0-2"},
-		block:            &blockDuration,
-		expectedResponse: []redis.XStream(nil),
-		expectedError:    "redis: nil",
-	}).Run(client, logger)
+	resp, err = client.XRead(&redis.XReadArgs{
+		Streams: []string{randomKey, "0-2"},
+		Block:   1000,
+	}).Result()
+
+	if err != redis.Nil {
+		if err == nil {
+			logger.Debugf("Hint: Read about null bulk strings in the Redis protocol docs")
+			return fmt.Errorf("Expected null string, got %#v", resp)
+		}
+
+		logFriendlyError(logger, err)
+		return err
+	}
 
 	return nil
 }

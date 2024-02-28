@@ -17,7 +17,6 @@ type XREADTest struct {
 	streams          []string
 	block            *time.Duration
 	expectedResponse []redis.XStream
-	expectedError    string
 }
 
 func (t *XREADTest) Run(client *redis.Client, logger *logger.Logger) error {
@@ -37,17 +36,6 @@ func (t *XREADTest) Run(client *redis.Client, logger *logger.Logger) error {
 			Streams: t.streams,
 			Block:   *t.block,
 		}).Result()
-	}
-
-	if t.expectedError != "" {
-		if err.Error() != t.expectedError {
-			logFriendlyError(logger, err)
-			return err
-		} else {
-			logFriendlyError(logger, err)
-			logger.Successf("Received error: \"%v\"", err.Error())
-			return nil
-		}
 	}
 
 	if err != nil {
