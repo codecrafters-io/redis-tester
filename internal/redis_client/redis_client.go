@@ -51,7 +51,7 @@ func (c *RedisClient) ReadMessageWithCustomTimeout(timeout time.Duration) (resp.
 
 	n, err := c.Conn.Read(c.ReadBuffer)
 	if err != nil {
-		return nil, err
+		return resp.Value{}, err
 	}
 
 	return resp.DecodeValue(c.ReadBuffer[:n])

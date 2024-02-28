@@ -1,11 +1,11 @@
-package redis_client
+package resp
 
 import (
 	"fmt"
 	"strconv"
 )
 
-func EncodeValue(v Value) []byte {
+func Encode(v Value) []byte {
 	switch v.Type {
 	case INTEGER:
 		return encodeInteger(v)
@@ -47,7 +47,7 @@ func encodeArray(v Value) []byte {
 	res := []byte{}
 
 	for _, elem := range v.array {
-		res = append(res, EncodeValue(elem)...)
+		res = append(res, Encode(elem)...)
 	}
 
 	return []byte(fmt.Sprintf("*%d\r\n%s", len(v.array), res))
