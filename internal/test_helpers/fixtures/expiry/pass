@@ -14,18 +14,29 @@ Debug = true
 [33m[stage-2] [0m[94m$ redis-cli ping[0m
 [33m[stage-2] [0m[36mSent bytes: "*1\r\n$4\r\nping\r\n"[0m
 [33m[stage-2] [0m[36mReading response...[0m
+[33m[stage-2] [0m[36mReceived RESP value: "PONG"[0m
+[33m[stage-2] [0m[92mReceived "PONG"[0m
 [33m[stage-2] [0m[92mTest passed.[0m
 [33m[stage-2] [0m[36mTerminating program[0m
 [33m[stage-2] [0m[36mProgram terminated successfully[0m
 
 [33m[stage-3] [0m[94mRunning tests for Stage #3: ping-pong-multiple[0m
 [33m[stage-3] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[stage-3] [0m[94mclient-1: Sending ping command...[0m
-[33m[stage-3] [0m[92mclient-1: Received PONG.[0m
-[33m[stage-3] [0m[94mclient-1: Sending ping command...[0m
-[33m[stage-3] [0m[92mclient-1: Received PONG.[0m
-[33m[stage-3] [0m[94mclient-1: Sending ping command...[0m
-[33m[stage-3] [0m[92mclient-1: Received PONG.[0m
+[33m[stage-3] [0m[94mclient-1: $ redis-cli ping[0m
+[33m[stage-3] [0m[36mclient-1: Sent bytes: "*1\r\n$4\r\nping\r\n"[0m
+[33m[stage-3] [0m[36mReading response...[0m
+[33m[stage-3] [0m[36mclient-1: Received RESP value: "PONG"[0m
+[33m[stage-3] [0m[92mReceived "PONG"[0m
+[33m[stage-3] [0m[94mclient-1: $ redis-cli ping[0m
+[33m[stage-3] [0m[36mclient-1: Sent bytes: "*1\r\n$4\r\nping\r\n"[0m
+[33m[stage-3] [0m[36mReading response...[0m
+[33m[stage-3] [0m[36mclient-1: Received RESP value: "PONG"[0m
+[33m[stage-3] [0m[92mReceived "PONG"[0m
+[33m[stage-3] [0m[94mclient-1: $ redis-cli ping[0m
+[33m[stage-3] [0m[36mclient-1: Sent bytes: "*1\r\n$4\r\nping\r\n"[0m
+[33m[stage-3] [0m[36mReading response...[0m
+[33m[stage-3] [0m[36mclient-1: Received RESP value: "PONG"[0m
+[33m[stage-3] [0m[92mReceived "PONG"[0m
 [33m[stage-3] [0m[36mSuccess, closing connection...[0m
 [33m[stage-3] [0m[92mTest passed.[0m
 [33m[stage-3] [0m[36mTerminating program[0m
@@ -33,19 +44,37 @@ Debug = true
 
 [33m[stage-4] [0m[94mRunning tests for Stage #4: concurrent-clients[0m
 [33m[stage-4] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[stage-4] [0m[94mclient-1: Sending ping command...[0m
-[33m[stage-4] [0m[92mclient-1: Received PONG.[0m
-[33m[stage-4] [0m[94mclient-2: Sending ping command...[0m
-[33m[stage-4] [0m[92mclient-2: Received PONG.[0m
-[33m[stage-4] [0m[94mclient-1: Sending ping command...[0m
-[33m[stage-4] [0m[92mclient-1: Received PONG.[0m
-[33m[stage-4] [0m[94mclient-1: Sending ping command...[0m
-[33m[stage-4] [0m[92mclient-1: Received PONG.[0m
-[33m[stage-4] [0m[94mclient-2: Sending ping command...[0m
-[33m[stage-4] [0m[92mclient-2: Received PONG.[0m
+[33m[stage-4] [0m[94mclient-1: $ redis-cli ping[0m
+[33m[stage-4] [0m[36mclient-1: Sent bytes: "*1\r\n$4\r\nping\r\n"[0m
+[33m[stage-4] [0m[36mReading response...[0m
+[33m[stage-4] [0m[36mclient-1: Received RESP value: "PONG"[0m
+[33m[stage-4] [0m[92mReceived "PONG"[0m
+[33m[stage-4] [0m[94mclient-2: $ redis-cli ping[0m
+[33m[stage-4] [0m[36mclient-2: Sent bytes: "*1\r\n$4\r\nping\r\n"[0m
+[33m[stage-4] [0m[36mReading response...[0m
+[33m[stage-4] [0m[36mclient-2: Received RESP value: "PONG"[0m
+[33m[stage-4] [0m[92mReceived "PONG"[0m
+[33m[stage-4] [0m[94mclient-1: $ redis-cli ping[0m
+[33m[stage-4] [0m[36mclient-1: Sent bytes: "*1\r\n$4\r\nping\r\n"[0m
+[33m[stage-4] [0m[36mReading response...[0m
+[33m[stage-4] [0m[36mclient-1: Received RESP value: "PONG"[0m
+[33m[stage-4] [0m[92mReceived "PONG"[0m
+[33m[stage-4] [0m[94mclient-1: $ redis-cli ping[0m
+[33m[stage-4] [0m[36mclient-1: Sent bytes: "*1\r\n$4\r\nping\r\n"[0m
+[33m[stage-4] [0m[36mReading response...[0m
+[33m[stage-4] [0m[36mclient-1: Received RESP value: "PONG"[0m
+[33m[stage-4] [0m[92mReceived "PONG"[0m
+[33m[stage-4] [0m[94mclient-2: $ redis-cli ping[0m
+[33m[stage-4] [0m[36mclient-2: Sent bytes: "*1\r\n$4\r\nping\r\n"[0m
+[33m[stage-4] [0m[36mReading response...[0m
+[33m[stage-4] [0m[36mclient-2: Received RESP value: "PONG"[0m
+[33m[stage-4] [0m[92mReceived "PONG"[0m
 [33m[stage-4] [0m[36mclient-1: Success, closing connection...[0m
-[33m[stage-4] [0m[94mclient-3: Sending ping command...[0m
-[33m[stage-4] [0m[92mclient-3: Received PONG.[0m
+[33m[stage-4] [0m[94mclient-3: $ redis-cli ping[0m
+[33m[stage-4] [0m[36mclient-3: Sent bytes: "*1\r\n$4\r\nping\r\n"[0m
+[33m[stage-4] [0m[36mReading response...[0m
+[33m[stage-4] [0m[36mclient-3: Received RESP value: "PONG"[0m
+[33m[stage-4] [0m[92mReceived "PONG"[0m
 [33m[stage-4] [0m[36mclient-2: Success, closing connection...[0m
 [33m[stage-4] [0m[36mclient-3: Success, closing connection...[0m
 [33m[stage-4] [0m[92mTest passed.[0m
@@ -54,7 +83,11 @@ Debug = true
 
 [33m[stage-5] [0m[94mRunning tests for Stage #5: echo[0m
 [33m[stage-5] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[stage-5] [0m[36mSending command: echo apples[0m
+[33m[stage-5] [0m[94m$ redis-cli echo pear[0m
+[33m[stage-5] [0m[36mSent bytes: "*2\r\n$4\r\necho\r\n$4\r\npear\r\n"[0m
+[33m[stage-5] [0m[36mReading response...[0m
+[33m[stage-5] [0m[36mReceived RESP value: "pear"[0m
+[33m[stage-5] [0m[92mReceived "pear"[0m
 [33m[stage-5] [0m[92mTest passed.[0m
 [33m[stage-5] [0m[36mTerminating program[0m
 [33m[stage-5] [0m[36mProgram terminated successfully[0m
@@ -70,11 +103,11 @@ Debug = true
 [33m[stage-7] [0m[94mRunning tests for Stage #7: expiry[0m
 [33m[stage-7] [0m[94m$ ./spawn_redis_server.sh[0m
 [33m[stage-7] [0m[94m$ redis-cli set grapes apples px 100[0m
-[33m[stage-7] [0m[92mReceived OK (at 22:25:36.770)[0m
-[33m[stage-7] [0m[94m$ redis-cli get grapes (sent at 22:25:36.771, key should not be expired)[0m
+[33m[stage-7] [0m[92mReceived OK (at 23:27:56.654)[0m
+[33m[stage-7] [0m[94m$ redis-cli get grapes (sent at 23:27:56.655, key should not be expired)[0m
 [33m[stage-7] [0m[92mReceived "apples"[0m
 [33m[stage-7] [0m[36mSleeping for 101ms[0m
-[33m[stage-7] [0m[94m$ redis-cli get grapes (sent at 22:25:36.873, key should be expired)[0m
+[33m[stage-7] [0m[94m$ redis-cli get grapes (sent at 23:27:56.757, key should be expired)[0m
 [33m[stage-7] [0m[92mTest passed.[0m
 [33m[stage-7] [0m[36mTerminating program[0m
 [33m[stage-7] [0m[36mProgram terminated successfully[0m

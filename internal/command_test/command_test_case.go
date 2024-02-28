@@ -27,7 +27,7 @@ func (t CommandTestCase) Run(client *redis_client.RedisClient, logger *logger.Lo
 		return err
 	}
 
-	if err = resp_assertions.NewStringValueAssertion("PONG").Run(value); err != nil {
+	if err = t.Assertion.Run(value); err != nil {
 		return err
 	}
 
