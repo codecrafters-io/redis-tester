@@ -160,5 +160,9 @@ var testerDefinition = testerutils.TesterDefinition{
 			Slug:     "streams-xadd-full-autoid",
 			TestFunc: testStreamsXaddFullAutoid,
 		},
+		{
+			Slug:     "streams-xrange",
+			TestFunc: testStreamsXrange,
+		},
 	},
 }
