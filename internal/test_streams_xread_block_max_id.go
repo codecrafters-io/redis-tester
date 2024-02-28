@@ -1,12 +1,14 @@
 package internal
 
 import (
+	"encoding/json"
 	"fmt"
-	"math/rand"
 	"reflect"
+	"strings"
 	"time"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
+	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/go-redis/redis"
 )
 
@@ -17,23 +19,9 @@ func testStreamsXreadBlockMaxId(stageHarness *testerutils.StageHarness) error {
 	}
 
 	logger := stageHarness.Logger
-
 	client := NewRedisClient("localhost:6379")
 
-	strings := [10]string{
-		"hello",
-		"world",
-		"mangos",
-		"apples",
-		"oranges",
-		"watermelons",
-		"grapes",
-		"pears",
-		"horses",
-		"elephants",
-	}
-
-	randomKey := strings[rand.Intn(10)]
+	randomKey := testerutils_random.RandomWord()
 
 	testXadd(client, logger, XADDTest{
 		streamKey:        randomKey,
@@ -42,9 +30,11 @@ func testStreamsXreadBlockMaxId(stageHarness *testerutils.StageHarness) error {
 		expectedResponse: "0-1",
 	})
 
-	respChan := make(chan *redis.XStream, 1)
+	respChan := make(chan *[]redis.XStream, 1)
 
 	go func() error {
+		logger.Infof("$ redis-cli block %v xread streams %s", 0, strings.Join([]string{randomKey, "0-1"}, " "))
+
 		resp, err := client.XRead(&redis.XReadArgs{
 			Streams: []string{randomKey, "$"},
 			Block:   0,
@@ -55,12 +45,12 @@ func testStreamsXreadBlockMaxId(stageHarness *testerutils.StageHarness) error {
 			return err
 		}
 
-		respChan <- &resp[0]
+		respChan <- &resp
 
 		return nil
 	}()
 
-	time.Sleep(time.Second)
+	time.Sleep(1000 * time.Millisecond)
 
 	testXadd(client, logger, XADDTest{
 		streamKey:        randomKey,
@@ -71,21 +61,37 @@ func testStreamsXreadBlockMaxId(stageHarness *testerutils.StageHarness) error {
 
 	resp := <-respChan
 
-	expectedResp := &redis.XStream{
-		Stream: randomKey,
-		Messages: []redis.XMessage{
-			{
-				ID:     "0-2",
-				Values: map[string]interface{}{"bar": "baz"},
+	expectedResp := &[]redis.XStream{
+		{
+			Stream: randomKey,
+			Messages: []redis.XMessage{
+				{
+					ID:     "0-2",
+					Values: map[string]interface{}{"bar": "baz"},
+				},
 			},
 		},
 	}
 
+	expectedRespJson, err := json.MarshalIndent(expectedResp, "", "  ")
+
+	if err != nil {
+		logFriendlyError(logger, err)
+		return err
+	}
+
+	respJson, err := json.MarshalIndent(resp, "", "  ")
+
+	if err != nil {
+		logFriendlyError(logger, err)
+		return err
+	}
+
 	if !reflect.DeepEqual(resp, expectedResp) {
-		logger.Infof("Received response: \"%v\"", resp)
-		return fmt.Errorf("Expected %#v, got %#v", expectedResp, resp)
+		logger.Infof("Received response: \"%v\"", string(respJson))
+		return fmt.Errorf("Expected %#v, got %#v", string(expectedRespJson), string(respJson))
 	} else {
-		logger.Successf("Received response: \"%v\"", resp)
+		logger.Successf("Received response: \"%v\"", string(respJson))
 	}
 
 	return nil
