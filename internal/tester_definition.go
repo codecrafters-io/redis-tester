@@ -188,5 +188,9 @@ var testerDefinition = testerutils.TesterDefinition{
 			Slug:     "streams-xread-block-no-timeout",
 			TestFunc: testStreamsXreadBlockNoTimeout,
 		},
+		{
+			Slug:     "streams-xread-block-max-id",
+			TestFunc: testStreamsXreadBlockMaxId,
+		},
 	},
 }

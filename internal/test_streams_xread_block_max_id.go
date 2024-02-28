@@ -13,7 +13,7 @@ import (
 	"github.com/go-redis/redis"
 )
 
-func testStreamsXreadBlockNoTimeout(stageHarness *testerutils.StageHarness) error {
+func testStreamsXreadBlockMaxId(stageHarness *testerutils.StageHarness) error {
 	b := NewRedisBinary(stageHarness)
 	if err := b.Run(); err != nil {
 		return err
@@ -38,7 +38,7 @@ func testStreamsXreadBlockNoTimeout(stageHarness *testerutils.StageHarness) erro
 		logger.Infof("$ redis-cli xread block %v streams %s", 0, strings.Join([]string{randomKey, "0-1"}, " "))
 
 		resp, err := client.XRead(&redis.XReadArgs{
-			Streams: []string{randomKey, "0-1"},
+			Streams: []string{randomKey, "$"},
 			Block:   0,
 		}).Result()
 
