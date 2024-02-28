@@ -149,6 +149,26 @@ var testerDefinition = testerutils.TesterDefinition{
 			TestFunc: testStreamsXadd,
 		},
 		{
+			Slug:     "streams-xadd-validate-id",
+			TestFunc: testStreamsXaddValidateId,
+		},
+		{
+			Slug:     "streams-xadd-partial-autoid",
+			TestFunc: testStreamsXaddPartialAutoid,
+		},
+		{
+			Slug:     "streams-xadd-full-autoid",
+			TestFunc: testStreamsXaddFullAutoid,
+		},
+		{
+			Slug:     "streams-xrange",
+			TestFunc: testStreamsXrange,
+		},
+		{
+			Slug:     "streams-xrange-min-id",
+			TestFunc: testStreamsXrangeMinId,
+		},
+		{
 			Slug:     "streams-xrange-max-id",
 			TestFunc: testStreamsXrangeMaxId,
 		},

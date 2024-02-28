@@ -2,7 +2,9 @@ package internal
 
 import (
 	"fmt"
+	"net"
 	"strings"
+	"time"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
 )
@@ -13,20 +15,32 @@ func antiCheatTest(stageHarness *testerutils.StageHarness) error {
 		return err
 	}
 
-	client := NewRedisClient("localhost:6379")
 	logger := stageHarness.Logger
-
-	result := client.Info("server")
-	if result.Err() != nil {
-		return nil
-	}
-
-	str, err := result.Result()
+	conn, err := NewRedisConn("", "localhost:6379")
 	if err != nil {
+		logger.Debugf("Error connecting to TCP server: %v", err)
+		return err
+	}
+	defer conn.Close()
+
+	if err := conn.SetReadDeadline(time.Now().Add(100 * time.Millisecond)); err != nil {
+		return fmt.Errorf("Error setting read deadline: %w", err)
+	}
+
+	client := NewFakeRedisClient(conn, logger)
+	if err := client.Send([]string{"MEMORY", "DOCTOR"}); err != nil {
+		return fmt.Errorf("Error sending command to Redis: %w", err)
+	}
+
+	actualMessage, err := client.readRespString()
+	if err != nil {
+		if netErr, ok := err.(net.Error); ok && netErr.Timeout() {
+			return nil // Read timed out. No data received from client.
+		}
 		return nil
 	}
 
-	if !strings.HasPrefix(str, "# Server") {
+	if !strings.Contains(actualMessage, "memory") {
 		return nil
 	}
 

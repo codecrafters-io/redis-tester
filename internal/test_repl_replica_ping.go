@@ -8,11 +8,13 @@ import (
 )
 
 func testReplReplicaSendsPing(stageHarness *testerutils.StageHarness) error {
+	logger := stageHarness.Logger
+
 	listener, err := net.Listen("tcp", ":6379")
 	if err != nil {
-		fmt.Println("Error starting TCP server:", err)
+		logFriendlyBindError(logger, err)
+		return fmt.Errorf("Error starting TCP server: %v", err)
 	}
-	logger := stageHarness.Logger
 
 	logger.Infof("Master is running on port 6379.")
 
