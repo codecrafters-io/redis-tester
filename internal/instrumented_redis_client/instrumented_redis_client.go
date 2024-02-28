@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	redis_client "github.com/codecrafters-io/redis-tester/internal/redis_client"
+	"github.com/codecrafters-io/redis-tester/internal/resp"
 	testerutils "github.com/codecrafters-io/tester-utils"
 )
 
@@ -20,6 +21,12 @@ func NewInstrumentedRedisClient(stageHarness *testerutils.StageHarness, addr str
 			},
 			OnRawSend: func(bytes []byte) {
 				stageHarness.Logger.Debugf("Sent bytes: %q", string(bytes))
+			},
+			OnRawRead: func(bytes []byte) {
+				stageHarness.Logger.Debugf("Received bytes: %q", string(bytes))
+			},
+			OnValueRead: func(value resp.Value) {
+				stageHarness.Logger.Debugf("Received RESP value: %s", value.FormattedString())
 			},
 		},
 	)

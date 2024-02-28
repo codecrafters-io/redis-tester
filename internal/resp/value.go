@@ -76,6 +76,27 @@ func (v *Value) String() string {
 	return string(v.data)
 }
 
-func (v *Value) Integer() (int, error) {
-	return strconv.Atoi(string(v.data))
+func (v *Value) Integer() int {
+	i, err := strconv.Atoi(string(v.data))
+	if err != nil {
+		panic("invalid integer") // This should never happen since we create values
+	}
+	return i
+}
+
+func (v *Value) FormattedString() string {
+	switch v.Type {
+	case SIMPLE_STRING:
+		return fmt.Sprintf("%q", v.String())
+	case INTEGER:
+		return fmt.Sprintf("%q", v.Integer())
+	case BULK_STRING:
+		return fmt.Sprintf("%q", v.String())
+	case ARRAY:
+		return fmt.Sprintf("%q", v.Array())
+	case ERROR:
+		return fmt.Sprintf("%q", "ERR: "+v.String())
+	}
+
+	return ""
 }
