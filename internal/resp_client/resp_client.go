@@ -12,21 +12,21 @@ import (
 )
 
 type RespClientCallbacks struct {
-	// OnSendCommand is called when a command is sent to the server.
+	// BeforeSendCommand is called when a command is sent to the server.
 	// This can be useful for info logs.
-	OnSendCommand func(command string, args ...string)
+	BeforeSendCommand func(command string, args ...string)
 
-	// OnBytesSent is called when raw bytes are sent to the server.
+	// BeforeSendBytes is called when raw bytes are sent to the server.
 	// This can be useful for debug logs.
-	OnBytesSent func(bytes []byte)
+	BeforeSendBytes func(bytes []byte)
 
-	// OnBytesReceived is called when raw bytes are read from the server.
+	// AfterBytesReceived is called when raw bytes are read from the server.
 	// This can be useful for debug logs.
-	OnBytesReceived func(bytes []byte)
+	AfterBytesReceived func(bytes []byte)
 
-	// OnValueRead is called when a RESP value is decoded from bytes read from the server.
+	// AfterReadValue is called when a RESP value is decoded from bytes read from the server.
 	// This can be useful for success logs.
-	OnValueRead func(value resp_value.Value)
+	AfterReadValue func(value resp_value.Value)
 }
 
 type RespClient struct {
@@ -76,8 +76,8 @@ func (c *RespClient) Close() error {
 }
 
 func (c *RespClient) SendCommand(command string, args ...string) error {
-	if c.Callbacks.OnSendCommand != nil {
-		c.Callbacks.OnSendCommand(command, args...)
+	if c.Callbacks.BeforeSendCommand != nil {
+		c.Callbacks.BeforeSendCommand(command, args...)
 	}
 
 	encodedValue := resp_encoder.Encode(resp_value.NewStringArrayValue(append([]string{command}, args...)))
@@ -85,8 +85,8 @@ func (c *RespClient) SendCommand(command string, args ...string) error {
 }
 
 func (c *RespClient) SendRaw(bytes []byte) error {
-	if c.Callbacks.OnBytesSent != nil {
-		c.Callbacks.OnBytesSent(bytes)
+	if c.Callbacks.BeforeSendBytes != nil {
+		c.Callbacks.BeforeSendBytes(bytes)
 	}
 
 	n, err := c.Conn.Write(bytes)
@@ -145,8 +145,8 @@ func (c *RespClient) ReadValueWithTimeout(timeout time.Duration) (resp_value.Val
 
 	value, readBytesCount, err := resp_decoder.Decode(c.UnreadBuffer.Bytes())
 	if err != nil {
-		if c.Callbacks.OnBytesReceived != nil {
-			c.Callbacks.OnBytesReceived(c.UnreadBuffer.Bytes())
+		if c.Callbacks.AfterBytesReceived != nil {
+			c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes())
 		}
 
 		return resp_value.Value{}, err
@@ -156,8 +156,8 @@ func (c *RespClient) ReadValueWithTimeout(timeout time.Duration) (resp_value.Val
 	c.LastValueBytes = c.UnreadBuffer.Bytes()[:readBytesCount]
 	c.UnreadBuffer = *bytes.NewBuffer(c.UnreadBuffer.Bytes()[readBytesCount:])
 
-	if c.Callbacks.OnValueRead != nil {
-		c.Callbacks.OnValueRead(value)
+	if c.Callbacks.AfterReadValue != nil {
+		c.Callbacks.AfterReadValue(value)
 	}
 
 	return value, nil

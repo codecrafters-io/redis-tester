@@ -17,20 +17,20 @@ func NewInstrumentedRespClient(stageHarness *testerutils.StageHarness, addr stri
 	return resp_client.NewRespClientWithCallbacks(
 		addr,
 		resp_client.RespClientCallbacks{
-			OnSendCommand: func(command string, args ...string) {
+			BeforeSendCommand: func(command string, args ...string) {
 				if len(args) > 0 {
 					stageHarness.Logger.Infof("%s$ redis-cli %s %s", logPrefix, command, strings.Join(args, " "))
 				} else {
 					stageHarness.Logger.Infof("%s$ redis-cli %s", logPrefix, command)
 				}
 			},
-			OnBytesSent: func(bytes []byte) {
+			BeforeSendBytes: func(bytes []byte) {
 				stageHarness.Logger.Debugf("%sSent bytes: %q", logPrefix, string(bytes))
 			},
-			OnBytesReceived: func(bytes []byte) {
+			AfterBytesReceived: func(bytes []byte) {
 				stageHarness.Logger.Debugf("%sReceived bytes: %q", logPrefix, string(bytes))
 			},
-			OnValueRead: func(value resp_value.Value) {
+			AfterReadValue: func(value resp_value.Value) {
 				stageHarness.Logger.Debugf("%sReceived RESP value: %s", logPrefix, value.FormattedString())
 			},
 		},
