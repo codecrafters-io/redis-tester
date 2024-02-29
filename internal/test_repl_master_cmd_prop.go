@@ -4,9 +4,9 @@ import (
 	"strings"
 
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_client"
+	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
-	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	testerutils "github.com/codecrafters-io/tester-utils"
 )
 
@@ -65,41 +65,24 @@ func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
 		}
 	}
 
-	// We assert that the SET commands are replicated from the replica (user's code)
-	receiveFirstCommandTestCase := &test_cases.ReceiveValueTestCase{
-		Assertion:                 resp_assertions.NewCommandAssertion("SET", "foo", "123"),
-		ShouldSkipUnreadDataCheck: true, // We're expecting more SET commands to be present
-	}
+	// We then assert that as a replica we receive the SET commands in order
+	for i := 1; i <= len(kvMap); i++ {
+		receiveCommandTestCase := &test_cases.ReceiveValueTestCase{
+			Assertion:                 resp_assertions.NewCommandAssertion("SET", kvMap[i][0], kvMap[i][1]),
+			ShouldSkipUnreadDataCheck: i < len(kvMap), // Except in the last case, we're expecting more SET commands to be present
+		}
 
-	if err := receiveFirstCommandTestCase.Run(replicaClient, logger); err != nil {
-		if isSelectCommand(receiveFirstCommandTestCase.ActualValue) {
-			// Redis sends a SELECT command, but we don't expect it from users
-			// Let's repeat the test case and assert the next command
-			if err := receiveFirstCommandTestCase.Run(replicaClient, logger); err != nil {
+		if err := receiveCommandTestCase.Run(replicaClient, logger); err != nil {
+			// Redis sends a SELECT command, but we don't expect it from users.
+			// If the first command is a SELECT command, we'll re-run the test case to test the next command instead
+			if i == 1 && isSelectCommand(receiveCommandTestCase.ActualValue) {
+				if err := receiveCommandTestCase.Run(replicaClient, logger); err != nil {
+					return err
+				}
+			} else {
 				return err
 			}
-		} else {
-			// This is the user's code, and we have a failed assertion
-			return err
 		}
-	}
-
-	receiveSecondCommandTestCase := &test_cases.ReceiveValueTestCase{
-		Assertion:                 resp_assertions.NewCommandAssertion("SET", "bar", "456"),
-		ShouldSkipUnreadDataCheck: true, // We're expecting more SET commands to be present
-	}
-
-	if err := receiveSecondCommandTestCase.Run(replicaClient, logger); err != nil {
-		return err
-	}
-
-	receivedThirdCommandTestCase := &test_cases.ReceiveValueTestCase{
-		Assertion:                 resp_assertions.NewCommandAssertion("SET", "baz", "789"),
-		ShouldSkipUnreadDataCheck: false, // We're not expecting more commands to be present
-	}
-
-	if err := receivedThirdCommandTestCase.Run(replicaClient, logger); err != nil {
-		return err
 	}
 
 	return nil
