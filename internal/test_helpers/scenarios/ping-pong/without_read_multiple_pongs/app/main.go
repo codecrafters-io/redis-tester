@@ -15,16 +15,16 @@ func main() {
 		os.Exit(1)
 	}
 	connection, err := l.Accept()
-	for {
-		if err != nil {
-			fmt.Println("Error accepting connection: ", err.Error())
-			os.Exit(1)
-		}
-		resp := []byte("+PONG\r\n")
-		_, err = connection.Write(resp)
-		if err != nil {
-			fmt.Println("Error writing resp: ", err.Error())
-			os.Exit(1)
-		}
+	if err != nil {
+		fmt.Println("Error accepting connection: ", err.Error())
+		os.Exit(1)
+	}
+
+	// Simulate case where user doesn't read commands one by one
+	resp := []byte("+PONG\r\n+PONG\r\n+PONG\r\n")
+	_, err = connection.Write(resp)
+	if err != nil {
+		fmt.Println("Error writing resp: ", err.Error())
+		os.Exit(1)
 	}
 }
