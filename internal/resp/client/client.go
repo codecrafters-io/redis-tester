@@ -81,10 +81,10 @@ func (c *RespClient) SendCommand(command string, args ...string) error {
 	}
 
 	encodedValue := resp_encoder.Encode(resp_value.NewStringArrayValue(append([]string{command}, args...)))
-	return c.SendRaw(encodedValue)
+	return c.SendBytes(encodedValue)
 }
 
-func (c *RespClient) SendRaw(bytes []byte) error {
+func (c *RespClient) SendBytes(bytes []byte) error {
 	if c.Callbacks.BeforeSendBytes != nil {
 		c.Callbacks.BeforeSendBytes(bytes)
 	}
