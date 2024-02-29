@@ -24,9 +24,9 @@ test_with_redis: build
 
 
 test_tmp: build
-	cd /workspaces/redis-go/codecrafters-redis-go/ && \
-	CODECRAFTERS_SUBMISSION_DIR=/workspaces/redis-go/codecrafters-redis-go/  \
-	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\":\"init\",\"tester_log_prefix\":\"stage-1\",\"title\":\"Stage #1: Bind to a port\"},{\"slug\":\"ping-pong\",\"tester_log_prefix\":\"stage-2\",\"title\":\"Stage #2: Respond to PING\"},{\"slug\":\"ping-pong-multiple\",\"tester_log_prefix\":\"stage-3\",\"title\":\"Stage #3: Respond to multiple PINGs\"},{\"slug\":\"concurrent-clients\",\"tester_log_prefix\":\"stage-4\",\"title\":\"Stage #4: Handle concurrent clients\"},{\"slug\":\"echo\",\"tester_log_prefix\":\"stage-5\",\"title\":\"Stage #5: Implement the ECHO command\"},{\"slug\":\"set_get\",\"tester_log_prefix\":\"stage-6\",\"title\":\"Stage #6: Implement the SET \u0026 GET commands\"},{\"slug\":\"expiry\",\"tester_log_prefix\":\"stage-7\",\"title\":\"Stage #7: Expiry\"},{\"slug\":\"repl-custom-port\",\"tester_log_prefix\":\"stage-101\",\"title\":\"Stage #101: Replication - Custom Port\"}, {\"slug\":\"repl-info\",\"tester_log_prefix\":\"stage-102\",\"title\":\"Stage #102: Replication - Info on Master\"}, {\"slug\":\"repl-info-replica\",\"tester_log_prefix\":\"stage-103\",\"title\":\"Stage #103: Replication - Info on Replica\"}, {\"slug\":\"repl-id\",\"tester_log_prefix\":\"stage-104\",\"title\":\"Stage #104: Replication - Replication ID and Offset\"}]" \
+	cd /tmp/8307fca11c4a54b0 && \
+	CODECRAFTERS_SUBMISSION_DIR=/tmp/8307fca11c4a54b0  \
+	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\":\"repl-master-cmd-prop\",\"tester_log_prefix\":\"replication-11\",\"title\":\"Replication Stage\"}]" \
 	$(shell pwd)/dist/main.out
 
 copy_course_file:

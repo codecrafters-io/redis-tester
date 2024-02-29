@@ -8,12 +8,12 @@ import (
 
 func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
 	deleteRDBfile()
-	master := NewRedisBinary(stageHarness)
-	master.args = []string{
+	masterBinary := NewRedisBinary(stageHarness)
+	masterBinary.args = []string{
 		"--port", "6379",
 	}
 
-	if err := master.Run(); err != nil {
+	if err := masterBinary.Run(); err != nil {
 		return err
 	}
 
