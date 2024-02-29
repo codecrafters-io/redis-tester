@@ -19,7 +19,7 @@ func NewFakeRedisMaster(conn net.Conn, logger *logger.Logger) *FakeRedisMaster {
 }
 
 func (master FakeRedisMaster) Assert(receiveMessages []string, sendMessage string, caseSensitiveMatch bool) error {
-	err, _ := master.readAndAssertMessages(receiveMessages, caseSensitiveMatch)
+	_, err := master.readAndAssertMessages(receiveMessages, caseSensitiveMatch)
 	if err != nil {
 		return err
 	}
@@ -33,7 +33,7 @@ func (master FakeRedisMaster) Assert(receiveMessages []string, sendMessage strin
 }
 
 func (master FakeRedisMaster) AssertWithOr(receiveMessages [][]string, sendMessage string, caseSensitiveMatch bool) error {
-	err, _ := master.readAndAssertMessagesWithOr(receiveMessages, caseSensitiveMatch)
+	_, err := master.readAndAssertMessagesWithOr(receiveMessages, caseSensitiveMatch)
 	if err != nil {
 		return err
 	}

@@ -52,18 +52,18 @@ func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
 	}
 
 	// Redis will send SELECT, but not expected from Users.
-	err, _ = replica.readAndAssertMessagesWithSkip([]string{"SET", "foo", "123"}, "SELECT", true)
+	_, err = replica.readAndAssertMessagesWithSkip([]string{"SET", "foo", "123"}, "SELECT", true)
 
 	if err != nil {
 		return err
 	}
 
-	err, _ = replica.readAndAssertMessages([]string{"SET", "bar", "456"}, true)
+	_, err = replica.readAndAssertMessages([]string{"SET", "bar", "456"}, true)
 	if err != nil {
 		return err
 	}
 
-	err, _ = replica.readAndAssertMessages([]string{"SET", "baz", "789"}, true)
+	_, err = replica.readAndAssertMessages([]string{"SET", "baz", "789"}, true)
 	if err != nil {
 		return err
 	}

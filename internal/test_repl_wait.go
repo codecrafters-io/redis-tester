@@ -133,12 +133,12 @@ func consumeReplicationStreamAndSendPartialAcks(replicas []*FakeRedisReplica, re
 		// Redis will send SELECT, but not expected from Users.
 		// We skip the SELECT command, IF received.
 		// Then check the next received command.
-		err, offsetDeltaFromSetCommand := replica.readAndAssertMessagesWithSkip(firstCommand, "SELECT", true)
+		offsetDeltaFromSetCommand, err := replica.readAndAssertMessagesWithSkip(firstCommand, "SELECT", true)
 		if err != nil {
 			return 0, err
 		}
 
-		err, offsetDeltaFromGetAckCommand := replica.readAndAssertMessages(secondCommand, false)
+		offsetDeltaFromGetAckCommand, err := replica.readAndAssertMessages(secondCommand, false)
 		if err != nil {
 			return 0, err
 		}

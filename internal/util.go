@@ -25,7 +25,7 @@ func convertToStringArray(interfaceSlice []interface{}) ([]string, error) {
 
 func compareStringSlices(actual, expected []string, caseSensitiveMatch bool) error {
 	if len(actual) != len(expected) {
-		return fmt.Errorf("Length mismatch between actual message and expected message.")
+		return fmt.Errorf("Length mismatch between expected and received messages.\nExpected %v bytes, Received %v bytes.\nExpected : %v.\nReceived : %v.\n", GetByteOffset(expected), GetByteOffset(actual), expected, actual)
 	}
 
 	for i := range actual {
@@ -64,7 +64,7 @@ func compareStringSlicesWithOr(actual []string, expected [][]string, caseSensiti
 		}
 	}
 
-	if foundMatch == true {
+	if foundMatch {
 		return nil
 	}
 	return e // Will return last error. Will accordingly call assert.
