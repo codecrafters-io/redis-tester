@@ -3,8 +3,8 @@ package instrumented_resp_client
 import (
 	"strings"
 
+	resp_client "github.com/codecrafters-io/redis-tester/internal/resp/client"
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
-	resp_client "github.com/codecrafters-io/redis-tester/internal/resp_client"
 	testerutils "github.com/codecrafters-io/tester-utils"
 )
 

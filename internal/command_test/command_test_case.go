@@ -3,8 +3,8 @@ package command_test
 import (
 	"fmt"
 
+	resp_client "github.com/codecrafters-io/redis-tester/internal/resp/client"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
-	"github.com/codecrafters-io/redis-tester/internal/resp_client"
 	logger "github.com/codecrafters-io/tester-utils/logger"
 )
 

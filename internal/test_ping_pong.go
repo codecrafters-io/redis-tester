@@ -3,8 +3,8 @@ package internal
 import (
 	"github.com/codecrafters-io/redis-tester/internal/command_test"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_client"
+	resp_client "github.com/codecrafters-io/redis-tester/internal/resp/client"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
-	"github.com/codecrafters-io/redis-tester/internal/resp_client"
 	testerutils "github.com/codecrafters-io/tester-utils"
 	logger "github.com/codecrafters-io/tester-utils/logger"
 )
