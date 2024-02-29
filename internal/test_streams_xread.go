@@ -28,6 +28,7 @@ func (t *XREADTest) Run(client *redis.Client, logger *logger.Logger) error {
 
 		resp, err = client.XRead(&redis.XReadArgs{
 			Streams: t.streams,
+			Block:   -1 * time.Millisecond, // Zero value for Block in XReadArgs struct is 0. Need a negative value to indicate no block.
 		}).Result()
 	} else {
 		logger.Infof("$ redis-cli xread block %v streams %s", t.block.Milliseconds(), strings.Join(t.streams, " "))
