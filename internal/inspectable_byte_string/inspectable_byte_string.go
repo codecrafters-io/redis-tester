@@ -19,12 +19,8 @@ func NewInspectableByteString(bytes []byte) InspectableByteString {
 //
 // For example, if called with highlightOffset 4, highlightText "error" and formattedString "Received: ", the return value will be:
 //
-// ```
-// Received: "+OK\r\n"
-//
-//	^ error
-//
-// ```
+// > Received: "+OK\r\n"
+// >                 ^ error
 func (s InspectableByteString) FormatWithHighlightedOffset(highlightOffset int, highlightText string, formattedStringPrefix string) string {
 	s = s.TruncateAroundOffset(highlightOffset)
 
