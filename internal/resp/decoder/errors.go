@@ -8,11 +8,13 @@ import (
 	inspectable_byte_string "github.com/codecrafters-io/redis-tester/internal/inspectable_byte_string"
 )
 
+// TODO: Rename to IncompleteInputError
 type IncompleteRESPError struct {
 	Reader  *bytes.Reader
 	Message string
 }
 
+// TODO: Rename to InvalidInputError
 type InvalidRESPError struct {
 	Reader  *bytes.Reader
 	Message string

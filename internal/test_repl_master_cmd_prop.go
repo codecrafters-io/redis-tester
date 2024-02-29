@@ -1,13 +1,19 @@
 package internal
 
 import (
-	"fmt"
+	"strings"
 
+	"github.com/codecrafters-io/redis-tester/internal/command_test"
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_client"
+	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
+	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	testerutils "github.com/codecrafters-io/tester-utils"
 )
 
 func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
 	deleteRDBfile()
+
+	// Run the user's code as a master
 	masterBinary := NewRedisBinary(stageHarness)
 	masterBinary.args = []string{
 		"--port", "6379",
@@ -19,24 +25,22 @@ func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
 
 	logger := stageHarness.Logger
 
-	conn, err := NewRedisConn("", "localhost:6379")
+	// We use one client to send commands to the master
+	client, err := instrumented_resp_client.NewInstrumentedRespClient(stageHarness, "localhost:6379", "client")
 	if err != nil {
-		fmt.Println("Error connecting to TCP server:", err)
+		logFriendlyError(logger, err)
 		return err
 	}
 
-	conn1, err := NewRedisConn("", "localhost:6379")
+	// We use another client to assert whether sent commands are replicated from the master (user's code)
+	replicaClient, err := instrumented_resp_client.NewInstrumentedRespClient(stageHarness, "localhost:6379", "replica")
 	if err != nil {
-		fmt.Println("Error connecting to TCP server:", err)
+		logFriendlyError(logger, err)
 		return err
 	}
 
-	client := NewFakeRedisMaster(conn1, logger)
-
-	replica := NewFakeRedisReplica(conn, logger)
-
-	err = replica.Handshake()
-	if err != nil {
+	sendHandshakeTestCase := command_test.SendReplicationHandshakeTestCase{}
+	if err := sendHandshakeTestCase.RunAll(replicaClient, logger); err != nil {
 		return err
 	}
 
@@ -45,29 +49,65 @@ func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
 		2: {"bar", "456"},
 		3: {"baz", "789"},
 	}
-	for i := 1; i <= len(kvMap); i++ { // We need order of commands preserved
+
+	// We send SET commands to the master in order (user's code)
+	for i := 1; i <= len(kvMap); i++ {
 		key, value := kvMap[i][0], kvMap[i][1]
-		logger.Infof("Setting key %s to %s", key, value)
-		client.Send([]string{"SET", key, value})
+
+		setCommandTestCase := command_test.CommandTestCase{
+			Command:   "SET",
+			Args:      []string{key, value},
+			Assertion: resp_assertions.NewStringAssertion("OK"),
+		}
+
+		if err := setCommandTestCase.Run(client, logger); err != nil {
+			return err
+		}
 	}
 
-	// Redis will send SELECT, but not expected from Users.
-	_, err = replica.readAndAssertMessagesWithSkip([]string{"SET", "foo", "123"}, "SELECT", true)
+	// We assert that the SET commands are replicated from the replica (user's code)
+	receiveFirstCommandTestCase := &command_test.ReceiveValueTestCase{
+		Assertion:                 resp_assertions.NewCommandAssertion("SET", "foo", "123"),
+		ShouldSkipUnreadDataCheck: true, // We're expecting more SET commands to be present
+	}
 
-	if err != nil {
+	if err := receiveFirstCommandTestCase.Run(replicaClient, logger); err != nil {
+		if isSelectCommand(receiveFirstCommandTestCase.ActualValue) {
+			// Redis sends a SELECT command, but we don't expect it from users
+			// Let's repeat the test case and assert the next command
+			if err := receiveFirstCommandTestCase.Run(replicaClient, logger); err != nil {
+				return err
+			}
+		} else {
+			// This is the user's code, and we have a failed assertion
+			return err
+		}
+	}
+
+	receiveSecondCommandTestCase := &command_test.ReceiveValueTestCase{
+		Assertion:                 resp_assertions.NewCommandAssertion("SET", "bar", "456"),
+		ShouldSkipUnreadDataCheck: true, // We're expecting more SET commands to be present
+	}
+
+	if err := receiveSecondCommandTestCase.Run(replicaClient, logger); err != nil {
 		return err
 	}
 
-	_, err = replica.readAndAssertMessages([]string{"SET", "bar", "456"}, true)
-	if err != nil {
+	receivedThirdCommandTestCase := &command_test.ReceiveValueTestCase{
+		Assertion:                 resp_assertions.NewCommandAssertion("SET", "baz", "789"),
+		ShouldSkipUnreadDataCheck: false, // We're not expecting more commands to be present
+	}
+
+	if err := receivedThirdCommandTestCase.Run(replicaClient, logger); err != nil {
 		return err
 	}
 
-	_, err = replica.readAndAssertMessages([]string{"SET", "baz", "789"}, true)
-	if err != nil {
-		return err
-	}
-
-	conn.Close()
 	return nil
+}
+
+func isSelectCommand(value resp_value.Value) bool {
+	return value.Type == resp_value.ARRAY &&
+		len(value.Array()) > 0 &&
+		value.Array()[0].Type == resp_value.BULK_STRING &&
+		strings.ToLower(value.Array()[0].String()) == "SELECT"
 }

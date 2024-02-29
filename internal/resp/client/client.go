@@ -102,6 +102,52 @@ func (c *RespClient) SendBytes(bytes []byte) error {
 	return nil
 }
 
+func (c *RespClient) ReadFullResyncRDBFile() ([]byte, error) {
+	deadline := time.Now().Add(2 * time.Second)
+
+	for {
+		if time.Now().After(deadline) {
+			break
+		}
+
+		// We'll swallow these errors and try reading again anyway
+		_ = c.ReadIntoBuffer()
+
+		// Let's try to decode the value at this point.
+		_, _, err := resp_decoder.DecodeFullResyncRDBFile(c.UnreadBuffer.Bytes())
+
+		if err == nil {
+			break // We were able to read a value!
+		}
+
+		if _, ok := err.(resp_decoder.InvalidRESPError); ok {
+			break // We've read an invalid value, we can stop reading immediately
+		}
+
+		time.Sleep(10 * time.Millisecond) // Let's wait a bit before trying again
+	}
+
+	value, readBytesCount, err := resp_decoder.DecodeFullResyncRDBFile(c.UnreadBuffer.Bytes())
+	if err != nil {
+		if c.Callbacks.AfterBytesReceived != nil {
+			c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes())
+		}
+
+		return nil, err
+	}
+
+	// We've read a value! Let's remove the bytes we've read from the buffer
+	c.LastValueBytes = c.UnreadBuffer.Bytes()[:readBytesCount]
+	c.UnreadBuffer = *bytes.NewBuffer(c.UnreadBuffer.Bytes()[readBytesCount:])
+
+	// TODO: Add a "AfterReadFullResyncRDBFile" callback?
+	// if c.Callbacks.AfterReadValue != nil {
+	// 	c.Callbacks.AfterReadValue(value)
+	// }
+
+	return value, nil
+}
+
 func (c *RespClient) ReadValue() (resp_value.Value, error) {
 	return c.ReadValueWithTimeout(2 * time.Second)
 }
