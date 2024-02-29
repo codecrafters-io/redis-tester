@@ -105,8 +105,10 @@ func (c *RedisClient) ReadValue() (resp.Value, error) {
 }
 
 func (c *RedisClient) ReadIntoBuffer() error {
-	buf := make([]byte, 1024)
+	// Ensure we allow enough time for a read to complete
+	c.Conn.SetReadDeadline(time.Now().Add(100 * time.Millisecond))
 
+	buf := make([]byte, 1024)
 	n, err := c.Conn.Read(buf)
 
 	if n > 0 {
@@ -123,9 +125,6 @@ func (c *RedisClient) ReadValueWithTimeout(timeout time.Duration) (resp.Value, e
 		if time.Now().After(deadline) {
 			break
 		}
-
-		// Ensure we allow enough time for a read to complete
-		c.Conn.SetReadDeadline(time.Now().Add(100 * time.Millisecond))
 
 		// We'll swallow these errors and try reading again anyway
 		_ = c.ReadIntoBuffer()
