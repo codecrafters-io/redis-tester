@@ -41,7 +41,7 @@ func (a CommandAssertion) Run(value resp_value.Value) error {
 	}
 
 	if len(elements) != len(a.ExpectedArgs)+1 {
-		return fmt.Errorf("Expected comamnd to have %d arguments, got %d", len(a.ExpectedArgs), len(elements)-1)
+		return fmt.Errorf("Expected command to have %d arguments, got %d", len(a.ExpectedArgs), len(elements)-1)
 	}
 
 	for i, expectedArg := range a.ExpectedArgs {
