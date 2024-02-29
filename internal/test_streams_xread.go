@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"reflect"
+	"strconv"
 	"strings"
 	"time"
 
@@ -93,7 +94,7 @@ func testStreamsXread(stageHarness *testerutils.StageHarness) error {
 			Messages: []redis.XMessage{
 				{
 					ID:     "0-1",
-					Values: map[string]interface{}{"temperature": randomInt},
+					Values: map[string]interface{}{"temperature": strconv.Itoa(randomInt)},
 				},
 			},
 		},
