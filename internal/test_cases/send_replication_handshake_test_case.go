@@ -11,12 +11,10 @@ import (
 )
 
 // SendReplicationHandshakeTestCase is a test case where we connect to a master
-// as a replica and perform either all of a subset of the replication handshake:
+// as a replica and perform either all or a subset of the replication handshake.
 //
-// 1. SEND_PING
-// 2. SEND_REPLCONF_WITH_PORT
-// 3. SEND_PSYNC
-// 4. RECEIVE_RDB
+// RunAll will run all the steps in the replication handshake. Alternatively, you
+// can run each step individually.
 type SendReplicationHandshakeTestCase struct{}
 
 func (t SendReplicationHandshakeTestCase) RunAll(client *resp_client.RespClient, logger *logger.Logger) error {
