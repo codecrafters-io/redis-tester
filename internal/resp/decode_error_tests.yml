@@ -1,0 +1,28 @@
+# Invalid RESP
+
+- input: ""
+  error: |
+    Received: ""
+               ^ error
+    Error: Expected start of a new RESP value (either +, -, :, $ or *)
+
+# Invalid RESP
+- input: "K"
+  error: |
+    Received: "K"
+               ^ error
+    Error: "K" is not a valid start of a RESP value (expected +, -, :, $ or *)
+
+# Simple Strings
+
+- input: "+OK"
+  error: |
+    Received: "+OK"
+                  ^ error
+    Error: Expected \r\n at the end of a simple string
+
+- input: "+OK\r"
+  error: |
+    Received: "+OK\r"
+                    ^ error
+    Error: Expected \r\n at the end of a simple string

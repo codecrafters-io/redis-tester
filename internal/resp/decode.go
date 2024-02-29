@@ -23,7 +23,7 @@ func doDecodeValue(reader *bytes.Reader) (Value, error) {
 	if err == io.EOF {
 		return Value{}, IncompleteRESPError{
 			Reader:  reader,
-			Message: "Expected start of a new RESP value (either +, -, :, $, or *).",
+			Message: "Expected start of a new RESP value (either +, -, :, $ or *)",
 		}
 	}
 
@@ -43,7 +43,7 @@ func doDecodeValue(reader *bytes.Reader) (Value, error) {
 
 		return Value{}, InvalidRESPError{
 			Reader:  reader,
-			Message: fmt.Sprintf("%q is not a valid start of a new RESP value (expected +, -, :, $, or *)", string(firstByte)),
+			Message: fmt.Sprintf("%q is not a valid start of a RESP value (expected +, -, :, $ or *)", string(firstByte)),
 		}
 	}
 }
@@ -53,7 +53,7 @@ func decodeSimpleString(reader *bytes.Reader) (Value, error) {
 	if err == io.EOF {
 		return Value{}, IncompleteRESPError{
 			Reader:  reader,
-			Message: `Expected \r\n at the end of a simple string.`,
+			Message: `Expected \r\n at the end of a simple string`,
 		}
 	}
 
@@ -65,7 +65,7 @@ func decodeBulkString(reader *bytes.Reader) (Value, error) {
 	if err == io.EOF {
 		return Value{}, IncompleteRESPError{
 			Reader:  reader,
-			Message: `Expected \r\n at the end of a bulk string length.`,
+			Message: `Expected \r\n at the end of a bulk string length`,
 		}
 	}
 
@@ -84,7 +84,7 @@ func decodeBulkString(reader *bytes.Reader) (Value, error) {
 		if err == io.EOF {
 			return Value{}, IncompleteRESPError{
 				Reader:  reader,
-				Message: fmt.Sprintf("Expected %d bytes in bulk string, got %d.", length, i),
+				Message: fmt.Sprintf("Expected %d bytes in bulk string, got %d", length, i),
 			}
 		}
 

@@ -1,10 +1,12 @@
 package resp
 
 import (
+	"os"
 	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"gopkg.in/yaml.v3"
 )
 
 func TestDecodeSimpleStringSuccess(t *testing.T) {
@@ -23,28 +25,23 @@ func TestDecodeWithExtraDataSuccess(t *testing.T) {
 	assert.Equal(t, 5, nBytes)
 }
 
-func TestDecodeIncompleteSimpleStringFailure(t *testing.T) {
-	_, _, err := Decode([]byte("+OK"))
-	assert.NotNil(t, err)
-	incompleteRespErr, ok := err.(IncompleteRESPError)
-	assert.True(t, ok)
-
-	assert.Equal(t, strings.TrimSpace(`
-Received: "+OK"
-              ^ error
-Error: Expected \r\n at the end of a simple string.
-	`), incompleteRespErr.Error())
+type DecodeErrorTestCase struct {
+	Input string `yaml:"input"`
+	Error string `yaml:"error"`
 }
 
-func TestDecodeInvalidSimpleStringFailure(t *testing.T) {
-	_, _, err := Decode([]byte("OK\r\n"))
-	assert.NotNil(t, err)
-	invalidRespErr, ok := err.(InvalidRESPError)
-	assert.True(t, ok)
+func TestDecodeErrors(t *testing.T) {
+	testCases := []DecodeErrorTestCase{}
 
-	assert.Equal(t, strings.TrimSpace(`
-Received: "OK\r\n"
-           ^ error
-Error: "O" is not a valid start of a new RESP value (expected +, -, :, $, or *)
-	`), invalidRespErr.Error())
+	yamlContents, err := os.ReadFile("decode_error_tests.yml")
+	assert.Nil(t, err)
+
+	err = yaml.Unmarshal(yamlContents, &testCases)
+	assert.Nil(t, err)
+
+	for _, testCase := range testCases {
+		_, _, err := Decode([]byte(testCase.Input))
+		assert.NotNil(t, err)
+		assert.Equal(t, strings.TrimSpace(testCase.Error), err.Error())
+	}
 }
