@@ -42,6 +42,8 @@ func testStreamsType(stageHarness *testerutils.StageHarness) error {
 
 	if resp != "string" {
 		return fmt.Errorf("Expected \"string\", got %#v", resp)
+	} else {
+		logger.Successf("Type of %s is %s", randomKey, resp)
 	}
 
 	logger.Infof("$ redis-cli type %s", "missing_key"+"_"+randomValue)
@@ -54,6 +56,8 @@ func testStreamsType(stageHarness *testerutils.StageHarness) error {
 
 	if resp != "none" {
 		return fmt.Errorf("Expected \"none\", got %#v", resp)
+	} else {
+		logger.Successf("Type of missing_key_%s is %s", randomValue, resp)
 	}
 
 	return nil

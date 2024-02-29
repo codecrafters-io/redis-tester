@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"reflect"
+	"strconv"
 	"strings"
 	"time"
 
@@ -28,6 +29,7 @@ func (t *XREADTest) Run(client *redis.Client, logger *logger.Logger) error {
 
 		resp, err = client.XRead(&redis.XReadArgs{
 			Streams: t.streams,
+			Block:   -1 * time.Millisecond, // Zero value for Block in XReadArgs struct is 0. Need a negative value to indicate no block.
 		}).Result()
 	} else {
 		logger.Infof("$ redis-cli xread block %v streams %s", t.block.Milliseconds(), strings.Join(t.streams, " "))
@@ -92,16 +94,22 @@ func testStreamsXread(stageHarness *testerutils.StageHarness) error {
 			Messages: []redis.XMessage{
 				{
 					ID:     "0-1",
-					Values: map[string]interface{}{"temperature": randomInt},
+					Values: map[string]interface{}{"temperature": strconv.Itoa(randomInt)},
 				},
 			},
 		},
 	}
 
-	(&XREADTest{
+	xreadTest := &XREADTest{
 		streams:          []string{randomKey, "0-0"},
 		expectedResponse: expectedResp,
-	}).Run(client, logger)
+	}
+
+	err := xreadTest.Run(client, logger)
+
+	if err != nil {
+		return err
+	}
 
 	return nil
 }

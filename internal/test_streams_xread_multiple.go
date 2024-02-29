@@ -1,6 +1,8 @@
 package internal
 
 import (
+	"strconv"
+
 	testerutils "github.com/codecrafters-io/tester-utils"
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/go-redis/redis"
@@ -40,7 +42,7 @@ func testStreamsXreadMultiple(stageHarness *testerutils.StageHarness) error {
 			Messages: []redis.XMessage{
 				{
 					ID:     "0-1",
-					Values: map[string]interface{}{"temperature": randomInt},
+					Values: map[string]interface{}{"temperature": strconv.Itoa(randomInt)},
 				},
 			},
 		},
@@ -49,16 +51,22 @@ func testStreamsXreadMultiple(stageHarness *testerutils.StageHarness) error {
 			Messages: []redis.XMessage{
 				{
 					ID:     "0-2",
-					Values: map[string]interface{}{"humidity": otherRandomInt},
+					Values: map[string]interface{}{"humidity": strconv.Itoa(otherRandomInt)},
 				},
 			},
 		},
 	}
 
-	(&XREADTest{
+	xreadTest := &XREADTest{
 		streams:          []string{randomKey, otherRandomKey, "0-0", "0-1"},
 		expectedResponse: expectedResp,
-	}).Run(client, logger)
+	}
+
+	err := xreadTest.Run(client, logger)
+
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
