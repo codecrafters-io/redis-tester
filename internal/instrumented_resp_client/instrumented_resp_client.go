@@ -3,7 +3,7 @@ package instrumented_resp_client
 import (
 	"strings"
 
-	"github.com/codecrafters-io/redis-tester/internal/resp/value"
+	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	resp_client "github.com/codecrafters-io/redis-tester/internal/resp_client"
 	testerutils "github.com/codecrafters-io/tester-utils"
 )
@@ -24,10 +24,10 @@ func NewInstrumentedRespClient(stageHarness *testerutils.StageHarness, addr stri
 					stageHarness.Logger.Infof("%s$ redis-cli %s", logPrefix, command)
 				}
 			},
-			OnRawSend: func(bytes []byte) {
+			OnBytesSent: func(bytes []byte) {
 				stageHarness.Logger.Debugf("%sSent bytes: %q", logPrefix, string(bytes))
 			},
-			OnRawRead: func(bytes []byte) {
+			OnBytesReceived: func(bytes []byte) {
 				stageHarness.Logger.Debugf("%sReceived bytes: %q", logPrefix, string(bytes))
 			},
 			OnValueRead: func(value resp_value.Value) {

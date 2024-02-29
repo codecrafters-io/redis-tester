@@ -6,9 +6,9 @@ import (
 	"net"
 	"time"
 
-	"github.com/codecrafters-io/redis-tester/internal/resp/value"
-	"github.com/codecrafters-io/redis-tester/internal/resp/decoder"
-	"github.com/codecrafters-io/redis-tester/internal/resp/encoder"
+	resp_decoder "github.com/codecrafters-io/redis-tester/internal/resp/decoder"
+	resp_encoder "github.com/codecrafters-io/redis-tester/internal/resp/encoder"
+	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 )
 
 type RespClientCallbacks struct {
@@ -16,13 +16,13 @@ type RespClientCallbacks struct {
 	// This can be useful for info logs.
 	OnSendCommand func(command string, args ...string)
 
-	// OnRawSend is called when raw bytes are sent to the server.
+	// OnBytesSent is called when raw bytes are sent to the server.
 	// This can be useful for debug logs.
-	OnRawSend func(bytes []byte)
+	OnBytesSent func(bytes []byte)
 
-	// OnRawRead is called when raw bytes are read from the server.
+	// OnBytesReceived is called when raw bytes are read from the server.
 	// This can be useful for debug logs.
-	OnRawRead func(bytes []byte)
+	OnBytesReceived func(bytes []byte)
 
 	// OnValueRead is called when a RESP value is decoded from bytes read from the server.
 	// This can be useful for success logs.
@@ -85,8 +85,8 @@ func (c *RespClient) SendCommand(command string, args ...string) error {
 }
 
 func (c *RespClient) SendRaw(bytes []byte) error {
-	if c.Callbacks.OnRawSend != nil {
-		c.Callbacks.OnRawSend(bytes)
+	if c.Callbacks.OnBytesSent != nil {
+		c.Callbacks.OnBytesSent(bytes)
 	}
 
 	n, err := c.Conn.Write(bytes)
@@ -145,8 +145,8 @@ func (c *RespClient) ReadValueWithTimeout(timeout time.Duration) (resp_value.Val
 
 	value, readBytesCount, err := resp_decoder.Decode(c.UnreadBuffer.Bytes())
 	if err != nil {
-		if c.Callbacks.OnRawRead != nil {
-			c.Callbacks.OnRawRead(c.UnreadBuffer.Bytes())
+		if c.Callbacks.OnBytesReceived != nil {
+			c.Callbacks.OnBytesReceived(c.UnreadBuffer.Bytes())
 		}
 
 		return resp_value.Value{}, err
