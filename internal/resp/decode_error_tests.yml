@@ -6,7 +6,6 @@
                ^ error
     Error: Expected start of a new RESP value (either +, -, :, $ or *)
 
-# Invalid RESP
 - input: "K"
   error: |
     Received: "K"
@@ -26,3 +25,35 @@
     Received: "+OK\r"
                     ^ error
     Error: Expected \r\n at the end of a simple string
+
+- input: "+OK\n"
+  error: |
+    Received: "+OK\n"
+                    ^ error
+    Error: Expected \r\n at the end of a simple string
+
+# Bulk Strings
+
+- input: "$3"
+  error: |
+    Received: "$3"
+                 ^ error
+    Error: Expected \r\n after bulk string length
+
+- input: "$3\r"
+  error: |
+    Received: "$3\r"
+                   ^ error
+    Error: Expected \r\n after bulk string length
+
+- input: "$abc\r\n"
+  error: |
+    Received: "$abc\r\n"
+                ^ error
+    Error: Invalid bulk string length: "abc", expected a number
+
+- input: "$3\r\n"
+  error: |
+    Received: "$3\r\n"
+                     ^ error
+    Error: Expected 3 bytes of data in bulk string, got 0
