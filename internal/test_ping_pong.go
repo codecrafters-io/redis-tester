@@ -2,9 +2,9 @@ package internal
 
 import (
 	"github.com/codecrafters-io/redis-tester/internal/command_test"
-	"github.com/codecrafters-io/redis-tester/internal/instrumented_redis_client"
-	"github.com/codecrafters-io/redis-tester/internal/redis_client"
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_client"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+	"github.com/codecrafters-io/redis-tester/internal/resp_client"
 	testerutils "github.com/codecrafters-io/tester-utils"
 	logger "github.com/codecrafters-io/tester-utils/logger"
 )
@@ -17,7 +17,7 @@ func testPingPongOnce(stageHarness *testerutils.StageHarness) error {
 
 	logger := stageHarness.Logger
 
-	client, err := instrumented_redis_client.NewInstrumentedRedisClient(stageHarness, "localhost:6379", "")
+	client, err := instrumented_resp_client.NewInstrumentedRespClient(stageHarness, "localhost:6379", "")
 	if err != nil {
 		return err
 	}
@@ -45,7 +45,7 @@ func testPingPongMultiple(stageHarness *testerutils.StageHarness) error {
 	}
 
 	logger := stageHarness.Logger
-	client, err := instrumented_redis_client.NewInstrumentedRedisClient(stageHarness, "localhost:6379", "client-1")
+	client, err := instrumented_resp_client.NewInstrumentedRespClient(stageHarness, "localhost:6379", "client-1")
 	if err != nil {
 		return err
 	}
@@ -69,7 +69,7 @@ func testPingPongConcurrent(stageHarness *testerutils.StageHarness) error {
 	}
 
 	logger := stageHarness.Logger
-	client1, err := instrumented_redis_client.NewInstrumentedRedisClient(stageHarness, "localhost:6379", "client-1")
+	client1, err := instrumented_resp_client.NewInstrumentedRespClient(stageHarness, "localhost:6379", "client-1")
 	if err != nil {
 		return err
 	}
@@ -78,7 +78,7 @@ func testPingPongConcurrent(stageHarness *testerutils.StageHarness) error {
 		return err
 	}
 
-	client2, err := instrumented_redis_client.NewInstrumentedRedisClient(stageHarness, "localhost:6379", "client-2")
+	client2, err := instrumented_resp_client.NewInstrumentedRespClient(stageHarness, "localhost:6379", "client-2")
 	if err != nil {
 		return err
 	}
@@ -100,7 +100,7 @@ func testPingPongConcurrent(stageHarness *testerutils.StageHarness) error {
 	logger.Debugf("client-%d: Success, closing connection...", 1)
 	client1.Close()
 
-	client3, err := instrumented_redis_client.NewInstrumentedRedisClient(stageHarness, "localhost:6379", "client-3")
+	client3, err := instrumented_resp_client.NewInstrumentedRespClient(stageHarness, "localhost:6379", "client-3")
 	if err != nil {
 		return err
 	}
@@ -117,7 +117,7 @@ func testPingPongConcurrent(stageHarness *testerutils.StageHarness) error {
 	return nil
 }
 
-func runPing(logger *logger.Logger, client *redis_client.RedisClient) error {
+func runPing(logger *logger.Logger, client *resp_client.RespClient) error {
 	commandTestCase := command_test.CommandTestCase{
 		Command:   "ping",
 		Args:      []string{},

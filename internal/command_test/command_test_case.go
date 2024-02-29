@@ -3,8 +3,8 @@ package command_test
 import (
 	"fmt"
 
-	"github.com/codecrafters-io/redis-tester/internal/redis_client"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+	"github.com/codecrafters-io/redis-tester/internal/resp_client"
 	logger "github.com/codecrafters-io/tester-utils/logger"
 )
 
@@ -15,7 +15,7 @@ type CommandTestCase struct {
 	ShouldSkipUnreadBufferCheck bool
 }
 
-func (t CommandTestCase) Run(client *redis_client.RedisClient, logger *logger.Logger) error {
+func (t CommandTestCase) Run(client *resp_client.RespClient, logger *logger.Logger) error {
 	if err := client.SendCommand(t.Command, t.Args...); err != nil {
 		return err
 	}

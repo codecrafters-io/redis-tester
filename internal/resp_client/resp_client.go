@@ -1,4 +1,4 @@
-package redis_client
+package resp_client
 
 import (
 	"bytes"
@@ -9,7 +9,7 @@ import (
 	"github.com/codecrafters-io/redis-tester/internal/resp"
 )
 
-type RedisClientCallbacks struct {
+type RespClientCallbacks struct {
 	// OnSendCommand is called when a command is sent to the server.
 	// This can be useful for info logs.
 	OnSendCommand func(command string, args ...string)
@@ -27,7 +27,7 @@ type RedisClientCallbacks struct {
 	OnValueRead func(value resp.Value)
 }
 
-type RedisClient struct {
+type RespClient struct {
 	// Conn is the underlying connection to the Redis server.
 	Conn net.Conn
 
@@ -39,41 +39,41 @@ type RedisClient struct {
 	LastValueBytes []byte
 
 	// Callbacks is a set of functions that are called at various points in the client's lifecycle.
-	Callbacks RedisClientCallbacks
+	Callbacks RespClientCallbacks
 }
 
-func NewRedisClient(addr string) (*RedisClient, error) {
-	conn, err := newRedisConn(addr)
+func NewRespClient(addr string) (*RespClient, error) {
+	conn, err := newConn(addr)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return &RedisClient{
+	return &RespClient{
 		Conn:         conn,
 		UnreadBuffer: bytes.Buffer{},
 	}, nil
 }
 
-func NewRedisClientWithCallbacks(addr string, callbacks RedisClientCallbacks) (*RedisClient, error) {
-	conn, err := newRedisConn(addr)
+func NewRespClientWithCallbacks(addr string, callbacks RespClientCallbacks) (*RespClient, error) {
+	conn, err := newConn(addr)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return &RedisClient{
+	return &RespClient{
 		Conn:         conn,
 		UnreadBuffer: bytes.Buffer{},
 		Callbacks:    callbacks,
 	}, nil
 }
 
-func (c *RedisClient) Close() error {
+func (c *RespClient) Close() error {
 	return c.Conn.Close()
 }
 
-func (c *RedisClient) SendCommand(command string, args ...string) error {
+func (c *RespClient) SendCommand(command string, args ...string) error {
 	if c.Callbacks.OnSendCommand != nil {
 		c.Callbacks.OnSendCommand(command, args...)
 	}
@@ -82,7 +82,7 @@ func (c *RedisClient) SendCommand(command string, args ...string) error {
 	return c.SendRaw(encodedValue)
 }
 
-func (c *RedisClient) SendRaw(bytes []byte) error {
+func (c *RespClient) SendRaw(bytes []byte) error {
 	if c.Callbacks.OnRawSend != nil {
 		c.Callbacks.OnRawSend(bytes)
 	}
@@ -100,11 +100,11 @@ func (c *RedisClient) SendRaw(bytes []byte) error {
 	return nil
 }
 
-func (c *RedisClient) ReadValue() (resp.Value, error) {
+func (c *RespClient) ReadValue() (resp.Value, error) {
 	return c.ReadValueWithTimeout(2 * time.Second)
 }
 
-func (c *RedisClient) ReadIntoBuffer() error {
+func (c *RespClient) ReadIntoBuffer() error {
 	// Ensure we allow enough time for a read to complete
 	c.Conn.SetReadDeadline(time.Now().Add(100 * time.Millisecond))
 
@@ -118,7 +118,7 @@ func (c *RedisClient) ReadIntoBuffer() error {
 	return err
 }
 
-func (c *RedisClient) ReadValueWithTimeout(timeout time.Duration) (resp.Value, error) {
+func (c *RespClient) ReadValueWithTimeout(timeout time.Duration) (resp.Value, error) {
 	deadline := time.Now().Add(timeout)
 
 	for {
@@ -161,7 +161,7 @@ func (c *RedisClient) ReadValueWithTimeout(timeout time.Duration) (resp.Value, e
 	return value, nil
 }
 
-func newRedisConn(address string) (net.Conn, error) {
+func newConn(address string) (net.Conn, error) {
 	attempts := 0
 
 	for {
