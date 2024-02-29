@@ -21,9 +21,6 @@ func (t CommandTestCase) Run(client *resp_client.RespClient, logger *logger.Logg
 		return err
 	}
 
-	// TODO: See if this is necessary?
-	// logger.Debugln("Reading response...")
-
 	value, err := client.ReadValue()
 	if err != nil {
 		return err
