@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"encoding/json"
 	"fmt"
 	"reflect"
 	"strconv"
@@ -24,7 +25,7 @@ func testStreamsXrange(stageHarness *testerutils.StageHarness) error {
 	max := 5
 	min := 3
 	randomNumber := testerutils_random.RandomInt(min, max)
-	expected := []redis.XMessage{}
+	expectedResp := []redis.XMessage{}
 
 	for i := 1; i <= randomNumber; i++ {
 		id := "0-" + strconv.Itoa(i)
@@ -36,7 +37,7 @@ func testStreamsXrange(stageHarness *testerutils.StageHarness) error {
 			expectedResponse: id,
 		})
 
-		expected = append(expected, redis.XMessage{
+		expectedResp = append(expectedResp, redis.XMessage{
 			ID: id,
 			Values: map[string]interface{}{
 				"foo": "bar",
@@ -45,7 +46,7 @@ func testStreamsXrange(stageHarness *testerutils.StageHarness) error {
 	}
 
 	maxId := "0-" + strconv.Itoa(randomNumber)
-	expected = expected[1:]
+	expectedResp = expectedResp[1:]
 
 	resp, err := client.XRange(randomKey, "0-2", maxId).Result()
 
@@ -54,11 +55,25 @@ func testStreamsXrange(stageHarness *testerutils.StageHarness) error {
 		return err
 	}
 
-	if !reflect.DeepEqual(resp, expected) {
-		logger.Infof("Received response: \"%s\"", resp)
-		return fmt.Errorf("Expected %#v, got %#v", expected, resp)
+	expectedRespJson, err := json.MarshalIndent(expectedResp, "", "  ")
+
+	if err != nil {
+		logFriendlyError(logger, err)
+		return err
+	}
+
+	respJson, err := json.MarshalIndent(resp, "", "  ")
+
+	if err != nil {
+		logFriendlyError(logger, err)
+		return err
+	}
+
+	if !reflect.DeepEqual(resp, expectedResp) {
+		logger.Infof("Received response: \"%s\"", string(respJson))
+		return fmt.Errorf("Expected %#v, got %#v", string(expectedRespJson), string(respJson))
 	} else {
-		logger.Successf("Received response: \"%s\"", resp)
+		logger.Successf("Received response: \"%s\"", string(respJson))
 	}
 
 	return nil

@@ -25,7 +25,11 @@ func testStreamsXaddValidateId(stageHarness *testerutils.StageHarness) error {
 	}
 
 	for _, test := range tests {
-		testXadd(client, logger, test)
+		err := testXadd(client, logger, test)
+
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
