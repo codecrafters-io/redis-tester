@@ -86,7 +86,7 @@ func (t SendReplicationHandshakeTestCase) RunReceiveRDBStep(client *resp_client.
 		return err
 	}
 
-	// We don't care about the contents of the RDB file, we just want to make sure the file was valie
+	// We don't care about the contents of the RDB file, we just want to make sure the file was valid
 	processRedisObject := func(_ rdb_parser.RedisObject) bool {
 		return true
 	}
