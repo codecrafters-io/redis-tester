@@ -8,7 +8,6 @@ import (
 	logger "github.com/codecrafters-io/tester-utils/logger"
 )
 
-// TODO: Rename to SendCommandTestCase
 type CommandTestCase struct {
 	Command                   string
 	Args                      []string
