@@ -2,6 +2,7 @@ package inspectable_byte_string
 
 import (
 	"fmt"
+	"strings"
 )
 
 type InspectableByteString struct {
@@ -27,6 +28,29 @@ func (s InspectableByteString) GetOffsetInFormattedString(byteOffset int) int {
 
 	formattedBytesBefore := fmt.Sprintf("%q", string(s.bytes[:byteOffset]))
 	return len(formattedBytesBefore) - 1
+}
+
+// FormatWithHighlightedOffset returns a string that represents the bytes with the byteOffset highlighted
+//
+// For example, if called with highlightOffset 4, highlightText "error" and formattedString "Received: ", the return value will be:
+//
+// ```
+// Received: "+OK\r\n"
+//	^ error
+// ```
+func (s InspectableByteString) FormatWithHighlightedOffset(highlightOffset int, highlightText string, formattedStringPrefix string) string {
+	s = s.TruncateAroundOffset(highlightOffset)
+
+	lines := []string{}
+
+	lines = append(lines, fmt.Sprintf("%s%s", formattedStringPrefix, s.FormattedString()))
+
+	offsetPointerLine := ""
+	offsetPointerLine += strings.Repeat(" ", len(formattedStringPrefix)+s.GetOffsetInFormattedString(highlightOffset))
+	offsetPointerLine += "^ " + highlightText
+	lines = append(lines, offsetPointerLine)
+
+	return strings.Join(lines, "\n")
 }
 
 func (s InspectableByteString) FormattedString() string {

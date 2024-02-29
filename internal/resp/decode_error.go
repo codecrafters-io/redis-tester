@@ -59,15 +59,9 @@ func formatDetailedError(reader *bytes.Reader, message string) string {
 	offset := getReaderOffset(reader)
 	receivedBytes := readBytesFromReader(reader)
 	receivedByteString := inspectable_byte_string.NewInspectableByteString(receivedBytes)
-	receivedByteString = receivedByteString.TruncateAroundOffset(offset)
 
-	lines = append(lines, fmt.Sprintf("Received: %s", receivedByteString.FormattedString()))
-	lines = append(lines, offsetPointerString(len("Received: ")+receivedByteString.GetOffsetInFormattedString(offset)))
+	lines = append(lines, receivedByteString.FormatWithHighlightedOffset(offset, "error", "Received: "))
 	lines = append(lines, fmt.Sprintf("Error: %s", message))
 
 	return strings.Join(lines, "\n")
-}
-
-func offsetPointerString(offset int) string {
-	return strings.Repeat(" ", offset) + "^ error"
 }
