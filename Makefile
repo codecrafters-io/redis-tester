@@ -15,7 +15,7 @@ build:
 	go build -o dist/main.out ./cmd/tester
 
 test:
-	go test -v ./internal/
+	go test -v ./internal/...
 
 test_with_redis: build
 	CODECRAFTERS_SUBMISSION_DIR=./internal/test_helpers/pass_all \

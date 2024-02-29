@@ -1,10 +1,11 @@
-package resp
+package resp_decoder
 
 import (
 	"os"
 	"strings"
 	"testing"
 
+	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v3"
 )
@@ -13,15 +14,15 @@ func TestDecodeSimpleStringSuccess(t *testing.T) {
 	value, nBytes, err := Decode([]byte("+OK\r\n"))
 	assert.Nil(t, err)
 	assert.Equal(t, 5, nBytes)
-	assert.Equal(t, "OK", string(value.data))
-	assert.Equal(t, SIMPLE_STRING, value.Type)
+	assert.Equal(t, resp_value.SIMPLE_STRING, value.Type)
+	assert.Equal(t, "OK", value.String())
 }
 
 func TestDecodeWithExtraDataSuccess(t *testing.T) {
 	value, nBytes, err := Decode([]byte("+OK\r\nextra"))
 	assert.Nil(t, err)
-	assert.Equal(t, SIMPLE_STRING, value.Type)
-	assert.Equal(t, "OK", string(value.data))
+	assert.Equal(t, resp_value.SIMPLE_STRING, value.Type)
+	assert.Equal(t, "OK", value.String())
 	assert.Equal(t, 5, nBytes)
 }
 

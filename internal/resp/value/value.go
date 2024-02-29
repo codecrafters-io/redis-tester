@@ -1,4 +1,4 @@
-package resp
+package resp_value
 
 import (
 	"fmt"
@@ -62,6 +62,10 @@ func NewArrayValue(arr []Value) Value {
 		Type:  ARRAY,
 		array: arr,
 	}
+}
+
+func (v *Value) Bytes() []byte {
+	return v.data
 }
 
 func (v *Value) Array() []Value {

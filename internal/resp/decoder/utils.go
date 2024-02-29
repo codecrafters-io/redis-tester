@@ -1,4 +1,4 @@
-package resp
+package resp_decoder
 
 import (
 	"bytes"

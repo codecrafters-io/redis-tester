@@ -1,4 +1,4 @@
-package resp
+package resp_decoder
 
 import (
 	"bytes"
@@ -26,6 +26,19 @@ func (e InvalidRESPError) Error() string {
 	return formatDetailedError(e.Reader, e.Message)
 }
 
+func formatDetailedError(reader *bytes.Reader, message string) string {
+	lines := []string{}
+
+	offset := getReaderOffset(reader)
+	receivedBytes := readBytesFromReader(reader)
+	receivedByteString := inspectable_byte_string.NewInspectableByteString(receivedBytes)
+
+	lines = append(lines, receivedByteString.FormatWithHighlightedOffset(offset, "error", "Received: "))
+	lines = append(lines, fmt.Sprintf("Error: %s", message))
+
+	return strings.Join(lines, "\n")
+}
+
 func getReaderOffset(reader *bytes.Reader) int {
 	return int(reader.Size()) - reader.Len()
 }
@@ -51,17 +64,4 @@ func readBytesFromReader(reader *bytes.Reader) []byte {
 	}
 
 	return bytes
-}
-
-func formatDetailedError(reader *bytes.Reader, message string) string {
-	lines := []string{}
-
-	offset := getReaderOffset(reader)
-	receivedBytes := readBytesFromReader(reader)
-	receivedByteString := inspectable_byte_string.NewInspectableByteString(receivedBytes)
-
-	lines = append(lines, receivedByteString.FormatWithHighlightedOffset(offset, "error", "Received: "))
-	lines = append(lines, fmt.Sprintf("Error: %s", message))
-
-	return strings.Join(lines, "\n")
 }

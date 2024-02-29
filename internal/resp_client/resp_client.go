@@ -6,7 +6,9 @@ import (
 	"net"
 	"time"
 
-	"github.com/codecrafters-io/redis-tester/internal/resp"
+	"github.com/codecrafters-io/redis-tester/internal/resp/value"
+	"github.com/codecrafters-io/redis-tester/internal/resp/decoder"
+	"github.com/codecrafters-io/redis-tester/internal/resp/encoder"
 )
 
 type RespClientCallbacks struct {
@@ -24,7 +26,7 @@ type RespClientCallbacks struct {
 
 	// OnValueRead is called when a RESP value is decoded from bytes read from the server.
 	// This can be useful for success logs.
-	OnValueRead func(value resp.Value)
+	OnValueRead func(value resp_value.Value)
 }
 
 type RespClient struct {
@@ -78,7 +80,7 @@ func (c *RespClient) SendCommand(command string, args ...string) error {
 		c.Callbacks.OnSendCommand(command, args...)
 	}
 
-	encodedValue := resp.Encode(resp.NewStringArrayValue(append([]string{command}, args...)))
+	encodedValue := resp_encoder.Encode(resp_value.NewStringArrayValue(append([]string{command}, args...)))
 	return c.SendRaw(encodedValue)
 }
 
@@ -100,7 +102,7 @@ func (c *RespClient) SendRaw(bytes []byte) error {
 	return nil
 }
 
-func (c *RespClient) ReadValue() (resp.Value, error) {
+func (c *RespClient) ReadValue() (resp_value.Value, error) {
 	return c.ReadValueWithTimeout(2 * time.Second)
 }
 
@@ -118,7 +120,7 @@ func (c *RespClient) ReadIntoBuffer() error {
 	return err
 }
 
-func (c *RespClient) ReadValueWithTimeout(timeout time.Duration) (resp.Value, error) {
+func (c *RespClient) ReadValueWithTimeout(timeout time.Duration) (resp_value.Value, error) {
 	deadline := time.Now().Add(timeout)
 
 	for {
@@ -130,24 +132,24 @@ func (c *RespClient) ReadValueWithTimeout(timeout time.Duration) (resp.Value, er
 		_ = c.ReadIntoBuffer()
 
 		// Let's try to decode the value at this point.
-		_, _, err := resp.Decode(c.UnreadBuffer.Bytes())
+		_, _, err := resp_decoder.Decode(c.UnreadBuffer.Bytes())
 
 		if err == nil {
 			break // We were able to read a value!
 		}
 
-		if _, ok := err.(resp.InvalidRESPError); ok {
+		if _, ok := err.(resp_decoder.InvalidRESPError); ok {
 			break // We've read an invalid value, we can stop reading immediately
 		}
 	}
 
-	value, readBytesCount, err := resp.Decode(c.UnreadBuffer.Bytes())
+	value, readBytesCount, err := resp_decoder.Decode(c.UnreadBuffer.Bytes())
 	if err != nil {
 		if c.Callbacks.OnRawRead != nil {
 			c.Callbacks.OnRawRead(c.UnreadBuffer.Bytes())
 		}
 
-		return resp.Value{}, err
+		return resp_value.Value{}, err
 	}
 
 	// We've read a value! Let's remove the bytes we've read from the buffer

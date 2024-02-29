@@ -1,26 +1,28 @@
-package resp
+package resp_decoder
 
 import (
 	"bytes"
 	"fmt"
 	"io"
+
+	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 )
 
-func Decode(data []byte) (value Value, readBytesCount int, err error) {
+func Decode(data []byte) (value resp_value.Value, readBytesCount int, err error) {
 	reader := bytes.NewReader(data)
 
 	value, err = doDecodeValue(reader)
 	if err != nil {
-		return Value{}, 0, err
+		return resp_value.Value{}, 0, err
 	}
 
 	return value, len(data) - reader.Len(), nil
 }
 
-func doDecodeValue(reader *bytes.Reader) (Value, error) {
+func doDecodeValue(reader *bytes.Reader) (resp_value.Value, error) {
 	firstByte, err := reader.ReadByte()
 	if err == io.EOF {
-		return Value{}, IncompleteRESPError{
+		return resp_value.Value{}, IncompleteRESPError{
 			Reader:  reader,
 			Message: "Expected start of a new RESP value (either +, -, :, $ or *)",
 		}
@@ -35,7 +37,7 @@ func doDecodeValue(reader *bytes.Reader) (Value, error) {
 	default:
 		reader.UnreadByte() // Ensure the error points to the correct byte
 
-		return Value{}, InvalidRESPError{
+		return resp_value.Value{}, InvalidRESPError{
 			Reader:  reader,
 			Message: fmt.Sprintf("%q is not a valid start of a RESP value (expected +, -, :, $ or *)", string(firstByte)),
 		}
