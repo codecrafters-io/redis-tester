@@ -3,18 +3,14 @@ package resp_assertions
 import (
 	"fmt"
 
-	"github.com/codecrafters-io/redis-tester/internal/resp/value"
+	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 )
-
-type RESPAssertion interface {
-	Run(value resp_value.Value) error
-}
 
 type StringAssertion struct {
 	ExpectedValue string
 }
 
-func NewStringValueAssertion(expectedValue string) RESPAssertion {
+func NewStringAssertion(expectedValue string) RESPAssertion {
 	return StringAssertion{ExpectedValue: expectedValue}
 }
 

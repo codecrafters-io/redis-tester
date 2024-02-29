@@ -9,7 +9,7 @@ import (
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 )
 
-func decodeBulkString(reader *bytes.Reader) (resp_value.Value, error) {
+func decodeBulkStringOrNil(reader *bytes.Reader) (resp_value.Value, error) {
 	offsetBeforeLength := getReaderOffset(reader)
 
 	lengthBytes, err := readUntilCRLF(reader)
@@ -28,6 +28,20 @@ func decodeBulkString(reader *bytes.Reader) (resp_value.Value, error) {
 		return resp_value.Value{}, InvalidRESPError{
 			Reader:  reader,
 			Message: fmt.Sprintf("Invalid bulk string length: %q, expected a number", string(lengthBytes)),
+		}
+	}
+
+	if length == -1 {
+		return resp_value.NewNilValue(), nil
+	}
+
+	if length < 1 {
+		// Ensure error points to the correct byte
+		reader.Seek(int64(offsetBeforeLength), io.SeekStart)
+
+		return resp_value.Value{}, InvalidRESPError{
+			Reader:  reader,
+			Message: fmt.Sprintf("Invalid bulk string length: %d, expected a positive integer", length),
 		}
 	}
 

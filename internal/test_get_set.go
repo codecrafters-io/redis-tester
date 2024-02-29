@@ -32,7 +32,7 @@ func testGetSet(stageHarness *testerutils.StageHarness) error {
 	setCommandTestCase := command_test.CommandTestCase{
 		Command:   "set",
 		Args:      []string{randomKey, randomValue},
-		Assertion: resp_assertions.NewStringValueAssertion("OK"),
+		Assertion: resp_assertions.NewStringAssertion("OK"),
 	}
 
 	if err := setCommandTestCase.Run(client, logger); err != nil {
@@ -45,7 +45,7 @@ func testGetSet(stageHarness *testerutils.StageHarness) error {
 	getCommandTestCase := command_test.CommandTestCase{
 		Command:   "get",
 		Args:      []string{randomKey},
-		Assertion: resp_assertions.NewStringValueAssertion(randomValue),
+		Assertion: resp_assertions.NewStringAssertion(randomValue),
 	}
 
 	if err := getCommandTestCase.Run(client, logger); err != nil {
