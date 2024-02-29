@@ -85,6 +85,8 @@ func testStreamsXadd(stageHarness *testerutils.StageHarness) error {
 
 	if resp != "stream" {
 		return fmt.Errorf("Expected \"stream\", got %#v", resp)
+	} else {
+		logger.Successf("Type of %s is %s", randomKey, resp)
 	}
 
 	return nil
