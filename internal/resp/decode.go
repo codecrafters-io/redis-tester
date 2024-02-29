@@ -96,7 +96,7 @@ func decodeBulkString(reader *bytes.Reader) (Value, error) {
 		return Value{}, err
 	}
 
-	return NewBulkStringValue(string(bytes.Bytes())), nil
+	return NewBulkStringValue(bytes.String()), nil
 }
 
 func readUntilCRLF(r *bytes.Reader) ([]byte, error) {
