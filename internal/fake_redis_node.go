@@ -89,7 +89,7 @@ func (node FakeRedisNode) readRespMessages() ([]string, error) {
 	message := resp.SmartResult()
 	slice, ok := message.([]interface{})
 	if !ok {
-		return nil, fmt.Errorf("Unexpected message received : %v", message)
+		return nil, fmt.Errorf("Unexpected message received: %v", message)
 	}
 	return convertToStringArray(slice)
 }
@@ -103,7 +103,7 @@ func (node FakeRedisNode) readRespString() (string, error) {
 	message := resp.SmartResult()
 	slice, ok := message.(string)
 	if !ok {
-		return "", fmt.Errorf("Unexpected message received : %v", message)
+		return "", fmt.Errorf("Unexpected message received: %v", message)
 	}
 	return slice, nil
 }
@@ -117,7 +117,7 @@ func (node FakeRedisNode) readRespInt() (int, error) {
 	message := resp.SmartResult()
 	slice, ok := message.(int64)
 	if !ok {
-		return 0, fmt.Errorf("Unexpected message received : %v", message)
+		return 0, fmt.Errorf("Unexpected message received: %v", message)
 	}
 	integer := int(slice)
 	return integer, nil
