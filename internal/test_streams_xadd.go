@@ -43,7 +43,7 @@ func testXadd(client *redis.Client, logger *logger.Logger, test XADDTest) error 
 			return fmt.Errorf("Expected %#v, got %#v", test.expectedError, err.Error())
 		}
 
-		logger.Infof("Received error: \"%s\"", err.Error())
+		logger.Successf("Received error: \"%s\"", err.Error())
 		return nil
 	}
 
