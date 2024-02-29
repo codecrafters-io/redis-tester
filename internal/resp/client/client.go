@@ -132,11 +132,6 @@ func (c *RespClient) ReadFullResyncRDBFile() ([]byte, error) {
 	c.LastValueBytes = c.UnreadBuffer.Bytes()[:readBytesCount]
 	c.UnreadBuffer = *bytes.NewBuffer(c.UnreadBuffer.Bytes()[readBytesCount:])
 
-	// TODO: Add a "AfterReadFullResyncRDBFile" callback?
-	// if c.Callbacks.AfterReadValue != nil {
-	// 	c.Callbacks.AfterReadValue(value)
-	// }
-
 	return value, nil
 }
 
