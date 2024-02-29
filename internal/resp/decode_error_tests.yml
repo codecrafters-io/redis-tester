@@ -57,3 +57,17 @@
     Received: "$3\r\n"
                      ^ error
     Error: Expected 3 bytes of data in bulk string, got 0
+
+- input: "$3\r\nabc"
+  error: |
+    Received: "$3\r\nabc"
+                        ^ error
+    Error: Expected \r\n at the end of a bulk string
+
+# Arrays
+
+# - input: "*abc"
+#   error: |
+#     Received: "*abc"
+#                    ^ error
+#     Error: Expected \r\n after array length

@@ -97,7 +97,7 @@ func decodeBulkString(reader *bytes.Reader) (Value, error) {
 	}
 
 	// Read the \r\n at the end of the bulk string
-	if err := readCRLF(reader); err != nil {
+	if err := readCRLF(reader, "at the end of a bulk string"); err != nil {
 		return Value{}, err
 	}
 
@@ -108,19 +108,21 @@ func readUntilCRLF(r *bytes.Reader) ([]byte, error) {
 	return readUntil(r, []byte("\r\n"))
 }
 
-func readCRLF(reader *bytes.Reader) (err error) {
+func readCRLF(reader *bytes.Reader, locationDescriptor string) (err error) {
+	errorMessage := fmt.Sprintf(`Expected \r\n %s`, locationDescriptor)
+
 	b, err := reader.ReadByte()
 	if err == io.EOF {
 		return IncompleteRESPError{
 			Reader:  reader,
-			Message: `Expected \r\n.`,
+			Message: errorMessage,
 		}
 	}
 
 	if b != '\r' {
 		return InvalidRESPError{
 			Reader:  reader,
-			Message: `Expected \r\n.`,
+			Message: errorMessage,
 		}
 	}
 
@@ -128,14 +130,14 @@ func readCRLF(reader *bytes.Reader) (err error) {
 	if err == io.EOF {
 		return IncompleteRESPError{
 			Reader:  reader,
-			Message: `Expected \r\n.`,
+			Message: errorMessage,
 		}
 	}
 
 	if b != '\n' {
 		return InvalidRESPError{
 			Reader:  reader,
-			Message: `Expected \r\n.`,
+			Message: errorMessage,
 		}
 	}
 
