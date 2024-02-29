@@ -2,6 +2,7 @@ package inspectable_byte_string
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -40,4 +41,20 @@ func TestTruncateAroundOffset(t *testing.T) {
 
 	ibs = NewInspectableByteString(bytes)
 	assert.Equal(t, `"rld3helloworld4helloworld5hell"`, ibs.TruncateAroundOffset(60).FormattedString())
+}
+
+func TestFormatWithHighlightedOffset(t *testing.T) {
+	bytes := []byte("+OK\r\n")
+	ibs := NewInspectableByteString(bytes)
+	highlightOffset := 4
+	highlightText := "error"
+	formattedStringPrefix := "Received: "
+
+	expected := strings.TrimSpace(`
+Received: "+OK\r\n"
+                ^ error
+	`)
+	result := ibs.FormatWithHighlightedOffset(highlightOffset, highlightText, formattedStringPrefix)
+
+	assert.Equal(t, expected, result)
 }
