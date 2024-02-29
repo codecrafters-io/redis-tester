@@ -43,7 +43,7 @@ func (s InspectableByteString) FormattedString() string {
 func (s InspectableByteString) TruncateAroundOffset(offset int) InspectableByteString {
 	// We've got about 50 characters to use in the terminal line.
 	start := max(0, offset-20)
-	end := max(0, min(len(s.bytes), offset+10))
+	end := max(0, min(len(s.bytes), start+30))
 
 	return InspectableByteString{
 		bytes:                s.bytes[start:end],

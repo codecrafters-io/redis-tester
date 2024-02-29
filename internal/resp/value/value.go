@@ -10,6 +10,7 @@ const (
 	BULK_STRING   string = "BULK_STRING"
 	ARRAY         string = "ARRAY"
 	ERROR         string = "ERROR"
+	NIL           string = "NIL"
 )
 
 type Value struct {
@@ -63,6 +64,12 @@ func NewArrayValue(arr []Value) Value {
 	return Value{
 		Type:  ARRAY,
 		array: arr,
+	}
+}
+
+func NewNilValue() Value {
+	return Value{
+		Type: NIL,
 	}
 }
 

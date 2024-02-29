@@ -107,8 +107,8 @@ func (c *RespClient) ReadValue() (resp_value.Value, error) {
 }
 
 func (c *RespClient) ReadIntoBuffer() error {
-	// Ensure we allow enough time for a read to complete
-	c.Conn.SetReadDeadline(time.Now().Add(100 * time.Millisecond))
+	// We don't want to block indefinitely, so we'll set a read deadline
+	c.Conn.SetReadDeadline(time.Now().Add(1 * time.Millisecond))
 
 	buf := make([]byte, 1024)
 	n, err := c.Conn.Read(buf)
@@ -141,6 +141,8 @@ func (c *RespClient) ReadValueWithTimeout(timeout time.Duration) (resp_value.Val
 		if _, ok := err.(resp_decoder.InvalidRESPError); ok {
 			break // We've read an invalid value, we can stop reading immediately
 		}
+
+		time.Sleep(10 * time.Millisecond) // Let's wait a bit before trying again
 	}
 
 	value, readBytesCount, err := resp_decoder.Decode(c.UnreadBuffer.Bytes())

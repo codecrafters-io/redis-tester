@@ -52,6 +52,12 @@
                 ^ error
     Error: Invalid bulk string length: "abc", expected a number
 
+- input: "$-5\r\nhello\r\n"
+  error: |
+    Received: "$-5\r\nhello\r\n"
+                ^ error
+    Error: Invalid bulk string length: -5, expected a positive integer
+
 - input: "$3\r\n"
   error: |
     Received: "$3\r\n"
