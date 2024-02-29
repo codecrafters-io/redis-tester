@@ -10,11 +10,11 @@ import (
 )
 
 func encodeInteger(v Value) ([]byte, error) {
-	int_value, err := strconv.Atoi(string(v.data))
+	intValue, err := strconv.Atoi(string(v.data))
 	if err != nil {
 		return nil, err
 	}
-	return []byte(fmt.Sprintf(":%d\r\n", int_value)), nil
+	return []byte(fmt.Sprintf(":%d\r\n", intValue)), nil
 }
 
 func encodeSimpleString(v Value) []byte {

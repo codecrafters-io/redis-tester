@@ -49,7 +49,7 @@ func (node FakeRedisNode) SendAndAssertStringArray(sendMessage []string, receive
 	if err != nil {
 		return err
 	}
-	err, _ = node.readAndAssertMessages(receiveMessage, false)
+	_, err = node.readAndAssertMessages(receiveMessage, false)
 	if err != nil {
 		return err
 	}
@@ -87,7 +87,10 @@ func (node FakeRedisNode) readRespMessages() ([]string, error) {
 		return nil, e
 	}
 	message := resp.SmartResult()
-	slice, _ := message.([]interface{})
+	slice, ok := message.([]interface{})
+	if !ok {
+		return nil, fmt.Errorf("Unexpected message received: %v", message)
+	}
 	return convertToStringArray(slice)
 }
 
@@ -98,7 +101,10 @@ func (node FakeRedisNode) readRespString() (string, error) {
 		return "", e
 	}
 	message := resp.SmartResult()
-	slice, _ := message.(string)
+	slice, ok := message.(string)
+	if !ok {
+		return "", fmt.Errorf("Unexpected message received: %v", message)
+	}
 	return slice, nil
 }
 
@@ -109,65 +115,65 @@ func (node FakeRedisNode) readRespInt() (int, error) {
 		return 0, e
 	}
 	message := resp.SmartResult()
-	slice, err := message.(int64)
-	if err != true {
-		node.Logger.Debugf("Unable to convert %v", message)
+	slice, ok := message.(int64)
+	if !ok {
+		return 0, fmt.Errorf("Unexpected message received: %v", message)
 	}
 	integer := int(slice)
 	return integer, nil
 }
 
-func (node FakeRedisNode) readAndAssertMessagesWithSkip(messages []string, skipMessage string, caseSensitiveMatch bool) (error, int) {
+func (node FakeRedisNode) readAndAssertMessagesWithSkip(messages []string, skipMessage string, caseSensitiveMatch bool) (int, error) {
 	// Reads RESP message, skips assert if the first word matches with
 	// skipMessage (case insensitive), reads next RESP runs match on it.
 	actualMessages, err := node.readRespMessages()
 	offset := 0
 	if err != nil {
-		return err, offset
+		return offset, err
 	}
-	if strings.ToUpper(actualMessages[0]) == strings.ToUpper(skipMessage) {
+	if strings.EqualFold(actualMessages[0], skipMessage) {
 		node.Logger.Successf(node.LogPrefix + strings.Join(actualMessages, " ") + " received.")
 		offset += GetByteOffset(actualMessages)
 		actualMessages, err = node.readRespMessages() // Read next message
 		if err != nil {
-			return err, offset
+			return offset, err
 		}
 	}
 
 	offset += GetByteOffset(actualMessages)
 	err = node.assertMessages(actualMessages, messages, caseSensitiveMatch)
 	if err != nil {
-		return err, offset
+		return offset, err
 	}
-	return nil, offset
+	return offset, err
 }
 
-func (node FakeRedisNode) readAndAssertMessages(messages []string, caseSensitiveMatch bool) (error, int) {
+func (node FakeRedisNode) readAndAssertMessages(messages []string, caseSensitiveMatch bool) (int, error) {
 	actualMessages, err := node.readRespMessages()
 	offset := GetByteOffset(messages)
 	if err != nil {
-		return err, 0
+		return 0, err
 	}
-	// fmt.Println("ACTMSG :", actualMessages)
+	// node.Logger.Errorf("ACTMSG : %v", actualMessages)
 	err = node.assertMessages(actualMessages, messages, caseSensitiveMatch)
 	if err != nil {
-		return err, 0
+		return 0, err
 	}
-	return nil, offset
+	return offset, nil
 }
 
-func (node FakeRedisNode) readAndAssertMessagesWithOr(messages [][]string, caseSensitiveMatch bool) (error, int) {
+func (node FakeRedisNode) readAndAssertMessagesWithOr(messages [][]string, caseSensitiveMatch bool) (int, error) {
 	actualMessages, err := node.readRespMessages()
 	offset := GetByteOffset(actualMessages)
 	if err != nil {
-		return err, 0
+		return 0, err
 	}
 
 	err = node.assertMessagesWithOr(actualMessages, messages, caseSensitiveMatch)
 	if err != nil {
-		return err, 0
+		return 0, err
 	}
-	return nil, offset
+	return offset, nil
 }
 
 func (node FakeRedisNode) assertMessages(actualMessages []string, expectedMessages []string, caseSensitiveMatch bool) error {
