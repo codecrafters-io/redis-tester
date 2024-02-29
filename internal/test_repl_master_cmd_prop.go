@@ -109,5 +109,5 @@ func isSelectCommand(value resp_value.Value) bool {
 	return value.Type == resp_value.ARRAY &&
 		len(value.Array()) > 0 &&
 		value.Array()[0].Type == resp_value.BULK_STRING &&
-		strings.ToLower(value.Array()[0].String()) == "SELECT"
+		strings.ToLower(value.Array()[0].String()) == "select"
 }

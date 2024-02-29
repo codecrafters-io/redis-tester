@@ -2,6 +2,7 @@ package resp_value
 
 import (
 	"fmt"
+	"strings"
 )
 
 const (
@@ -102,7 +103,13 @@ func (v *Value) FormattedString() string {
 	case BULK_STRING:
 		return fmt.Sprintf("%q", v.String())
 	case ARRAY:
-		return fmt.Sprintf("%q", v.Array())
+		formattedStrings := make([]string, len(v.Array()))
+
+		for i, value := range v.Array() {
+			formattedStrings[i] = value.FormattedString()
+		}
+
+		return fmt.Sprintf("[%v]", strings.Join(formattedStrings, ", "))
 	case ERROR:
 		return fmt.Sprintf("%q", "ERR: "+v.String())
 	}
