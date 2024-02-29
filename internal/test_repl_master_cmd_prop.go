@@ -3,10 +3,10 @@ package internal
 import (
 	"strings"
 
-	"github.com/codecrafters-io/redis-tester/internal/command_test"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_client"
-	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
+	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	testerutils "github.com/codecrafters-io/tester-utils"
 )
 
@@ -39,7 +39,7 @@ func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
 		return err
 	}
 
-	sendHandshakeTestCase := command_test.SendReplicationHandshakeTestCase{}
+	sendHandshakeTestCase := test_cases.SendReplicationHandshakeTestCase{}
 	if err := sendHandshakeTestCase.RunAll(replicaClient, logger); err != nil {
 		return err
 	}
@@ -54,7 +54,7 @@ func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
 	for i := 1; i <= len(kvMap); i++ {
 		key, value := kvMap[i][0], kvMap[i][1]
 
-		setCommandTestCase := command_test.CommandTestCase{
+		setCommandTestCase := test_cases.CommandTestCase{
 			Command:   "SET",
 			Args:      []string{key, value},
 			Assertion: resp_assertions.NewStringAssertion("OK"),
@@ -66,7 +66,7 @@ func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
 	}
 
 	// We assert that the SET commands are replicated from the replica (user's code)
-	receiveFirstCommandTestCase := &command_test.ReceiveValueTestCase{
+	receiveFirstCommandTestCase := &test_cases.ReceiveValueTestCase{
 		Assertion:                 resp_assertions.NewCommandAssertion("SET", "foo", "123"),
 		ShouldSkipUnreadDataCheck: true, // We're expecting more SET commands to be present
 	}
@@ -84,7 +84,7 @@ func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
 		}
 	}
 
-	receiveSecondCommandTestCase := &command_test.ReceiveValueTestCase{
+	receiveSecondCommandTestCase := &test_cases.ReceiveValueTestCase{
 		Assertion:                 resp_assertions.NewCommandAssertion("SET", "bar", "456"),
 		ShouldSkipUnreadDataCheck: true, // We're expecting more SET commands to be present
 	}
@@ -93,7 +93,7 @@ func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
 		return err
 	}
 
-	receivedThirdCommandTestCase := &command_test.ReceiveValueTestCase{
+	receivedThirdCommandTestCase := &test_cases.ReceiveValueTestCase{
 		Assertion:                 resp_assertions.NewCommandAssertion("SET", "baz", "789"),
 		ShouldSkipUnreadDataCheck: false, // We're not expecting more commands to be present
 	}

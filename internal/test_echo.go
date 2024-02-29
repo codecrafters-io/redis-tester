@@ -1,9 +1,9 @@
 package internal
 
 import (
-	"github.com/codecrafters-io/redis-tester/internal/command_test"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_client"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	"github.com/codecrafters-io/tester-utils/random"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
@@ -25,7 +25,7 @@ func testEcho(stageHarness *testerutils.StageHarness) error {
 
 	randomWord := random.RandomWord()
 
-	commandTestCase := command_test.CommandTestCase{
+	commandTestCase := test_cases.CommandTestCase{
 		Command:   "echo",
 		Args:      []string{randomWord},
 		Assertion: resp_assertions.NewStringAssertion(randomWord),

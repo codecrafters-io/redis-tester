@@ -1,29 +1,30 @@
-package command_test
+package test_cases
 
 import (
 	"fmt"
 
 	resp_client "github.com/codecrafters-io/redis-tester/internal/resp/client"
-	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	logger "github.com/codecrafters-io/tester-utils/logger"
 )
 
-type ReceiveValueTestCase struct {
+// TODO: Rename to SendCommandTestCase
+type CommandTestCase struct {
+	Command                   string
+	Args                      []string
 	Assertion                 resp_assertions.RESPAssertion
 	ShouldSkipUnreadDataCheck bool
-
-	// This is set after the test is run
-	ActualValue resp_value.Value
 }
 
-func (t *ReceiveValueTestCase) Run(client *resp_client.RespClient, logger *logger.Logger) error {
+func (t CommandTestCase) Run(client *resp_client.RespClient, logger *logger.Logger) error {
+	if err := client.SendCommand(t.Command, t.Args...); err != nil {
+		return err
+	}
+
 	value, err := client.ReadValue()
 	if err != nil {
 		return err
 	}
-
-	t.ActualValue = value
 
 	if err = t.Assertion.Run(value); err != nil {
 		return err

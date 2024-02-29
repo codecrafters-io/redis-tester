@@ -1,4 +1,4 @@
-package command_test
+package test_cases
 
 import (
 	"bytes"
