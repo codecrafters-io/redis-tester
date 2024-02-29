@@ -2,7 +2,6 @@ package resp_value
 
 import (
 	"fmt"
-	"strconv"
 )
 
 const (
@@ -14,36 +13,39 @@ const (
 )
 
 type Value struct {
-	Type  string
-	data  []byte
-	array []Value
+	Type string
+
+	// Each type might use a different field to store data
+	bytes   []byte
+	integer int
+	array   []Value
 }
 
 func NewSimpleStringValue(s string) Value {
 	return Value{
-		Type: SIMPLE_STRING,
-		data: []byte(s),
+		Type:  SIMPLE_STRING,
+		bytes: []byte(s),
 	}
 }
 
 func NewBulkStringValue(s string) Value {
 	return Value{
-		Type: BULK_STRING,
-		data: []byte(s),
+		Type:  BULK_STRING,
+		bytes: []byte(s),
 	}
 }
 
 func NewIntegerValue(i int) Value {
 	return Value{
-		Type: INTEGER,
-		data: []byte(fmt.Sprint(i)),
+		Type:    INTEGER,
+		integer: i,
 	}
 }
 
 func NewErrorValue(err string) Value {
 	return Value{
-		Type: ERROR,
-		data: []byte(err),
+		Type:  ERROR,
+		bytes: []byte(err),
 	}
 }
 
@@ -65,7 +67,7 @@ func NewArrayValue(arr []Value) Value {
 }
 
 func (v *Value) Bytes() []byte {
-	return v.data
+	return v.bytes
 }
 
 func (v *Value) Array() []Value {
@@ -77,15 +79,11 @@ func (v *Value) Array() []Value {
 }
 
 func (v *Value) String() string {
-	return string(v.data)
+	return string(v.bytes)
 }
 
 func (v *Value) Integer() int {
-	i, err := strconv.Atoi(string(v.data))
-	if err != nil {
-		panic("invalid integer") // This should never happen since we create values
-	}
-	return i
+	return v.integer
 }
 
 func (v *Value) FormattedString() string {
