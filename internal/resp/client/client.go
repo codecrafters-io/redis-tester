@@ -110,7 +110,7 @@ func (c *RespClient) ReadFullResyncRDBFile() ([]byte, error) {
 			return true // We were able to read a value!
 		}
 
-		if _, ok := err.(resp_decoder.InvalidRESPError); ok {
+		if _, ok := err.(resp_decoder.InvalidInputError); ok {
 			return true // We've read an invalid value, we can stop reading immediately
 		}
 
@@ -161,7 +161,7 @@ func (c *RespClient) ReadValueWithTimeout(timeout time.Duration) (resp_value.Val
 			return true // We were able to read a value!
 		}
 
-		if _, ok := err.(resp_decoder.InvalidRESPError); ok {
+		if _, ok := err.(resp_decoder.InvalidInputError); ok {
 			return true // We've read an invalid value, we can stop reading immediately
 		}
 

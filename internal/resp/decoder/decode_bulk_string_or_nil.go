@@ -14,7 +14,7 @@ func decodeBulkStringOrNil(reader *bytes.Reader) (resp_value.Value, error) {
 
 	lengthBytes, err := readUntilCRLF(reader)
 	if err == io.EOF {
-		return resp_value.Value{}, IncompleteRESPError{
+		return resp_value.Value{}, IncompleteInputError{
 			Reader:  reader,
 			Message: `Expected \r\n after bulk string length`,
 		}
@@ -25,7 +25,7 @@ func decodeBulkStringOrNil(reader *bytes.Reader) (resp_value.Value, error) {
 		// Ensure error points to the correct byte
 		reader.Seek(int64(offsetBeforeLength), io.SeekStart)
 
-		return resp_value.Value{}, InvalidRESPError{
+		return resp_value.Value{}, InvalidInputError{
 			Reader:  reader,
 			Message: fmt.Sprintf("Invalid bulk string length: %q, expected a number", string(lengthBytes)),
 		}
@@ -39,7 +39,7 @@ func decodeBulkStringOrNil(reader *bytes.Reader) (resp_value.Value, error) {
 		// Ensure error points to the correct byte
 		reader.Seek(int64(offsetBeforeLength), io.SeekStart)
 
-		return resp_value.Value{}, InvalidRESPError{
+		return resp_value.Value{}, InvalidInputError{
 			Reader:  reader,
 			Message: fmt.Sprintf("Invalid bulk string length: %d, expected a positive integer", length),
 		}
@@ -50,7 +50,7 @@ func decodeBulkStringOrNil(reader *bytes.Reader) (resp_value.Value, error) {
 		b, err := reader.ReadByte()
 
 		if err == io.EOF {
-			return resp_value.Value{}, IncompleteRESPError{
+			return resp_value.Value{}, IncompleteInputError{
 				Reader:  reader,
 				Message: fmt.Sprintf("Expected %d bytes of data in bulk string, got %d", length, i),
 			}

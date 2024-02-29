@@ -14,7 +14,7 @@ func decodeArray(reader *bytes.Reader) (resp_value.Value, error) {
 
 	lengthBytes, err := readUntilCRLF(reader)
 	if err == io.EOF {
-		return resp_value.Value{}, IncompleteRESPError{
+		return resp_value.Value{}, IncompleteInputError{
 			Reader:  reader,
 			Message: `Expected \r\n after array length`,
 		}
@@ -25,7 +25,7 @@ func decodeArray(reader *bytes.Reader) (resp_value.Value, error) {
 		// Ensure error points to the correct byte
 		reader.Seek(int64(offsetBeforeLength), io.SeekStart)
 
-		return resp_value.Value{}, InvalidRESPError{
+		return resp_value.Value{}, InvalidInputError{
 			Reader:  reader,
 			Message: fmt.Sprintf("Invalid array length: %q, expected a number", string(lengthBytes)),
 		}
@@ -35,7 +35,7 @@ func decodeArray(reader *bytes.Reader) (resp_value.Value, error) {
 		// Ensure error points to the correct byte
 		reader.Seek(int64(offsetBeforeLength), io.SeekStart)
 
-		return resp_value.Value{}, InvalidRESPError{
+		return resp_value.Value{}, InvalidInputError{
 			Reader:  reader,
 			Message: fmt.Sprintf("Invalid array length: %d, expected 0 or a positive integer", length),
 		}

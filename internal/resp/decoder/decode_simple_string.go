@@ -10,7 +10,7 @@ import (
 func decodeSimpleString(reader *bytes.Reader) (resp_value.Value, error) {
 	bytes, err := readUntilCRLF(reader)
 	if err == io.EOF {
-		return resp_value.Value{}, IncompleteRESPError{
+		return resp_value.Value{}, IncompleteInputError{
 			Reader:  reader,
 			Message: `Expected \r\n at the end of a simple string`,
 		}
