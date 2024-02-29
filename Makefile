@@ -24,8 +24,8 @@ test_with_redis: build
 
 
 test_tmp: build
-	cd /tmp/8307fca11c4a54b0 && \
-	CODECRAFTERS_SUBMISSION_DIR=/tmp/8307fca11c4a54b0  \
+	cd /tmp/abc && \
+	CODECRAFTERS_SUBMISSION_DIR=/tmp/abc  \
 	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\":\"repl-master-cmd-prop\",\"tester_log_prefix\":\"replication-11\",\"title\":\"Replication Stage\"}]" \
 	$(shell pwd)/dist/main.out
 
