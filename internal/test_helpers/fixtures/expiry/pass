@@ -13,7 +13,6 @@ Debug = true
 [33m[stage-2] [0m[36mConnection established, sending ping command...[0m
 [33m[stage-2] [0m[94m$ redis-cli ping[0m
 [33m[stage-2] [0m[36mSent bytes: "*1\r\n$4\r\nping\r\n"[0m
-[33m[stage-2] [0m[36mReading response...[0m
 [33m[stage-2] [0m[36mReceived RESP value: "PONG"[0m
 [33m[stage-2] [0m[92mReceived "PONG"[0m
 [33m[stage-2] [0m[92mTest passed.[0m
@@ -24,17 +23,14 @@ Debug = true
 [33m[stage-3] [0m[94m$ ./spawn_redis_server.sh[0m
 [33m[stage-3] [0m[94mclient-1: $ redis-cli ping[0m
 [33m[stage-3] [0m[36mclient-1: Sent bytes: "*1\r\n$4\r\nping\r\n"[0m
-[33m[stage-3] [0m[36mReading response...[0m
 [33m[stage-3] [0m[36mclient-1: Received RESP value: "PONG"[0m
 [33m[stage-3] [0m[92mReceived "PONG"[0m
 [33m[stage-3] [0m[94mclient-1: $ redis-cli ping[0m
 [33m[stage-3] [0m[36mclient-1: Sent bytes: "*1\r\n$4\r\nping\r\n"[0m
-[33m[stage-3] [0m[36mReading response...[0m
 [33m[stage-3] [0m[36mclient-1: Received RESP value: "PONG"[0m
 [33m[stage-3] [0m[92mReceived "PONG"[0m
 [33m[stage-3] [0m[94mclient-1: $ redis-cli ping[0m
 [33m[stage-3] [0m[36mclient-1: Sent bytes: "*1\r\n$4\r\nping\r\n"[0m
-[33m[stage-3] [0m[36mReading response...[0m
 [33m[stage-3] [0m[36mclient-1: Received RESP value: "PONG"[0m
 [33m[stage-3] [0m[92mReceived "PONG"[0m
 [33m[stage-3] [0m[36mSuccess, closing connection...[0m
@@ -46,33 +42,27 @@ Debug = true
 [33m[stage-4] [0m[94m$ ./spawn_redis_server.sh[0m
 [33m[stage-4] [0m[94mclient-1: $ redis-cli ping[0m
 [33m[stage-4] [0m[36mclient-1: Sent bytes: "*1\r\n$4\r\nping\r\n"[0m
-[33m[stage-4] [0m[36mReading response...[0m
 [33m[stage-4] [0m[36mclient-1: Received RESP value: "PONG"[0m
 [33m[stage-4] [0m[92mReceived "PONG"[0m
 [33m[stage-4] [0m[94mclient-2: $ redis-cli ping[0m
 [33m[stage-4] [0m[36mclient-2: Sent bytes: "*1\r\n$4\r\nping\r\n"[0m
-[33m[stage-4] [0m[36mReading response...[0m
 [33m[stage-4] [0m[36mclient-2: Received RESP value: "PONG"[0m
 [33m[stage-4] [0m[92mReceived "PONG"[0m
 [33m[stage-4] [0m[94mclient-1: $ redis-cli ping[0m
 [33m[stage-4] [0m[36mclient-1: Sent bytes: "*1\r\n$4\r\nping\r\n"[0m
-[33m[stage-4] [0m[36mReading response...[0m
 [33m[stage-4] [0m[36mclient-1: Received RESP value: "PONG"[0m
 [33m[stage-4] [0m[92mReceived "PONG"[0m
 [33m[stage-4] [0m[94mclient-1: $ redis-cli ping[0m
 [33m[stage-4] [0m[36mclient-1: Sent bytes: "*1\r\n$4\r\nping\r\n"[0m
-[33m[stage-4] [0m[36mReading response...[0m
 [33m[stage-4] [0m[36mclient-1: Received RESP value: "PONG"[0m
 [33m[stage-4] [0m[92mReceived "PONG"[0m
 [33m[stage-4] [0m[94mclient-2: $ redis-cli ping[0m
 [33m[stage-4] [0m[36mclient-2: Sent bytes: "*1\r\n$4\r\nping\r\n"[0m
-[33m[stage-4] [0m[36mReading response...[0m
 [33m[stage-4] [0m[36mclient-2: Received RESP value: "PONG"[0m
 [33m[stage-4] [0m[92mReceived "PONG"[0m
 [33m[stage-4] [0m[36mclient-1: Success, closing connection...[0m
 [33m[stage-4] [0m[94mclient-3: $ redis-cli ping[0m
 [33m[stage-4] [0m[36mclient-3: Sent bytes: "*1\r\n$4\r\nping\r\n"[0m
-[33m[stage-4] [0m[36mReading response...[0m
 [33m[stage-4] [0m[36mclient-3: Received RESP value: "PONG"[0m
 [33m[stage-4] [0m[92mReceived "PONG"[0m
 [33m[stage-4] [0m[36mclient-2: Success, closing connection...[0m
@@ -85,7 +75,6 @@ Debug = true
 [33m[stage-5] [0m[94m$ ./spawn_redis_server.sh[0m
 [33m[stage-5] [0m[94m$ redis-cli echo pear[0m
 [33m[stage-5] [0m[36mSent bytes: "*2\r\n$4\r\necho\r\n$4\r\npear\r\n"[0m
-[33m[stage-5] [0m[36mReading response...[0m
 [33m[stage-5] [0m[36mReceived RESP value: "pear"[0m
 [33m[stage-5] [0m[92mReceived "pear"[0m
 [33m[stage-5] [0m[92mTest passed.[0m
@@ -97,13 +86,11 @@ Debug = true
 [33m[stage-6] [0m[36mSetting key orange to pear[0m
 [33m[stage-6] [0m[94m$ redis-cli set orange pear[0m
 [33m[stage-6] [0m[36mSent bytes: "*3\r\n$3\r\nset\r\n$6\r\norange\r\n$4\r\npear\r\n"[0m
-[33m[stage-6] [0m[36mReading response...[0m
 [33m[stage-6] [0m[36mReceived RESP value: "OK"[0m
 [33m[stage-6] [0m[92mReceived "OK"[0m
 [33m[stage-6] [0m[36mGetting key orange[0m
 [33m[stage-6] [0m[94m$ redis-cli get orange[0m
 [33m[stage-6] [0m[36mSent bytes: "*2\r\n$3\r\nget\r\n$6\r\norange\r\n"[0m
-[33m[stage-6] [0m[36mReading response...[0m
 [33m[stage-6] [0m[36mReceived RESP value: "pear"[0m
 [33m[stage-6] [0m[92mReceived "pear"[0m
 [33m[stage-6] [0m[92mTest passed.[0m
@@ -114,21 +101,18 @@ Debug = true
 [33m[stage-7] [0m[94m$ ./spawn_redis_server.sh[0m
 [33m[stage-7] [0m[94m$ redis-cli set pineapple grape px 100[0m
 [33m[stage-7] [0m[36mSent bytes: "*5\r\n$3\r\nset\r\n$9\r\npineapple\r\n$5\r\ngrape\r\n$2\r\npx\r\n$3\r\n100\r\n"[0m
-[33m[stage-7] [0m[36mReading response...[0m
 [33m[stage-7] [0m[36mReceived RESP value: "OK"[0m
 [33m[stage-7] [0m[92mReceived "OK"[0m
-[33m[stage-7] [0m[92mReceived OK at 01:55:22.759[0m
-[33m[stage-7] [0m[94mFetching key "pineapple" at 01:55:22.759 (should not be expired)[0m
+[33m[stage-7] [0m[92mReceived OK at 12:39:27.531[0m
+[33m[stage-7] [0m[94mFetching key "pineapple" at 12:39:27.531 (should not be expired)[0m
 [33m[stage-7] [0m[94m$ redis-cli get pineapple[0m
 [33m[stage-7] [0m[36mSent bytes: "*2\r\n$3\r\nget\r\n$9\r\npineapple\r\n"[0m
-[33m[stage-7] [0m[36mReading response...[0m
 [33m[stage-7] [0m[36mReceived RESP value: "grape"[0m
 [33m[stage-7] [0m[92mReceived "grape"[0m
 [33m[stage-7] [0m[36mSleeping for 101ms[0m
-[33m[stage-7] [0m[94mFetching key "pineapple" at 01:55:22.862 (should be expired)[0m
+[33m[stage-7] [0m[94mFetching key "pineapple" at 12:39:27.634 (should be expired)[0m
 [33m[stage-7] [0m[94m$ redis-cli get pineapple[0m
 [33m[stage-7] [0m[36mSent bytes: "*2\r\n$3\r\nget\r\n$9\r\npineapple\r\n"[0m
-[33m[stage-7] [0m[36mReading response...[0m
 [33m[stage-7] [0m[36mReceived RESP value: [0m
 [33m[stage-7] [0m[92mReceived [0m
 [33m[stage-7] [0m[92mTest passed.[0m
