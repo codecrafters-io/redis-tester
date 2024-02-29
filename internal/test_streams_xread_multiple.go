@@ -55,10 +55,16 @@ func testStreamsXreadMultiple(stageHarness *testerutils.StageHarness) error {
 		},
 	}
 
-	(&XREADTest{
+	xreadTest := &XREADTest{
 		streams:          []string{randomKey, otherRandomKey, "0-0", "0-1"},
 		expectedResponse: expectedResp,
-	}).Run(client, logger)
+	}
+
+	err := xreadTest.Run(client, logger)
+
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
