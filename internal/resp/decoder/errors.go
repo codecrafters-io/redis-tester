@@ -51,7 +51,6 @@ func readBytesFromReader(reader *bytes.Reader) []byte {
 	bytes := make([]byte, reader.Len())
 
 	if reader.Len() == 0 {
-
 		return bytes
 	}
 
