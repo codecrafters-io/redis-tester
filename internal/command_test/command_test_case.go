@@ -9,10 +9,9 @@ import (
 )
 
 type CommandTestCase struct {
-	Command                     string
-	Args                        []string
-	Assertion                   resp_assertions.RESPAssertion
-	ShouldSkipUnreadBufferCheck bool
+	Command   string
+	Args      []string
+	Assertion resp_assertions.RESPAssertion
 }
 
 func (t CommandTestCase) Run(client *resp_client.RespClient, logger *logger.Logger) error {
@@ -31,12 +30,10 @@ func (t CommandTestCase) Run(client *resp_client.RespClient, logger *logger.Logg
 		return err
 	}
 
-	if !t.ShouldSkipUnreadBufferCheck {
-		client.ReadIntoBuffer() // Let's make sure there's no extra data
+	client.ReadIntoBuffer() // Let's make sure there's no extra data
 
-		if client.UnreadBuffer.Len() > 0 {
-			return fmt.Errorf("Found extra data: %q", string(client.LastValueBytes)+client.UnreadBuffer.String())
-		}
+	if client.UnreadBuffer.Len() > 0 {
+		return fmt.Errorf("Found extra data: %q", string(client.LastValueBytes)+client.UnreadBuffer.String())
 	}
 
 	logger.Successf("Received %s", value.FormattedString())
