@@ -23,7 +23,7 @@ func testStreamsXaddPartialAutoid(stageHarness *testerutils.StageHarness) error 
 	}
 
 	for _, test := range tests {
-		err := testXadd(client, logger, test)
+		err := test.Run(client, logger)
 
 		if err != nil {
 			return err

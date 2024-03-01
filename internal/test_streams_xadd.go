@@ -18,38 +18,38 @@ type XADDTest struct {
 	expectedError    string
 }
 
-func testXadd(client *redis.Client, logger *logger.Logger, test XADDTest) error {
+func (t *XADDTest) Run(client *redis.Client, logger *logger.Logger) error {
 	var values []string
 
-	for key, value := range test.values {
+	for key, value := range t.values {
 		values = append(values, key, fmt.Sprintf("%v", value))
 	}
 
-	logger.Infof("$ redis-cli xadd %s %s %s", test.streamKey, test.id, strings.Join(values, " "))
+	logger.Infof("$ redis-cli xadd %s %s %s", t.streamKey, t.id, strings.Join(values, " "))
 
 	resp, err := client.XAdd(&redis.XAddArgs{
-		Stream: test.streamKey,
-		ID:     test.id,
-		Values: test.values,
+		Stream: t.streamKey,
+		ID:     t.id,
+		Values: t.values,
 	}).Result()
 
-	if err != nil && test.expectedError == "" {
+	if err != nil && t.expectedError == "" {
 		logFriendlyError(logger, err)
 		return err
 	}
 
-	if err != nil && test.expectedError != "" {
-		if err.Error() != test.expectedError {
-			return fmt.Errorf("Expected %#v, got %#v", test.expectedError, err.Error())
+	if err != nil && t.expectedError != "" {
+		if err.Error() != t.expectedError {
+			return fmt.Errorf("Expected %#v, got %#v", t.expectedError, err.Error())
 		}
 
 		logger.Successf("Received error: \"%s\"", err.Error())
 		return nil
 	}
 
-	if resp != test.expectedResponse {
+	if resp != t.expectedResponse {
 		logger.Infof("Received response: \"%s\"", resp)
-		return fmt.Errorf("Expected %#v, got %#v", test.expectedResponse, resp)
+		return fmt.Errorf("Expected %#v, got %#v", t.expectedResponse, resp)
 	} else {
 		logger.Successf("Received response: \"%s\"", resp)
 	}
@@ -68,12 +68,18 @@ func testStreamsXadd(stageHarness *testerutils.StageHarness) error {
 
 	randomKey := testerutils_random.RandomWord()
 
-	testXadd(client, logger, XADDTest{
+	xaddTest := &XADDTest{
 		streamKey:        randomKey,
 		id:               "0-1",
 		values:           map[string]interface{}{"foo": "bar"},
 		expectedResponse: "0-1",
-	})
+	}
+
+	err := xaddTest.Run(client, logger)
+
+	if err != nil {
+		return err
+	}
 
 	logger.Infof("$ redis-cli type %s", randomKey)
 	resp, err := client.Type(randomKey).Result()

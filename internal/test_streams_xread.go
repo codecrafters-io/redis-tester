@@ -81,12 +81,18 @@ func testStreamsXread(stageHarness *testerutils.StageHarness) error {
 	randomKey := testerutils_random.RandomWord()
 	randomInt := testerutils_random.RandomInt(1, 100)
 
-	testXadd(client, logger, XADDTest{
+	xaddTest := &XADDTest{
 		streamKey:        randomKey,
 		id:               "0-1",
 		values:           map[string]interface{}{"temperature": randomInt},
 		expectedResponse: "0-1",
-	})
+	}
+
+	err := xaddTest.Run(client, logger)
+
+	if err != nil {
+		return err
+	}
 
 	expectedResp := []redis.XStream{
 		{
@@ -105,7 +111,7 @@ func testStreamsXread(stageHarness *testerutils.StageHarness) error {
 		expectedResponse: expectedResp,
 	}
 
-	err := xreadTest.Run(client, logger)
+	err = xreadTest.Run(client, logger)
 
 	if err != nil {
 		return err
