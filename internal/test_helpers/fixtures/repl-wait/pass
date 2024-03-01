@@ -158,8 +158,7 @@ Debug = true
 [33m[stage-12] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles3007948030 --dbfilename apple.rdb[0m
 [33m[stage-12] [0m[94m$ redis-cli GET banana[0m
 [33m[stage-12] [0m[94m$ redis-cli GET pineapple[0m
-[33m[stage-12] [0m[94m$ redis-cli GET blueberry[0m
-[33m[stage-12] [0m[94m$ redis-cli GET orange[0m
+[33m[stage-12] [0m[94m$ redis-cli GET mango[0m
 [33m[stage-12] [0m[92mTest passed.[0m
 [33m[stage-12] [0m[36mTerminating program[0m
 [33m[stage-12] [0m[36mError terminating program: 'program failed to exit in 2 seconds after receiving sigterm'[0m
@@ -168,8 +167,9 @@ Debug = true
 [33m[stage-13] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles2684944633 --dbfilename blueberry.rdb[0m
 [33m[stage-13] [0m[94m$ redis-cli GET blueberry[0m
 [33m[stage-13] [0m[94m$ redis-cli GET strawberry[0m
-[33m[stage-13] [0m[94m$ redis-cli GET pineapple[0m
-[33m[stage-13] [0m[94m$ redis-cli GET apple[0m
+[33m[stage-13] [0m[94m$ redis-cli GET pear[0m
+[33m[stage-13] [0m[94m$ redis-cli GET raspberry[0m
+[33m[stage-13] [0m[94m$ redis-cli GET banana[0m
 [33m[stage-13] [0m[92mTest passed.[0m
 [33m[stage-13] [0m[36mTerminating program[0m
 [33m[stage-13] [0m[36mError terminating program: 'program failed to exit in 2 seconds after receiving sigterm'[0m
@@ -236,7 +236,7 @@ Debug = true
 [33m[stage-20] [0m[92mREPLCONF capa eof capa psync2 received.[0m
 [33m[stage-20] [0m[94m+OK sent.[0m
 [33m[stage-20] [0m[92mPSYNC ? -1 received.[0m
-[33m[stage-20] [0m[94m+FULLRESYNC pepe0fpfdqujg57mpqkqpyemvrym9rdfjvlugbet 0 sent.[0m
+[33m[stage-20] [0m[94m+FULLRESYNC dqujg57mpqkqpyemvrym9rdfjvlugbetwxp9j5n1 0 sent.[0m
 [33m[stage-20] [0m[92mTest passed.[0m
 [33m[stage-20] [0m[36mTerminating program[0m
 [33m[stage-20] [0m[36mProgram terminated successfully[0m
@@ -357,7 +357,7 @@ Debug = true
 [33m[stage-26] [0m[92mREPLCONF capa eof capa psync2 received.[0m
 [33m[stage-26] [0m[94m+OK sent.[0m
 [33m[stage-26] [0m[92mPSYNC ? -1 received.[0m
-[33m[stage-26] [0m[94m+FULLRESYNC wxp9j5n1rimrcc7sekzl3lv3gnfybl3e37nphpuv 0 sent.[0m
+[33m[stage-26] [0m[94m+FULLRESYNC rimrcc7sekzl3lv3gnfybl3e37nphpuvaf6xx6wn 0 sent.[0m
 [33m[stage-26] [0m[94mRDB file sent.[0m
 [33m[stage-26] [0m[94m$ redis-cli SET foo 123[0m
 [33m[stage-26] [0m[94m$ redis-cli SET bar 456[0m
@@ -385,7 +385,7 @@ Debug = true
 [33m[stage-27] [0m[92mREPLCONF capa eof capa psync2 received.[0m
 [33m[stage-27] [0m[94m+OK sent.[0m
 [33m[stage-27] [0m[92mPSYNC ? -1 received.[0m
-[33m[stage-27] [0m[94m+FULLRESYNC af6xx6wn7a9ohog1bmg9ibhpikkhmtr9nva872qj 0 sent.[0m
+[33m[stage-27] [0m[94m+FULLRESYNC 7a9ohog1bmg9ibhpikkhmtr9nva872qjcyc9x2nr 0 sent.[0m
 [33m[stage-27] [0m[94mRDB file sent.[0m
 [33m[stage-27] [0m[94m$ redis-cli REPLCONF GETACK *[0m
 [33m[stage-27] [0m[92mREPLCONF ACK 0 received.[0m
@@ -403,17 +403,17 @@ Debug = true
 [33m[stage-28] [0m[92mREPLCONF capa eof capa psync2 received.[0m
 [33m[stage-28] [0m[94m+OK sent.[0m
 [33m[stage-28] [0m[92mPSYNC ? -1 received.[0m
-[33m[stage-28] [0m[94m+FULLRESYNC cyc9x2nr05gyntwlkwcbwjzrikxq29yao2lzk6sl 0 sent.[0m
+[33m[stage-28] [0m[94m+FULLRESYNC 05gyntwlkwcbwjzrikxq29yao2lzk6sl3zm6fr8k 0 sent.[0m
 [33m[stage-28] [0m[94mRDB file sent.[0m
 [33m[stage-28] [0m[94m$ redis-cli REPLCONF GETACK *[0m
 [33m[stage-28] [0m[92mREPLCONF ACK 0 received.[0m
 [33m[stage-28] [0m[94m$ redis-cli PING[0m
 [33m[stage-28] [0m[94m$ redis-cli REPLCONF GETACK *[0m
 [33m[stage-28] [0m[92mREPLCONF ACK 51 received.[0m
-[33m[stage-28] [0m[94m$ redis-cli SET zm6fr8k001neo85mamg 1t3opy[0m
-[33m[stage-28] [0m[94m$ redis-cli SET bottjn7crua7i6b 85u7ak85q3i5hzmgs1k[0m
+[33m[stage-28] [0m[94m$ redis-cli SET 01neo85 amgn1t3opy5[0m
+[33m[stage-28] [0m[94m$ redis-cli SET ottjn7cru 7i6b085u7ak[0m
 [33m[stage-28] [0m[94m$ redis-cli REPLCONF GETACK *[0m
-[33m[stage-28] [0m[92mREPLCONF ACK 200 received.[0m
+[33m[stage-28] [0m[92mREPLCONF ACK 178 received.[0m
 [33m[stage-28] [0m[92mTest passed.[0m
 [33m[stage-28] [0m[36mTerminating program[0m
 [33m[stage-28] [0m[36mProgram terminated successfully[0m

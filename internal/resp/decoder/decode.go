@@ -32,7 +32,7 @@ func doDecodeValue(reader *bytes.Reader) (resp_value.Value, error) {
 	case '+':
 		return decodeSimpleString(reader)
 	case '$':
-		return decodeBulkString(reader)
+		return decodeBulkStringOrNil(reader)
 	// TODO: Implement the rest of the types
 	default:
 		reader.UnreadByte() // Ensure the error points to the correct byte

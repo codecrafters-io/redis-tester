@@ -41,8 +41,10 @@ func TestDecodeErrors(t *testing.T) {
 	assert.Nil(t, err)
 
 	for _, testCase := range testCases {
-		_, _, err := Decode([]byte(testCase.Input))
-		assert.NotNil(t, err)
-		assert.Equal(t, strings.TrimSpace(testCase.Error), err.Error())
+		t.Run(testCase.Input, func(t *testing.T) {
+			_, _, err := Decode([]byte(testCase.Input))
+			assert.NotNil(t, err)
+			assert.Equal(t, strings.TrimSpace(testCase.Error), err.Error())
+		})
 	}
 }
