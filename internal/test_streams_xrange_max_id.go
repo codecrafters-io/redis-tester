@@ -30,12 +30,18 @@ func testStreamsXrangeMaxId(stageHarness *testerutils.StageHarness) error {
 	for i := 1; i <= randomNumber; i++ {
 		id := "0-" + strconv.Itoa(i)
 
-		testXadd(client, logger, XADDTest{
+		xaddTest := &XADDTest{
 			streamKey:        randomKey,
 			id:               id,
 			values:           map[string]interface{}{"foo": "bar"},
 			expectedResponse: id,
-		})
+		}
+
+		err := xaddTest.Run(client, logger)
+
+		if err != nil {
+			return err
+		}
 	}
 
 	for i := 2; i <= randomNumber; i++ {

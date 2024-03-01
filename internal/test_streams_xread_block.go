@@ -25,15 +25,20 @@ func testStreamsXreadBlock(stageHarness *testerutils.StageHarness) error {
 	randomKey := testerutils_random.RandomWord()
 	randomInt := testerutils_random.RandomInt(1, 100)
 
-	testXadd(client, logger, XADDTest{
+	xaddTest := &XADDTest{
 		streamKey:        randomKey,
 		id:               "0-1",
 		values:           map[string]interface{}{"temperature": randomInt},
 		expectedResponse: "0-1",
-	})
+	}
+
+	err := xaddTest.Run(client, logger)
+
+	if err != nil {
+		return err
+	}
 
 	var resp []redis.XStream
-	var err error
 
 	done := make(chan bool)
 
@@ -56,12 +61,18 @@ func testStreamsXreadBlock(stageHarness *testerutils.StageHarness) error {
 
 	time.Sleep(500 * time.Millisecond)
 
-	testXadd(client, logger, XADDTest{
+	xaddTest = &XADDTest{
 		streamKey:        randomKey,
 		id:               "0-2",
 		values:           map[string]interface{}{"temperature": randomInt},
 		expectedResponse: "0-2",
-	})
+	}
+
+	err = xaddTest.Run(client, logger)
+
+	if err != nil {
+		return err
+	}
 
 	<-done
 
