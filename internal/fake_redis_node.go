@@ -100,11 +100,17 @@ func (node FakeRedisNode) readRespString() (string, error) {
 		node.Logger.Debugf(string(b))
 		return "", e
 	}
+
 	message := resp.SmartResult()
 	slice, ok := message.(string)
 	if !ok {
 		return "", fmt.Errorf("Unexpected message received: %v", message)
 	}
+
+	if resp.Type != resp3.TypeSimpleString && resp.Type != resp3.TypeBlobString {
+		return "", fmt.Errorf("Expected string, but received %q", message)
+	}
+
 	return slice, nil
 }
 

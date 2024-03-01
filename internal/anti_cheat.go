@@ -40,11 +40,11 @@ func antiCheatTest(stageHarness *testerutils.StageHarness) error {
 		return nil
 	}
 
-	if !strings.Contains(actualMessage, "memory") {
+	if strings.Contains(actualMessage, "memory") {
+		logger.Criticalf("anti-cheat (ac1) failed.")
+		logger.Criticalf("Are you sure you aren't running this against the actual Redis?")
+		return fmt.Errorf("anti-cheat (ac1) failed")
+	} else {
 		return nil
 	}
-
-	logger.Criticalf("anti-cheat (ac1) failed.")
-	logger.Criticalf("Are you sure you aren't running this against the actual Redis?")
-	return fmt.Errorf("anti-cheat (ac1) failed")
 }
