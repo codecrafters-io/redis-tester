@@ -29,7 +29,10 @@ func testStreamsType(stageHarness *testerutils.StageHarness) error {
 	}
 
 	if resp != "OK" {
+		logger.Infof("Received response: \"%s\"", resp)
 		return fmt.Errorf("Expected \"OK\", got %#v", resp)
+	} else {
+		logger.Successf("Received response: \"%s\"", resp)
 	}
 
 	logger.Infof("$ redis-cli type %s", randomKey)

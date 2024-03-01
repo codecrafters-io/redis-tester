@@ -43,7 +43,7 @@ func testXadd(client *redis.Client, logger *logger.Logger, test XADDTest) error 
 			return fmt.Errorf("Expected %#v, got %#v", test.expectedError, err.Error())
 		}
 
-		logger.Infof("Received error: \"%s\"", err.Error())
+		logger.Successf("Received error: \"%s\"", err.Error())
 		return nil
 	}
 
@@ -85,6 +85,8 @@ func testStreamsXadd(stageHarness *testerutils.StageHarness) error {
 
 	if resp != "stream" {
 		return fmt.Errorf("Expected \"stream\", got %#v", resp)
+	} else {
+		logger.Successf("Type of %s is %s", randomKey, resp)
 	}
 
 	return nil

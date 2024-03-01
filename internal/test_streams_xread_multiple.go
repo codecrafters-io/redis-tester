@@ -18,7 +18,15 @@ func testStreamsXreadMultiple(stageHarness *testerutils.StageHarness) error {
 	client := NewRedisClient("localhost:6379")
 
 	randomKey := testerutils_random.RandomWord()
-	otherRandomKey := testerutils_random.RandomWord()
+	var otherRandomKey string
+
+	for {
+		otherRandomKey = testerutils_random.RandomWord()
+		if otherRandomKey != randomKey {
+			break
+		}
+	}
+
 	randomInt := testerutils_random.RandomInt(1, 100)
 	otherRandomInt := testerutils_random.RandomInt(1, 100)
 
