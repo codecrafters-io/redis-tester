@@ -32,12 +32,16 @@ func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
 		return err
 	}
 
+	defer client.Close()
+
 	// We use another client to assert whether sent commands are replicated from the master (user's code)
 	replicaClient, err := instrumented_resp_client.NewInstrumentedRespClient(stageHarness, "localhost:6379", "replica")
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
 	}
+
+	defer replicaClient.Close()
 
 	sendHandshakeTestCase := test_cases.SendReplicationHandshakeTestCase{}
 	if err := sendHandshakeTestCase.RunAll(replicaClient, logger); err != nil {
