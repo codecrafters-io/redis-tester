@@ -1,4 +1,4 @@
-package command_test
+package test_cases
 
 import (
 	"fmt"
@@ -9,17 +9,16 @@ import (
 )
 
 type CommandTestCase struct {
-	Command   string
-	Args      []string
-	Assertion resp_assertions.RESPAssertion
+	Command                   string
+	Args                      []string
+	Assertion                 resp_assertions.RESPAssertion
+	ShouldSkipUnreadDataCheck bool
 }
 
 func (t CommandTestCase) Run(client *resp_client.RespClient, logger *logger.Logger) error {
 	if err := client.SendCommand(t.Command, t.Args...); err != nil {
 		return err
 	}
-
-	logger.Debugln("Reading response...")
 
 	value, err := client.ReadValue()
 	if err != nil {
@@ -30,10 +29,12 @@ func (t CommandTestCase) Run(client *resp_client.RespClient, logger *logger.Logg
 		return err
 	}
 
-	client.ReadIntoBuffer() // Let's make sure there's no extra data
+	if !t.ShouldSkipUnreadDataCheck {
+		client.ReadIntoBuffer() // Let's make sure there's no extra data
 
-	if client.UnreadBuffer.Len() > 0 {
-		return fmt.Errorf("Found extra data: %q", string(client.LastValueBytes)+client.UnreadBuffer.String())
+		if client.UnreadBuffer.Len() > 0 {
+			return fmt.Errorf("Found extra data: %q", string(client.LastValueBytes)+client.UnreadBuffer.String())
+		}
 	}
 
 	logger.Successf("Received %s", value.FormattedString())

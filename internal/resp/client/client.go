@@ -102,6 +102,39 @@ func (c *RespClient) SendBytes(bytes []byte) error {
 	return nil
 }
 
+func (c *RespClient) ReadFullResyncRDBFile() ([]byte, error) {
+	shouldStopReadingIntoBuffer := func(buf []byte) bool {
+		_, _, err := resp_decoder.DecodeFullResyncRDBFile(c.UnreadBuffer.Bytes())
+
+		if err == nil {
+			return true // We were able to read a value!
+		}
+
+		if _, ok := err.(resp_decoder.InvalidInputError); ok {
+			return true // We've read an invalid value, we can stop reading immediately
+		}
+
+		return false
+	}
+
+	c.readIntoBufferUntil(shouldStopReadingIntoBuffer, 2*time.Second)
+
+	value, readBytesCount, err := resp_decoder.DecodeFullResyncRDBFile(c.UnreadBuffer.Bytes())
+	if err != nil {
+		if c.Callbacks.AfterBytesReceived != nil {
+			c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes())
+		}
+
+		return nil, err
+	}
+
+	// We've read a value! Let's remove the bytes we've read from the buffer
+	c.LastValueBytes = c.UnreadBuffer.Bytes()[:readBytesCount]
+	c.UnreadBuffer = *bytes.NewBuffer(c.UnreadBuffer.Bytes()[readBytesCount:])
+
+	return value, nil
+}
+
 func (c *RespClient) ReadValue() (resp_value.Value, error) {
 	return c.ReadValueWithTimeout(2 * time.Second)
 }
@@ -121,29 +154,21 @@ func (c *RespClient) ReadIntoBuffer() error {
 }
 
 func (c *RespClient) ReadValueWithTimeout(timeout time.Duration) (resp_value.Value, error) {
-	deadline := time.Now().Add(timeout)
-
-	for {
-		if time.Now().After(deadline) {
-			break
-		}
-
-		// We'll swallow these errors and try reading again anyway
-		_ = c.ReadIntoBuffer()
-
-		// Let's try to decode the value at this point.
-		_, _, err := resp_decoder.Decode(c.UnreadBuffer.Bytes())
+	shouldStopReadingIntoBuffer := func(buf []byte) bool {
+		_, _, err := resp_decoder.Decode(buf)
 
 		if err == nil {
-			break // We were able to read a value!
+			return true // We were able to read a value!
 		}
 
-		if _, ok := err.(resp_decoder.InvalidRESPError); ok {
-			break // We've read an invalid value, we can stop reading immediately
+		if _, ok := err.(resp_decoder.InvalidInputError); ok {
+			return true // We've read an invalid value, we can stop reading immediately
 		}
 
-		time.Sleep(10 * time.Millisecond) // Let's wait a bit before trying again
+		return false
 	}
+
+	c.readIntoBufferUntil(shouldStopReadingIntoBuffer, timeout)
 
 	value, readBytesCount, err := resp_decoder.Decode(c.UnreadBuffer.Bytes())
 	if err != nil {
@@ -163,6 +188,25 @@ func (c *RespClient) ReadValueWithTimeout(timeout time.Duration) (resp_value.Val
 	}
 
 	return value, nil
+}
+
+func (c *RespClient) readIntoBufferUntil(condition func([]byte) bool, timeout time.Duration) {
+	deadline := time.Now().Add(timeout)
+
+	for {
+		if time.Now().After(deadline) {
+			break
+		}
+
+		// We'll swallow these errors and try reading again anyway
+		_ = c.ReadIntoBuffer()
+
+		if condition(c.UnreadBuffer.Bytes()) {
+			break
+		} else {
+			time.Sleep(10 * time.Millisecond) // Let's wait a bit before trying again
+		}
+	}
 }
 
 func newConn(address string) (net.Conn, error) {

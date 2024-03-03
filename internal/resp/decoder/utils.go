@@ -15,14 +15,14 @@ func readCRLF(reader *bytes.Reader, locationDescriptor string) (err error) {
 
 	b, err := reader.ReadByte()
 	if err == io.EOF {
-		return IncompleteRESPError{
+		return IncompleteInputError{
 			Reader:  reader,
 			Message: errorMessage,
 		}
 	}
 
 	if b != '\r' {
-		return InvalidRESPError{
+		return InvalidInputError{
 			Reader:  reader,
 			Message: errorMessage,
 		}
@@ -30,14 +30,14 @@ func readCRLF(reader *bytes.Reader, locationDescriptor string) (err error) {
 
 	b, err = reader.ReadByte()
 	if err == io.EOF {
-		return IncompleteRESPError{
+		return IncompleteInputError{
 			Reader:  reader,
 			Message: errorMessage,
 		}
 	}
 
 	if b != '\n' {
-		return InvalidRESPError{
+		return InvalidInputError{
 			Reader:  reader,
 			Message: errorMessage,
 		}

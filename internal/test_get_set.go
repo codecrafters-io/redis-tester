@@ -1,9 +1,9 @@
 package internal
 
 import (
-	"github.com/codecrafters-io/redis-tester/internal/command_test"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_client"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	testerutils "github.com/codecrafters-io/tester-utils"
 	"github.com/codecrafters-io/tester-utils/random"
 )
@@ -29,7 +29,7 @@ func testGetSet(stageHarness *testerutils.StageHarness) error {
 	randomValue := randomWords[1]
 
 	logger.Debugf("Setting key %s to %s", randomKey, randomValue)
-	setCommandTestCase := command_test.CommandTestCase{
+	setCommandTestCase := test_cases.CommandTestCase{
 		Command:   "set",
 		Args:      []string{randomKey, randomValue},
 		Assertion: resp_assertions.NewStringAssertion("OK"),
@@ -42,7 +42,7 @@ func testGetSet(stageHarness *testerutils.StageHarness) error {
 
 	logger.Debugf("Getting key %s", randomKey)
 
-	getCommandTestCase := command_test.CommandTestCase{
+	getCommandTestCase := test_cases.CommandTestCase{
 		Command:   "get",
 		Args:      []string{randomKey},
 		Assertion: resp_assertions.NewStringAssertion(randomValue),

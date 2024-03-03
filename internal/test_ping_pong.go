@@ -1,12 +1,12 @@
 package internal
 
 import (
-	"github.com/codecrafters-io/redis-tester/internal/command_test"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_client"
-	resp_client "github.com/codecrafters-io/redis-tester/internal/resp/client"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
-	testerutils "github.com/codecrafters-io/tester-utils"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	logger "github.com/codecrafters-io/tester-utils/logger"
+	resp_client "github.com/codecrafters-io/redis-tester/internal/resp/client"
+	testerutils "github.com/codecrafters-io/tester-utils"
 )
 
 func testPingPongOnce(stageHarness *testerutils.StageHarness) error {
@@ -24,7 +24,7 @@ func testPingPongOnce(stageHarness *testerutils.StageHarness) error {
 
 	logger.Debugln("Connection established, sending ping command...")
 
-	commandTestCase := command_test.CommandTestCase{
+	commandTestCase := test_cases.CommandTestCase{
 		Command:   "ping",
 		Args:      []string{},
 		Assertion: resp_assertions.NewStringAssertion("PONG"),
@@ -118,7 +118,7 @@ func testPingPongConcurrent(stageHarness *testerutils.StageHarness) error {
 }
 
 func runPing(logger *logger.Logger, client *resp_client.RespClient) error {
-	commandTestCase := command_test.CommandTestCase{
+	commandTestCase := test_cases.CommandTestCase{
 		Command:   "ping",
 		Args:      []string{},
 		Assertion: resp_assertions.NewStringAssertion("PONG"),

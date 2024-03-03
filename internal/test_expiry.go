@@ -3,9 +3,9 @@ package internal
 import (
 	"time"
 
-	"github.com/codecrafters-io/redis-tester/internal/command_test"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_client"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	testerutils "github.com/codecrafters-io/tester-utils"
 	"github.com/codecrafters-io/tester-utils/random"
 )
@@ -29,7 +29,7 @@ func testExpiry(stageHarness *testerutils.StageHarness) error {
 	randomKey := randomWords[0]
 	randomValue := randomWords[1]
 
-	setCommandTestCase := command_test.CommandTestCase{
+	setCommandTestCase := test_cases.CommandTestCase{
 		Command:   "set",
 		Args:      []string{randomKey, randomValue, "px", "100"},
 		Assertion: resp_assertions.NewStringAssertion("OK"),
@@ -43,7 +43,7 @@ func testExpiry(stageHarness *testerutils.StageHarness) error {
 	logger.Successf("Received OK at %s", time.Now().Format("15:04:05.000"))
 	logger.Infof("Fetching key %q at %s (should not be expired)", randomKey, time.Now().Format("15:04:05.000"))
 
-	getCommandTestCase := command_test.CommandTestCase{
+	getCommandTestCase := test_cases.CommandTestCase{
 		Command:   "get",
 		Args:      []string{randomKey},
 		Assertion: resp_assertions.NewStringAssertion(randomValue),
@@ -59,7 +59,7 @@ func testExpiry(stageHarness *testerutils.StageHarness) error {
 
 	logger.Infof("Fetching key %q at %s (should be expired)", randomKey, time.Now().Format("15:04:05.000"))
 
-	getCommandTestCase = command_test.CommandTestCase{
+	getCommandTestCase = test_cases.CommandTestCase{
 		Command:   "get",
 		Args:      []string{randomKey},
 		Assertion: resp_assertions.NewNilAssertion(),

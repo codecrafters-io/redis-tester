@@ -1,42 +1,50 @@
 package internal
 
 import (
-	"fmt"
+	"strings"
 
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_client"
+	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
+	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	testerutils "github.com/codecrafters-io/tester-utils"
 )
 
 func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
 	deleteRDBfile()
-	master := NewRedisBinary(stageHarness)
-	master.args = []string{
+
+	// Run the user's code as a master
+	masterBinary := NewRedisBinary(stageHarness)
+	masterBinary.args = []string{
 		"--port", "6379",
 	}
 
-	if err := master.Run(); err != nil {
+	if err := masterBinary.Run(); err != nil {
 		return err
 	}
 
 	logger := stageHarness.Logger
 
-	conn, err := NewRedisConn("", "localhost:6379")
+	// We use one client to send commands to the master
+	client, err := instrumented_resp_client.NewInstrumentedRespClient(stageHarness, "localhost:6379", "client")
 	if err != nil {
-		fmt.Println("Error connecting to TCP server:", err)
+		logFriendlyError(logger, err)
 		return err
 	}
 
-	conn1, err := NewRedisConn("", "localhost:6379")
+	defer client.Close()
+
+	// We use another client to assert whether sent commands are replicated from the master (user's code)
+	replicaClient, err := instrumented_resp_client.NewInstrumentedRespClient(stageHarness, "localhost:6379", "replica")
 	if err != nil {
-		fmt.Println("Error connecting to TCP server:", err)
+		logFriendlyError(logger, err)
 		return err
 	}
 
-	client := NewFakeRedisMaster(conn1, logger)
+	defer replicaClient.Close()
 
-	replica := NewFakeRedisReplica(conn, logger)
-
-	err = replica.Handshake()
-	if err != nil {
+	sendHandshakeTestCase := test_cases.SendReplicationHandshakeTestCase{}
+	if err := sendHandshakeTestCase.RunAll(replicaClient, logger); err != nil {
 		return err
 	}
 
@@ -45,29 +53,48 @@ func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
 		2: {"bar", "456"},
 		3: {"baz", "789"},
 	}
-	for i := 1; i <= len(kvMap); i++ { // We need order of commands preserved
+
+	// We send SET commands to the master in order (user's code)
+	for i := 1; i <= len(kvMap); i++ {
 		key, value := kvMap[i][0], kvMap[i][1]
-		logger.Infof("Setting key %s to %s", key, value)
-		client.Send([]string{"SET", key, value})
+
+		setCommandTestCase := test_cases.CommandTestCase{
+			Command:   "SET",
+			Args:      []string{key, value},
+			Assertion: resp_assertions.NewStringAssertion("OK"),
+		}
+
+		if err := setCommandTestCase.Run(client, logger); err != nil {
+			return err
+		}
 	}
 
-	// Redis will send SELECT, but not expected from Users.
-	_, err = replica.readAndAssertMessagesWithSkip([]string{"SET", "foo", "123"}, "SELECT", true)
+	// We then assert that as a replica we receive the SET commands in order
+	for i := 1; i <= len(kvMap); i++ {
+		receiveCommandTestCase := &test_cases.ReceiveValueTestCase{
+			Assertion:                 resp_assertions.NewCommandAssertion("SET", kvMap[i][0], kvMap[i][1]),
+			ShouldSkipUnreadDataCheck: i < len(kvMap), // Except in the last case, we're expecting more SET commands to be present
+		}
 
-	if err != nil {
-		return err
+		if err := receiveCommandTestCase.Run(replicaClient, logger); err != nil {
+			// Redis sends a SELECT command, but we don't expect it from users.
+			// If the first command is a SELECT command, we'll re-run the test case to test the next command instead
+			if i == 1 && isSelectCommand(receiveCommandTestCase.ActualValue) {
+				if err := receiveCommandTestCase.Run(replicaClient, logger); err != nil {
+					return err
+				}
+			} else {
+				return err
+			}
+		}
 	}
 
-	_, err = replica.readAndAssertMessages([]string{"SET", "bar", "456"}, true)
-	if err != nil {
-		return err
-	}
-
-	_, err = replica.readAndAssertMessages([]string{"SET", "baz", "789"}, true)
-	if err != nil {
-		return err
-	}
-
-	conn.Close()
 	return nil
+}
+
+func isSelectCommand(value resp_value.Value) bool {
+	return value.Type == resp_value.ARRAY &&
+		len(value.Array()) > 0 &&
+		value.Array()[0].Type == resp_value.BULK_STRING &&
+		strings.ToLower(value.Array()[0].String()) == "select"
 }
