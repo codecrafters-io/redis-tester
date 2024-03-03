@@ -28,13 +28,13 @@ func testRdbReadValueWithExpiry(stageHarness *test_case_harness.TestCaseHarness)
 			keyValuePairs[i] = KeyValuePair{
 				key:      keys[i],
 				value:    values[i],
-				expiryTs: time.Date(2022, 1, 1, 0, 0, 0, 0, time.UTC).UnixMilli(),
+				expiryTS: time.Date(2022, 1, 1, 0, 0, 0, 0, time.UTC).UnixMilli(),
 			}
 		} else {
 			keyValuePairs[i] = KeyValuePair{
 				key:      keys[i],
 				value:    values[i],
-				expiryTs: time.Date(2032, 1, 1, 0, 0, 0, 0, time.UTC).UnixMilli(),
+				expiryTS: time.Date(2032, 1, 1, 0, 0, 0, 0, time.UTC).UnixMilli(),
 			}
 		}
 	}

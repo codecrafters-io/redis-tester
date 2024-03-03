@@ -45,14 +45,14 @@ func (t *XREADTest) Run(client *redis.Client, logger *logger.Logger) error {
 		return err
 	}
 
-	expectedRespJson, err := json.MarshalIndent(t.expectedResponse, "", "  ")
+	expectedRespJSON, err := json.MarshalIndent(t.expectedResponse, "", "  ")
 
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
 	}
 
-	respJson, err := json.MarshalIndent(resp, "", "  ")
+	respJSON, err := json.MarshalIndent(resp, "", "  ")
 
 	if err != nil {
 		logFriendlyError(logger, err)
@@ -60,10 +60,10 @@ func (t *XREADTest) Run(client *redis.Client, logger *logger.Logger) error {
 	}
 
 	if !reflect.DeepEqual(resp, t.expectedResponse) {
-		logger.Infof("Received response: \"%v\"", string(respJson))
-		return fmt.Errorf("Expected %#v, got %#v", string(expectedRespJson), string(respJson))
+		logger.Infof("Received response: \"%v\"", string(respJSON))
+		return fmt.Errorf("Expected %#v, got %#v", string(expectedRespJSON), string(respJSON))
 	} else {
-		logger.Successf("Received response: \"%v\"", string(respJson))
+		logger.Successf("Received response: \"%v\"", string(respJSON))
 	}
 
 	return nil

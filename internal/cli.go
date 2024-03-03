@@ -1,7 +1,9 @@
+// Package internal exposes RunCLI, which is the entry point for the tester CLI.
 package internal
 
 import (
 	"fmt"
+
 	testerutils "github.com/codecrafters-io/tester-utils"
 )
 

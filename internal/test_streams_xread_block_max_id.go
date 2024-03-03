@@ -13,7 +13,7 @@ import (
 	"github.com/go-redis/redis"
 )
 
-func testStreamsXreadBlockMaxId(stageHarness *test_case_harness.TestCaseHarness) error {
+func testStreamsXreadBlockMaxID(stageHarness *test_case_harness.TestCaseHarness) error {
 	b := NewRedisBinary(stageHarness)
 	if err := b.Run(); err != nil {
 		return err
@@ -87,14 +87,14 @@ func testStreamsXreadBlockMaxId(stageHarness *test_case_harness.TestCaseHarness)
 		},
 	}
 
-	expectedRespJson, err := json.MarshalIndent(expectedResp, "", "  ")
+	expectedRespJSON, err := json.MarshalIndent(expectedResp, "", "  ")
 
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
 	}
 
-	respJson, err := json.MarshalIndent(resp, "", "  ")
+	respJSON, err := json.MarshalIndent(resp, "", "  ")
 
 	if err != nil {
 		logFriendlyError(logger, err)
@@ -102,10 +102,10 @@ func testStreamsXreadBlockMaxId(stageHarness *test_case_harness.TestCaseHarness)
 	}
 
 	if !reflect.DeepEqual(resp, expectedResp) {
-		logger.Infof("Received response: \"%v\"", string(respJson))
-		return fmt.Errorf("Expected %#v, got %#v", string(expectedRespJson), string(respJson))
+		logger.Infof("Received response: \"%v\"", string(respJSON))
+		return fmt.Errorf("Expected %#v, got %#v", string(expectedRespJSON), string(respJSON))
 	} else {
-		logger.Successf("Received response: \"%v\"", string(respJson))
+		logger.Successf("Received response: \"%v\"", string(respJSON))
 	}
 
 	return nil

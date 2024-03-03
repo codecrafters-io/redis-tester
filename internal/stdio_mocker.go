@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"io/ioutil"
 	"os"
 )
 
@@ -27,9 +26,9 @@ func (m *IOMocker) Start() {
 }
 
 func (m *IOMocker) Reset() {
-	m.mockedStdout, _ = ioutil.TempFile("", "")
-	m.mockedStdin, _ = ioutil.TempFile("", "")
-	m.mockedStderr, _ = ioutil.TempFile("", "")
+	m.mockedStdout, _ = os.CreateTemp("", "")
+	m.mockedStdin, _ = os.CreateTemp("", "")
+	m.mockedStderr, _ = os.CreateTemp("", "")
 
 	os.Stdout = m.mockedStdout
 	os.Stdin = m.mockedStdin
@@ -37,7 +36,7 @@ func (m *IOMocker) Reset() {
 }
 
 func (m *IOMocker) ReadStdout() []byte {
-	bytes, err := ioutil.ReadFile(m.mockedStdout.Name())
+	bytes, err := os.ReadFile(m.mockedStdout.Name())
 	if err != nil {
 		panic(err)
 	}
@@ -46,7 +45,7 @@ func (m *IOMocker) ReadStdout() []byte {
 }
 
 func (m *IOMocker) ReadStderr() []byte {
-	bytes, err := ioutil.ReadFile(m.mockedStderr.Name())
+	bytes, err := os.ReadFile(m.mockedStderr.Name())
 	if err != nil {
 		panic(err)
 	}

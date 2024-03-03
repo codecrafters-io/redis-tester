@@ -1,10 +1,7 @@
 package internal
 
 import (
-	"context"
-	"net"
 	"strings"
-	"time"
 
 	executable "github.com/codecrafters-io/tester-utils/executable"
 	logger "github.com/codecrafters-io/tester-utils/logger"
@@ -55,32 +52,4 @@ func (b *RedisBinary) Kill() error {
 
 	b.logger.Debugf("Program terminated successfully")
 	return nil // When does this happen?
-}
-
-func (b *RedisBinary) waitForPort(ctx context.Context) {
-	dialedChan := make(chan bool)
-	go func(ctx context.Context, dialedChan chan<- bool) {
-		for {
-			_, err := net.Dial("tcp", "localhost:6379")
-			if err == nil {
-				dialedChan <- true
-				break
-			}
-
-			select {
-			case <-time.After(100 * time.Millisecond):
-				continue
-			case <-ctx.Done():
-				break
-			}
-		}
-	}(ctx, dialedChan)
-
-	// Wait either until Dial works, or until the ctx times out
-	select {
-	case <-dialedChan:
-		return
-	case <-ctx.Done():
-		return
-	}
 }
