@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"strings"
 
-	testerutils "github.com/codecrafters-io/tester-utils"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
-func testReplReplicationID(stageHarness *testerutils.StageHarness) error {
+func testReplReplicationID(stageHarness *test_case_harness.TestCaseHarness) error {
 	deleteRDBfile()
 	b := NewRedisBinary(stageHarness)
 

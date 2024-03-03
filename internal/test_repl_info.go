@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"strings"
 
-	testerutils "github.com/codecrafters-io/tester-utils"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
-func testReplInfo(stageHarness *testerutils.StageHarness) error {
+func testReplInfo(stageHarness *test_case_harness.TestCaseHarness) error {
 	b := NewRedisBinary(stageHarness)
 
 	if err := b.Run(); err != nil {

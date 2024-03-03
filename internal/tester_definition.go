@@ -3,18 +3,18 @@ package internal
 import (
 	"time"
 
-	testerutils "github.com/codecrafters-io/tester-utils"
+	"github.com/codecrafters-io/tester-utils/tester_definition"
 )
 
-var testerDefinition = testerutils.TesterDefinition{
-	AntiCheatTestCases: []testerutils.TestCase{
+var testerDefinition = tester_definition.TesterDefinition{
+	AntiCheatTestCases: []tester_definition.TestCase{
 		{
 			Slug:     "anti-cheat-1",
 			TestFunc: antiCheatTest,
 		},
 	},
 	ExecutableFileName: "spawn_redis_server.sh",
-	TestCases: []testerutils.TestCase{
+	TestCases: []tester_definition.TestCase{
 		{
 			Slug:     "init",
 			TestFunc: testBindToPort,

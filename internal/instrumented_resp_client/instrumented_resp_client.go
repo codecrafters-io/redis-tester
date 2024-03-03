@@ -5,10 +5,10 @@ import (
 
 	resp_client "github.com/codecrafters-io/redis-tester/internal/resp/client"
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
-	testerutils "github.com/codecrafters-io/tester-utils"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
-func NewInstrumentedRespClient(stageHarness *testerutils.StageHarness, addr string, clientIdentifier string) (*resp_client.RespClient, error) {
+func NewInstrumentedRespClient(stageHarness *test_case_harness.TestCaseHarness, addr string, clientIdentifier string) (*resp_client.RespClient, error) {
 	logPrefix := ""
 	if clientIdentifier != "" {
 		logPrefix = clientIdentifier + ": "

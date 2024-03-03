@@ -7,10 +7,10 @@ import (
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
-	testerutils "github.com/codecrafters-io/tester-utils"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
-func testReplMasterCmdProp(stageHarness *testerutils.StageHarness) error {
+func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) error {
 	deleteRDBfile()
 
 	// Run the user's code as a master

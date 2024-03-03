@@ -6,9 +6,9 @@ import (
 	"strings"
 	"time"
 
-	testerutils "github.com/codecrafters-io/tester-utils"
 	executable "github.com/codecrafters-io/tester-utils/executable"
 	logger "github.com/codecrafters-io/tester-utils/logger"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
 type RedisBinary struct {
@@ -17,7 +17,7 @@ type RedisBinary struct {
 	args       []string
 }
 
-func NewRedisBinary(stageHarness *testerutils.StageHarness) *RedisBinary {
+func NewRedisBinary(stageHarness *test_case_harness.TestCaseHarness) *RedisBinary {
 	b := &RedisBinary{
 		executable: stageHarness.NewExecutable(),
 		logger:     stageHarness.Logger,

@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"net"
 
-	testerutils "github.com/codecrafters-io/tester-utils"
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
-func testReplGetaAckNonZero(stageHarness *testerutils.StageHarness) error {
+func testReplGetaAckNonZero(stageHarness *test_case_harness.TestCaseHarness) error {
 	deleteRDBfile()
 
 	logger := stageHarness.Logger

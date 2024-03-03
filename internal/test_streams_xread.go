@@ -8,9 +8,9 @@ import (
 	"strings"
 	"time"
 
-	testerutils "github.com/codecrafters-io/tester-utils"
 	"github.com/codecrafters-io/tester-utils/logger"
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 	"github.com/go-redis/redis"
 )
 
@@ -69,7 +69,7 @@ func (t *XREADTest) Run(client *redis.Client, logger *logger.Logger) error {
 	return nil
 }
 
-func testStreamsXread(stageHarness *testerutils.StageHarness) error {
+func testStreamsXread(stageHarness *test_case_harness.TestCaseHarness) error {
 	b := NewRedisBinary(stageHarness)
 	if err := b.Run(); err != nil {
 		return err

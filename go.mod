@@ -3,7 +3,7 @@ module github.com/codecrafters-io/redis-tester
 go 1.21
 
 require (
-	github.com/codecrafters-io/tester-utils v0.2.12
+	github.com/codecrafters-io/tester-utils v0.2.14
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/hdt3213/rdb v1.0.13
 	github.com/smallnest/resp3 v0.1.1
@@ -26,4 +26,4 @@ require (
 )
 
 // Use this to test locally
-// replace github.com/codecrafters-io/tester-utils v0.2.0 => /Users/rohitpaulk/experiments/codecrafters/tester-utils
+// replace github.com/codecrafters-io/tester-utils v0.2.12 => /Users/rohitpaulk/experiments/codecrafters/tester-utils

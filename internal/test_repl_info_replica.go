@@ -5,11 +5,11 @@ import (
 	"net"
 	"strings"
 
-	testerutils "github.com/codecrafters-io/tester-utils"
 	loggerutils "github.com/codecrafters-io/tester-utils/logger"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
-func testReplInfoReplica(stageHarness *testerutils.StageHarness) error {
+func testReplInfoReplica(stageHarness *test_case_harness.TestCaseHarness) error {
 	logger := stageHarness.Logger
 
 	listener, err := net.Listen("tcp", ":6379")

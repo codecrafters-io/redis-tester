@@ -3,10 +3,10 @@ package internal
 import (
 	"fmt"
 
-	testerutils "github.com/codecrafters-io/tester-utils"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
-func testWaitZeroReplicas(stageHarness *testerutils.StageHarness) error {
+func testWaitZeroReplicas(stageHarness *test_case_harness.TestCaseHarness) error {
 	deleteRDBfile()
 	master := NewRedisBinary(stageHarness)
 	master.args = []string{

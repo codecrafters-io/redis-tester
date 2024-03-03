@@ -6,9 +6,9 @@ import (
 	"strconv"
 	"time"
 
-	testerutils "github.com/codecrafters-io/tester-utils"
 	"github.com/codecrafters-io/tester-utils/logger"
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
 type WaitTest struct {
@@ -37,7 +37,7 @@ type WaitTest struct {
 //     4.3. Read propagated command on replicas + respond to subset of GETACKs
 //     4.4. Assert response of WAIT command is ActualNumberOfAcks
 //     4.5. Assert that the WAIT command returned after the timeout
-func testWait(stageHarness *testerutils.StageHarness) error {
+func testWait(stageHarness *test_case_harness.TestCaseHarness) error {
 	deleteRDBfile()
 
 	// Step 1: Boot the user's code as a Redis master.

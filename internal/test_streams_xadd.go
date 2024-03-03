@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	testerutils "github.com/codecrafters-io/tester-utils"
 	"github.com/codecrafters-io/tester-utils/logger"
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 	"github.com/go-redis/redis"
 )
 
@@ -57,7 +57,7 @@ func (t *XADDTest) Run(client *redis.Client, logger *logger.Logger) error {
 	return nil
 }
 
-func testStreamsXadd(stageHarness *testerutils.StageHarness) error {
+func testStreamsXadd(stageHarness *test_case_harness.TestCaseHarness) error {
 	b := NewRedisBinary(stageHarness)
 	if err := b.Run(); err != nil {
 		return err
