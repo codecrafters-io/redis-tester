@@ -4,12 +4,12 @@ import (
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_client"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
-	testerutils "github.com/codecrafters-io/tester-utils"
 	"github.com/codecrafters-io/tester-utils/random"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
 // Tests 'GET, SET'
-func testGetSet(stageHarness *testerutils.StageHarness) error {
+func testGetSet(stageHarness *test_case_harness.TestCaseHarness) error {
 	b := NewRedisBinary(stageHarness)
 	if err := b.Run(); err != nil {
 		return err

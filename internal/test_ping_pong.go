@@ -2,14 +2,14 @@ package internal
 
 import (
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_client"
+	resp_client "github.com/codecrafters-io/redis-tester/internal/resp/client"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	logger "github.com/codecrafters-io/tester-utils/logger"
-	resp_client "github.com/codecrafters-io/redis-tester/internal/resp/client"
-	testerutils "github.com/codecrafters-io/tester-utils"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
-func testPingPongOnce(stageHarness *testerutils.StageHarness) error {
+func testPingPongOnce(stageHarness *test_case_harness.TestCaseHarness) error {
 	b := NewRedisBinary(stageHarness)
 	if err := b.Run(); err != nil {
 		return err
@@ -38,7 +38,7 @@ func testPingPongOnce(stageHarness *testerutils.StageHarness) error {
 	return nil
 }
 
-func testPingPongMultiple(stageHarness *testerutils.StageHarness) error {
+func testPingPongMultiple(stageHarness *test_case_harness.TestCaseHarness) error {
 	b := NewRedisBinary(stageHarness)
 	if err := b.Run(); err != nil {
 		return err
@@ -62,7 +62,7 @@ func testPingPongMultiple(stageHarness *testerutils.StageHarness) error {
 	return nil
 }
 
-func testPingPongConcurrent(stageHarness *testerutils.StageHarness) error {
+func testPingPongConcurrent(stageHarness *test_case_harness.TestCaseHarness) error {
 	b := NewRedisBinary(stageHarness)
 	if err := b.Run(); err != nil {
 		return err

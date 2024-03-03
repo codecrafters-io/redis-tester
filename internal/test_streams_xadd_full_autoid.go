@@ -6,12 +6,12 @@ import (
 	"strings"
 	"time"
 
-	testerutils "github.com/codecrafters-io/tester-utils"
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 	"github.com/go-redis/redis"
 )
 
-func testStreamsXaddFullAutoid(stageHarness *testerutils.StageHarness) error {
+func testStreamsXaddFullAutoid(stageHarness *test_case_harness.TestCaseHarness) error {
 	b := NewRedisBinary(stageHarness)
 	if err := b.Run(); err != nil {
 		return err

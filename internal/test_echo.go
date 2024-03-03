@@ -5,12 +5,11 @@ import (
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	"github.com/codecrafters-io/tester-utils/random"
-
-	testerutils "github.com/codecrafters-io/tester-utils"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
 // Tests 'ECHO'
-func testEcho(stageHarness *testerutils.StageHarness) error {
+func testEcho(stageHarness *test_case_harness.TestCaseHarness) error {
 	b := NewRedisBinary(stageHarness)
 	if err := b.Run(); err != nil {
 		return err

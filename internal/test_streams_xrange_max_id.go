@@ -6,12 +6,12 @@ import (
 	"reflect"
 	"strconv"
 
-	testerutils "github.com/codecrafters-io/tester-utils"
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 	"github.com/go-redis/redis"
 )
 
-func testStreamsXrangeMaxId(stageHarness *testerutils.StageHarness) error {
+func testStreamsXrangeMaxId(stageHarness *test_case_harness.TestCaseHarness) error {
 	b := NewRedisBinary(stageHarness)
 	if err := b.Run(); err != nil {
 		return err

@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"net"
 
-	testerutils "github.com/codecrafters-io/tester-utils"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
-func testReplReplicaSendsReplconf(stageHarness *testerutils.StageHarness) error {
+func testReplReplicaSendsReplconf(stageHarness *test_case_harness.TestCaseHarness) error {
 	logger := stageHarness.Logger
 
 	listener, err := net.Listen("tcp", ":6379")

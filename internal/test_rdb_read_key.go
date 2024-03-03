@@ -3,11 +3,11 @@ package internal
 import (
 	"fmt"
 
-	testerutils "github.com/codecrafters-io/tester-utils"
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
-func testRdbReadKey(stageHarness *testerutils.StageHarness) error {
+func testRdbReadKey(stageHarness *test_case_harness.TestCaseHarness) error {
 	RDBFileCreator, err := NewRDBFileCreator(stageHarness)
 	if err != nil {
 		return fmt.Errorf("CodeCrafters Tester Error: %s", err)

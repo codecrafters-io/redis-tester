@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"net"
 
-	testerutils "github.com/codecrafters-io/tester-utils"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
-func testReplCmdProcessing(stageHarness *testerutils.StageHarness) error {
+func testReplCmdProcessing(stageHarness *test_case_harness.TestCaseHarness) error {
 	deleteRDBfile()
 
 	logger := stageHarness.Logger

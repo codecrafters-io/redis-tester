@@ -5,8 +5,8 @@ import (
 	"os"
 	"path/filepath"
 
-	testerutils "github.com/codecrafters-io/tester-utils"
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 
 	"github.com/hdt3213/rdb/encoder"
 )
@@ -21,10 +21,10 @@ type RDBFileCreator struct {
 	Dir      string
 	Filename string
 
-	StageHarness *testerutils.StageHarness
+	StageHarness *test_case_harness.TestCaseHarness
 }
 
-func NewRDBFileCreator(stageHarness *testerutils.StageHarness) (*RDBFileCreator, error) {
+func NewRDBFileCreator(stageHarness *test_case_harness.TestCaseHarness) (*RDBFileCreator, error) {
 	tmpDir, err := os.MkdirTemp("", "rdbfiles")
 	if err != nil {
 		return &RDBFileCreator{}, err

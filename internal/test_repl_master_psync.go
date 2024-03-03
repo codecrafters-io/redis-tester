@@ -3,10 +3,10 @@ package internal
 import (
 	"fmt"
 
-	testerutils "github.com/codecrafters-io/tester-utils"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
-func testReplMasterPsync(stageHarness *testerutils.StageHarness) error {
+func testReplMasterPsync(stageHarness *test_case_harness.TestCaseHarness) error {
 	master := NewRedisBinary(stageHarness)
 	master.args = []string{
 		"--port", "6379",

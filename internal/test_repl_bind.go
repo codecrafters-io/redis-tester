@@ -6,11 +6,11 @@ import (
 	"strconv"
 	"time"
 
-	testerutils "github.com/codecrafters-io/tester-utils"
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
-func testReplBindToCustomPort(stageHarness *testerutils.StageHarness) error {
+func testReplBindToCustomPort(stageHarness *test_case_harness.TestCaseHarness) error {
 	port := testerutils_random.RandomInt(6380, 6390)
 
 	b := NewRedisBinary(stageHarness)
