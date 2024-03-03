@@ -26,4 +26,4 @@ require (
 )
 
 // Use this to test locally
-// replace github.com/codecrafters-io/tester-utils v0.2.0 => /Users/rohitpaulk/experiments/codecrafters/tester-utils
+replace github.com/codecrafters-io/tester-utils v0.2.12 => /Users/rohitpaulk/experiments/codecrafters/tester-utils
