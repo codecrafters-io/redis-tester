@@ -22,7 +22,7 @@ func testStreamsXaddFullAutoid(stageHarness *test_case_harness.TestCaseHarness) 
 
 	randomKey := testerutils_random.RandomWord()
 
-	logger.Infof("$ redis-cli xadd %s * foo bar", randomKey)
+	logger.Infof("$ redis-cli xadd %q * foo bar", randomKey)
 
 	resp, err := client.XAdd(&redis.XAddArgs{
 		Stream: randomKey,
@@ -37,12 +37,12 @@ func testStreamsXaddFullAutoid(stageHarness *test_case_harness.TestCaseHarness) 
 		return err
 	}
 
-	logger.Infof("Received response: \"%s\"", resp)
+	logger.Infof("Received response: \"%q\"", resp)
 
 	parts := strings.Split(resp, "-")
 
 	if len(parts) != 2 {
-		return fmt.Errorf("Expected a string in the form \"<millisecondsTime>-<sequenceNumber>\", got %s", resp)
+		return fmt.Errorf("Expected a string in the form \"<millisecondsTime>-<sequenceNumber>\", got %q", resp)
 	}
 
 	timeStr, sequenceNumber := parts[0], parts[1]
@@ -54,13 +54,13 @@ func testStreamsXaddFullAutoid(stageHarness *test_case_harness.TestCaseHarness) 
 	if len(timeStr) != 13 {
 		return fmt.Errorf("Expected the first part of the ID to be a unix timestamp (%d characters), got %d characters", len(strconv.FormatInt(now, 10)), len(timeStr))
 	} else if !(timeInt64 > oneSecondAgo && timeInt64 < oneSecondLater) {
-		return fmt.Errorf("Expected the first part of the ID to be a valid unix timestamp, got %s", timeStr)
+		return fmt.Errorf("Expected the first part of the ID to be a valid unix timestamp, got %q", timeStr)
 	} else {
 		logger.Successf("The first part of the ID is a valid unix milliseconds timestamp")
 	}
 
 	if sequenceNumber != "0" {
-		return fmt.Errorf("Expected the second part of the ID to be a sequence number with a value of \"0\", got %#v", sequenceNumber)
+		return fmt.Errorf("Expected the second part of the ID to be a sequence number with a value of \"0\", got %q", sequenceNumber)
 	} else {
 		logger.Successf("The second part of the ID is a valid sequence number")
 	}
