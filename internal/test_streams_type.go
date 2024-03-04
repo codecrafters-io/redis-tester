@@ -57,7 +57,7 @@ func testStreamsType(stageHarness *test_case_harness.TestCaseHarness) error {
 		return err
 	}
 
-	if resp != "none" 
+	if resp != "none" {
 		return fmt.Errorf("Expected \"none\", got %q", resp)
 	} else {
 		logger.Successf("Type of missing_key_%q is %q", randomValue, resp)
