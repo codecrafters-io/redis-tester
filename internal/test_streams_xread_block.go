@@ -43,7 +43,7 @@ func testStreamsXreadBlock(stageHarness *test_case_harness.TestCaseHarness) erro
 	done := make(chan bool)
 
 	go func() error {
-		logger.Infof("$ redis-cli xread block %v streams %s", 1000, strings.Join([]string{randomKey, "0-1"}, " "))
+		logger.Infof("$ redis-cli xread block %q streams %q", 1000, strings.Join([]string{randomKey, "0-1"}, " "))
 
 		resp, err = client.XRead(&redis.XReadArgs{
 			Streams: []string{randomKey, "0-1"},
@@ -104,12 +104,12 @@ func testStreamsXreadBlock(stageHarness *test_case_harness.TestCaseHarness) erro
 
 	if !reflect.DeepEqual(resp, expectedResp) {
 		logger.Infof("Received response: \"%v\"", string(respJson))
-		return fmt.Errorf("Expected %#v, got %#v", string(expectedRespJson), string(respJson))
+		return fmt.Errorf("Expected %v, got %v", string(expectedRespJson), string(respJson))
 	} else {
 		logger.Successf("Received response: \"%v\"", string(respJson))
 	}
 
-	logger.Infof("$ redis-cli xread block %v streams %s", 1000, strings.Join([]string{randomKey, "0-2"}, " "))
+	logger.Infof("$ redis-cli xread block %q streams %q", 1000, strings.Join([]string{randomKey, "0-2"}, " "))
 
 	resp, err = client.XRead(&redis.XReadArgs{
 		Streams: []string{randomKey, "0-2"},
@@ -119,7 +119,7 @@ func testStreamsXreadBlock(stageHarness *test_case_harness.TestCaseHarness) erro
 	if err != redis.Nil {
 		if err == nil {
 			logger.Debugf("Hint: Read about null bulk strings in the Redis protocol docs")
-			return fmt.Errorf("Expected null string, got %#v", resp)
+			return fmt.Errorf("Expected null string, got %q", resp)
 		}
 
 		logFriendlyError(logger, err)
