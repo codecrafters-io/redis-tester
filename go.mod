@@ -7,7 +7,7 @@ require (
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/hdt3213/rdb v1.0.13
 	github.com/smallnest/resp3 v0.1.1
-	github.com/stretchr/testify v1.8.4
+	github.com/stretchr/testify v1.9.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
