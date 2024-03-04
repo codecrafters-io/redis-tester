@@ -47,10 +47,13 @@ func (t *XADDTest) Run(client *redis.Client, logger *logger.Logger) error {
 		return nil
 	}
 
-	if resp != t.expectedResponse {
+	if resp != t.expectedResponse && t.expectedError != "" {
+		logger.Infof("Received response: \"%q\"", resp)
+		return fmt.Errorf("Expected an error as the response, got %q", resp)
+	} else if resp != t.expectedResponse 
 		logger.Infof("Received response: \"%q\"", resp)
 		return fmt.Errorf("Expected %q, got %q", t.expectedResponse, resp)
-	} else {
+  } else {
 		logger.Successf("Received response: \"%q\"", resp)
 	}
 
