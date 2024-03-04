@@ -14,7 +14,7 @@ import (
 type KeyValuePair struct {
 	key      string
 	value    string
-	expiryTs int64 // Unix timestamp in milliseconds
+	expiryTS int64 // Unix timestamp in milliseconds
 }
 
 type RDBFileCreator struct {
@@ -70,21 +70,21 @@ func (r *RDBFileCreator) Write(keyValuePairs []KeyValuePair) error {
 		}
 	}
 
-	keysWithTtlCount := 0
+	keysWithTTLCount := 0
 
 	for _, keyValuePair := range keyValuePairs {
-		if keyValuePair.expiryTs > 0 {
-			keysWithTtlCount++
+		if keyValuePair.expiryTS > 0 {
+			keysWithTTLCount++
 		}
 	}
 
-	if err := enc.WriteDBHeader(0, uint64(len(keyValuePairs)), uint64(keysWithTtlCount)); err != nil {
+	if err := enc.WriteDBHeader(0, uint64(len(keyValuePairs)), uint64(keysWithTTLCount)); err != nil {
 		return err
 	}
 
 	for _, keyValuePair := range keyValuePairs {
-		if keyValuePair.expiryTs > 0 {
-			if err := enc.WriteStringObject(keyValuePair.key, []byte(keyValuePair.value), encoder.WithTTL(uint64(keyValuePair.expiryTs))); err != nil {
+		if keyValuePair.expiryTS > 0 {
+			if err := enc.WriteStringObject(keyValuePair.key, []byte(keyValuePair.value), encoder.WithTTL(uint64(keyValuePair.expiryTS))); err != nil {
 				return err
 			}
 		} else {

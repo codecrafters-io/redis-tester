@@ -86,7 +86,7 @@ func testWait(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 
 	replicaSubsetCount = testerutils_random.RandomInt(2, replicaCount)
-	if masterOffset, err = RunWaitTest(client, replicas, masterOffset, WaitTest{
+	if _, err = RunWaitTest(client, replicas, masterOffset, WaitTest{
 		WriteCommand:        []string{"SET", "baz", "789"},
 		WaitReplicaCount:    replicaSubsetCount + 1,
 		ActualNumberOfAcks:  replicaSubsetCount,

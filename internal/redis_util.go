@@ -161,14 +161,6 @@ func parseRESPCommandRDB(reader *resp3.Reader) (Value, error) {
 	return req, nil
 }
 
-func parseRESPCommand(reader *resp3.Reader) (Value, error) {
-	req, err := Decode(reader)
-	if err != nil {
-		return Value{}, err
-	}
-	return req, nil
-}
-
 func SendError(err error) []byte {
 	e := NewErrorValue("ERR - " + err.Error())
 	return encodeError(e)

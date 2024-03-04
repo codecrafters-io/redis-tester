@@ -36,7 +36,7 @@ func (a CommandAssertion) Run(value resp_value.Value) error {
 
 	command := elements[0].String()
 
-	if strings.ToLower(command) != strings.ToLower(a.ExpectedCommand) {
+	if !strings.EqualFold(command, a.ExpectedCommand) {
 		return fmt.Errorf("Expected command to be %q, got %q", strings.ToLower(a.ExpectedCommand), strings.ToLower(command))
 	}
 

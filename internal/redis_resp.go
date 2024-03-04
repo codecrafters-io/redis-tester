@@ -1,3 +1,4 @@
+//lint:file-ignore ST1003 We're going to remove this file soon
 package internal
 
 import (

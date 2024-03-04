@@ -150,7 +150,7 @@ var testerDefinition = tester_definition.TesterDefinition{
 		},
 		{
 			Slug:     "streams-xadd-validate-id",
-			TestFunc: testStreamsXaddValidateId,
+			TestFunc: testStreamsXaddValidateID,
 		},
 		{
 			Slug:     "streams-xadd-partial-autoid",
@@ -166,11 +166,11 @@ var testerDefinition = tester_definition.TesterDefinition{
 		},
 		{
 			Slug:     "streams-xrange-min-id",
-			TestFunc: testStreamsXrangeMinId,
+			TestFunc: testStreamsXrangeMinID,
 		},
 		{
 			Slug:     "streams-xrange-max-id",
-			TestFunc: testStreamsXrangeMaxId,
+			TestFunc: testStreamsXrangeMaxID,
 		},
 		{
 			Slug:     "streams-xread",
@@ -190,7 +190,7 @@ var testerDefinition = tester_definition.TesterDefinition{
 		},
 		{
 			Slug:     "streams-xread-block-max-id",
-			TestFunc: testStreamsXreadBlockMaxId,
+			TestFunc: testStreamsXreadBlockMaxID,
 		},
 	},
 }

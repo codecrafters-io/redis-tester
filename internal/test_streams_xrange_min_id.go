@@ -11,7 +11,7 @@ import (
 	"github.com/go-redis/redis"
 )
 
-func testStreamsXrangeMinId(stageHarness *test_case_harness.TestCaseHarness) error {
+func testStreamsXrangeMinID(stageHarness *test_case_harness.TestCaseHarness) error {
 	b := NewRedisBinary(stageHarness)
 	if err := b.Run(); err != nil {
 		return err
@@ -44,7 +44,7 @@ func testStreamsXrangeMinId(stageHarness *test_case_harness.TestCaseHarness) err
 		}
 	}
 
-	maxId := "0-" + strconv.Itoa(randomNumber-1)
+	maxID := "0-" + strconv.Itoa(randomNumber-1)
 
 	for i := 1; i <= randomNumber-1; i++ {
 		id := "0-" + strconv.Itoa(i)
@@ -57,22 +57,22 @@ func testStreamsXrangeMinId(stageHarness *test_case_harness.TestCaseHarness) err
 		})
 	}
 
-	logger.Infof("$ redis-cli xrange %q - %q", randomKey, maxId)
-	resp, err := client.XRange(randomKey, "-", maxId).Result()
+	logger.Infof("$ redis-cli xrange %q - %q", randomKey, maxID)
+	resp, err := client.XRange(randomKey, "-", maxID).Result()
 
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
 	}
 
-	expectedRespJson, err := json.MarshalIndent(expectedResp, "", "  ")
+	expectedRespJSON, err := json.MarshalIndent(expectedResp, "", "  ")
 
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
 	}
 
-	respJson, err := json.MarshalIndent(resp, "", "  ")
+	respJSON, err := json.MarshalIndent(resp, "", "  ")
 
 	if err != nil {
 		logFriendlyError(logger, err)
@@ -80,10 +80,10 @@ func testStreamsXrangeMinId(stageHarness *test_case_harness.TestCaseHarness) err
 	}
 
 	if !reflect.DeepEqual(resp, expectedResp) {
-		logger.Infof("Received response: \"%q\"", string(respJson))
-		return fmt.Errorf("Expected %q, got %q", string(expectedRespJson), string(respJson))
+		logger.Infof("Received response: \"%q\"", string(respJSON))
+		return fmt.Errorf("Expected %q, got %q", string(expectedRespJSON), string(respJSON))
 	} else {
-		logger.Successf("Received response: \"%q\"", string(respJson))
+		logger.Successf("Received response: \"%q\"", string(respJSON))
 	}
 
 	return nil

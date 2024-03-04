@@ -51,25 +51,25 @@ func testStreamsXrange(stageHarness *test_case_harness.TestCaseHarness) error {
 		})
 	}
 
-	maxId := "0-" + strconv.Itoa(randomNumber)
+	maxID := "0-" + strconv.Itoa(randomNumber)
 	expectedResp = expectedResp[1:]
 
-	logger.Infof("$ redis-cli xrange %q 0-2 %q", randomKey, maxId)
-	resp, err := client.XRange(randomKey, "0-2", maxId).Result()
+	logger.Infof("$ redis-cli xrange %q 0-2 %q", randomKey, maxID)
+	resp, err := client.XRange(randomKey, "0-2", maxID).Result()
 
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
 	}
 
-	expectedRespJson, err := json.MarshalIndent(expectedResp, "", "  ")
+	expectedRespJSON, err := json.MarshalIndent(expectedResp, "", "  ")
 
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
 	}
 
-	respJson, err := json.MarshalIndent(resp, "", "  ")
+	respJSON, err := json.MarshalIndent(resp, "", "  ")
 
 	if err != nil {
 		logFriendlyError(logger, err)
@@ -77,10 +77,10 @@ func testStreamsXrange(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 
 	if !reflect.DeepEqual(resp, expectedResp) {
-		logger.Infof("Received response: \"%q\"", string(respJson))
-		return fmt.Errorf("Expected %q, got %q", string(expectedRespJson), string(respJson))
+		logger.Infof("Received response: \"%q\"", string(respJSON))
+		return fmt.Errorf("Expected %q, got %q", string(expectedRespJSON), string(respJSON))
 	} else {
-		logger.Successf("Received response: \"%q\"", string(respJson))
+		logger.Successf("Received response: \"%q\"", string(respJSON))
 	}
 
 	return nil
