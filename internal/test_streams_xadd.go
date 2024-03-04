@@ -25,7 +25,7 @@ func (t *XADDTest) Run(client *redis.Client, logger *logger.Logger) error {
 		values = append(values, key, fmt.Sprintf("%v", value))
 	}
 
-	logger.Infof("$ redis-cli xadd %s %s %s", t.streamKey, t.id, strings.Join(values, " "))
+	logger.Infof("$ redis-cli xadd %q %q %q", t.streamKey, t.id, strings.Join(values, " "))
 
 	resp, err := client.XAdd(&redis.XAddArgs{
 		Stream: t.streamKey,
@@ -40,18 +40,18 @@ func (t *XADDTest) Run(client *redis.Client, logger *logger.Logger) error {
 
 	if err != nil && t.expectedError != "" {
 		if err.Error() != t.expectedError {
-			return fmt.Errorf("Expected %#v, got %#v", t.expectedError, err.Error())
+			return fmt.Errorf("Expected %q, got %q", t.expectedError, err.Error())
 		}
 
-		logger.Successf("Received error: \"%s\"", err.Error())
+		logger.Successf("Received error: \"%q\"", err.Error())
 		return nil
 	}
 
 	if resp != t.expectedResponse {
-		logger.Infof("Received response: \"%s\"", resp)
-		return fmt.Errorf("Expected %#v, got %#v", t.expectedResponse, resp)
+		logger.Infof("Received response: \"%q\"", resp)
+		return fmt.Errorf("Expected %q, got %q", t.expectedResponse, resp)
 	} else {
-		logger.Successf("Received response: \"%s\"", resp)
+		logger.Successf("Received response: \"%q\"", resp)
 	}
 
 	return nil
@@ -81,7 +81,7 @@ func testStreamsXadd(stageHarness *test_case_harness.TestCaseHarness) error {
 		return err
 	}
 
-	logger.Infof("$ redis-cli type %s", randomKey)
+	logger.Infof("$ redis-cli type %q", randomKey)
 	resp, err := client.Type(randomKey).Result()
 
 	if err != nil {
@@ -90,9 +90,9 @@ func testStreamsXadd(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 
 	if resp != "stream" {
-		return fmt.Errorf("Expected \"stream\", got %#v", resp)
+		return fmt.Errorf("Expected \"stream\", got %q", resp)
 	} else {
-		logger.Successf("Type of %s is %s", randomKey, resp)
+		logger.Successf("Type of %q is %q", randomKey, resp)
 	}
 
 	return nil

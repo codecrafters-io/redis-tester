@@ -41,7 +41,7 @@ func testStreamsXreadBlockMaxId(stageHarness *test_case_harness.TestCaseHarness)
 	respChan := make(chan *[]redis.XStream, 1)
 
 	go func() error {
-		logger.Infof("$ redis-cli xread block %v streams %s", 0, strings.Join([]string{randomKey, "0-1"}, " "))
+		logger.Infof("$ redis-cli xread block %q streams %q", 0, strings.Join([]string{randomKey, "0-1"}, " "))
 
 		resp, err := client.XRead(&redis.XReadArgs{
 			Streams: []string{randomKey, "$"},
@@ -49,7 +49,7 @@ func testStreamsXreadBlockMaxId(stageHarness *test_case_harness.TestCaseHarness)
 		}).Result()
 
 		if err != nil {
-			logger.Errorf("Error: %v", err)
+			logger.Errorf("Error: %q", err)
 			return err
 		}
 
@@ -103,7 +103,7 @@ func testStreamsXreadBlockMaxId(stageHarness *test_case_harness.TestCaseHarness)
 
 	if !reflect.DeepEqual(resp, expectedResp) {
 		logger.Infof("Received response: \"%v\"", string(respJson))
-		return fmt.Errorf("Expected %#v, got %#v", string(expectedRespJson), string(respJson))
+		return fmt.Errorf("Expected %v, got %v", string(expectedRespJson), string(respJson))
 	} else {
 		logger.Successf("Received response: \"%v\"", string(respJson))
 	}

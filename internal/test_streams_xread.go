@@ -25,14 +25,14 @@ func (t *XREADTest) Run(client *redis.Client, logger *logger.Logger) error {
 	var err error
 
 	if t.block == nil {
-		logger.Infof("$ redis-cli xread streams %s", strings.Join(t.streams, " "))
+		logger.Infof("$ redis-cli xread streams %q", strings.Join(t.streams, " "))
 
 		resp, err = client.XRead(&redis.XReadArgs{
 			Streams: t.streams,
 			Block:   -1 * time.Millisecond, // Zero value for Block in XReadArgs struct is 0. Need a negative value to indicate no block.
 		}).Result()
 	} else {
-		logger.Infof("$ redis-cli xread block %v streams %s", t.block.Milliseconds(), strings.Join(t.streams, " "))
+		logger.Infof("$ redis-cli xread block %q streams %q", t.block.Milliseconds(), strings.Join(t.streams, " "))
 
 		resp, err = client.XRead(&redis.XReadArgs{
 			Streams: t.streams,
@@ -61,7 +61,7 @@ func (t *XREADTest) Run(client *redis.Client, logger *logger.Logger) error {
 
 	if !reflect.DeepEqual(resp, t.expectedResponse) {
 		logger.Infof("Received response: \"%v\"", string(respJson))
-		return fmt.Errorf("Expected %#v, got %#v", string(expectedRespJson), string(respJson))
+		return fmt.Errorf("Expected %v, got %v", string(expectedRespJson), string(respJson))
 	} else {
 		logger.Successf("Received response: \"%v\"", string(respJson))
 	}

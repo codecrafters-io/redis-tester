@@ -20,7 +20,7 @@ func testStreamsType(stageHarness *test_case_harness.TestCaseHarness) error {
 	randomKey := testerutils_random.RandomWord()
 	randomValue := testerutils_random.RandomWord()
 
-	logger.Infof("$ redis-cli set %s %s", randomKey, randomValue)
+	logger.Infof("$ redis-cli set %q %q", randomKey, randomValue)
 	resp, err := client.Set(randomKey, randomValue, 0).Result()
 
 	if err != nil {
@@ -29,13 +29,13 @@ func testStreamsType(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 
 	if resp != "OK" {
-		logger.Infof("Received response: \"%s\"", resp)
-		return fmt.Errorf("Expected \"OK\", got %#v", resp)
+		logger.Infof("Received response: \"%q\"", resp)
+		return fmt.Errorf("Expected \"OK\", got %q", resp)
 	} else {
-		logger.Successf("Received response: \"%s\"", resp)
+		logger.Successf("Received response: \"%q\"", resp)
 	}
 
-	logger.Infof("$ redis-cli type %s", randomKey)
+	logger.Infof("$ redis-cli type %q", randomKey)
 	resp, err = client.Type(randomKey).Result()
 
 	if err != nil {
@@ -44,12 +44,12 @@ func testStreamsType(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 
 	if resp != "string" {
-		return fmt.Errorf("Expected \"string\", got %#v", resp)
+		return fmt.Errorf("Expected \"string\", got %q", resp)
 	} else {
-		logger.Successf("Type of %s is %s", randomKey, resp)
+		logger.Successf("Type of %q is %q", randomKey, resp)
 	}
 
-	logger.Infof("$ redis-cli type %s", "missing_key"+"_"+randomValue)
+	logger.Infof("$ redis-cli type %q", "missing_key"+"_"+randomValue)
 	resp, err = client.Type("missing_key" + "_" + randomValue).Result()
 
 	if err != nil {
@@ -57,10 +57,10 @@ func testStreamsType(stageHarness *test_case_harness.TestCaseHarness) error {
 		return err
 	}
 
-	if resp != "none" {
-		return fmt.Errorf("Expected \"none\", got %#v", resp)
+	if resp != "none" 
+		return fmt.Errorf("Expected \"none\", got %q", resp)
 	} else {
-		logger.Successf("Type of missing_key_%s is %s", randomValue, resp)
+		logger.Successf("Type of missing_key_%q is %q", randomValue, resp)
 	}
 
 	return nil
