@@ -5,6 +5,7 @@ import (
 	"net"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/codecrafters-io/tester-utils/logger"
 	"github.com/hdt3213/rdb/parser"
@@ -66,6 +67,28 @@ func (node FakeRedisNode) SendAndAssertString(sendMessage []string, receiveMessa
 		return err
 	}
 	return nil
+}
+
+func (node FakeRedisNode) SendAndAssertStringWithRetry(sendMessage []string, receiveMessage string, caseSensitiveMatch bool) error {
+	const maxRetries = 5
+	var err error
+
+	for attempt := 0; attempt < maxRetries; attempt++ {
+		err = node.Send(sendMessage)
+		if err != nil {
+			return err
+		}
+		err = node.readAndAssertMessage(receiveMessage, caseSensitiveMatch)
+		if err == nil {
+			return nil
+		}
+
+		if attempt < maxRetries-1 {
+			node.Logger.Debugf("Assertion failed, retrying... (Attempt %d/%d)\n", attempt+2, maxRetries)
+			time.Sleep(500 * time.Millisecond)
+		}
+	}
+	return err
 }
 
 func (node FakeRedisNode) SendAndAssertInt(sendMessage []string, receiveMessage int) error {
