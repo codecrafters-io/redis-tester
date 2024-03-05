@@ -30,12 +30,12 @@ test_tmp: build
 	$(shell pwd)/dist/main.out
 
 test_parallel: build
-	rm dump.rdb
+	rm -f dump.rdb
 	CODECRAFTERS_SKIP_ANTI_CHEAT=true \
 	CODECRAFTERS_SUBMISSION_DIR=./internal/test_helpers/pass_all \
 	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\":\"init\",\"tester_log_prefix\":\"stage-1\",\"title\":\"Stage 1\"}, {\"slug\":\"ping-pong\",\"tester_log_prefix\":\"stage-2\",\"title\":\"Stage 2\"}, {\"slug\":\"ping-pong-multiple\",\"tester_log_prefix\":\"stage-3\",\"title\":\"Stage 3\"}]" \
 	$(shell pwd)/dist/main.out
-	rm dump.rdb
+	rm -f dump.rdb
 
 copy_course_file:
 	gh api repos/codecrafters-io/build-your-own-redis/contents/course-definition.yml \
