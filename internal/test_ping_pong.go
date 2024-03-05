@@ -1,10 +1,6 @@
 package internal
 
 import (
-	"fmt"
-	"net"
-	"time"
-
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_client"
 	resp_client "github.com/codecrafters-io/redis-tester/internal/resp/client"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
@@ -126,20 +122,21 @@ func testPingPongConcurrent(stageHarness *test_case_harness.TestCaseHarness) err
 }
 
 func runPing(logger *logger.Logger, client *resp_client.RespClient) error {
-	// TODO: Test concurrent network activity
-	for i := 1; i <= 20; i++ {
-		logger.Infof("Connecting to port 6900...")
-		l, err := net.Listen("tcp", "0.0.0.0:6900")
-		if err != nil {
-			fmt.Println("Failed to bind to port 6900")
-			return err
-		}
+	// // TODO: Test concurrent network activity
+	// for i := 1; i <= 20; i++ {
+	// 	logger.Infof("Connecting to port 6900...")
+	// 	l, err := net.Listen("tcp", "0.0.0.0:6900")
+	// 	if err != nil {
+	// 		fmt.Println("Failed to bind to port 6900")
+	// 		return err
+	// 	}
 
-		logger.Infof("Connected.")
-		time.Sleep(100 * time.Millisecond)
+	// 	logger.Infof("Connected to port 6900.")
+	// 	time.Sleep(100 * time.Millisecond)
 
-		l.Close()
-	}
+	// 	l.Close()
+	// 	logger.Infof("Removed listener on port 6900.")
+	// }
 
 	commandTestCase := test_cases.CommandTestCase{
 		Command:   "ping",
