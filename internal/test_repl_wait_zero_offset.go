@@ -2,10 +2,9 @@ package internal
 
 import (
 	"fmt"
-	"strconv"
-
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
+	"time"
 )
 
 func testWaitZeroOffset(stageHarness *test_case_harness.TestCaseHarness) error {
@@ -54,8 +53,8 @@ func testWaitZeroOffset(stageHarness *test_case_harness.TestCaseHarness) error {
 	diff := ((replicaCount + 3) - 3) / 3
 	safeDiff := max(1, diff) // If diff is 0, it will get stuck in an infinite loop
 	for i := 3; i < replicaCount+3; i += safeDiff {
-		actual, expected := strconv.Itoa(i), replicaCount
-		err = client.Wait(actual, "500", expected)
+		actual, expected := i, replicaCount
+		err = client.Wait(actual, time.Millisecond*500, expected)
 		if err != nil {
 			return err
 		}
