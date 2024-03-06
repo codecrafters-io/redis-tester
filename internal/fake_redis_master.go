@@ -1,9 +1,11 @@
 package internal
 
 import (
+	"fmt"
 	"net"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/codecrafters-io/tester-utils/logger"
 )
@@ -66,8 +68,26 @@ func (master FakeRedisMaster) GetAck(offset int) error {
 	return master.SendAndAssertStringArray([]string{"REPLCONF", "GETACK", "*"}, []string{"REPLCONF", "ACK", strconv.Itoa(offset)})
 }
 
-func (master FakeRedisMaster) Wait(replicas string, timeout string, expectedMessage int) error {
-	return master.SendAndAssertInt([]string{"WAIT", replicas, timeout}, expectedMessage)
+func (master FakeRedisMaster) Wait(needReplicas int, timeout time.Duration, maxReplicas int) error {
+	if err := master.Send([]string{"WAIT", strconv.Itoa(needReplicas), strconv.Itoa(int(timeout.Milliseconds()))}); err != nil {
+		return err
+	}
+	actualMessage, err := master.readRespInt()
+	if err != nil {
+		return err
+	}
+
+	if needReplicas > maxReplicas {
+		if actualMessage != maxReplicas {
+			return fmt.Errorf("Expected: '%v' and actual: '%v' messages don't match", maxReplicas, actualMessage)
+		}
+	} else {
+		if actualMessage < needReplicas || actualMessage > maxReplicas {
+			return fmt.Errorf("Expected: '[%v, %v]' and actual: '%v' messages don't match", needReplicas, maxReplicas, actualMessage)
+		}
+	}
+	master.Logger.Successf(master.LogPrefix + strconv.Itoa(actualMessage) + " received.")
+	return nil
 }
 
 func (master FakeRedisMaster) Handshake() error {

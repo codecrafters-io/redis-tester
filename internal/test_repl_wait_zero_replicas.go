@@ -2,6 +2,7 @@ package internal
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
@@ -28,7 +29,7 @@ func testWaitZeroReplicas(stageHarness *test_case_harness.TestCaseHarness) error
 	client := NewFakeRedisMaster(conn, logger)
 	client.LogPrefix = "[client] "
 
-	err = client.Wait("0", "60000", 0)
+	err = client.Wait(0, time.Millisecond*60000, 0)
 	if err != nil {
 		return err
 	}
