@@ -70,7 +70,7 @@ func (t SendReplicationHandshakeTestCase) RunReplconfStep(client *resp_client.Re
 func (t SendReplicationHandshakeTestCase) RunPsyncStep(client *resp_client.RespClient, logger *logger.Logger) error {
 	commandTest := CommandTestCase{
 		Command:                   "PSYNC",
-		Args:                      []string{"-1", "0"},
+		Args:                      []string{"?", "-1"},
 		Assertion:                 resp_assertions.NewRegexStringAssertion("FULLRESYNC \\w+ 0"),
 		ShouldSkipUnreadDataCheck: true, // We're expecting the RDB file to be sent next
 	}
