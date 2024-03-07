@@ -138,12 +138,12 @@ func consumeReplicationStreamAndSendPartialAcks(replicas []*FakeRedisReplica, re
 			return 0, err
 		}
 
-		offsetDeltaFromGetAckCommand, err := replica.readAndAssertMessages(secondCommand, false)
+		_, err = replica.readAndAssertMessages(secondCommand, false)
 		if err != nil {
 			return 0, err
 		}
 
-		newMasterOffset = previousMasterOffset + offsetDeltaFromSetCommand + offsetDeltaFromGetAckCommand
+		newMasterOffset = previousMasterOffset + offsetDeltaFromSetCommand
 
 		if i < replicaAcksCount {
 			replica.Send([]string{"REPLCONF", "ACK", strconv.Itoa(newMasterOffset)})
@@ -165,7 +165,8 @@ func RunWaitTest(client *FakeRedisClient, replicas []*FakeRedisReplica, replicat
 	}
 
 	// Step 3: Read propagated command on replicas + respond to subset of GETACKs
-	newReplicationOffset, err = consumeReplicationStreamAndSendPartialAcks(replicas, waitTest.ActualNumberOfAcks, replicationOffset, waitTest.WriteCommand, []string{"REPLCONF", "GETACK", "*"})
+	getAckCommand := []string{"REPLCONF", "GETACK", "*"}
+	newReplicationOffset, err = consumeReplicationStreamAndSendPartialAcks(replicas, waitTest.ActualNumberOfAcks, replicationOffset, waitTest.WriteCommand, getAckCommand)
 	if err != nil {
 		return 0, err
 	}
@@ -176,9 +177,17 @@ func RunWaitTest(client *FakeRedisClient, replicas []*FakeRedisReplica, replicat
 		return 0, err
 	}
 
+	// Step 5: Send GETACKs to the remainder of replicas and update new replication offset to include GETACK
+	for i := waitTest.ActualNumberOfAcks; i < len(replicas); i++ {
+		replica := replicas[i]
+		replica.Send([]string{"REPLCONF", "ACK", strconv.Itoa(newReplicationOffset)})
+	}
+	offsetDeltaFromGetAckCommand := GetByteOffset(getAckCommand)
+	newReplicationOffset += offsetDeltaFromGetAckCommand
+
 	endTimeMilli := time.Now().UnixMilli()
 
-	// Step 5: If shouldVerifyTimeout is true : Assert that the WAIT command
+	// Step 6: If shouldVerifyTimeout is true : Assert that the WAIT command
 	// returned after the timeout
 	if waitTest.ShouldVerifyTimeout {
 		threshold := 500 // ms
