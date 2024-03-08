@@ -40,7 +40,8 @@ func antiCheatTest(stageHarness *test_case_harness.TestCaseHarness) error {
 		return nil
 	}
 
-	if strings.Contains(actualMessage, "memory") {
+	// All the answers for MEMORY DOCTOR include the string "sam" in them.
+	if strings.Contains(strings.ToLower(actualMessage), "sam") {
 		logger.Criticalf("anti-cheat (ac1) failed.")
 		logger.Criticalf("Are you sure you aren't running this against the actual Redis?")
 		return fmt.Errorf("anti-cheat (ac1) failed")
