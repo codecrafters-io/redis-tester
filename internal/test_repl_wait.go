@@ -177,7 +177,7 @@ func RunWaitTest(client *FakeRedisClient, replicas []*FakeRedisReplica, replicat
 		return 0, err
 	}
 
-	// Step 5: Send GETACKs to the remainder of replicas and update new replication offset to include GETACK
+	// Step 5: Send ACKs to the remainder of replicas and update new replication offset to include GETACK
 	for i := waitTest.ActualNumberOfAcks; i < len(replicas); i++ {
 		replica := replicas[i]
 		replica.Send([]string{"REPLCONF", "ACK", strconv.Itoa(newReplicationOffset)})
