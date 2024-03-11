@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"github.com/codecrafters-io/tester-utils/logger"
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
@@ -70,8 +71,8 @@ func (t *XREADTest) Run(client *redis.Client, logger *logger.Logger) error {
 }
 
 func testStreamsXread(stageHarness *test_case_harness.TestCaseHarness) error {
-	b := NewRedisBinary(stageHarness)
-	if err := b.Run(); err != nil {
+	b := redis_executable.NewRedisExecutable(stageHarness)
+	if err := b.Run([]string{}); err != nil {
 		return err
 	}
 
