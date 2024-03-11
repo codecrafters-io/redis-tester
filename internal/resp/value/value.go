@@ -6,12 +6,13 @@ import (
 )
 
 const (
-	SIMPLE_STRING string = "SIMPLE_STRING"
-	INTEGER       string = "INTEGER"
-	BULK_STRING   string = "BULK_STRING"
-	ARRAY         string = "ARRAY"
-	ERROR         string = "ERROR"
-	NIL           string = "NIL"
+	SIMPLE_STRING   string = "SIMPLE_STRING"
+	INTEGER         string = "INTEGER"
+	BULK_STRING     string = "BULK_STRING"
+	RDB_BULK_STRING string = "RDB_BULK_STRING"
+	ARRAY           string = "ARRAY"
+	ERROR           string = "ERROR"
+	NIL             string = "NIL"
 )
 
 type Value struct {
@@ -33,6 +34,13 @@ func NewSimpleStringValue(s string) Value {
 func NewBulkStringValue(s string) Value {
 	return Value{
 		Type:  BULK_STRING,
+		bytes: []byte(s),
+	}
+}
+
+func NewRDBAsBulkStringValue(s string) Value {
+	return Value{
+		Type:  RDB_BULK_STRING,
 		bytes: []byte(s),
 	}
 }
@@ -99,7 +107,7 @@ func (v *Value) FormattedString() string {
 	case SIMPLE_STRING:
 		return fmt.Sprintf("%q", v.String())
 	case INTEGER:
-		return fmt.Sprintf("%q", v.Integer())
+		return fmt.Sprintf("%d", v.Integer())
 	case BULK_STRING:
 		return fmt.Sprintf("%q", v.String())
 	case ARRAY:
