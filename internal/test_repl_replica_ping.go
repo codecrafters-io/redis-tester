@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"net"
 
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
@@ -15,16 +18,15 @@ func testReplReplicaSendsPing(stageHarness *test_case_harness.TestCaseHarness) e
 		logFriendlyBindError(logger, err)
 		return fmt.Errorf("Error starting TCP server: %v", err)
 	}
+	defer listener.Close()
 
 	logger.Infof("Master is running on port 6379.")
 
-	replica := NewRedisBinary(stageHarness)
-	replica.args = []string{
+	b := redis_executable.NewRedisExecutable(stageHarness)
+	if err := b.Run([]string{
 		"--port", "6380",
 		"--replicaof", "localhost", "6379",
-	}
-
-	if err := replica.Run(); err != nil {
+	}); err != nil {
 		return err
 	}
 
@@ -33,15 +35,14 @@ func testReplReplicaSendsPing(stageHarness *test_case_harness.TestCaseHarness) e
 		fmt.Println("Error accepting: ", err.Error())
 		return err
 	}
+	defer conn.Close()
 
-	master := NewFakeRedisMaster(conn, logger)
-
-	err = master.AssertPing()
+	server, err := instrumented_resp_connection.NewInstrumentedRespConnection(stageHarness, conn, "master")
 	if err != nil {
+		logFriendlyError(logger, err)
 		return err
 	}
 
-	conn.Close()
-	listener.Close()
-	return nil
+	receiveReplicationHandshakeTestCase := test_cases.ReceiveReplicationHandshakeTestCase{}
+	return receiveReplicationHandshakeTestCase.RunPingStep(server, logger)
 }
