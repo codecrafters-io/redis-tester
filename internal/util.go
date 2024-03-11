@@ -12,10 +12,3 @@ func deleteRDBfile() {
 	}
 	_ = os.Remove(fileName)
 }
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}

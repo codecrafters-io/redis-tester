@@ -78,7 +78,6 @@ func testReplCmdProcessing(stageHarness *test_case_harness.TestCaseHarness) erro
 	for i := 1; i <= len(kvMap); i++ {
 		key, value := kvMap[i][0], kvMap[i][1]
 		logger.Infof("Getting key %s", key)
-		// Need to retry here. ToDo.
 		getCommandTestCase := test_cases.CommandTestCase{
 			Command:     "GET",
 			Args:        []string{key},

@@ -1,11 +1,9 @@
 package internal
 
 import (
-	"strings"
-
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
-	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
+	resp_utils "github.com/codecrafters-io/redis-tester/internal/resp"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
@@ -76,7 +74,7 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 		if err := receiveCommandTestCase.Run(replicaClient, logger); err != nil {
 			// Redis sends a SELECT command, but we don't expect it from users.
 			// If the first command is a SELECT command, we'll re-run the test case to test the next command instead
-			if i == 1 && isSelectCommand(receiveCommandTestCase.ActualValue) {
+			if i == 1 && resp_utils.IsSelectCommand(receiveCommandTestCase.ActualValue) {
 				if err := receiveCommandTestCase.Run(replicaClient, logger); err != nil {
 					return err
 				}
@@ -87,12 +85,4 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 	}
 
 	return nil
-}
-
-// ToDo move to util file
-func isSelectCommand(value resp_value.Value) bool {
-	return value.Type == resp_value.ARRAY &&
-		len(value.Array()) > 0 &&
-		value.Array()[0].Type == resp_value.BULK_STRING &&
-		strings.ToLower(value.Array()[0].String()) == "select"
 }

@@ -8,6 +8,7 @@ import (
 
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	resp_utils "github.com/codecrafters-io/redis-tester/internal/resp"
 	resp_connection "github.com/codecrafters-io/redis-tester/internal/resp/connection"
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
@@ -132,7 +133,7 @@ func consumeReplicationStreamAndSendAcks(replicas []*resp_connection.RespConnect
 		if err != nil {
 			// Redis sends a SELECT command, but we don't expect it from users.
 			// If the first command is a SELECT command, we'll re-run the test case to test the next command instead
-			if isSelectCommand(receiveCommandTestCase.ActualValue) {
+			if resp_utils.IsSelectCommand(receiveCommandTestCase.ActualValue) {
 				err := receiveCommandTestCase.Run(replica, logger)
 				if err != nil {
 					return 0, err
