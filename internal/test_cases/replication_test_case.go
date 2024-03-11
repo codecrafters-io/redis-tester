@@ -8,11 +8,6 @@ import (
 	logger "github.com/codecrafters-io/tester-utils/logger"
 )
 
-// ReplicationTestCase is a test case where we connect to a master
-// as a replica and perform either all or a subset of the replication handshake.
-//
-// RunAll will run all the steps in the replication handshake. Alternatively, you
-// can run each step individually.
 type ReplicationTestCase struct{}
 
 func (t ReplicationTestCase) RunGetAck(client *resp_connection.RespConnection, logger *logger.Logger, offset int) error {

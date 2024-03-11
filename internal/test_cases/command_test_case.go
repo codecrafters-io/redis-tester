@@ -43,10 +43,12 @@ func (t *CommandTestCase) Run(client *resp_connection.RespConnection, logger *lo
 		if err != nil {
 			return err
 		}
-		// ToDo Should use NilAssertion ?
-		if value.Type != "NIL" {
+
+		if err := resp_assertions.NewNilAssertion().Run(value); err != nil {
+			// value is not nil, we can stop retrying
 			break
 		} else {
+			// value is nil, sleep then retry
 			time.Sleep(500 * time.Millisecond)
 		}
 	}

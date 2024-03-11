@@ -12,7 +12,7 @@ type WildcardCommandAssertion struct {
 	ExpectedArgs    []string
 }
 
-// WilcardCommandAssertion supports wildcards in command assertion.
+// NewWildcardCommandAssertion supports wildcards in command assertion.
 // "*" asserts that a string is present, but we don't care about the value
 // "**" asserts that a string is present, but we don't care about the value, and we don't care about the next elements
 // "?" asserts that if a string is present, we will match the value

@@ -10,8 +10,8 @@ import (
 	rdb_parser "github.com/hdt3213/rdb/parser"
 )
 
-// SendReplicationHandshakeTestCase is a test case where we connect to a master
-// as a replica and perform either all or a subset of the replication handshake.
+// SendReplicationHandshakeTestCase is a test case where we act as the master
+// and allow replicas to connect with us and perform either all or a subset of the replication handshake.
 //
 // RunAll will run all the steps in the replication handshake. Alternatively, you
 // can run each step individually.
