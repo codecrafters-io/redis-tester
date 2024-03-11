@@ -2,46 +2,41 @@ package internal
 
 import (
 	"fmt"
-	"net"
-	"strings"
-	"time"
 
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
 func antiCheatTest(stageHarness *test_case_harness.TestCaseHarness) error {
-	b := NewRedisBinary(stageHarness)
-	if err := b.Run(); err != nil {
+	b := redis_executable.NewRedisExecutable(stageHarness)
+	if err := b.Run([]string{
+		"--port", "6379",
+	}); err != nil {
 		return err
 	}
 
 	logger := stageHarness.Logger
-	conn, err := NewRedisConn("", "localhost:6379")
+
+	client, err := instrumented_resp_connection.NewInstrumentedRespClient(stageHarness, "localhost:6379", "replica")
 	if err != nil {
-		logger.Debugf("Error connecting to TCP server: %v", err)
+		logFriendlyError(logger, err)
 		return err
 	}
-	defer conn.Close()
-
-	if err := conn.SetReadDeadline(time.Now().Add(100 * time.Millisecond)); err != nil {
-		return fmt.Errorf("Error setting read deadline: %w", err)
-	}
-
-	client := NewFakeRedisClient(conn, logger)
-	if err := client.Send([]string{"MEMORY", "DOCTOR"}); err != nil {
-		return fmt.Errorf("Error sending command to Redis: %w", err)
-	}
-
-	actualMessage, err := client.readRespString()
-	if err != nil {
-		if netErr, ok := err.(net.Error); ok && netErr.Timeout() {
-			return nil // Read timed out. No data received from client.
-		}
-		return nil
-	}
+	defer client.Close()
 
 	// All the answers for MEMORY DOCTOR include the string "sam" in them.
-	if strings.Contains(strings.ToLower(actualMessage), "sam") {
+	commandTestCase := test_cases.CommandTestCase{
+		Command:                   "MEMORY",
+		Args:                      []string{"DOCTOR"},
+		Assertion:                 resp_assertions.NewRegexStringAssertion("[\\s\\S]*[sS]am[\\s\\S]*"),
+		ShouldSkipUnreadDataCheck: true,
+	}
+	err = commandTestCase.Run(client, logger)
+
+	if err == nil {
 		logger.Criticalf("anti-cheat (ac1) failed.")
 		logger.Criticalf("Are you sure you aren't running this against the actual Redis?")
 		return fmt.Errorf("anti-cheat (ac1) failed")
