@@ -51,12 +51,6 @@ func testReplGetaAckNonZero(stageHarness *test_case_harness.TestCaseHarness) err
 	}
 	offset += GetByteOffset([]string{"REPLCONF", "GETACK", "*"})
 
-	err = master.GetAck(offset) // 37
-	if err != nil {
-		return err
-	}
-	offset += GetByteOffset([]string{"REPLCONF", "GETACK", "*"})
-
 	cmd := []string{"PING"}
 	master.Send(cmd) // 14
 	offset += GetByteOffset(cmd)

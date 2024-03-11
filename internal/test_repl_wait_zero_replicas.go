@@ -1,37 +1,33 @@
 package internal
 
 import (
-	"fmt"
-
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
 func testWaitZeroReplicas(stageHarness *test_case_harness.TestCaseHarness) error {
 	deleteRDBfile()
-	master := NewRedisBinary(stageHarness)
-	master.args = []string{
-		"--port", "6379",
-	}
 
-	if err := master.Run(); err != nil {
+	// Run the user's code as a master
+	masterBinary := redis_executable.NewRedisExecutable(stageHarness)
+	if err := masterBinary.Run([]string{
+		"--port", "6379",
+	}); err != nil {
 		return err
 	}
 
 	logger := stageHarness.Logger
 
-	conn, err := NewRedisConn("", "localhost:6379")
+	client, err := instrumented_resp_connection.NewInstrumentedRespClient(stageHarness, "localhost:6379", "client")
 	if err != nil {
-		fmt.Println("Error connecting to TCP server:", err)
+		logFriendlyError(logger, err)
 		return err
 	}
+	defer client.Close()
 
-	client := NewFakeRedisMaster(conn, logger)
-	client.LogPrefix = "[client] "
+	waitTestCase := test_cases.ReplicationTestCase{}
 
-	err = client.Wait("0", "60000", 0)
-	if err != nil {
-		return err
-	}
-	conn.Close()
-	return nil
+	return waitTestCase.RunWait(client, logger, "0", "60000", 0)
 }
