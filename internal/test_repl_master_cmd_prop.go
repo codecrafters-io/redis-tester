@@ -3,7 +3,8 @@ package internal
 import (
 	"strings"
 
-	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_client"
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
@@ -14,33 +15,29 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 	deleteRDBfile()
 
 	// Run the user's code as a master
-	masterBinary := NewRedisBinary(stageHarness)
-	masterBinary.args = []string{
+	masterBinary := redis_executable.NewRedisExecutable(stageHarness)
+	if err := masterBinary.Run([]string{
 		"--port", "6379",
-	}
-
-	if err := masterBinary.Run(); err != nil {
+	}); err != nil {
 		return err
 	}
 
 	logger := stageHarness.Logger
 
 	// We use one client to send commands to the master
-	client, err := instrumented_resp_client.NewInstrumentedRespClient(stageHarness, "localhost:6379", "client")
+	client, err := instrumented_resp_connection.NewInstrumentedRespClient(stageHarness, "localhost:6379", "client")
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
 	}
-
 	defer client.Close()
 
 	// We use another client to assert whether sent commands are replicated from the master (user's code)
-	replicaClient, err := instrumented_resp_client.NewInstrumentedRespClient(stageHarness, "localhost:6379", "replica")
+	replicaClient, err := instrumented_resp_connection.NewInstrumentedRespClient(stageHarness, "localhost:6379", "replica")
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
 	}
-
 	defer replicaClient.Close()
 
 	sendHandshakeTestCase := test_cases.SendReplicationHandshakeTestCase{}
@@ -92,6 +89,7 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 	return nil
 }
 
+// ToDo move to util file
 func isSelectCommand(value resp_value.Value) bool {
 	return value.Type == resp_value.ARRAY &&
 		len(value.Array()) > 0 &&

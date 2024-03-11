@@ -15,6 +15,8 @@ func Encode(v resp_value.Value) []byte {
 		return encodeSimpleString(v)
 	case resp_value.BULK_STRING:
 		return encodeBulkString(v)
+	case resp_value.RDB_BULK_STRING:
+		return encodeRDBAsBulkString(v)
 	case resp_value.ERROR:
 		return encodeError(v)
 	case resp_value.ARRAY:
@@ -39,6 +41,10 @@ func encodeSimpleString(v resp_value.Value) []byte {
 
 func encodeBulkString(v resp_value.Value) []byte {
 	return []byte(fmt.Sprintf("$%d\r\n%s\r\n", len(v.Bytes()), v.Bytes()))
+}
+
+func encodeRDBAsBulkString(v resp_value.Value) []byte {
+	return []byte(fmt.Sprintf("$%d\r\n%s", len(v.Bytes()), v.Bytes()))
 }
 
 func encodeError(v resp_value.Value) []byte {
