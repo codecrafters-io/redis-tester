@@ -94,11 +94,8 @@ func testWait(stageHarness *test_case_harness.TestCaseHarness) error {
 	}); err != nil {
 		return err
 	}
-	fmt.Println(offset)
 
-	logger.Successf("---------------------------------------------------")
 	logger.Successf("Passed first WAIT test.")
-	logger.Successf("---------------------------------------------------")
 
 	waitCommandReplicaSubsetCount = testerutils_random.RandomInt(2, replicaCount) + 1
 	acksSendByReplicaSubsetCount = waitCommandReplicaSubsetCount - 1

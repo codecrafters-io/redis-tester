@@ -4,6 +4,7 @@ import (
 	"encoding/hex"
 	"fmt"
 
+	resp_utils "github.com/codecrafters-io/redis-tester/internal/resp"
 	resp_connection "github.com/codecrafters-io/redis-tester/internal/resp/connection"
 	resp_encoder "github.com/codecrafters-io/redis-tester/internal/resp/encoder"
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
@@ -71,10 +72,11 @@ func (t ReceiveReplicationHandshakeTestCase) RunReplconfStep2(client *resp_conne
 }
 
 func (t ReceiveReplicationHandshakeTestCase) RunPsyncStep(client *resp_connection.RespConnection, logger *logger.Logger) error {
+	id := resp_utils.RandomAlphanumericString(40)
 	commandTest := ReceiveCommandTestCase{
 		Assertion: resp_assertions.NewCommandAssertion("PSYNC", "?", "-1"),
-		Response:  resp_value.NewSimpleStringValue("FULLRESYNC IDIDIDIDIDIDIDIDIDIDIDIDIDIDIDIDIDIDIDID 0"),
-	} // ToDo Add random ID generation
+		Response:  resp_value.NewSimpleStringValue(fmt.Sprintf("FULLRESYNC %v 0", id)),
+	}
 
 	return commandTest.Run(client, logger)
 }

@@ -3,6 +3,8 @@ package resp_utils
 import (
 	"strconv"
 	"strings"
+
+	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 )
 
 func GetByteOffset(args []string) int {
@@ -21,4 +23,14 @@ func GetByteOffset(args []string) int {
 func GetByteOffsetHelper(args string) int {
 	// Takes a string of the type "[ 'COMMAND', 'ARGS']"
 	return GetByteOffset(strings.Split(args[1:len(args)-1], ", "))
+}
+
+func RandomAlphanumericString(length int) string {
+	const charset = "abcdefghijklmnopqrstuvwxyz0123456789"
+	result := make([]byte, length)
+	for i := 0; i < length; i++ {
+		charIndex := testerutils_random.RandomInt(0, len(charset))
+		result[i] = charset[charIndex]
+	}
+	return string(result)
 }
