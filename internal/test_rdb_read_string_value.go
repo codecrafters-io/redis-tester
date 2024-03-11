@@ -3,6 +3,7 @@ package internal
 import (
 	"fmt"
 
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
@@ -26,13 +27,11 @@ func testRdbReadStringValue(stageHarness *test_case_harness.TestCaseHarness) err
 	logger := stageHarness.Logger
 	logger.Infof("Created RDB file with single key-value pair: %s=%q", randomKey, randomValue)
 
-	b := NewRedisBinary(stageHarness)
-	b.args = []string{
+	b := redis_executable.NewRedisExecutable(stageHarness)
+	if err := b.Run([]string{
 		"--dir", RDBFileCreator.Dir,
 		"--dbfilename", RDBFileCreator.Filename,
-	}
-
-	if err := b.Run(); err != nil {
+	}); err != nil {
 		return err
 	}
 
