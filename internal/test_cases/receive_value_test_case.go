@@ -3,7 +3,6 @@ package test_cases
 import (
 	"fmt"
 
-	resp_utils "github.com/codecrafters-io/redis-tester/internal/resp"
 	resp_connection "github.com/codecrafters-io/redis-tester/internal/resp/connection"
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
@@ -16,7 +15,6 @@ type ReceiveValueTestCase struct {
 
 	// This is set after the test is run
 	ActualValue resp_value.Value
-	Offset      int
 }
 
 func (t *ReceiveValueTestCase) Run(conn *resp_connection.RespConnection, logger *logger.Logger) error {
@@ -26,9 +24,6 @@ func (t *ReceiveValueTestCase) Run(conn *resp_connection.RespConnection, logger 
 	}
 
 	t.ActualValue = value
-	if t.ActualValue.Type == resp_value.ARRAY {
-		t.Offset = resp_utils.GetByteOffsetHelper(t.ActualValue.FormattedString())
-	}
 
 	if err = t.Assertion.Run(value); err != nil {
 		return err

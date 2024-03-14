@@ -42,6 +42,13 @@ type RespConnection struct {
 
 	// Callbacks is a set of functions that are called at various points in the client's lifecycle.
 	Callbacks RespConnectionCallbacks
+
+	// Offset tracking:
+	// SentBytes is the number of bytes sent to the server.
+	SentBytes int
+
+	// ReceivedBytes is the number of bytes received from the server.
+	ReceivedBytes int
 }
 
 func NewRespConnection(addr string) (*RespConnection, error) {
@@ -89,7 +96,11 @@ func (c *RespConnection) SendCommand(command resp_value.Value) error {
 	}
 
 	encodedValue := resp_encoder.Encode(command)
-	return c.SendBytes(encodedValue)
+	if err := c.SendBytes(encodedValue); err != nil {
+		return err
+	}
+	c.SentBytes += len(encodedValue)
+	return nil
 }
 
 func (c *RespConnection) SendBytes(bytes []byte) error {
@@ -149,8 +160,7 @@ func (c *RespConnection) ReadValue() (resp_value.Value, error) {
 
 func (c *RespConnection) ReadIntoBuffer() error {
 	// We don't want to block indefinitely, so we'll set a read deadline
-	c.Conn.SetReadDeadline(time.Now().Add(50 * time.Millisecond))
-	// ToDo Paul this might have been the issue why reads were timing out re : Discord
+	c.Conn.SetReadDeadline(time.Now().Add(1 * time.Millisecond))
 	buf := make([]byte, 1024)
 	n, err := c.Conn.Read(buf)
 
@@ -187,6 +197,7 @@ func (c *RespConnection) ReadValueWithTimeout(timeout time.Duration) (resp_value
 		return resp_value.Value{}, err
 	}
 
+	c.ReceivedBytes += readBytesCount
 	// We've read a value! Let's remove the bytes we've read from the buffer
 	c.LastValueBytes = c.UnreadBuffer.Bytes()[:readBytesCount]
 	c.UnreadBuffer = *bytes.NewBuffer(c.UnreadBuffer.Bytes()[readBytesCount:])
@@ -215,6 +226,13 @@ func (c *RespConnection) readIntoBufferUntil(condition func([]byte) bool, timeou
 			time.Sleep(10 * time.Millisecond) // Let's wait a bit before trying again
 		}
 	}
+}
+
+func (c *RespConnection) InitializeOffset() {
+	// The bytes received and sent during the handshake don't count towards offset.
+	// After finishing the handshake we reset the offset.
+	c.ReceivedBytes = 0
+	c.SentBytes = 0
 }
 
 func newConn(address string) (net.Conn, error) {
