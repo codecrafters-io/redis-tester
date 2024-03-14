@@ -2,6 +2,7 @@ package internal
 
 import (
 	"fmt"
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"strings"
 
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
@@ -37,13 +38,11 @@ func testRdbReadMultipleStringValues(stageHarness *test_case_harness.TestCaseHar
 		return fmt.Errorf("CodeCrafters Tester Error: %s", err)
 	}
 
-	b := NewRedisBinary(stageHarness)
-	b.args = []string{
+	b := redis_executable.NewRedisExecutable(stageHarness)
+	if err := b.Run([]string{
 		"--dir", RDBFileCreator.Dir,
 		"--dbfilename", RDBFileCreator.Filename,
-	}
-
-	if err := b.Run(); err != nil {
+	}...); err != nil {
 		return err
 	}
 

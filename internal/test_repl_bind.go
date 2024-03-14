@@ -2,6 +2,7 @@ package internal
 
 import (
 	"fmt"
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"net"
 	"strconv"
 	"time"
@@ -13,13 +14,8 @@ import (
 func testReplBindToCustomPort(stageHarness *test_case_harness.TestCaseHarness) error {
 	port := testerutils_random.RandomInt(6380, 6390)
 
-	b := NewRedisBinary(stageHarness)
-
-	b.args = []string{
-		"--port", strconv.Itoa(port),
-	}
-
-	if err := b.Run(); err != nil {
+	b := redis_executable.NewRedisExecutable(stageHarness)
+	if err := b.Run([]string{"--port", strconv.Itoa(port)}...); err != nil {
 		return err
 	}
 

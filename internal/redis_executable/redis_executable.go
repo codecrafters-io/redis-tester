@@ -1,4 +1,4 @@
-package internal
+package redis_executable
 
 import (
 	"strings"
@@ -8,14 +8,14 @@ import (
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
-type RedisBinary struct {
+type RedisExecutable struct {
 	executable *executable.Executable
 	logger     *logger.Logger
 	args       []string
 }
 
-func NewRedisBinary(stageHarness *test_case_harness.TestCaseHarness) *RedisBinary {
-	b := &RedisBinary{
+func NewRedisExecutable(stageHarness *test_case_harness.TestCaseHarness) *RedisExecutable {
+	b := &RedisExecutable{
 		executable: stageHarness.NewExecutable(),
 		logger:     stageHarness.Logger,
 	}
@@ -25,7 +25,8 @@ func NewRedisBinary(stageHarness *test_case_harness.TestCaseHarness) *RedisBinar
 	return b
 }
 
-func (b *RedisBinary) Run() error {
+func (b *RedisExecutable) Run(args ...string) error {
+	b.args = args
 	if b.args == nil || len(b.args) == 0 {
 		b.logger.Infof("$ ./spawn_redis_server.sh")
 	} else {
@@ -39,11 +40,11 @@ func (b *RedisBinary) Run() error {
 	return nil
 }
 
-func (b *RedisBinary) HasExited() bool {
+func (b *RedisExecutable) HasExited() bool {
 	return b.executable.HasExited()
 }
 
-func (b *RedisBinary) Kill() error {
+func (b *RedisExecutable) Kill() error {
 	b.logger.Debugf("Terminating program")
 	if err := b.executable.Kill(); err != nil {
 		b.logger.Debugf("Error terminating program: '%v'", err)
