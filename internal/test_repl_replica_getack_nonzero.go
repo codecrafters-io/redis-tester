@@ -54,25 +54,23 @@ func testReplGetaAckNonZero(stageHarness *test_case_harness.TestCaseHarness) err
 		return err
 	}
 
-	offset := 0
+	// Reset received and sent byte offset here.
+	master.InitializeOffset()
+
 	replicationTestCase := test_cases.ReplicationTestCase{}
-	if err := replicationTestCase.RunGetAck(master, logger, offset); err != nil {
+	if err := replicationTestCase.RunGetAck(master, logger, master.SentBytes); err != nil {
 		return err
 	}
-	// How to handle offset in TestCase without breaking encapsulation ? ToDo Paul.
-	offset += resp_utils.GetByteOffset([]string{"REPLCONF", "GETACK", "*"})
 
 	command := append([]string{"PING"}, []string{}...)
 	respValue := resp_value.NewStringArrayValue(command)
 	if err := master.SendCommand(respValue); err != nil {
 		return err
 	}
-	offset += resp_utils.GetByteOffset(command)
 
-	if err := replicationTestCase.RunGetAck(master, logger, offset); err != nil {
+	if err := replicationTestCase.RunGetAck(master, logger, master.SentBytes); err != nil {
 		return err
 	}
-	offset += resp_utils.GetByteOffset([]string{"REPLCONF", "GETACK", "*"})
 
 	key := resp_utils.RandomAlphanumericString(testerutils_random.RandomInt(5, 20))
 	value := resp_utils.RandomAlphanumericString(testerutils_random.RandomInt(5, 20))
@@ -81,7 +79,6 @@ func testReplGetaAckNonZero(stageHarness *test_case_harness.TestCaseHarness) err
 	if err := master.SendCommand(respValue); err != nil {
 		return err
 	}
-	offset += resp_utils.GetByteOffset(command)
 
 	key = resp_utils.RandomAlphanumericString(testerutils_random.RandomInt(5, 20))
 	value = resp_utils.RandomAlphanumericString(testerutils_random.RandomInt(5, 20))
@@ -90,7 +87,6 @@ func testReplGetaAckNonZero(stageHarness *test_case_harness.TestCaseHarness) err
 	if err := master.SendCommand(respValue); err != nil {
 		return err
 	}
-	offset += resp_utils.GetByteOffset(command)
 
-	return replicationTestCase.RunGetAck(master, logger, offset)
+	return replicationTestCase.RunGetAck(master, logger, master.SentBytes)
 }

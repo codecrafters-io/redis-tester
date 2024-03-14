@@ -83,9 +83,8 @@ func testWait(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	waitCommandReplicaSubsetCount := 1
 	acksSendByReplicaSubsetCount := 1
-	offset := 0
 
-	if offset, err = RunWaitTest(client, replicas, offset, WaitTest{
+	if err = RunWaitTest(client, replicas, WaitTest{
 		WriteCommand:        []string{"SET", "foo", "123"},
 		WaitReplicaCount:    waitCommandReplicaSubsetCount,
 		ActualNumberOfAcks:  acksSendByReplicaSubsetCount,
@@ -100,7 +99,7 @@ func testWait(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	waitCommandReplicaSubsetCount = testerutils_random.RandomInt(2, replicaCount) + 1
 	acksSendByReplicaSubsetCount = waitCommandReplicaSubsetCount - 1
-	if _, err = RunWaitTest(client, replicas, offset, WaitTest{
+	if err = RunWaitTest(client, replicas, WaitTest{
 		WriteCommand:        []string{"SET", "baz", "789"},
 		WaitReplicaCount:    waitCommandReplicaSubsetCount,
 		ActualNumberOfAcks:  acksSendByReplicaSubsetCount,
@@ -114,11 +113,9 @@ func testWait(stageHarness *test_case_harness.TestCaseHarness) error {
 	return nil
 }
 
-func consumeReplicationStreamAndSendAcks(replicas []*resp_connection.RespConnection, logger *logger.Logger, previousReplicaOffset int, acksSendByReplicaSubsetCount int, command []string) (int, error) {
-	var replicaOffset int
+func consumeReplicationStreamAndSendAcks(replicas []*resp_connection.RespConnection, logger *logger.Logger, acksSendByReplicaSubsetCount int, command []string) error {
 	var err error
 	for j := 0; j < len(replicas); j++ {
-		replicaOffset = previousReplicaOffset
 		replica := replicas[j]
 		logger.Infof("Testing Replica : %v", j+1)
 		receiveCommandTestCase := &test_cases.ReceiveValueTestCase{
@@ -127,46 +124,41 @@ func consumeReplicationStreamAndSendAcks(replicas []*resp_connection.RespConnect
 		}
 
 		err := receiveCommandTestCase.Run(replica, logger)
-		firstCommandOffset := receiveCommandTestCase.Offset
-		var secondCommandOffset int
-		// If err occurs, this will be bad, other path is to keep this after err != nil block, but there receiveCommandTestCase is overwritten, should I keep an array of offsets then ? ToDo Paul.
+
 		if err != nil {
 			// Redis sends a SELECT command, but we don't expect it from users.
 			// If the first command is a SELECT command, we'll re-run the test case to test the next command instead
 			if resp_utils.IsSelectCommand(receiveCommandTestCase.ActualValue) {
 				err := receiveCommandTestCase.Run(replica, logger)
 				if err != nil {
-					return 0, err
+					return err
 				}
-				secondCommandOffset = receiveCommandTestCase.Offset
 			} else {
-				return 0, err
+				return err
 			}
 		}
-		replicaOffset += firstCommandOffset + secondCommandOffset
 
 		receiveGetackCommandTestCase := &test_cases.ReceiveValueTestCase{
 			Assertion:                 resp_assertions.NewCommandAssertion("REPLCONF", "GETACK", "*"),
 			ShouldSkipUnreadDataCheck: false,
 		}
 		if err = receiveGetackCommandTestCase.Run(replica, logger); err != nil {
-			return 0, err
+			return err
 		}
-		thirdCommandOffset := receiveCommandTestCase.Offset
 
 		if j < acksSendByReplicaSubsetCount {
-			command := append([]string{"REPLCONF"}, []string{"ACK", strconv.Itoa(replicaOffset)}...)
+			// Remove GETACK command bytes from offset before sending ACK.
+			command := append([]string{"REPLCONF"}, []string{"ACK", strconv.Itoa(replica.ReceivedBytes - len(replica.LastValueBytes))}...)
 			respValue := resp_value.NewStringArrayValue(command)
 			if err := replica.SendCommand(respValue); err != nil {
-				return 0, err
+				return err
 			}
 		}
-		replicaOffset += thirdCommandOffset
 	}
-	return replicaOffset, err
+	return err
 }
 
-func RunWaitTest(client *resp_connection.RespConnection, replicas []*resp_connection.RespConnection, replicationOffset int, waitTest WaitTest) (newReplicationOffset int, err error) {
+func RunWaitTest(client *resp_connection.RespConnection, replicas []*resp_connection.RespConnection, waitTest WaitTest) (err error) {
 	// Step 1: Issue a write command
 	setCommandTestCase := test_cases.CommandTestCase{
 		Command:   waitTest.WriteCommand[0],
@@ -174,7 +166,7 @@ func RunWaitTest(client *resp_connection.RespConnection, replicas []*resp_connec
 		Assertion: resp_assertions.NewStringAssertion("OK"),
 	}
 	if err := setCommandTestCase.Run(client, waitTest.Logger); err != nil {
-		return 0, err
+		return err
 	}
 
 	// Step 2: Issue a WAIT command with a subset as the expected number of replicas
@@ -182,24 +174,24 @@ func RunWaitTest(client *resp_connection.RespConnection, replicas []*resp_connec
 	command := append([]string{"WAIT"}, []string{strconv.Itoa(waitTest.WaitReplicaCount), strconv.Itoa(waitTest.WaitTimeoutMilli)}...)
 	respValue := resp_value.NewStringArrayValue(command)
 	if err := client.SendCommand(respValue); err != nil {
-		return 0, err
+		return err
 	}
 
 	// Step 3: Read propagated command on replicas + respond to subset of GETACKs
 	// We then assert that across all the replicas we receive the SET commands in order
-	offset, err := consumeReplicationStreamAndSendAcks(replicas, waitTest.Logger, replicationOffset, waitTest.ActualNumberOfAcks, waitTest.WriteCommand)
+	err = consumeReplicationStreamAndSendAcks(replicas, waitTest.Logger, waitTest.ActualNumberOfAcks, waitTest.WriteCommand)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
 	// Step 4: Assert response of WAIT command is replicaAcksCount
-	value, err := client.ReadValue()
+	value, err := client.ReadValueWithTimeout(4 * time.Second)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
 	if err := resp_assertions.NewIntegerAssertion(waitTest.ActualNumberOfAcks).Run(value); err != nil {
-		return 0, err
+		return err
 	}
 
 	endTimeMilli := time.Now().UnixMilli()
@@ -210,9 +202,9 @@ func RunWaitTest(client *resp_connection.RespConnection, replicas []*resp_connec
 		elapsedTimeMilli := endTimeMilli - startTimeMilli
 		waitTest.Logger.Infof(fmt.Sprintf("WAIT command returned after %v ms", elapsedTimeMilli))
 		if math.Abs(float64(elapsedTimeMilli-int64(waitTest.WaitTimeoutMilli))) > float64(threshold) {
-			return 0, fmt.Errorf("Expected WAIT to return exactly after %v ms timeout elapsed.", 1000)
+			return fmt.Errorf("Expected WAIT to return exactly after %v ms timeout elapsed.", 1000)
 		}
 	}
 
-	return offset, nil
+	return nil
 }
