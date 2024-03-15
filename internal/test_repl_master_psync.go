@@ -2,6 +2,7 @@ package internal
 
 import (
 	"fmt"
+
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
@@ -9,9 +10,7 @@ import (
 
 func testReplMasterPsync(stageHarness *test_case_harness.TestCaseHarness) error {
 	master := redis_executable.NewRedisExecutable(stageHarness)
-	if err := master.Run([]string{
-		"--port", "6379",
-	}...); err != nil {
+	if err := master.Run("--port", "6379"); err != nil {
 		return err
 	}
 

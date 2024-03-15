@@ -13,7 +13,7 @@ func testReplBindToCustomPort(stageHarness *test_case_harness.TestCaseHarness) e
 	port := testerutils_random.RandomInt(6380, 6390)
 
 	b := redis_executable.NewRedisExecutable(stageHarness)
-	if err := b.Run([]string{"--port", strconv.Itoa(port)}...); err != nil {
+	if err := b.Run("--port", strconv.Itoa(port)); err != nil {
 		return err
 	}
 
