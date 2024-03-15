@@ -5,6 +5,8 @@ import (
 	"net"
 	"strings"
 
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+
 	loggerutils "github.com/codecrafters-io/tester-utils/logger"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
@@ -21,13 +23,9 @@ func testReplInfoReplica(stageHarness *test_case_harness.TestCaseHarness) error 
 	defer listener.Close()
 	logger.Infof("Master is running on port 6379")
 
-	replica := NewRedisBinary(stageHarness)
-	replica.args = []string{
-		"--port", "6380",
-		"--replicaof", "localhost", "6379",
-	}
-
-	if err := replica.Run(); err != nil {
+	replica := redis_executable.NewRedisExecutable(stageHarness)
+	if err := replica.Run("--port", "6380",
+		"--replicaof", "localhost", "6379"); err != nil {
 		return err
 	}
 

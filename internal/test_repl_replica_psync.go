@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net"
 
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
@@ -20,13 +22,9 @@ func testReplReplicaSendsPsync(stageHarness *test_case_harness.TestCaseHarness) 
 
 	logger.Infof("Master is running on port 6379")
 
-	replica := NewRedisBinary(stageHarness)
-	replica.args = []string{
-		"--port", "6380",
-		"--replicaof", "localhost", "6379",
-	}
-
-	if err := replica.Run(); err != nil {
+	replica := redis_executable.NewRedisExecutable(stageHarness)
+	if err := replica.Run("--port", "6380",
+		"--replicaof", "localhost", "6379"); err != nil {
 		return err
 	}
 

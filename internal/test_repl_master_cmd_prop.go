@@ -3,6 +3,8 @@ package internal
 import (
 	"strings"
 
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_client"
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
@@ -14,12 +16,8 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 	deleteRDBfile()
 
 	// Run the user's code as a master
-	masterBinary := NewRedisBinary(stageHarness)
-	masterBinary.args = []string{
-		"--port", "6379",
-	}
-
-	if err := masterBinary.Run(); err != nil {
+	masterBinary := redis_executable.NewRedisExecutable(stageHarness)
+	if err := masterBinary.Run("--port", "6379"); err != nil {
 		return err
 	}
 

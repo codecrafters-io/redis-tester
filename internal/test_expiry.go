@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"time"
 
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_client"
@@ -12,7 +13,7 @@ import (
 
 // Tests Expiry
 func testExpiry(stageHarness *test_case_harness.TestCaseHarness) error {
-	b := NewRedisBinary(stageHarness)
+	b := redis_executable.NewRedisExecutable(stageHarness)
 	if err := b.Run(); err != nil {
 		return err
 	}

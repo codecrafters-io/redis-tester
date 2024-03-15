@@ -3,6 +3,7 @@ package internal
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"reflect"
 	"strconv"
 
@@ -12,7 +13,7 @@ import (
 )
 
 func testStreamsXrangeMinID(stageHarness *test_case_harness.TestCaseHarness) error {
-	b := NewRedisBinary(stageHarness)
+	b := redis_executable.NewRedisExecutable(stageHarness)
 	if err := b.Run(); err != nil {
 		return err
 	}
