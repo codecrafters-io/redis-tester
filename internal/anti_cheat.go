@@ -25,7 +25,7 @@ func antiCheatTest(stageHarness *test_case_harness.TestCaseHarness) error {
 	defer client.Close()
 
 	// All the answers for MEMORY DOCTOR include the string "sam" in them.
-	commandTestCase := test_cases.CommandTestCase{
+	commandTestCase := test_cases.SendCommandAndReceiveValueTestCase{
 		Command:                   "MEMORY",
 		Args:                      []string{"DOCTOR"},
 		Assertion:                 resp_assertions.NewRegexStringAssertion("[sS]am"),

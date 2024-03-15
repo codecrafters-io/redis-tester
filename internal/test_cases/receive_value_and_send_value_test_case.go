@@ -6,17 +6,17 @@ import (
 	resp_connection "github.com/codecrafters-io/redis-tester/internal/resp/connection"
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
-	logger "github.com/codecrafters-io/tester-utils/logger"
+	"github.com/codecrafters-io/tester-utils/logger"
 )
 
-type ReceiveAndSendTestCase struct {
+type ReceiveValueAndSendValueTestCase struct {
 	Response                  resp_value.Value
 	Assertion                 resp_assertions.RESPAssertion
 	ShouldSkipUnreadDataCheck bool
 	ReceivedValue             resp_value.Value
 }
 
-func (t *ReceiveAndSendTestCase) Run(conn *resp_connection.RespConnection, logger *logger.Logger) error {
+func (t *ReceiveValueAndSendValueTestCase) Run(conn *resp_connection.RespConnection, logger *logger.Logger) error {
 	value, err := conn.ReadValue()
 	if err != nil {
 		return err

@@ -25,7 +25,7 @@ func testReplReplicationID(stageHarness *test_case_harness.TestCaseHarness) erro
 	}
 	defer client.Close()
 
-	commandTestCase := test_cases.CommandTestCase{
+	commandTestCase := test_cases.SendCommandAndReceiveValueTestCase{
 		Command: "INFO",
 		Args:    []string{"replication"},
 		// ToDo : This test requires the order of the offset and id to be fixed, change this to be order agnostic.
