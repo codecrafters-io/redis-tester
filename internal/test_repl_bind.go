@@ -1,11 +1,12 @@
 package internal
 
 import (
+	"strconv"
+
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
-	"strconv"
 )
 
 func testReplBindToCustomPort(stageHarness *test_case_harness.TestCaseHarness) error {
@@ -17,7 +18,6 @@ func testReplBindToCustomPort(stageHarness *test_case_harness.TestCaseHarness) e
 	}
 
 	logger := stageHarness.Logger
-	logger.Infof("Connecting to port %d...", port)
 
 	bindTestCase := test_cases.BindTestCase{
 		Port:    port,
