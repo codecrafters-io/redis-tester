@@ -12,7 +12,6 @@ func testReplMasterPsyncRdb(stageHarness *test_case_harness.TestCaseHarness) err
 	deleteRDBfile()
 	master := redis_executable.NewRedisExecutable(stageHarness)
 	if err := master.Run("--port", "6379"); err != nil {
-
 		return err
 	}
 
