@@ -3,7 +3,7 @@ package test_cases
 import (
 	"fmt"
 
-	resp_client "github.com/codecrafters-io/redis-tester/internal/resp/client"
+	resp_client "github.com/codecrafters-io/redis-tester/internal/resp/connection"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	logger "github.com/codecrafters-io/tester-utils/logger"
 )
@@ -15,7 +15,7 @@ type CommandTestCase struct {
 	ShouldSkipUnreadDataCheck bool
 }
 
-func (t CommandTestCase) Run(client *resp_client.RespClient, logger *logger.Logger) error {
+func (t CommandTestCase) Run(client *resp_client.RespConnection, logger *logger.Logger) error {
 	if err := client.SendCommand(t.Command, t.Args...); err != nil {
 		return err
 	}

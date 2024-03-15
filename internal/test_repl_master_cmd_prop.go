@@ -4,7 +4,7 @@ import (
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"strings"
 
-	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_client"
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
@@ -25,7 +25,7 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 	logger := stageHarness.Logger
 
 	// We use one client to send commands to the master
-	client, err := instrumented_resp_client.NewInstrumentedRespClient(stageHarness, "localhost:6379", "client")
+	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "client")
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
@@ -34,7 +34,7 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 	defer client.Close()
 
 	// We use another client to assert whether sent commands are replicated from the master (user's code)
-	replicaClient, err := instrumented_resp_client.NewInstrumentedRespClient(stageHarness, "localhost:6379", "replica")
+	replicaClient, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "replica")
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err

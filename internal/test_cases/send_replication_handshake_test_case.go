@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 
-	resp_client "github.com/codecrafters-io/redis-tester/internal/resp/client"
+	resp_client "github.com/codecrafters-io/redis-tester/internal/resp/connection"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	logger "github.com/codecrafters-io/tester-utils/logger"
 	rdb_parser "github.com/hdt3213/rdb/parser"
@@ -17,7 +17,7 @@ import (
 // can run each step individually.
 type SendReplicationHandshakeTestCase struct{}
 
-func (t SendReplicationHandshakeTestCase) RunAll(client *resp_client.RespClient, logger *logger.Logger) error {
+func (t SendReplicationHandshakeTestCase) RunAll(client *resp_client.RespConnection, logger *logger.Logger) error {
 	if err := t.RunPingStep(client, logger); err != nil {
 		return err
 	}
@@ -37,7 +37,7 @@ func (t SendReplicationHandshakeTestCase) RunAll(client *resp_client.RespClient,
 	return nil
 }
 
-func (t SendReplicationHandshakeTestCase) RunPingStep(client *resp_client.RespClient, logger *logger.Logger) error {
+func (t SendReplicationHandshakeTestCase) RunPingStep(client *resp_client.RespConnection, logger *logger.Logger) error {
 	commandTest := CommandTestCase{
 		Command:   "PING",
 		Args:      []string{},
@@ -47,7 +47,7 @@ func (t SendReplicationHandshakeTestCase) RunPingStep(client *resp_client.RespCl
 	return commandTest.Run(client, logger)
 }
 
-func (t SendReplicationHandshakeTestCase) RunReplconfStep(client *resp_client.RespClient, logger *logger.Logger) error {
+func (t SendReplicationHandshakeTestCase) RunReplconfStep(client *resp_client.RespConnection, logger *logger.Logger) error {
 	commandTest := CommandTestCase{
 		Command:   "REPLCONF",
 		Args:      []string{"listening-port", "6380"},
@@ -67,7 +67,7 @@ func (t SendReplicationHandshakeTestCase) RunReplconfStep(client *resp_client.Re
 	return commandTest.Run(client, logger)
 }
 
-func (t SendReplicationHandshakeTestCase) RunPsyncStep(client *resp_client.RespClient, logger *logger.Logger) error {
+func (t SendReplicationHandshakeTestCase) RunPsyncStep(client *resp_client.RespConnection, logger *logger.Logger) error {
 	commandTest := CommandTestCase{
 		Command:                   "PSYNC",
 		Args:                      []string{"?", "-1"},
@@ -78,7 +78,7 @@ func (t SendReplicationHandshakeTestCase) RunPsyncStep(client *resp_client.RespC
 	return commandTest.Run(client, logger)
 }
 
-func (t SendReplicationHandshakeTestCase) RunReceiveRDBStep(client *resp_client.RespClient, logger *logger.Logger) error {
+func (t SendReplicationHandshakeTestCase) RunReceiveRDBStep(client *resp_client.RespConnection, logger *logger.Logger) error {
 	logger.Debugln("Reading RDB file...")
 
 	rdbFileBytes, err := client.ReadFullResyncRDBFile()
