@@ -1,11 +1,10 @@
 package internal
 
 import (
-  "github.com/codecrafters-io/redis-tester/internal/redis_executable"
-	"strings"
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
-	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
+	resp_utils "github.com/codecrafters-io/redis-tester/internal/resp"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
@@ -28,7 +27,6 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 		logFriendlyError(logger, err)
 		return err
 	}
-
 	defer client.Close()
 
 	// We use another client to assert whether sent commands are replicated from the master (user's code)
@@ -37,7 +35,6 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 		logFriendlyError(logger, err)
 		return err
 	}
-
 	defer replicaClient.Close()
 
 	sendHandshakeTestCase := test_cases.SendReplicationHandshakeTestCase{}
@@ -55,7 +52,7 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 	for i := 1; i <= len(kvMap); i++ {
 		key, value := kvMap[i][0], kvMap[i][1]
 
-		setCommandTestCase := test_cases.CommandTestCase{
+		setCommandTestCase := test_cases.SendCommandAndReceiveValueTestCase{
 			Command:   "SET",
 			Args:      []string{key, value},
 			Assertion: resp_assertions.NewStringAssertion("OK"),
@@ -76,7 +73,7 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 		if err := receiveCommandTestCase.Run(replicaClient, logger); err != nil {
 			// Redis sends a SELECT command, but we don't expect it from users.
 			// If the first command is a SELECT command, we'll re-run the test case to test the next command instead
-			if i == 1 && isSelectCommand(receiveCommandTestCase.ActualValue) {
+			if i == 1 && resp_utils.IsSelectCommand(receiveCommandTestCase.ActualValue) {
 				if err := receiveCommandTestCase.Run(replicaClient, logger); err != nil {
 					return err
 				}
@@ -87,11 +84,4 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 	}
 
 	return nil
-}
-
-func isSelectCommand(value resp_value.Value) bool {
-	return value.Type == resp_value.ARRAY &&
-		len(value.Array()) > 0 &&
-		value.Array()[0].Type == resp_value.BULK_STRING &&
-		strings.ToLower(value.Array()[0].String()) == "select"
 }

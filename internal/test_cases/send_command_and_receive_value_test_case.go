@@ -5,17 +5,17 @@ import (
 
 	resp_client "github.com/codecrafters-io/redis-tester/internal/resp/connection"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
-	logger "github.com/codecrafters-io/tester-utils/logger"
+	"github.com/codecrafters-io/tester-utils/logger"
 )
 
-type CommandTestCase struct {
+type SendCommandAndReceiveValueTestCase struct {
 	Command                   string
 	Args                      []string
 	Assertion                 resp_assertions.RESPAssertion
 	ShouldSkipUnreadDataCheck bool
 }
 
-func (t CommandTestCase) Run(client *resp_client.RespConnection, logger *logger.Logger) error {
+func (t SendCommandAndReceiveValueTestCase) Run(client *resp_client.RespConnection, logger *logger.Logger) error {
 	if err := client.SendCommand(t.Command, t.Args...); err != nil {
 		return err
 	}

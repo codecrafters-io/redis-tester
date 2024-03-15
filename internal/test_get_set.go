@@ -30,7 +30,7 @@ func testGetSet(stageHarness *test_case_harness.TestCaseHarness) error {
 	randomValue := randomWords[1]
 
 	logger.Debugf("Setting key %s to %s", randomKey, randomValue)
-	setCommandTestCase := test_cases.CommandTestCase{
+	setCommandTestCase := test_cases.SendCommandAndReceiveValueTestCase{
 		Command:   "set",
 		Args:      []string{randomKey, randomValue},
 		Assertion: resp_assertions.NewStringAssertion("OK"),
@@ -43,7 +43,7 @@ func testGetSet(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	logger.Debugf("Getting key %s", randomKey)
 
-	getCommandTestCase := test_cases.CommandTestCase{
+	getCommandTestCase := test_cases.SendCommandAndReceiveValueTestCase{
 		Command:   "get",
 		Args:      []string{randomKey},
 		Assertion: resp_assertions.NewStringAssertion(randomValue),

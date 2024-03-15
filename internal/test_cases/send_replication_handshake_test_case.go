@@ -38,7 +38,7 @@ func (t SendReplicationHandshakeTestCase) RunAll(client *resp_client.RespConnect
 }
 
 func (t SendReplicationHandshakeTestCase) RunPingStep(client *resp_client.RespConnection, logger *logger.Logger) error {
-	commandTest := CommandTestCase{
+	commandTest := SendCommandAndReceiveValueTestCase{
 		Command:   "PING",
 		Args:      []string{},
 		Assertion: resp_assertions.NewStringAssertion("PONG"),
@@ -48,7 +48,7 @@ func (t SendReplicationHandshakeTestCase) RunPingStep(client *resp_client.RespCo
 }
 
 func (t SendReplicationHandshakeTestCase) RunReplconfStep(client *resp_client.RespConnection, logger *logger.Logger) error {
-	commandTest := CommandTestCase{
+	commandTest := SendCommandAndReceiveValueTestCase{
 		Command:   "REPLCONF",
 		Args:      []string{"listening-port", "6380"},
 		Assertion: resp_assertions.NewStringAssertion("OK"),
@@ -58,7 +58,7 @@ func (t SendReplicationHandshakeTestCase) RunReplconfStep(client *resp_client.Re
 		return err
 	}
 
-	commandTest = CommandTestCase{
+	commandTest = SendCommandAndReceiveValueTestCase{
 		Command:   "REPLCONF",
 		Args:      []string{"capa", "psync2"},
 		Assertion: resp_assertions.NewStringAssertion("OK"),
@@ -68,7 +68,7 @@ func (t SendReplicationHandshakeTestCase) RunReplconfStep(client *resp_client.Re
 }
 
 func (t SendReplicationHandshakeTestCase) RunPsyncStep(client *resp_client.RespConnection, logger *logger.Logger) error {
-	commandTest := CommandTestCase{
+	commandTest := SendCommandAndReceiveValueTestCase{
 		Command:                   "PSYNC",
 		Args:                      []string{"?", "-1"},
 		Assertion:                 resp_assertions.NewRegexStringAssertion("FULLRESYNC \\w+ 0"),

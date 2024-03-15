@@ -25,7 +25,7 @@ func testPingPongOnce(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	logger.Debugln("Connection established, sending ping command...")
 
-	commandTestCase := test_cases.CommandTestCase{
+	commandTestCase := test_cases.SendCommandAndReceiveValueTestCase{
 		Command:   "ping",
 		Args:      []string{},
 		Assertion: resp_assertions.NewStringAssertion("PONG"),
@@ -119,7 +119,7 @@ func testPingPongConcurrent(stageHarness *test_case_harness.TestCaseHarness) err
 }
 
 func runPing(logger *logger.Logger, client *resp_connection.RespConnection) error {
-	commandTestCase := test_cases.CommandTestCase{
+	commandTestCase := test_cases.SendCommandAndReceiveValueTestCase{
 		Command:   "ping",
 		Args:      []string{},
 		Assertion: resp_assertions.NewStringAssertion("PONG"),
