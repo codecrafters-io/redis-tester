@@ -2,8 +2,9 @@ package internal
 
 import (
 	"fmt"
-	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"net"
+
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
@@ -23,10 +24,8 @@ func testReplGetaAckNonZero(stageHarness *test_case_harness.TestCaseHarness) err
 	logger.Infof("Master is running on port 6379")
 
 	replica := redis_executable.NewRedisExecutable(stageHarness)
-	if err := replica.Run([]string{
-		"--port", "6380",
-		"--replicaof", "localhost", "6379",
-	}...); err != nil {
+	if err := replica.Run("--port", "6380",
+		"--replicaof", "localhost", "6379"); err != nil {
 		return err
 	}
 

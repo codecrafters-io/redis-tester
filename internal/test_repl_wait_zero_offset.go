@@ -2,8 +2,9 @@ package internal
 
 import (
 	"fmt"
-	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"strconv"
+
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
@@ -12,9 +13,7 @@ import (
 func testWaitZeroOffset(stageHarness *test_case_harness.TestCaseHarness) error {
 	deleteRDBfile()
 	master := redis_executable.NewRedisExecutable(stageHarness)
-	if err := master.Run([]string{
-		"--port", "6379",
-	}...); err != nil {
+	if err := master.Run("--port", "6379"); err != nil {
 		return err
 	}
 
