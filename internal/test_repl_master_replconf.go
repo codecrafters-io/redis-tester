@@ -1,8 +1,9 @@
 package internal
 
 import (
-	"fmt"
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
@@ -17,24 +18,18 @@ func testReplMasterReplconf(stageHarness *test_case_harness.TestCaseHarness) err
 
 	logger := stageHarness.Logger
 
-	conn, err := NewRedisConn("", "localhost:6379")
+	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "client")
 	if err != nil {
-		fmt.Println("Error connecting to TCP server:", err)
+		logFriendlyError(logger, err)
+		return err
+	}
+	defer client.Close()
+
+	sendHandshakeTestCase := test_cases.SendReplicationHandshakeTestCase{}
+
+	if err := sendHandshakeTestCase.RunPingStep(client, logger); err != nil {
 		return err
 	}
 
-	replica := NewFakeRedisReplica(conn, logger)
-
-	err = replica.Ping()
-	if err != nil {
-		return err
-	}
-
-	err = replica.ReplConfPort()
-	if err != nil {
-		return err
-	}
-
-	conn.Close()
-	return nil
+	return sendHandshakeTestCase.RunReplconfStep(client, logger)
 }

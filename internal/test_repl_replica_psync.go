@@ -2,7 +2,9 @@ package internal
 
 import (
 	"fmt"
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	"net"
 
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
@@ -18,6 +20,7 @@ func testReplReplicaSendsPsync(stageHarness *test_case_harness.TestCaseHarness) 
 		logFriendlyBindError(logger, err)
 		return fmt.Errorf("Error starting TCP server: %v", err)
 	}
+	defer listener.Close()
 
 	logger.Infof("Master is running on port 6379")
 
@@ -34,30 +37,27 @@ func testReplReplicaSendsPsync(stageHarness *test_case_harness.TestCaseHarness) 
 		fmt.Println("Error accepting: ", err.Error())
 		return err
 	}
+	defer conn.Close()
 
-	master := NewFakeRedisMaster(conn, logger)
-
-	err = master.AssertPing()
+	master, err := instrumented_resp_connection.NewFromConn(stageHarness, conn, "master")
 	if err != nil {
+		logFriendlyError(logger, err)
 		return err
 	}
 
-	err = master.AssertReplConfPort()
-	if err != nil {
+	receiveReplicationHandshakeTestCase := test_cases.ReceiveReplicationHandshakeTestCase{}
+
+	if err := receiveReplicationHandshakeTestCase.RunPingStep(master, logger); err != nil {
 		return err
 	}
 
-	err = master.AssertReplConfCapa()
-	if err != nil {
+	if err := receiveReplicationHandshakeTestCase.RunReplconfStep1(master, logger); err != nil {
 		return err
 	}
 
-	err = master.AssertPsync()
-	if err != nil {
+	if err := receiveReplicationHandshakeTestCase.RunReplconfStep2(master, logger); err != nil {
 		return err
 	}
 
-	conn.Close()
-	listener.Close()
-	return nil
+	return receiveReplicationHandshakeTestCase.RunPsyncStep(master, logger)
 }
