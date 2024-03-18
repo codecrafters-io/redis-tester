@@ -1,4 +1,4 @@
-package resp_client
+package resp_connection
 
 import (
 	"bytes"
@@ -11,7 +11,7 @@ import (
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 )
 
-type RespClientCallbacks struct {
+type RespConnectionCallbacks struct {
 	// BeforeSendCommand is called when a command is sent to the server.
 	// This can be useful for info logs.
 	BeforeSendCommand func(command string, args ...string)
@@ -29,7 +29,7 @@ type RespClientCallbacks struct {
 	AfterReadValue func(value resp_value.Value)
 }
 
-type RespClient struct {
+type RespConnection struct {
 	// Conn is the underlying connection to the Redis server.
 	Conn net.Conn
 
@@ -40,42 +40,37 @@ type RespClient struct {
 	// LastValueBytes contains the bytes of the last value that was decoded.
 	LastValueBytes []byte
 
-	// Callbacks is a set of functions that are called at various points in the client's lifecycle.
-	Callbacks RespClientCallbacks
+	// Callbacks is a set of functions that are called at various points in the connection's lifecycle.
+	Callbacks RespConnectionCallbacks
 }
 
-func NewRespClient(addr string) (*RespClient, error) {
+func NewRespConnectionFromAddr(addr string, callbacks RespConnectionCallbacks) (*RespConnection, error) {
 	conn, err := newConn(addr)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return &RespClient{
-		Conn:         conn,
-		UnreadBuffer: bytes.Buffer{},
-	}, nil
-}
-
-func NewRespClientWithCallbacks(addr string, callbacks RespClientCallbacks) (*RespClient, error) {
-	conn, err := newConn(addr)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &RespClient{
+	return &RespConnection{
 		Conn:         conn,
 		UnreadBuffer: bytes.Buffer{},
 		Callbacks:    callbacks,
 	}, nil
 }
 
-func (c *RespClient) Close() error {
+func NewRespConnectionFromConn(conn net.Conn, callbacks RespConnectionCallbacks) (*RespConnection, error) {
+	return &RespConnection{
+		Conn:         conn,
+		UnreadBuffer: bytes.Buffer{},
+		Callbacks:    callbacks,
+	}, nil
+}
+
+func (c *RespConnection) Close() error {
 	return c.Conn.Close()
 }
 
-func (c *RespClient) SendCommand(command string, args ...string) error {
+func (c *RespConnection) SendCommand(command string, args ...string) error {
 	if c.Callbacks.BeforeSendCommand != nil {
 		c.Callbacks.BeforeSendCommand(command, args...)
 	}
@@ -84,7 +79,7 @@ func (c *RespClient) SendCommand(command string, args ...string) error {
 	return c.SendBytes(encodedValue)
 }
 
-func (c *RespClient) SendBytes(bytes []byte) error {
+func (c *RespConnection) SendBytes(bytes []byte) error {
 	if c.Callbacks.BeforeSendBytes != nil {
 		c.Callbacks.BeforeSendBytes(bytes)
 	}
@@ -102,7 +97,7 @@ func (c *RespClient) SendBytes(bytes []byte) error {
 	return nil
 }
 
-func (c *RespClient) ReadFullResyncRDBFile() ([]byte, error) {
+func (c *RespConnection) ReadFullResyncRDBFile() ([]byte, error) {
 	shouldStopReadingIntoBuffer := func(buf []byte) bool {
 		_, _, err := resp_decoder.DecodeFullResyncRDBFile(c.UnreadBuffer.Bytes())
 
@@ -135,11 +130,11 @@ func (c *RespClient) ReadFullResyncRDBFile() ([]byte, error) {
 	return value, nil
 }
 
-func (c *RespClient) ReadValue() (resp_value.Value, error) {
+func (c *RespConnection) ReadValue() (resp_value.Value, error) {
 	return c.ReadValueWithTimeout(2 * time.Second)
 }
 
-func (c *RespClient) ReadIntoBuffer() error {
+func (c *RespConnection) ReadIntoBuffer() error {
 	// We don't want to block indefinitely, so we'll set a read deadline
 	c.Conn.SetReadDeadline(time.Now().Add(1 * time.Millisecond))
 
@@ -153,7 +148,7 @@ func (c *RespClient) ReadIntoBuffer() error {
 	return err
 }
 
-func (c *RespClient) ReadValueWithTimeout(timeout time.Duration) (resp_value.Value, error) {
+func (c *RespConnection) ReadValueWithTimeout(timeout time.Duration) (resp_value.Value, error) {
 	shouldStopReadingIntoBuffer := func(buf []byte) bool {
 		_, _, err := resp_decoder.Decode(buf)
 
@@ -190,7 +185,7 @@ func (c *RespClient) ReadValueWithTimeout(timeout time.Duration) (resp_value.Val
 	return value, nil
 }
 
-func (c *RespClient) readIntoBufferUntil(condition func([]byte) bool, timeout time.Duration) {
+func (c *RespConnection) readIntoBufferUntil(condition func([]byte) bool, timeout time.Duration) {
 	deadline := time.Now().Add(timeout)
 
 	for {
