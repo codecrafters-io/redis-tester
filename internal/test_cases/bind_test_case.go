@@ -2,11 +2,12 @@ package test_cases
 
 import (
 	"fmt"
-	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
-	"github.com/codecrafters-io/tester-utils/logger"
 	"net"
 	"strconv"
 	"time"
+
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	"github.com/codecrafters-io/tester-utils/logger"
 )
 
 type BindTestCase struct {
@@ -15,6 +16,8 @@ type BindTestCase struct {
 }
 
 func (t BindTestCase) Run(executable *redis_executable.RedisExecutable, logger *logger.Logger) error {
+	logger.Infof("Connecting to port %d...", t.Port)
+
 	retries := 0
 	var err error
 	address := "localhost:" + strconv.Itoa(t.Port)
