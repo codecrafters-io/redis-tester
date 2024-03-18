@@ -35,7 +35,7 @@ func NewFromAddr(stageHarness *test_case_harness.TestCaseHarness, addr string, c
 	if clientIdentifier != "" {
 		logPrefix = clientIdentifier + ": "
 	}
-	return resp_connection.NewRespConnectionFromAddrWithCallbacks(
+	return resp_connection.NewRespConnectionFromAddr(
 		addr, defaultCallbacks(stageHarness, logPrefix),
 	)
 }
@@ -46,7 +46,7 @@ func NewFromConn(stageHarness *test_case_harness.TestCaseHarness, conn net.Conn,
 		logPrefix = clientIdentifier + ": "
 	}
 
-	return resp_connection.NewRespConnectionFromConnWithCallbacks(
+	return resp_connection.NewRespConnectionFromConn(
 		conn, defaultCallbacks(stageHarness, logPrefix),
 	)
 }
