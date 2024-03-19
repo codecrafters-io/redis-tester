@@ -3,7 +3,6 @@ package internal
 import (
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
-	resp_utils "github.com/codecrafters-io/redis-tester/internal/resp"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 
@@ -69,7 +68,7 @@ func testReplMultipleReplicas(stageHarness *test_case_harness.TestCaseHarness) e
 			if err := receiveCommandTestCase.Run(replica, logger); err != nil {
 				// Redis sends a SELECT command, but we don't expect it from users.
 				// If the first command is a SELECT command, we'll re-run the test case to test the next command instead
-				if i == 1 && resp_utils.IsSelectCommand(receiveCommandTestCase.ActualValue) {
+				if i == 1 && IsSelectCommand(receiveCommandTestCase.ActualValue) {
 					if err := receiveCommandTestCase.Run(replica, logger); err != nil {
 						return err
 					}
