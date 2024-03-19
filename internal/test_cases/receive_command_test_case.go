@@ -9,14 +9,14 @@ import (
 	"github.com/codecrafters-io/tester-utils/logger"
 )
 
-type ReceiveValueAndSendValueTestCase struct {
+type ReceiveCommandTestCase struct {
 	Response                  resp_value.Value
 	Assertion                 resp_assertions.RESPAssertion
 	ShouldSkipUnreadDataCheck bool
 	ReceivedValue             resp_value.Value
 }
 
-func (t *ReceiveValueAndSendValueTestCase) Run(conn *resp_connection.RespConnection, logger *logger.Logger) error {
+func (t *ReceiveCommandTestCase) Run(conn *resp_connection.RespConnection, logger *logger.Logger) error {
 	value, err := conn.ReadValue()
 	if err != nil {
 		return err

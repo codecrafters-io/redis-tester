@@ -43,7 +43,7 @@ func (t ReceiveReplicationHandshakeTestCase) RunAll(client *resp_connection.Resp
 }
 
 func (t ReceiveReplicationHandshakeTestCase) RunPingStep(client *resp_connection.RespConnection, logger *logger.Logger) error {
-	commandTest := ReceiveValueAndSendValueTestCase{
+	commandTest := ReceiveCommandTestCase{
 		Assertion: resp_assertions.NewCommandAssertion("PING"),
 		Response:  resp_value.NewSimpleStringValue("PONG"),
 	}
@@ -52,7 +52,7 @@ func (t ReceiveReplicationHandshakeTestCase) RunPingStep(client *resp_connection
 }
 
 func (t ReceiveReplicationHandshakeTestCase) RunReplconfStep1(client *resp_connection.RespConnection, logger *logger.Logger) error {
-	commandTest := ReceiveValueAndSendValueTestCase{
+	commandTest := ReceiveCommandTestCase{
 		Assertion:                 resp_assertions.NewCommandAssertion("REPLCONF", "listening-port", "6380"),
 		Response:                  resp_value.NewSimpleStringValue("OK"),
 		ShouldSkipUnreadDataCheck: true,
@@ -62,7 +62,7 @@ func (t ReceiveReplicationHandshakeTestCase) RunReplconfStep1(client *resp_conne
 }
 
 func (t ReceiveReplicationHandshakeTestCase) RunReplconfStep2(client *resp_connection.RespConnection, logger *logger.Logger) error {
-	commandTest := ReceiveValueAndSendValueTestCase{
+	commandTest := ReceiveCommandTestCase{
 		Assertion: resp_assertions.NewWildcardCommandAssertion("REPLCONF", "capa", "*", "?capa", "*"),
 		Response:  resp_value.NewSimpleStringValue("OK"),
 	}
@@ -72,7 +72,7 @@ func (t ReceiveReplicationHandshakeTestCase) RunReplconfStep2(client *resp_conne
 
 func (t ReceiveReplicationHandshakeTestCase) RunPsyncStep(client *resp_connection.RespConnection, logger *logger.Logger) error {
 	id := "75cd7bc10c49047e0d163660f3b90625b1af31dc"
-	commandTest := ReceiveValueAndSendValueTestCase{
+	commandTest := ReceiveCommandTestCase{
 		Assertion: resp_assertions.NewCommandAssertion("PSYNC", "?", "-1"),
 		Response:  resp_value.NewSimpleStringValue(fmt.Sprintf("FULLRESYNC %v 0", id)),
 	}

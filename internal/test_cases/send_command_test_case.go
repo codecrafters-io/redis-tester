@@ -2,15 +2,15 @@ package test_cases
 
 import (
 	"fmt"
-	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"time"
 
 	resp_client "github.com/codecrafters-io/redis-tester/internal/resp/connection"
+	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
-	logger "github.com/codecrafters-io/tester-utils/logger"
+	"github.com/codecrafters-io/tester-utils/logger"
 )
 
-type SendCommandAndReceiveValueWithRetriesTestCase struct {
+type SendCommandTestCase struct {
 	Command                   string
 	Args                      []string
 	Assertion                 resp_assertions.RESPAssertion
@@ -18,7 +18,7 @@ type SendCommandAndReceiveValueWithRetriesTestCase struct {
 	Retries                   int
 }
 
-func (t SendCommandAndReceiveValueWithRetriesTestCase) Run(client *resp_client.RespConnection, logger *logger.Logger) error {
+func (t SendCommandTestCase) Run(client *resp_client.RespConnection, logger *logger.Logger) error {
 	var value resp_value.Value
 	var err error
 

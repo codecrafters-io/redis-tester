@@ -51,7 +51,7 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 	for i := 1; i <= len(kvMap); i++ {
 		key, value := kvMap[i][0], kvMap[i][1]
 
-		setCommandTestCase := test_cases.SendCommandAndReceiveValueTestCase{
+		setCommandTestCase := test_cases.SendCommandTestCase{
 			Command:   "SET",
 			Args:      []string{key, value},
 			Assertion: resp_assertions.NewStringAssertion("OK"),
