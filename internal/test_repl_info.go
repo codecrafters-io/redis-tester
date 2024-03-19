@@ -1,43 +1,34 @@
 package internal
 
 import (
-	"fmt"
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
-	"strings"
-
+	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
 func testReplInfo(stageHarness *test_case_harness.TestCaseHarness) error {
 	b := redis_executable.NewRedisExecutable(stageHarness)
-
 	if err := b.Run(); err != nil {
 		return err
 	}
 
 	logger := stageHarness.Logger
-	client := NewRedisClient("localhost:6379")
 
-	logger.Infof("$ redis-cli INFO replication")
-	resp, err := client.Info("replication").Result()
-	lines := strings.Split(resp, "\n")
-	infoMap := parseInfoOutput(lines, ":")
-	key := "role"
-	role := infoMap[key]
-
+	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "client")
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
 	}
+	defer client.Close()
 
-	if infoMap[key] == "" {
-		return fmt.Errorf("Expected: 'role' key in INFO replication.")
+	commandTestCase := test_cases.CommandTestCase{
+		Command:                   "INFO",
+		Args:                      []string{"replication"},
+		Assertion:                 resp_assertions.NewRegexStringAssertion("role:master"),
+		ShouldSkipUnreadDataCheck: true,
 	}
 
-	if role != "master" {
-		return fmt.Errorf("Expected: 'role' to be 'master' in INFO replication, got %v", role)
-	}
-
-	client.Close()
-	return nil
+	return commandTestCase.Run(client, logger)
 }
