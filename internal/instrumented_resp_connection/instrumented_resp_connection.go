@@ -19,7 +19,7 @@ func defaultCallbacks(stageHarness *test_case_harness.TestCaseHarness, logPrefix
 			}
 		},
 		BeforeSendValue: func(value resp_value.Value) {
-			stageHarness.Logger.Infof("%s$ %s", logPrefix, value.FormattedString())
+			stageHarness.Logger.Infof("%sSent %s", logPrefix, value.FormattedString())
 		},
 		BeforeSendBytes: func(bytes []byte) {
 			stageHarness.Logger.Debugf("%sSent bytes: %q", logPrefix, string(bytes))

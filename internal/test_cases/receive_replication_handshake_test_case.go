@@ -4,12 +4,11 @@ import (
 	"encoding/hex"
 	"fmt"
 
-	resp_utils "github.com/codecrafters-io/redis-tester/internal/resp"
 	resp_connection "github.com/codecrafters-io/redis-tester/internal/resp/connection"
 	resp_encoder "github.com/codecrafters-io/redis-tester/internal/resp/encoder"
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
-	logger "github.com/codecrafters-io/tester-utils/logger"
+	"github.com/codecrafters-io/tester-utils/logger"
 )
 
 // ReceiveReplicationHandshakeTestCase is a test case where we connect to a master
@@ -72,7 +71,7 @@ func (t ReceiveReplicationHandshakeTestCase) RunReplconfStep2(client *resp_conne
 }
 
 func (t ReceiveReplicationHandshakeTestCase) RunPsyncStep(client *resp_connection.RespConnection, logger *logger.Logger) error {
-	id := resp_utils.RandomAlphanumericString(40)
+	id := "75cd7bc10c49047e0d163660f3b90625b1af31dc"
 	commandTest := ReceiveAndSendTestCase{
 		Assertion: resp_assertions.NewCommandAssertion("PSYNC", "?", "-1"),
 		Response:  resp_value.NewSimpleStringValue(fmt.Sprintf("FULLRESYNC %v 0", id)),
@@ -87,13 +86,10 @@ func (t ReceiveReplicationHandshakeTestCase) RunSendRDBStep(client *resp_connect
 	hexStr := "524544495330303131fa0972656469732d76657205372e322e30fa0a72656469732d62697473c040fa056374696d65c26d08bc65fa08757365642d6d656dc2b0c41000fa08616f662d62617365c000fff06e3bfec0ff5aa2"
 	bytes, err := hex.DecodeString(hexStr)
 	if err != nil {
-		fmt.Printf("Encountered %s while deconding hex string", err.Error())
-		error := resp_value.NewErrorValue(err.Error())
-		client.SendBytes(error.Bytes())
-		return err
+		panic(fmt.Sprintf("Encountered %s while decoding hex string", err.Error()))
 	}
 
-	encodedValue := resp_encoder.Encode(resp_value.NewRDBAsBulkStringValue(string(bytes)))
+	encodedValue := resp_encoder.EncodeFullResyncRDBFile(bytes)
 	client.SendBytes(encodedValue)
 
 	logger.Successf("Sent RDB file.")

@@ -16,8 +16,8 @@ type RespConnectionCallbacks struct {
 	// This can be useful for info logs.
 	BeforeSendCommand func(command string, args ...string)
 
-	// BeforeSendCommand is called when a command is sent from the server.
-	// This can be useful for info logs.
+	// BeforeSendValue is called when a value is sent using SendValue.
+	// It is NOT called when using SendCommand
 	BeforeSendValue func(response resp_value.Value)
 
 	// BeforeSendBytes is called when raw bytes are sent to the server.
