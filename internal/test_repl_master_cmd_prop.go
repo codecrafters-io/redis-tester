@@ -1,7 +1,7 @@
 package internal
 
 import (
-	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+  "github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"strings"
 
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
@@ -16,9 +16,7 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 
 	// Run the user's code as a master
 	masterBinary := redis_executable.NewRedisExecutable(stageHarness)
-	if err := masterBinary.Run([]string{
-		"--port", "6379",
-	}...); err != nil {
+	if err := masterBinary.Run("--port", "6379"); err != nil {
 		return err
 	}
 

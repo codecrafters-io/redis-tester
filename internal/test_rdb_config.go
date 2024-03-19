@@ -2,9 +2,10 @@ package internal
 
 import (
 	"fmt"
-	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"os"
 	"path/filepath"
+
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
@@ -25,10 +26,8 @@ func testRdbConfig(stageHarness *test_case_harness.TestCaseHarness) error {
 	tmpDir = realPath
 
 	b := redis_executable.NewRedisExecutable(stageHarness)
-	if err := b.Run([]string{
-		"--dir", tmpDir,
-		"--dbfilename", fmt.Sprintf("%s.rdb", testerutils_random.RandomWord()),
-	}...); err != nil {
+	if err := b.Run("--dir", tmpDir,
+		"--dbfilename", fmt.Sprintf("%s.rdb", testerutils_random.RandomWord())); err != nil {
 		return err
 	}
 

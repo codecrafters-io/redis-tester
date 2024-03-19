@@ -44,20 +44,7 @@ type RespConnection struct {
 	Callbacks RespConnectionCallbacks
 }
 
-func NewRespConnection(addr string) (*RespConnection, error) {
-	conn, err := newConn(addr)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &RespConnection{
-		Conn:         conn,
-		UnreadBuffer: bytes.Buffer{},
-	}, nil
-}
-
-func NewRespConnectionFromAddrWithCallbacks(addr string, callbacks RespConnectionCallbacks) (*RespConnection, error) {
+func NewRespConnectionFromAddr(addr string, callbacks RespConnectionCallbacks) (*RespConnection, error) {
 	conn, err := newConn(addr)
 
 	if err != nil {
@@ -71,7 +58,7 @@ func NewRespConnectionFromAddrWithCallbacks(addr string, callbacks RespConnectio
 	}, nil
 }
 
-func NewRespConnectionFromConnWithCallbacks(conn net.Conn, callbacks RespConnectionCallbacks) (*RespConnection, error) {
+func NewRespConnectionFromConn(conn net.Conn, callbacks RespConnectionCallbacks) (*RespConnection, error) {
 	return &RespConnection{
 		Conn:         conn,
 		UnreadBuffer: bytes.Buffer{},
