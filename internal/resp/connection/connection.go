@@ -16,6 +16,10 @@ type RespConnectionCallbacks struct {
 	// This can be useful for info logs.
 	BeforeSendCommand func(command string, args ...string)
 
+	// BeforeSendValue is called when a value is sent using SendValue.
+	// It is NOT called when using SendCommand
+	BeforeSendValue func(response resp_value.Value)
+
 	// BeforeSendBytes is called when raw bytes are sent to the server.
 	// This can be useful for debug logs.
 	BeforeSendBytes func(bytes []byte)
@@ -76,6 +80,15 @@ func (c *RespConnection) SendCommand(command string, args ...string) error {
 	}
 
 	encodedValue := resp_encoder.Encode(resp_value.NewStringArrayValue(append([]string{command}, args...)))
+	return c.SendBytes(encodedValue)
+}
+
+func (c *RespConnection) SendValue(response resp_value.Value) error {
+	if c.Callbacks.BeforeSendValue != nil {
+		c.Callbacks.BeforeSendValue(response)
+	}
+
+	encodedValue := resp_encoder.Encode(response)
 	return c.SendBytes(encodedValue)
 }
 

@@ -18,6 +18,9 @@ func defaultCallbacks(stageHarness *test_case_harness.TestCaseHarness, logPrefix
 				stageHarness.Logger.Infof("%s$ redis-cli %s", logPrefix, command)
 			}
 		},
+		BeforeSendValue: func(value resp_value.Value) {
+			stageHarness.Logger.Infof("%sSent %s", logPrefix, value.FormattedString())
+		},
 		BeforeSendBytes: func(bytes []byte) {
 			stageHarness.Logger.Debugf("%sSent bytes: %q", logPrefix, string(bytes))
 		},

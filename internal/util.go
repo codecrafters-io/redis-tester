@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 
+	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/hdt3213/rdb/parser"
 )
@@ -70,20 +71,6 @@ func compareStringSlicesWithOr(actual []string, expected [][]string, caseSensiti
 	return e // Will return last error. Will accordingly call assert.
 }
 
-func parseInfoOutput(lines []string, seperator string) map[string]string {
-	infoMap := make(map[string]string)
-	for _, line := range lines {
-		trimmedLine := strings.TrimSpace(line)
-		parts := strings.Split(trimmedLine, seperator)
-		if len(parts) == 2 {
-			key := parts[0]
-			value := parts[1]
-			infoMap[key] = value
-		}
-	}
-	return infoMap
-}
-
 func deleteRDBfile() {
 	fileName := "dump.rdb"
 	_, err := os.Stat(fileName)
@@ -127,4 +114,11 @@ func max(a, b int) int {
 		return a
 	}
 	return b
+}
+
+func IsSelectCommand(value resp_value.Value) bool {
+	return value.Type == resp_value.ARRAY &&
+		len(value.Array()) > 0 &&
+		value.Array()[0].Type == resp_value.BULK_STRING &&
+		strings.ToLower(value.Array()[0].String()) == "select"
 }

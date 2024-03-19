@@ -3,10 +3,12 @@ package internal
 import (
 	"fmt"
 	"net"
-	"strings"
 
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
+	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	loggerutils "github.com/codecrafters-io/tester-utils/logger"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
@@ -19,8 +21,8 @@ func testReplInfoReplica(stageHarness *test_case_harness.TestCaseHarness) error 
 		logFriendlyBindError(logger, err)
 		return fmt.Errorf("Error starting TCP server: %v", err)
 	}
-
 	defer listener.Close()
+
 	logger.Infof("Master is running on port 6379")
 
 	replica := redis_executable.NewRedisExecutable(stageHarness)
@@ -36,37 +38,32 @@ func testReplInfoReplica(stageHarness *test_case_harness.TestCaseHarness) error 
 			logger.Debugf("Error accepting: %s", err.Error())
 			return err
 		}
+		defer conn.Close()
 
 		quietLogger := loggerutils.GetQuietLogger("")
-		master := NewFakeRedisMaster(conn, quietLogger)
-		master.Handshake()
+		master, err := instrumented_resp_connection.NewFromConn(stageHarness, conn, "master")
+		if err != nil {
+			logFriendlyError(quietLogger, err)
+			return err
+		}
+		receiveReplicationHandshakeTestCase := test_cases.ReceiveReplicationHandshakeTestCase{}
 
-		conn.Close()
+		_ = receiveReplicationHandshakeTestCase.RunAll(master, quietLogger)
 		return nil
 	}(listener)
 
-	client := NewRedisClient("localhost:6380")
-
-	logger.Infof("$ redis-cli INFO replication")
-	resp, err := client.Info("replication").Result()
-	lines := strings.Split(resp, "\n")
-	infoMap := parseInfoOutput(lines, ":")
-	key := "role"
-	role := infoMap[key]
-
+	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6380", "client")
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
 	}
+	defer client.Close()
 
-	if key != "role" {
-		return fmt.Errorf("Expected: 'role' and actual: '%v' keys in INFO replication don't match", key)
+	commandTestCase := test_cases.CommandTestCase{
+		Command:                   "INFO",
+		Args:                      []string{"replication"},
+		Assertion:                 resp_assertions.NewRegexStringAssertion("role:slave"),
+		ShouldSkipUnreadDataCheck: true,
 	}
-
-	if role != "slave" {
-		return fmt.Errorf("Expected: 'role' and actual: '%v' roles in INFO replication don't match", role)
-	}
-
-	client.Close()
-	return nil
+	return commandTestCase.Run(client, logger)
 }
