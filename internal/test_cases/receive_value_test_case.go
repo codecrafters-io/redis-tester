@@ -2,6 +2,7 @@ package test_cases
 
 import (
 	"fmt"
+	"strings"
 
 	resp_client "github.com/codecrafters-io/redis-tester/internal/resp/connection"
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
@@ -25,9 +26,12 @@ func (t *ReceiveValueTestCase) Run(client *resp_client.RespConnection, logger *l
 
 	t.ActualValue = value
 
-	if err = t.Assertion.Run(value); err != nil {
-		return err
+	result := t.Assertion.Run(value)
+	if result.IsFailure() {
+		return fmt.Errorf(strings.Join(result.ErrorMessages, "\n"))
 	}
+
+	logger.Successf(strings.Join(result.SuccessMessages, "\n"))
 
 	if !t.ShouldSkipUnreadDataCheck {
 		client.ReadIntoBuffer() // Let's make sure there's no extra data

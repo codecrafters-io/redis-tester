@@ -20,14 +20,19 @@ func NewRegexStringAssertion(expectedPattern string) RESPAssertion {
 	return RegexStringAssertion{ExpectedPattern: pattern}
 }
 
-func (a RegexStringAssertion) Run(value resp_value.Value) error {
+func (a RegexStringAssertion) Run(value resp_value.Value) RESPAssertionResult {
 	if value.Type != resp_value.SIMPLE_STRING && value.Type != resp_value.BULK_STRING {
-		return fmt.Errorf("Expected simple string or bulk string, got %s", value.Type)
+		return RESPAssertionResult{
+			ErrorMessages: []string{fmt.Sprintf("Expected simple string or bulk string, got %s", value.Type)},
+		}
 	}
 
 	if !a.ExpectedPattern.MatchString(value.String()) {
-		return fmt.Errorf("Expected %q to match the pattern %q.", value.String(), a.ExpectedPattern.String())
+		return RESPAssertionResult{
+			ErrorMessages: []string{fmt.Sprintf("Expected %q to match the pattern %q.", value.String(), a.ExpectedPattern.String())},
+		}
 	}
 
-	return nil
+	match := a.ExpectedPattern.FindString(value.String())
+	return RESPAssertionResult{SuccessMessages: []string{fmt.Sprintf("Received %s", match)}}
 }

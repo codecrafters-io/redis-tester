@@ -25,11 +25,13 @@ func testReplReplicationID(stageHarness *test_case_harness.TestCaseHarness) erro
 	}
 	defer client.Close()
 
+	replidRegexAssertion := resp_assertions.NewRegexStringAssertion("master_replid:([a-zA-Z0-9]+)")
+	replOffsetRegexAssertion := resp_assertions.NewRegexStringAssertion("master_repl_offset:0")
+
 	commandTestCase := test_cases.SendCommandTestCase{
-		Command: "INFO",
-		Args:    []string{"replication"},
-		// ToDo : This test requires the order of the offset and id to be fixed, change this to be order agnostic.
-		Assertion:                 resp_assertions.NewRegexStringAssertion("master_replid:([a-zA-Z0-9]+)[\\s\\S]*master_repl_offset:0"),
+		Command:                   "INFO",
+		Args:                      []string{"replication"},
+		Assertion:                 resp_assertions.NewCompositeAssertion(replidRegexAssertion, replOffsetRegexAssertion),
 		ShouldSkipUnreadDataCheck: true,
 	}
 

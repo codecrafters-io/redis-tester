@@ -2,6 +2,7 @@ package test_cases
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	resp_client "github.com/codecrafters-io/redis-tester/internal/resp/connection"
@@ -36,7 +37,8 @@ func (t SendCommandTestCase) Run(client *resp_client.RespConnection, logger *log
 			return err
 		}
 
-		if err := resp_assertions.NewNilAssertion().Run(value); err != nil {
+		result := resp_assertions.NewNilAssertion().Run(value)
+		if result.IsFailure() {
 			// value is not nil, we can stop retrying
 			break
 		} else {
@@ -45,9 +47,15 @@ func (t SendCommandTestCase) Run(client *resp_client.RespConnection, logger *log
 		}
 	}
 
-	if err = t.Assertion.Run(value); err != nil {
-		return err
+	result := t.Assertion.Run(value)
+	if result.IsFailure() {
+		if result.SuccessMessages != nil {
+			logger.Successf(strings.Join(result.SuccessMessages, "\n"))
+		}
+		return fmt.Errorf(strings.Join(result.ErrorMessages, "\n"))
 	}
+
+	logger.Successf(strings.Join(result.SuccessMessages, "\n"))
 
 	if !t.ShouldSkipUnreadDataCheck {
 		client.ReadIntoBuffer() // Let's make sure there's no extra data
@@ -57,6 +65,5 @@ func (t SendCommandTestCase) Run(client *resp_client.RespConnection, logger *log
 		}
 	}
 
-	logger.Successf("Received %s", value.FormattedString())
 	return nil
 }

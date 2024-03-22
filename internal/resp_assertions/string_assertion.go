@@ -14,14 +14,18 @@ func NewStringAssertion(expectedValue string) RESPAssertion {
 	return StringAssertion{ExpectedValue: expectedValue}
 }
 
-func (a StringAssertion) Run(value resp_value.Value) error {
+func (a StringAssertion) Run(value resp_value.Value) RESPAssertionResult {
 	if value.Type != resp_value.SIMPLE_STRING && value.Type != resp_value.BULK_STRING {
-		return fmt.Errorf("Expected simple string or bulk string, got %s", value.Type)
+		return RESPAssertionResult{
+			ErrorMessages: []string{fmt.Sprintf("Expected simple string or bulk string, got %s", value.Type)},
+		}
 	}
 
 	if value.String() != a.ExpectedValue {
-		return fmt.Errorf("Expected %q, got %q", a.ExpectedValue, value.String())
+		return RESPAssertionResult{
+			ErrorMessages: []string{fmt.Sprintf("Expected %q, got %q", a.ExpectedValue, value.String())},
+		}
 	}
 
-	return nil
+	return RESPAssertionResult{SuccessMessages: []string{fmt.Sprintf("Received %q", value.String())}}
 }

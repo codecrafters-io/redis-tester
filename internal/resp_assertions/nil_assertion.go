@@ -12,10 +12,12 @@ func NewNilAssertion() RESPAssertion {
 	return NilAssertion{}
 }
 
-func (a NilAssertion) Run(value resp_value.Value) error {
+func (a NilAssertion) Run(value resp_value.Value) RESPAssertionResult {
 	if value.Type != resp_value.NIL {
-		return fmt.Errorf(`Expected null bulk string ("$-1\r\n"), got %s`, value.Type)
+		return RESPAssertionResult{
+			ErrorMessages: []string{fmt.Sprintf(`Expected null bulk string ("$-1\r\n"), got %s`, value.Type)},
+		}
 	}
 
-	return nil
+	return RESPAssertionResult{SuccessMessages: []string{"Received NIL"}}
 }
