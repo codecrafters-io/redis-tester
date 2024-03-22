@@ -22,9 +22,9 @@ func (t SendCommandTestCase) Run(client *resp_client.RespConnection, logger *log
 	var value resp_value.Value
 	var err error
 
-	for attempt := 0; attempt < t.Retries; attempt++ {
+	for attempt := 0; attempt <= t.Retries; attempt++ {
 		if attempt > 0 {
-			logger.Debugf("(Attempt %d/%d)", attempt+1, t.Retries)
+			logger.Debugf("(Attempt %d/%d)", attempt, t.Retries)
 		}
 
 		if err = client.SendCommand(t.Command, t.Args...); err != nil {

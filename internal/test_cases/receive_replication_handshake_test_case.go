@@ -3,6 +3,7 @@ package test_cases
 import (
 	"encoding/hex"
 	"fmt"
+	"strings"
 
 	resp_connection "github.com/codecrafters-io/redis-tester/internal/resp/connection"
 	resp_encoder "github.com/codecrafters-io/redis-tester/internal/resp/encoder"
@@ -63,11 +64,50 @@ func (t ReceiveReplicationHandshakeTestCase) RunReplconfStep1(client *resp_conne
 
 func (t ReceiveReplicationHandshakeTestCase) RunReplconfStep2(client *resp_connection.RespConnection, logger *logger.Logger) error {
 	commandTest := ReceiveCommandTestCase{
-		Assertion: resp_assertions.NewWildcardCommandAssertion("REPLCONF", "capa", "*", "?capa", "*"),
+		Assertion: resp_assertions.NewOnlyCommandAssertion("REPLCONF"),
 		Response:  resp_value.NewSimpleStringValue("OK"),
 	}
 
-	return commandTest.Run(client, logger)
+	err := commandTest.Run(client, logger)
+	if err != nil {
+		return err
+	}
+
+	receivedValue := commandTest.ReceivedValue
+
+	if receivedValue.Type != resp_value.ARRAY {
+		return fmt.Errorf("Expected array type, got %s", receivedValue.Type)
+	}
+
+	elements := receivedValue.Array()
+
+	if len(elements) < 3 {
+		return fmt.Errorf("Expected array with at least 3 element, got %d elements", len(elements))
+	}
+
+	firstCapaArg := elements[1].String()
+
+	if elements[1].Type != resp_value.SIMPLE_STRING && elements[1].Type != resp_value.BULK_STRING {
+		return fmt.Errorf("Expected replconf argument to be a string, got %s", elements[1].Type)
+	}
+
+	if !strings.EqualFold(firstCapaArg, "capa") {
+		return fmt.Errorf("Expected replconf argument to be %q, got %q", strings.ToLower("capa"), strings.ToLower(firstCapaArg))
+	}
+
+	if len(elements) == 5 {
+		secondCapaArg := elements[3].String()
+
+		if elements[3].Type != resp_value.SIMPLE_STRING && elements[3].Type != resp_value.BULK_STRING {
+			return fmt.Errorf("Expected replconf argument to be a string, got %s", elements[3].Type)
+		}
+
+		if !strings.EqualFold(secondCapaArg, "capa") {
+			return fmt.Errorf("Expected replconf argument to be %q, got %q", strings.ToLower("capa"), strings.ToLower(secondCapaArg))
+		}
+	}
+
+	return nil
 }
 
 func (t ReceiveReplicationHandshakeTestCase) RunPsyncStep(client *resp_connection.RespConnection, logger *logger.Logger) error {
