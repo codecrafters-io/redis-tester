@@ -56,20 +56,19 @@ func testReplMultipleReplicas(stageHarness *test_case_harness.TestCaseHarness) e
 	}
 
 	// We then assert that across all the replicas we receive the SET commands in order
-	for j := 0; j < replicaCount; j++ {
-		replica := replicas[j]
-		logger.Infof("Testing Replica : %v", j+1)
+	for j, replica := range replicas {
+		logger.Infof("Testing Replica: %d/%d", j+1, replicaCount)
 		for i := 1; i <= len(kvMap); i++ {
-			receiveCommandTestCase := &test_cases.ReceiveValueTestCase{
+			receiveValueTestCase := &test_cases.ReceiveValueTestCase{
 				Assertion:                 resp_assertions.NewCommandAssertion("SET", kvMap[i][0], kvMap[i][1]),
 				ShouldSkipUnreadDataCheck: i < len(kvMap), // Except in the last case, we're expecting more SET commands to be present
 			}
 
-			if err := receiveCommandTestCase.Run(replica, logger); err != nil {
+			if err := receiveValueTestCase.Run(replica, logger); err != nil {
 				// Redis sends a SELECT command, but we don't expect it from users.
 				// If the first command is a SELECT command, we'll re-run the test case to test the next command instead
-				if i == 1 && IsSelectCommand(receiveCommandTestCase.ActualValue) {
-					if err := receiveCommandTestCase.Run(replica, logger); err != nil {
+				if i == 1 && IsSelectCommand(receiveValueTestCase.ActualValue) {
+					if err := receiveValueTestCase.Run(replica, logger); err != nil {
 						return err
 					}
 				} else {

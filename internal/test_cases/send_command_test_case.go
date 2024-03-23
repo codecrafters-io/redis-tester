@@ -16,6 +16,7 @@ type SendCommandTestCase struct {
 	Assertion                 resp_assertions.RESPAssertion
 	ShouldSkipUnreadDataCheck bool
 	Retries                   int
+	ShouldRetryFunc           func(resp_value.Value) bool
 }
 
 func (t SendCommandTestCase) Run(client *resp_client.RespConnection, logger *logger.Logger) error {
@@ -24,7 +25,7 @@ func (t SendCommandTestCase) Run(client *resp_client.RespConnection, logger *log
 
 	for attempt := 0; attempt <= t.Retries; attempt++ {
 		if attempt > 0 {
-			logger.Debugf("(Attempt %d/%d)", attempt, t.Retries)
+			logger.Debugf("Retrying... (%d/%d attempts)", attempt, t.Retries)
 		}
 
 		if err = client.SendCommand(t.Command, t.Args...); err != nil {
@@ -36,12 +37,13 @@ func (t SendCommandTestCase) Run(client *resp_client.RespConnection, logger *log
 			return err
 		}
 
-		if err := resp_assertions.NewNilAssertion().Run(value); err != nil {
-			// value is not nil, we can stop retrying
-			break
-		} else {
-			// value is nil, sleep then retry
-			time.Sleep(500 * time.Millisecond)
+		if attempt > 0 {
+			if t.ShouldRetryFunc(value) {
+				// If ShouldRetryFunc returns true, we sleep and retry.
+				time.Sleep(500 * time.Millisecond)
+			} else {
+				break
+			}
 		}
 	}
 

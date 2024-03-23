@@ -6,6 +6,7 @@ import (
 
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 
@@ -67,7 +68,7 @@ func testReplCmdProcessing(stageHarness *test_case_harness.TestCaseHarness) erro
 	for i := 1; i <= len(kvMap); i++ { // We need order of commands preserved
 		key, value := kvMap[i][0], kvMap[i][1]
 		// We are propagating commands to Replica as Master, don't expect any response back.
-		if err := master.SendCommand("SET", []string{key, value}...); err != nil {
+		if err := master.SendCommand("SET", key, value); err != nil {
 			return err
 		}
 	}
@@ -80,6 +81,9 @@ func testReplCmdProcessing(stageHarness *test_case_harness.TestCaseHarness) erro
 			Args:      []string{key},
 			Assertion: resp_assertions.NewStringAssertion(value),
 			Retries:   5,
+			ShouldRetryFunc: func(value resp_value.Value) bool {
+				return resp_assertions.NewNilAssertion().Run(value) == nil
+			},
 		}
 
 		if err := getCommandTestCase.Run(replicaClient, logger); err != nil {
