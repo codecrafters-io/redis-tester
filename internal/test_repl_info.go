@@ -23,7 +23,7 @@ func testReplInfo(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 	defer client.Close()
 
-	commandTestCase := test_cases.CommandTestCase{
+	commandTestCase := test_cases.SendCommandTestCase{
 		Command:                   "INFO",
 		Args:                      []string{"replication"},
 		Assertion:                 resp_assertions.NewRegexStringAssertion("role:master"),

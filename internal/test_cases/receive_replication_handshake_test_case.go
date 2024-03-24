@@ -3,6 +3,7 @@ package test_cases
 import (
 	"encoding/hex"
 	"fmt"
+	"strings"
 
 	resp_connection "github.com/codecrafters-io/redis-tester/internal/resp/connection"
 	resp_encoder "github.com/codecrafters-io/redis-tester/internal/resp/encoder"
@@ -43,7 +44,7 @@ func (t ReceiveReplicationHandshakeTestCase) RunAll(client *resp_connection.Resp
 }
 
 func (t ReceiveReplicationHandshakeTestCase) RunPingStep(client *resp_connection.RespConnection, logger *logger.Logger) error {
-	commandTest := ReceiveAndSendTestCase{
+	commandTest := ReceiveCommandTestCase{
 		Assertion: resp_assertions.NewCommandAssertion("PING"),
 		Response:  resp_value.NewSimpleStringValue("PONG"),
 	}
@@ -52,7 +53,7 @@ func (t ReceiveReplicationHandshakeTestCase) RunPingStep(client *resp_connection
 }
 
 func (t ReceiveReplicationHandshakeTestCase) RunReplconfStep1(client *resp_connection.RespConnection, logger *logger.Logger) error {
-	commandTest := ReceiveAndSendTestCase{
+	commandTest := ReceiveCommandTestCase{
 		Assertion:                 resp_assertions.NewCommandAssertion("REPLCONF", "listening-port", "6380"),
 		Response:                  resp_value.NewSimpleStringValue("OK"),
 		ShouldSkipUnreadDataCheck: true,
@@ -62,17 +63,52 @@ func (t ReceiveReplicationHandshakeTestCase) RunReplconfStep1(client *resp_conne
 }
 
 func (t ReceiveReplicationHandshakeTestCase) RunReplconfStep2(client *resp_connection.RespConnection, logger *logger.Logger) error {
-	commandTest := ReceiveAndSendTestCase{
-		Assertion: resp_assertions.NewWildcardCommandAssertion("REPLCONF", "capa", "*", "?capa", "*"),
+	commandTest := ReceiveCommandTestCase{
+		Assertion: resp_assertions.NewOnlyCommandAssertion("REPLCONF"),
 		Response:  resp_value.NewSimpleStringValue("OK"),
 	}
 
-	return commandTest.Run(client, logger)
+	err := commandTest.Run(client, logger)
+	if err != nil {
+		return err
+	}
+
+	receivedValue := commandTest.ReceivedValue
+
+	elements := receivedValue.Array()
+
+	if len(elements) < 3 {
+		return fmt.Errorf("Expected array with at least 3 element, got %d elements", len(elements))
+	}
+
+	firstCapaArg := elements[1].String()
+
+	if elements[1].Type != resp_value.SIMPLE_STRING && elements[1].Type != resp_value.BULK_STRING {
+		return fmt.Errorf("Expected first replconf argument to be a string, got %s", elements[1].Type)
+	}
+
+	if !strings.EqualFold(firstCapaArg, "capa") {
+		return fmt.Errorf("Expected first replconf argument to be %q, got %q", "capa", strings.ToLower(firstCapaArg))
+	}
+
+	if len(elements) == 5 {
+		if elements[3].Type != resp_value.SIMPLE_STRING && elements[3].Type != resp_value.BULK_STRING {
+			return fmt.Errorf("Expected third replconf argument to be a string, got %s", elements[3].Type)
+		}
+
+		secondCapaArg := elements[3].String()
+
+		if !strings.EqualFold(secondCapaArg, "capa") {
+			return fmt.Errorf("Expected third replconf argument to be %q, got %q", "capa", strings.ToLower(secondCapaArg))
+		}
+	}
+
+	return nil
 }
 
 func (t ReceiveReplicationHandshakeTestCase) RunPsyncStep(client *resp_connection.RespConnection, logger *logger.Logger) error {
 	id := "75cd7bc10c49047e0d163660f3b90625b1af31dc"
-	commandTest := ReceiveAndSendTestCase{
+	commandTest := ReceiveCommandTestCase{
 		Assertion: resp_assertions.NewCommandAssertion("PSYNC", "?", "-1"),
 		Response:  resp_value.NewSimpleStringValue(fmt.Sprintf("FULLRESYNC %v 0", id)),
 	}

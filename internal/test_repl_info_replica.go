@@ -7,6 +7,7 @@ import (
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
+
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	loggerutils "github.com/codecrafters-io/tester-utils/logger"
@@ -59,7 +60,7 @@ func testReplInfoReplica(stageHarness *test_case_harness.TestCaseHarness) error 
 	}
 	defer client.Close()
 
-	commandTestCase := test_cases.CommandTestCase{
+	commandTestCase := test_cases.SendCommandTestCase{
 		Command:                   "INFO",
 		Args:                      []string{"replication"},
 		Assertion:                 resp_assertions.NewRegexStringAssertion("role:slave"),

@@ -2,6 +2,7 @@ package internal
 
 import (
 	"fmt"
+
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
@@ -25,7 +26,7 @@ func antiCheatTest(stageHarness *test_case_harness.TestCaseHarness) error {
 	defer client.Close()
 
 	// All the answers for MEMORY DOCTOR include the string "sam" in them.
-	commandTestCase := test_cases.CommandTestCase{
+	commandTestCase := test_cases.SendCommandTestCase{
 		Command:                   "MEMORY",
 		Args:                      []string{"DOCTOR"},
 		Assertion:                 resp_assertions.NewRegexStringAssertion("[sS]am"),
