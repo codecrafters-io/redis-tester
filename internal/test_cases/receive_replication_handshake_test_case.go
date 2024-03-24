@@ -75,10 +75,6 @@ func (t ReceiveReplicationHandshakeTestCase) RunReplconfStep2(client *resp_conne
 
 	receivedValue := commandTest.ReceivedValue
 
-	if receivedValue.Type != resp_value.ARRAY {
-		return fmt.Errorf("Expected array type, got %s", receivedValue.Type)
-	}
-
 	elements := receivedValue.Array()
 
 	if len(elements) < 3 {
@@ -88,22 +84,22 @@ func (t ReceiveReplicationHandshakeTestCase) RunReplconfStep2(client *resp_conne
 	firstCapaArg := elements[1].String()
 
 	if elements[1].Type != resp_value.SIMPLE_STRING && elements[1].Type != resp_value.BULK_STRING {
-		return fmt.Errorf("Expected replconf argument to be a string, got %s", elements[1].Type)
+		return fmt.Errorf("Expected first replconf argument to be a string, got %s", elements[1].Type)
 	}
 
 	if !strings.EqualFold(firstCapaArg, "capa") {
-		return fmt.Errorf("Expected replconf argument to be %q, got %q", strings.ToLower("capa"), strings.ToLower(firstCapaArg))
+		return fmt.Errorf("Expected first replconf argument to be %q, got %q", "capa", strings.ToLower(firstCapaArg))
 	}
 
 	if len(elements) == 5 {
-		secondCapaArg := elements[3].String()
-
 		if elements[3].Type != resp_value.SIMPLE_STRING && elements[3].Type != resp_value.BULK_STRING {
-			return fmt.Errorf("Expected replconf argument to be a string, got %s", elements[3].Type)
+			return fmt.Errorf("Expected third replconf argument to be a string, got %s", elements[3].Type)
 		}
 
+		secondCapaArg := elements[3].String()
+
 		if !strings.EqualFold(secondCapaArg, "capa") {
-			return fmt.Errorf("Expected replconf argument to be %q, got %q", strings.ToLower("capa"), strings.ToLower(secondCapaArg))
+			return fmt.Errorf("Expected third replconf argument to be %q, got %q", "capa", strings.ToLower(secondCapaArg))
 		}
 	}
 

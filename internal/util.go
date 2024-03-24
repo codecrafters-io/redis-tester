@@ -128,6 +128,7 @@ func IsSelectCommand(value resp_value.Value) bool {
 		value.Array()[0].Type == resp_value.BULK_STRING &&
 		strings.ToLower(value.Array()[0].String()) == "select"
 }
+
 func SpawnReplicas(replicaCount int, stageHarness *test_case_harness.TestCaseHarness, logger *logger.Logger, addr string) ([]*resp_connection.RespConnection, error) {
 	var replicas []*resp_connection.RespConnection
 	sendHandshakeTestCase := test_cases.SendReplicationHandshakeTestCase{}
