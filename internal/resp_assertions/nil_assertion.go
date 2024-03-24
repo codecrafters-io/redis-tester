@@ -19,5 +19,5 @@ func (a NilAssertion) Run(value resp_value.Value) RESPAssertionResult {
 		}
 	}
 
-	return RESPAssertionResult{SuccessMessages: []string{"Received NIL"}}
+	return RESPAssertionResult{SuccessMessages: []string{"Received Nil"}}
 }

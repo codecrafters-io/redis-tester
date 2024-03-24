@@ -41,6 +41,5 @@ func (t *ReceiveValueTestCase) Run(client *resp_client.RespConnection, logger *l
 		}
 	}
 
-	logger.Successf("Received %s", value.FormattedString())
 	return nil
 }

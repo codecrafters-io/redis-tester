@@ -46,5 +46,5 @@ func (a OnlyCommandAssertion) Run(value resp_value.Value) RESPAssertionResult {
 		}
 	}
 
-	return RESPAssertionResult{SuccessMessages: []string{fmt.Sprintf("Received %s", command)}}
+	return RESPAssertionResult{SuccessMessages: []string{fmt.Sprintf("Received %q", command)}}
 }

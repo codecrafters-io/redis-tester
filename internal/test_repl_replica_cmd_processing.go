@@ -82,7 +82,8 @@ func testReplCmdProcessing(stageHarness *test_case_harness.TestCaseHarness) erro
 			Assertion: resp_assertions.NewStringAssertion(value),
 			Retries:   5,
 			ShouldRetryFunc: func(value resp_value.Value) bool {
-				return resp_assertions.NewNilAssertion().Run(value) == nil
+				result := resp_assertions.NewNilAssertion().Run(value)
+				return result.IsSuccess()
 			},
 		}
 

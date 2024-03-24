@@ -34,5 +34,5 @@ func (a RegexStringAssertion) Run(value resp_value.Value) RESPAssertionResult {
 	}
 
 	match := a.ExpectedPattern.FindString(value.String())
-	return RESPAssertionResult{SuccessMessages: []string{fmt.Sprintf("Received %s", match)}}
+	return RESPAssertionResult{SuccessMessages: []string{fmt.Sprintf("Received %q", match)}}
 }
