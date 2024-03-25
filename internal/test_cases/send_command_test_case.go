@@ -22,7 +22,7 @@ type SendCommandTestCase struct {
 	ReceivedResponse resp_value.Value
 }
 
-func (t SendCommandTestCase) Run(client *resp_client.RespConnection, logger *logger.Logger) error {
+func (t *SendCommandTestCase) Run(client *resp_client.RespConnection, logger *logger.Logger) error {
 	var value resp_value.Value
 	var err error
 
@@ -49,6 +49,8 @@ func (t SendCommandTestCase) Run(client *resp_client.RespConnection, logger *log
 			}
 		}
 	}
+
+	t.ReceivedResponse = value
 
 	if err = t.Assertion.Run(value); err != nil {
 		return err

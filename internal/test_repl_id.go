@@ -29,7 +29,7 @@ func testReplReplicationID(stageHarness *test_case_harness.TestCaseHarness) erro
 	}
 	defer client.Close()
 
-	commandTestCase := test_cases.SendCommandTestCase{
+	commandTestCase := &test_cases.SendCommandTestCase{
 		Command:                   "INFO",
 		Args:                      []string{"replication"},
 		Assertion:                 resp_assertions.NewNoopAssertion(),
