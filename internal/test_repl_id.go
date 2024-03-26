@@ -1,8 +1,12 @@
 package internal
 
 import (
+	"fmt"
+	"regexp"
+
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
@@ -25,13 +29,36 @@ func testReplReplicationID(stageHarness *test_case_harness.TestCaseHarness) erro
 	}
 	defer client.Close()
 
-	commandTestCase := test_cases.SendCommandTestCase{
-		Command: "INFO",
-		Args:    []string{"replication"},
-		// ToDo : This test requires the order of the offset and id to be fixed, change this to be order agnostic.
-		Assertion:                 resp_assertions.NewRegexStringAssertion("master_replid:([a-zA-Z0-9]+)[\\s\\S]*master_repl_offset:0"),
+	commandTestCase := &test_cases.SendCommandTestCase{
+		Command:                   "INFO",
+		Args:                      []string{"replication"},
+		Assertion:                 resp_assertions.NewNoopAssertion(),
 		ShouldSkipUnreadDataCheck: true,
 	}
 
-	return commandTestCase.Run(client, logger)
+	if err := commandTestCase.Run(client, logger); err != nil {
+		return err
+	}
+
+	responseValue := commandTestCase.ReceivedResponse
+
+	if responseValue.Type != resp_value.BULK_STRING && responseValue.Type != resp_value.SIMPLE_STRING {
+		return fmt.Errorf("Expected simple string or bulk string, got %s", responseValue.Type)
+	}
+
+	var patternMatchError error
+
+	if regexp.MustCompile("master_replid:([a-zA-Z0-9]+)").Match([]byte(responseValue.String())) {
+		logger.Successf("Found master_replid:xxx in response.")
+	} else {
+		patternMatchError = fmt.Errorf("Expected master_replid:xxx to be present in response. Got: %q", responseValue.String())
+	}
+
+	if regexp.MustCompile("master_repl_offset:0").Match([]byte(responseValue.String())) {
+		logger.Successf("Found master_reploffset:0 in response.")
+	} else {
+		patternMatchError = fmt.Errorf("Expected master_repl_offset:0 to be present in response. Got: %q", responseValue.String())
+	}
+
+	return patternMatchError
 }
