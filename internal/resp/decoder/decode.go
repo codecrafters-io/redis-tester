@@ -31,11 +31,14 @@ func doDecodeValue(reader *bytes.Reader) (resp_value.Value, error) {
 	switch firstByte {
 	case '+':
 		return decodeSimpleString(reader)
+	case '-':
+		return decodeError(reader)
+	case ':':
+		return decodeInteger(reader)
 	case '$':
 		return decodeBulkStringOrNil(reader)
 	case '*':
 		return decodeArray(reader)
-	// TODO: Implement the rest of the types
 	default:
 		reader.UnreadByte() // Ensure the error points to the correct byte
 

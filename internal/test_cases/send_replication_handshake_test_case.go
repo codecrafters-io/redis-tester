@@ -102,6 +102,6 @@ func (t SendReplicationHandshakeTestCase) RunReceiveRDBStep(client *resp_client.
 		return fmt.Errorf("Found extra data: %q", string(client.LastValueBytes)+client.UnreadBuffer.String())
 	}
 
-	logger.Successf("Received RDB file.")
+	logger.Successf("Received RDB file")
 	return nil
 }

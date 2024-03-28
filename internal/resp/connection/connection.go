@@ -46,6 +46,13 @@ type RespConnection struct {
 
 	// Callbacks is a set of functions that are called at various points in the connection's lifecycle.
 	Callbacks RespConnectionCallbacks
+
+	// Offset tracking:
+	// SentBytes is the number of bytes sent using this connection.
+	SentBytes int
+
+	// ReceivedBytes is the number of bytes received using this connection.
+	ReceivedBytes int
 }
 
 func NewRespConnectionFromAddr(addr string, callbacks RespConnectionCallbacks) (*RespConnection, error) {
@@ -102,6 +109,8 @@ func (c *RespConnection) SendBytes(bytes []byte) error {
 		return err
 	}
 
+	c.SentBytes += len(bytes)
+
 	// TODO: Check when this happens - is it a valid error?
 	if n != len(bytes) {
 		return errors.New("failed to write entire bytes to connection")
@@ -135,6 +144,8 @@ func (c *RespConnection) ReadFullResyncRDBFile() ([]byte, error) {
 
 		return nil, err
 	}
+
+	c.ReceivedBytes += readBytesCount
 
 	// We've read a value! Let's remove the bytes we've read from the buffer
 	c.LastValueBytes = c.UnreadBuffer.Bytes()[:readBytesCount]
@@ -187,6 +198,8 @@ func (c *RespConnection) ReadValueWithTimeout(timeout time.Duration) (resp_value
 		return resp_value.Value{}, err
 	}
 
+	c.ReceivedBytes += readBytesCount
+
 	// We've read a value! Let's remove the bytes we've read from the buffer
 	c.LastValueBytes = c.UnreadBuffer.Bytes()[:readBytesCount]
 	c.UnreadBuffer = *bytes.NewBuffer(c.UnreadBuffer.Bytes()[readBytesCount:])
@@ -215,6 +228,13 @@ func (c *RespConnection) readIntoBufferUntil(condition func([]byte) bool, timeou
 			time.Sleep(10 * time.Millisecond) // Let's wait a bit before trying again
 		}
 	}
+}
+
+func (c *RespConnection) ResetByteCounters() {
+	// The bytes received and sent during the handshake don't count towards offset.
+	// After finishing the handshake we reset the counters.
+	c.ReceivedBytes = 0
+	c.SentBytes = 0
 }
 
 func newConn(address string) (net.Conn, error) {

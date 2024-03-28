@@ -3,8 +3,10 @@ package internal
 import (
 	"fmt"
 	"net"
+	"regexp"
 
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 
@@ -63,8 +65,31 @@ func testReplInfoReplica(stageHarness *test_case_harness.TestCaseHarness) error 
 	commandTestCase := test_cases.SendCommandTestCase{
 		Command:                   "INFO",
 		Args:                      []string{"replication"},
-		Assertion:                 resp_assertions.NewRegexStringAssertion("role:slave"),
+		Assertion:                 resp_assertions.NewNoopAssertion(),
 		ShouldSkipUnreadDataCheck: true,
 	}
-	return commandTestCase.Run(client, logger)
+
+	if err := commandTestCase.Run(client, logger); err != nil {
+		return err
+	}
+
+	responseValue := commandTestCase.ReceivedResponse
+
+	if responseValue.Type != resp_value.BULK_STRING && responseValue.Type != resp_value.SIMPLE_STRING {
+		return fmt.Errorf("Expected simple string or bulk string, got %s", responseValue.Type)
+	}
+
+	var patternMatchError error
+
+	if !regexp.MustCompile("role:").Match([]byte(responseValue.String())) {
+		patternMatchError = fmt.Errorf("Expected role to be present in response. Got: %q", responseValue.String())
+	}
+
+	if regexp.MustCompile("role:slave").Match([]byte(responseValue.String())) {
+		logger.Successf("Found role:slave in response.")
+	} else {
+		patternMatchError = fmt.Errorf("Expected role to be slave in response. Got: %q", responseValue.String())
+	}
+
+	return patternMatchError
 }
