@@ -2,6 +2,7 @@ package resp_decoder
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"strconv"
 
@@ -19,7 +20,10 @@ func decodeInteger(reader *bytes.Reader) (resp_value.Value, error) {
 
 	integer, err := strconv.Atoi(string(bytes))
 	if err != nil {
-		return resp_value.Value{}, err
+		return resp_value.Value{}, InvalidInputError{
+			Reader:  reader,
+			Message: fmt.Sprintf("Invalid integer: %q, expected a number", string(bytes)),
+		}
 	}
 	return resp_value.NewIntegerValue(integer), nil
 }
