@@ -52,5 +52,5 @@ func testReplGetaAckZero(stageHarness *test_case_harness.TestCaseHarness) error 
 
 	getAckTestCase := test_cases.GetAckTestCase{}
 
-	return getAckTestCase.RunGetAck(master, logger, 0)
+	return getAckTestCase.Run(master, logger, 0)
 }

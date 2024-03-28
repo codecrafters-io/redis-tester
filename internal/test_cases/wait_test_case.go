@@ -1,21 +1,23 @@
 package test_cases
 
 import (
+	"strconv"
+
 	resp_connection "github.com/codecrafters-io/redis-tester/internal/resp/connection"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/tester-utils/logger"
 )
 
 type WaitTestCase struct {
-	Replicas        string
-	Timeout         string
-	ExpectedMessage int
+	Replicas              int
+	TimeoutInMilliseconds int
+	ExpectedMessage       int
 }
 
-func (t WaitTestCase) RunWait(client *resp_connection.RespConnection, logger *logger.Logger) error {
+func (t WaitTestCase) Run(client *resp_connection.RespConnection, logger *logger.Logger) error {
 	commandTest := SendCommandTestCase{
 		Command:   "WAIT",
-		Args:      []string{t.Replicas, t.Timeout},
+		Args:      []string{strconv.Itoa(t.Replicas), strconv.Itoa(t.TimeoutInMilliseconds)},
 		Assertion: resp_assertions.NewIntegerAssertion(t.ExpectedMessage),
 	}
 

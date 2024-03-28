@@ -10,7 +10,7 @@ import (
 
 type GetAckTestCase struct{}
 
-func (t GetAckTestCase) RunGetAck(client *resp_connection.RespConnection, logger *logger.Logger, offset int) error {
+func (t GetAckTestCase) Run(client *resp_connection.RespConnection, logger *logger.Logger, offset int) error {
 	commandTest := SendCommandTestCase{
 		Command:   "REPLCONF",
 		Args:      []string{"GETACK", "*"},

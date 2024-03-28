@@ -231,8 +231,6 @@ func (c *RespConnection) readIntoBufferUntil(condition func([]byte) bool, timeou
 }
 
 func (c *RespConnection) ResetByteCounters() {
-	// The bytes received and sent during the handshake don't count towards offset.
-	// After finishing the handshake we reset the counters.
 	c.ReceivedBytes = 0
 	c.SentBytes = 0
 }

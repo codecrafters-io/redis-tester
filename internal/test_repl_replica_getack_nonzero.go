@@ -51,11 +51,12 @@ func testReplGetaAckNonZero(stageHarness *test_case_harness.TestCaseHarness) err
 		return err
 	}
 
-	// Reset received and sent byte offset here.
+	// The bytes received and sent during the handshake don't count towards offset.
+	// After finishing the handshake we reset the counters.
 	master.ResetByteCounters()
 
 	getAckTestCase := test_cases.GetAckTestCase{}
-	if err := getAckTestCase.RunGetAck(master, logger, master.SentBytes); err != nil {
+	if err := getAckTestCase.Run(master, logger, master.SentBytes); err != nil {
 		return err
 	}
 
@@ -63,7 +64,7 @@ func testReplGetaAckNonZero(stageHarness *test_case_harness.TestCaseHarness) err
 		return err
 	}
 
-	if err := getAckTestCase.RunGetAck(master, logger, master.SentBytes); err != nil {
+	if err := getAckTestCase.Run(master, logger, master.SentBytes); err != nil {
 		return err
 	}
 
@@ -79,5 +80,5 @@ func testReplGetaAckNonZero(stageHarness *test_case_harness.TestCaseHarness) err
 		return err
 	}
 
-	return getAckTestCase.RunGetAck(master, logger, master.SentBytes)
+	return getAckTestCase.Run(master, logger, master.SentBytes)
 }

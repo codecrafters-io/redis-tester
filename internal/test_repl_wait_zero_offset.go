@@ -1,8 +1,6 @@
 package internal
 
 import (
-	"strconv"
-
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
@@ -41,14 +39,13 @@ func testWaitZeroOffset(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	diff := ((replicaCount + 3) - 3) / 3
 	safeDiff := max(1, diff) // If diff is 0, it will get stuck in an infinite loop
-	for i := 3; i < replicaCount+3; i += safeDiff {
-		actual, expected := strconv.Itoa(i), replicaCount
+	for actual := 3; actual < replicaCount+3; actual += safeDiff {
 		waitTestCase := test_cases.WaitTestCase{
-			Replicas:        actual,
-			Timeout:         "500",
-			ExpectedMessage: expected,
+			Replicas:              actual,
+			TimeoutInMilliseconds: 500,
+			ExpectedMessage:       replicaCount,
 		}
-		if err := waitTestCase.RunWait(client, logger); err != nil {
+		if err := waitTestCase.Run(client, logger); err != nil {
 			return err
 		}
 	}

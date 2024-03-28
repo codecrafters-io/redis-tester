@@ -26,10 +26,10 @@ func testWaitZeroReplicas(stageHarness *test_case_harness.TestCaseHarness) error
 	defer client.Close()
 
 	waitTestCase := test_cases.WaitTestCase{
-		Replicas:        "0",
-		Timeout:         "60000",
-		ExpectedMessage: 0,
+		Replicas:              0,
+		TimeoutInMilliseconds: 60000,
+		ExpectedMessage:       0,
 	}
 
-	return waitTestCase.RunWait(client, logger)
+	return waitTestCase.Run(client, logger)
 }

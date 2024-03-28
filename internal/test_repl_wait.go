@@ -78,13 +78,10 @@ func testWait(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 	defer client.Close()
 
-	waitCommandReplicaSubsetCount := 1
-	acksSendByReplicaSubsetCount := 1
-
 	if err = RunWaitTest(client, replicas, WaitTest{
 		WriteCommand:        []string{"SET", "foo", "123"},
-		WaitReplicaCount:    waitCommandReplicaSubsetCount,
-		ActualNumberOfAcks:  acksSendByReplicaSubsetCount,
+		WaitReplicaCount:    1,
+		ActualNumberOfAcks:  1,
 		WaitTimeoutMilli:    500,
 		ShouldVerifyTimeout: false,
 		Logger:              logger,
@@ -94,12 +91,11 @@ func testWait(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	logger.Successf("Passed first WAIT test.")
 
-	waitCommandReplicaSubsetCount = testerutils_random.RandomInt(2, replicaCount) + 1
-	acksSendByReplicaSubsetCount = waitCommandReplicaSubsetCount - 1
+	waitCommandReplicaSubsetCount := testerutils_random.RandomInt(2, replicaCount) + 1
 	if err = RunWaitTest(client, replicas, WaitTest{
 		WriteCommand:        []string{"SET", "baz", "789"},
 		WaitReplicaCount:    waitCommandReplicaSubsetCount,
-		ActualNumberOfAcks:  acksSendByReplicaSubsetCount,
+		ActualNumberOfAcks:  waitCommandReplicaSubsetCount - 1,
 		WaitTimeoutMilli:    2000,
 		ShouldVerifyTimeout: true,
 		Logger:              logger,
@@ -110,7 +106,7 @@ func testWait(stageHarness *test_case_harness.TestCaseHarness) error {
 	return nil
 }
 
-func consumeReplicationStreamAndSendAcks(replicas []*resp_connection.RespConnection, logger *logger.Logger, acksSendByReplicaSubsetCount int, command []string) error {
+func consumeReplicationStreamAndSendAcks(replicas []*resp_connection.RespConnection, logger *logger.Logger, acksSentByReplicaSubsetCount int, command []string) error {
 	var err error
 	for j := 0; j < len(replicas); j++ {
 		replica := replicas[j]
@@ -143,7 +139,7 @@ func consumeReplicationStreamAndSendAcks(replicas []*resp_connection.RespConnect
 			return err
 		}
 
-		if j < acksSendByReplicaSubsetCount {
+		if j < acksSentByReplicaSubsetCount {
 			// Remove GETACK command bytes from offset before sending ACK.
 			if err := replica.SendCommand("REPLCONF", []string{"ACK", strconv.Itoa(replica.ReceivedBytes - len(replica.LastValueBytes))}...); err != nil {
 				return err
