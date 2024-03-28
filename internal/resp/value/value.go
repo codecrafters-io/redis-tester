@@ -99,7 +99,7 @@ func (v *Value) FormattedString() string {
 	case SIMPLE_STRING:
 		return fmt.Sprintf("%q", v.String())
 	case INTEGER:
-		return fmt.Sprintf("%q", v.Integer())
+		return fmt.Sprintf("%d", v.Integer())
 	case BULK_STRING:
 		return fmt.Sprintf("%q", v.String())
 	case ARRAY:

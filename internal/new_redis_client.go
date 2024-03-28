@@ -40,38 +40,3 @@ func NewRedisClient(addr string) *redis.Client {
 		},
 	})
 }
-
-func NewRedisConn(network string, address string) (net.Conn, error) {
-	if network == "" {
-		network = "tcp" // Default value
-	}
-	if address == "" {
-		address = "localhost:6379"
-	}
-	attempts := 0
-
-	for {
-		var err error
-		var conn net.Conn
-
-		conn, err = net.Dial("tcp", address)
-
-		if err == nil {
-			return conn, nil
-		}
-
-		// Already a timeout
-		if netErr, ok := err.(net.Error); ok && netErr.Timeout() {
-			return nil, err
-		}
-
-		// 50 * 100ms = 5s
-		if attempts > 50 {
-			return nil, err
-		}
-
-		attempts += 1
-		time.Sleep(100 * time.Millisecond)
-	}
-
-}

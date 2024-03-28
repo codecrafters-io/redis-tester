@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/codecrafters-io/redis-tester/internal"
 	"os"
 	"strings"
+
+	"github.com/codecrafters-io/redis-tester/internal"
 )
 
 func main() {
