@@ -10,6 +10,8 @@ import (
 )
 
 func decodeInteger(reader *bytes.Reader) (resp_value.Value, error) {
+	offsetBeforeInteger := getReaderOffset(reader)
+
 	bytes, err := readUntilCRLF(reader)
 	if err == io.EOF {
 		return resp_value.Value{}, IncompleteInputError{
@@ -20,10 +22,14 @@ func decodeInteger(reader *bytes.Reader) (resp_value.Value, error) {
 
 	integer, err := strconv.Atoi(string(bytes))
 	if err != nil {
+		// Ensure error points to the correct byte
+		reader.Seek(int64(offsetBeforeInteger), io.SeekStart)
+
 		return resp_value.Value{}, InvalidInputError{
 			Reader:  reader,
 			Message: fmt.Sprintf("Invalid integer: %q, expected a number", string(bytes)),
 		}
 	}
+
 	return resp_value.NewIntegerValue(integer), nil
 }
