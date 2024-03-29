@@ -40,12 +40,20 @@ func (t *SendCommandTestCase) Run(client *resp_client.RespConnection, logger *lo
 			return err
 		}
 
+		if t.Retries == 0 {
+			break
+		}
+
 		if attempt > 0 {
-			if t.ShouldRetryFunc(value) {
-				// If ShouldRetryFunc returns true, we sleep and retry.
-				time.Sleep(500 * time.Millisecond)
+			if t.ShouldRetryFunc == nil {
+				panic(fmt.Sprintf("Received SendCommand with retries: %d but no ShouldRetryFunc.", t.Retries))
 			} else {
-				break
+				if t.ShouldRetryFunc(value) {
+					// If ShouldRetryFunc returns true, we sleep and retry.
+					time.Sleep(500 * time.Millisecond)
+				} else {
+					break
+				}
 			}
 		}
 	}
