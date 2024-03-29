@@ -70,6 +70,33 @@
                         ^ error
     Error: Expected \r\n at the end of a bulk string
 
+# Integers
+
+- input: ":17"
+  error: |
+    Received: ":17"
+                  ^ error
+    Error: Expected \r\n at the end of an integer
+
+- input: ":17\r"
+  error: |
+    Received: ":17\r"
+                    ^ error
+    Error: Expected \r\n at the end of an integer
+
+- input: ":17\n"
+  error: |
+    Received: ":17\n"
+                    ^ error
+    Error: Expected \r\n at the end of an integer
+
+- input: ":foo\r\n"
+  error: |
+    Received: ":foo\r\n"
+                ^ error
+    Error: Invalid integer: "foo", expected a number
+
+
 # Arrays
 
 # - input: "*abc"

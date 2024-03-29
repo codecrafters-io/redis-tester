@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"net"
 
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
@@ -20,6 +22,7 @@ func testReplGetaAckNonZero(stageHarness *test_case_harness.TestCaseHarness) err
 		logFriendlyBindError(logger, err)
 		return fmt.Errorf("Error starting TCP server: %v", err)
 	}
+	defer listener.Close()
 
 	logger.Infof("Master is running on port 6379")
 
@@ -34,54 +37,48 @@ func testReplGetaAckNonZero(stageHarness *test_case_harness.TestCaseHarness) err
 		fmt.Println("Error accepting: ", err.Error())
 		return err
 	}
+	defer conn.Close()
 
-	master := NewFakeRedisMaster(conn, logger)
-
-	err = master.Handshake()
+	master, err := instrumented_resp_connection.NewFromConn(stageHarness, conn, "master")
 	if err != nil {
+		logFriendlyError(logger, err)
 		return err
 	}
 
-	offset := 0
-	err = master.GetAck(offset) // 37
-	if err != nil {
-		return err
-	}
-	offset += GetByteOffset([]string{"REPLCONF", "GETACK", "*"})
+	receiveReplicationHandshakeTestCase := test_cases.ReceiveReplicationHandshakeTestCase{}
 
-	err = master.GetAck(offset) // 37
-	if err != nil {
-		return err
-	}
-	offset += GetByteOffset([]string{"REPLCONF", "GETACK", "*"})
-
-	cmd := []string{"PING"}
-	master.Send(cmd) // 14
-	offset += GetByteOffset(cmd)
-
-	err = master.GetAck(offset) // 37
-	if err != nil {
-		return err
-	}
-	offset += GetByteOffset([]string{"REPLCONF", "GETACK", "*"})
-
-	key := RandomAlphanumericString(testerutils_random.RandomInt(5, 20))
-	value := RandomAlphanumericString(testerutils_random.RandomInt(5, 20))
-	cmd = []string{"SET", key, value}
-	master.Send(cmd) // 31
-	offset += GetByteOffset(cmd)
-
-	key = RandomAlphanumericString(testerutils_random.RandomInt(5, 20))
-	value = RandomAlphanumericString(testerutils_random.RandomInt(5, 20))
-	cmd = []string{"SET", key, value}
-	master.Send(cmd) // 31
-	offset += GetByteOffset(cmd)
-
-	err = master.GetAck(offset)
-	if err != nil {
+	if err := receiveReplicationHandshakeTestCase.RunAll(master, logger); err != nil {
 		return err
 	}
 
-	listener.Close()
-	return nil
+	// The bytes received and sent during the handshake don't count towards offset.
+	// After finishing the handshake we reset the counters.
+	master.ResetByteCounters()
+
+	getAckTestCase := test_cases.GetAckTestCase{}
+	if err := getAckTestCase.Run(master, logger, master.SentBytes); err != nil {
+		return err
+	}
+
+	if err := master.SendCommand("PING"); err != nil {
+		return err
+	}
+
+	if err := getAckTestCase.Run(master, logger, master.SentBytes); err != nil {
+		return err
+	}
+
+	key := testerutils_random.RandomWord()
+	value := testerutils_random.RandomWord()
+	if err := master.SendCommand("SET", []string{key, value}...); err != nil {
+		return err
+	}
+
+	key = testerutils_random.RandomWord()
+	value = testerutils_random.RandomWord()
+	if err := master.SendCommand("SET", []string{key, value}...); err != nil {
+		return err
+	}
+
+	return getAckTestCase.Run(master, logger, master.SentBytes)
 }
