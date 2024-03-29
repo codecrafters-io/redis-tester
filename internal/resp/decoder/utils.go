@@ -2,7 +2,6 @@ package resp_decoder
 
 import (
 	"bytes"
-	"fmt"
 	"io"
 )
 
@@ -10,8 +9,7 @@ func readUntilCRLF(r *bytes.Reader) ([]byte, error) {
 	return readUntil(r, []byte("\r\n"))
 }
 
-func readCRLF(reader *bytes.Reader, locationDescriptor string, length int) (err error) {
-	errorMessage := fmt.Sprintf(`Read %d bytes of string data, but didn't receive \r\n terminator %s of a bulk string`, length, locationDescriptor)
+func readCRLF(reader *bytes.Reader, errorMessage string) (err error) {
 	offsetBeforeCRLF := getReaderOffset(reader)
 
 	b, err := reader.ReadByte()
