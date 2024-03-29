@@ -137,11 +137,12 @@ func (c *RespConnection) ReadFullResyncRDBFile() ([]byte, error) {
 	c.readIntoBufferUntil(shouldStopReadingIntoBuffer, 2*time.Second)
 
 	value, readBytesCount, err := resp_decoder.DecodeFullResyncRDBFile(c.UnreadBuffer.Bytes())
-	if err != nil {
-		if c.Callbacks.AfterBytesReceived != nil {
-			c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes())
-		}
 
+	if c.Callbacks.AfterBytesReceived != nil {
+		c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes())
+	}
+
+	if err != nil {
 		return nil, err
 	}
 
@@ -190,11 +191,12 @@ func (c *RespConnection) ReadValueWithTimeout(timeout time.Duration) (resp_value
 	c.readIntoBufferUntil(shouldStopReadingIntoBuffer, timeout)
 
 	value, readBytesCount, err := resp_decoder.Decode(c.UnreadBuffer.Bytes())
-	if err != nil {
-		if c.Callbacks.AfterBytesReceived != nil {
-			c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes())
-		}
 
+	if c.Callbacks.AfterBytesReceived != nil {
+		c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes())
+	}
+
+	if err != nil {
 		return resp_value.Value{}, err
 	}
 
