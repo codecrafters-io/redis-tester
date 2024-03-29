@@ -64,11 +64,17 @@
                      ^ error
     Error: Expected 3 bytes of data in bulk string, got 0
 
+- input: "$2\r\nabc\r\n"
+  error: |
+    Received: "$2\r\nabc\r\n"
+                       ^ error
+    Error: Read 2 bytes of string data, but didn't receive \r\n terminator at the end of a bulk string
+
 - input: "$3\r\nabc"
   error: |
     Received: "$3\r\nabc"
                         ^ error
-    Error: Expected \r\n at the end of a bulk string
+    Error: Read 3 bytes of string data, but didn't receive \r\n terminator at the end of a bulk string
 
 # Integers
 

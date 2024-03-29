@@ -60,7 +60,7 @@ func decodeBulkStringOrNil(reader *bytes.Reader) (resp_value.Value, error) {
 	}
 
 	// Read the \r\n at the end of the bulk string
-	if err := readCRLF(reader, "at the end of a bulk string"); err != nil {
+	if err := readCRLF(reader, "at the end", length); err != nil {
 		return resp_value.Value{}, err
 	}
 

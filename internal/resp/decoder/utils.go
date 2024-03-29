@@ -10,8 +10,9 @@ func readUntilCRLF(r *bytes.Reader) ([]byte, error) {
 	return readUntil(r, []byte("\r\n"))
 }
 
-func readCRLF(reader *bytes.Reader, locationDescriptor string) (err error) {
-	errorMessage := fmt.Sprintf(`Expected \r\n %s`, locationDescriptor)
+func readCRLF(reader *bytes.Reader, locationDescriptor string, length int) (err error) {
+	errorMessage := fmt.Sprintf(`Read %d bytes of string data, but didn't receive \r\n terminator %s of a bulk string`, length, locationDescriptor)
+	offsetBeforeCRLF := getReaderOffset(reader)
 
 	b, err := reader.ReadByte()
 	if err == io.EOF {
@@ -22,6 +23,8 @@ func readCRLF(reader *bytes.Reader, locationDescriptor string) (err error) {
 	}
 
 	if b != '\r' {
+		reader.Seek(int64(offsetBeforeCRLF), io.SeekStart)
+
 		return InvalidInputError{
 			Reader:  reader,
 			Message: errorMessage,
@@ -37,6 +40,8 @@ func readCRLF(reader *bytes.Reader, locationDescriptor string) (err error) {
 	}
 
 	if b != '\n' {
+		reader.Seek(int64(offsetBeforeCRLF), io.SeekStart)
+
 		return InvalidInputError{
 			Reader:  reader,
 			Message: errorMessage,
