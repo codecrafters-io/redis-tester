@@ -13,6 +13,7 @@ Debug = true
 [33m[stage-2] [0m[36mConnection established, sending ping command...[0m
 [33m[stage-2] [0m[94m$ redis-cli ping[0m
 [33m[stage-2] [0m[36mSent bytes: "*1\r\n$4\r\nping\r\n"[0m
+[33m[stage-2] [0m[36mReceived bytes: "+PONG\r\n"[0m
 [33m[stage-2] [0m[36mReceived RESP value: "PONG"[0m
 [33m[stage-2] [0m[92mReceived "PONG"[0m
 [33m[stage-2] [0m[92mTest passed.[0m
@@ -23,14 +24,17 @@ Debug = true
 [33m[stage-3] [0m[94m$ ./spawn_redis_server.sh[0m
 [33m[stage-3] [0m[94mclient-1: $ redis-cli ping[0m
 [33m[stage-3] [0m[36mclient-1: Sent bytes: "*1\r\n$4\r\nping\r\n"[0m
+[33m[stage-3] [0m[36mclient-1: Received bytes: "+PONG\r\n"[0m
 [33m[stage-3] [0m[36mclient-1: Received RESP value: "PONG"[0m
 [33m[stage-3] [0m[92mReceived "PONG"[0m
 [33m[stage-3] [0m[94mclient-1: $ redis-cli ping[0m
 [33m[stage-3] [0m[36mclient-1: Sent bytes: "*1\r\n$4\r\nping\r\n"[0m
+[33m[stage-3] [0m[36mclient-1: Received bytes: "+PONG\r\n"[0m
 [33m[stage-3] [0m[36mclient-1: Received RESP value: "PONG"[0m
 [33m[stage-3] [0m[92mReceived "PONG"[0m
 [33m[stage-3] [0m[94mclient-1: $ redis-cli ping[0m
 [33m[stage-3] [0m[36mclient-1: Sent bytes: "*1\r\n$4\r\nping\r\n"[0m
+[33m[stage-3] [0m[36mclient-1: Received bytes: "+PONG\r\n"[0m
 [33m[stage-3] [0m[36mclient-1: Received RESP value: "PONG"[0m
 [33m[stage-3] [0m[92mReceived "PONG"[0m
 [33m[stage-3] [0m[36mSuccess, closing connection...[0m
@@ -42,27 +46,33 @@ Debug = true
 [33m[stage-4] [0m[94m$ ./spawn_redis_server.sh[0m
 [33m[stage-4] [0m[94mclient-1: $ redis-cli ping[0m
 [33m[stage-4] [0m[36mclient-1: Sent bytes: "*1\r\n$4\r\nping\r\n"[0m
+[33m[stage-4] [0m[36mclient-1: Received bytes: "+PONG\r\n"[0m
 [33m[stage-4] [0m[36mclient-1: Received RESP value: "PONG"[0m
 [33m[stage-4] [0m[92mReceived "PONG"[0m
 [33m[stage-4] [0m[94mclient-2: $ redis-cli ping[0m
 [33m[stage-4] [0m[36mclient-2: Sent bytes: "*1\r\n$4\r\nping\r\n"[0m
+[33m[stage-4] [0m[36mclient-2: Received bytes: "+PONG\r\n"[0m
 [33m[stage-4] [0m[36mclient-2: Received RESP value: "PONG"[0m
 [33m[stage-4] [0m[92mReceived "PONG"[0m
 [33m[stage-4] [0m[94mclient-1: $ redis-cli ping[0m
 [33m[stage-4] [0m[36mclient-1: Sent bytes: "*1\r\n$4\r\nping\r\n"[0m
+[33m[stage-4] [0m[36mclient-1: Received bytes: "+PONG\r\n"[0m
 [33m[stage-4] [0m[36mclient-1: Received RESP value: "PONG"[0m
 [33m[stage-4] [0m[92mReceived "PONG"[0m
 [33m[stage-4] [0m[94mclient-1: $ redis-cli ping[0m
 [33m[stage-4] [0m[36mclient-1: Sent bytes: "*1\r\n$4\r\nping\r\n"[0m
+[33m[stage-4] [0m[36mclient-1: Received bytes: "+PONG\r\n"[0m
 [33m[stage-4] [0m[36mclient-1: Received RESP value: "PONG"[0m
 [33m[stage-4] [0m[92mReceived "PONG"[0m
 [33m[stage-4] [0m[94mclient-2: $ redis-cli ping[0m
 [33m[stage-4] [0m[36mclient-2: Sent bytes: "*1\r\n$4\r\nping\r\n"[0m
+[33m[stage-4] [0m[36mclient-2: Received bytes: "+PONG\r\n"[0m
 [33m[stage-4] [0m[36mclient-2: Received RESP value: "PONG"[0m
 [33m[stage-4] [0m[92mReceived "PONG"[0m
 [33m[stage-4] [0m[36mclient-1: Success, closing connection...[0m
 [33m[stage-4] [0m[94mclient-3: $ redis-cli ping[0m
 [33m[stage-4] [0m[36mclient-3: Sent bytes: "*1\r\n$4\r\nping\r\n"[0m
+[33m[stage-4] [0m[36mclient-3: Received bytes: "+PONG\r\n"[0m
 [33m[stage-4] [0m[36mclient-3: Received RESP value: "PONG"[0m
 [33m[stage-4] [0m[92mReceived "PONG"[0m
 [33m[stage-4] [0m[36mclient-2: Success, closing connection...[0m
@@ -75,6 +85,7 @@ Debug = true
 [33m[stage-5] [0m[94m$ ./spawn_redis_server.sh[0m
 [33m[stage-5] [0m[94m$ redis-cli echo pear[0m
 [33m[stage-5] [0m[36mSent bytes: "*2\r\n$4\r\necho\r\n$4\r\npear\r\n"[0m
+[33m[stage-5] [0m[36mReceived bytes: "$4\r\npear\r\n"[0m
 [33m[stage-5] [0m[36mReceived RESP value: "pear"[0m
 [33m[stage-5] [0m[92mReceived "pear"[0m
 [33m[stage-5] [0m[92mTest passed.[0m
@@ -86,11 +97,13 @@ Debug = true
 [33m[stage-6] [0m[36mSetting key orange to pear[0m
 [33m[stage-6] [0m[94m$ redis-cli set orange pear[0m
 [33m[stage-6] [0m[36mSent bytes: "*3\r\n$3\r\nset\r\n$6\r\norange\r\n$4\r\npear\r\n"[0m
+[33m[stage-6] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[stage-6] [0m[36mReceived RESP value: "OK"[0m
 [33m[stage-6] [0m[92mReceived "OK"[0m
 [33m[stage-6] [0m[36mGetting key orange[0m
 [33m[stage-6] [0m[94m$ redis-cli get orange[0m
 [33m[stage-6] [0m[36mSent bytes: "*2\r\n$3\r\nget\r\n$6\r\norange\r\n"[0m
+[33m[stage-6] [0m[36mReceived bytes: "$4\r\npear\r\n"[0m
 [33m[stage-6] [0m[36mReceived RESP value: "pear"[0m
 [33m[stage-6] [0m[92mReceived "pear"[0m
 [33m[stage-6] [0m[92mTest passed.[0m
@@ -101,26 +114,29 @@ Debug = true
 [33m[stage-7] [0m[94m$ ./spawn_redis_server.sh[0m
 [33m[stage-7] [0m[94m$ redis-cli set pineapple grape px 100[0m
 [33m[stage-7] [0m[36mSent bytes: "*5\r\n$3\r\nset\r\n$9\r\npineapple\r\n$5\r\ngrape\r\n$2\r\npx\r\n$3\r\n100\r\n"[0m
+[33m[stage-7] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[stage-7] [0m[36mReceived RESP value: "OK"[0m
 [33m[stage-7] [0m[92mReceived "OK"[0m
-[33m[stage-7] [0m[92mReceived OK at 12:42:26.401[0m
-[33m[stage-7] [0m[94mFetching key "pineapple" at 12:42:26.401 (should not be expired)[0m
+[33m[stage-7] [0m[92mReceived OK at 23:38:34.936[0m
+[33m[stage-7] [0m[94mFetching key "pineapple" at 23:38:34.936 (should not be expired)[0m
 [33m[stage-7] [0m[94m$ redis-cli get pineapple[0m
 [33m[stage-7] [0m[36mSent bytes: "*2\r\n$3\r\nget\r\n$9\r\npineapple\r\n"[0m
+[33m[stage-7] [0m[36mReceived bytes: "$5\r\ngrape\r\n"[0m
 [33m[stage-7] [0m[36mReceived RESP value: "grape"[0m
 [33m[stage-7] [0m[92mReceived "grape"[0m
 [33m[stage-7] [0m[36mSleeping for 101ms[0m
-[33m[stage-7] [0m[94mFetching key "pineapple" at 12:42:26.504 (should be expired)[0m
+[33m[stage-7] [0m[94mFetching key "pineapple" at 23:38:35.040 (should be expired)[0m
 [33m[stage-7] [0m[94m$ redis-cli get pineapple[0m
 [33m[stage-7] [0m[36mSent bytes: "*2\r\n$3\r\nget\r\n$9\r\npineapple\r\n"[0m
-[33m[stage-7] [0m[36mReceived RESP value: [0m
-[33m[stage-7] [0m[92mReceived [0m
+[33m[stage-7] [0m[36mReceived bytes: "$-1\r\n"[0m
+[33m[stage-7] [0m[36mReceived RESP value: NIL[0m
+[33m[stage-7] [0m[92mReceived NIL[0m
 [33m[stage-7] [0m[92mTest passed.[0m
 [33m[stage-7] [0m[36mTerminating program[0m
 [33m[stage-7] [0m[36mProgram terminated successfully[0m
 
 [33m[stage-8] [0m[94mRunning tests for Stage #8: rdb-config[0m
-[33m[stage-8] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/f1/bs24_53x44j26flrfvyg416m0000gn/T/rdbfiles1857976389 --dbfilename banana.rdb[0m
+[33m[stage-8] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/rdbfiles4183027736 --dbfilename banana.rdb[0m
 [33m[stage-8] [0m[94m$ redis-cli CONFIG GET dir[0m
 [33m[stage-8] [0m[92mTest passed.[0m
 [33m[stage-8] [0m[36mTerminating program[0m
@@ -128,7 +144,7 @@ Debug = true
 
 [33m[stage-9] [0m[94mRunning tests for Stage #9: rdb-read-key[0m
 [33m[stage-9] [0m[94mCreated RDB file with single key: "orange"[0m
-[33m[stage-9] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/f1/bs24_53x44j26flrfvyg416m0000gn/T/rdbfiles2306328389 --dbfilename pineapple.rdb[0m
+[33m[stage-9] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/rdbfiles2711962083 --dbfilename pineapple.rdb[0m
 [33m[stage-9] [0m[94m$ redis-cli KEYS *[0m
 [33m[stage-9] [0m[92mTest passed.[0m
 [33m[stage-9] [0m[36mTerminating program[0m
@@ -136,7 +152,7 @@ Debug = true
 
 [33m[stage-10] [0m[94mRunning tests for Stage #10: rdb-read-string-value[0m
 [33m[stage-10] [0m[94mCreated RDB file with single key-value pair: blueberry="orange"[0m
-[33m[stage-10] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/f1/bs24_53x44j26flrfvyg416m0000gn/T/rdbfiles2223911189 --dbfilename pear.rdb[0m
+[33m[stage-10] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/rdbfiles4240521256 --dbfilename pear.rdb[0m
 [33m[stage-10] [0m[94m$ redis-cli GET blueberry[0m
 [33m[stage-10] [0m[92mTest passed.[0m
 [33m[stage-10] [0m[36mTerminating program[0m
@@ -144,7 +160,7 @@ Debug = true
 
 [33m[stage-11] [0m[94mRunning tests for Stage #11: rdb-read-multiple-keys[0m
 [33m[stage-11] [0m[94mCreated RDB file with 4 keys: ["grape" "pear" "strawberry" "banana"][0m
-[33m[stage-11] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/f1/bs24_53x44j26flrfvyg416m0000gn/T/rdbfiles2640172882 --dbfilename pineapple.rdb[0m
+[33m[stage-11] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/rdbfiles1371607472 --dbfilename pineapple.rdb[0m
 [33m[stage-11] [0m[94m$ redis-cli KEYS *[0m
 [33m[stage-11] [0m[92mTest passed.[0m
 [33m[stage-11] [0m[36mTerminating program[0m
@@ -152,7 +168,7 @@ Debug = true
 
 [33m[stage-12] [0m[94mRunning tests for Stage #12: rdb-read-multiple-string-values[0m
 [33m[stage-12] [0m[94mCreated RDB file with key-value pairs: "grape"="raspberry", "pineapple"="mango", "mango"="blueberry"[0m
-[33m[stage-12] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/f1/bs24_53x44j26flrfvyg416m0000gn/T/rdbfiles1061159386 --dbfilename pineapple.rdb[0m
+[33m[stage-12] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/rdbfiles3568218811 --dbfilename pineapple.rdb[0m
 [33m[stage-12] [0m[94m$ redis-cli GET grape[0m
 [33m[stage-12] [0m[94m$ redis-cli GET pineapple[0m
 [33m[stage-12] [0m[94m$ redis-cli GET mango[0m
@@ -161,7 +177,7 @@ Debug = true
 [33m[stage-12] [0m[36mError terminating program: 'program failed to exit in 2 seconds after receiving sigterm'[0m
 
 [33m[stage-13] [0m[94mRunning tests for Stage #13: rdb-read-value-with-expiry[0m
-[33m[stage-13] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/f1/bs24_53x44j26flrfvyg416m0000gn/T/rdbfiles426014138 --dbfilename banana.rdb[0m
+[33m[stage-13] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/rdbfiles2503190132 --dbfilename banana.rdb[0m
 [33m[stage-13] [0m[94m$ redis-cli GET strawberry[0m
 [33m[stage-13] [0m[94m$ redis-cli GET pear[0m
 [33m[stage-13] [0m[94m$ redis-cli GET raspberry[0m

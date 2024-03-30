@@ -112,6 +112,8 @@ func (v *Value) FormattedString() string {
 		return fmt.Sprintf("[%v]", strings.Join(formattedStrings, ", "))
 	case ERROR:
 		return fmt.Sprintf("%q", "ERR: "+v.String())
+	case NIL:
+		return "NIL"
 	}
 
 	return ""
