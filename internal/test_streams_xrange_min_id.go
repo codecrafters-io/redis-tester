@@ -81,10 +81,10 @@ func testStreamsXrangeMinID(stageHarness *test_case_harness.TestCaseHarness) err
 	}
 
 	if !reflect.DeepEqual(resp, expectedResp) {
-		logger.Infof("Received response: \"%q\"", string(respJSON))
-		return fmt.Errorf("Expected %q, got %q", string(expectedRespJSON), string(respJSON))
+		logger.Infof("Received response: \"%v\"", string(respJSON))
+		return fmt.Errorf("Expected %v, got %v", string(expectedRespJSON), string(respJSON))
 	} else {
-		logger.Successf("Received response: \"%q\"", string(respJSON))
+		logger.Successf("Received response: \"%v\"", string(respJSON))
 	}
 
 	return nil
