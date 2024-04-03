@@ -52,7 +52,7 @@ func testReplCmdProcessing(stageHarness *test_case_harness.TestCaseHarness) erro
 		return err
 	}
 
-	replicaClient, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6380", "replica")
+	replicaClient, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6380", "client")
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
