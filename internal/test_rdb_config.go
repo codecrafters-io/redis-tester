@@ -5,7 +5,10 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
@@ -32,30 +35,21 @@ func testRdbConfig(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 
 	logger := stageHarness.Logger
-	client := NewRedisClient("localhost:6379")
 
-	logger.Infof("$ redis-cli CONFIG GET dir")
-	resp, err := client.ConfigGet("dir").Result()
+	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "")
 	if err != nil {
-		logFriendlyError(logger, err)
 		return err
 	}
 
-	if len(resp) != 2 {
-		return fmt.Errorf("Expected 2 elements in response, got %d", len(resp))
+	commandTestCase := test_cases.SendCommandTestCase{
+		Command:   "config",
+		Args:      []string{"get", "dir"},
+		Assertion: resp_assertions.NewStringArrayAssertion([]string{"dir", tmpDir}),
 	}
 
-	if resp[0] != "dir" {
-		return fmt.Errorf("Expected first element in response to be 'dir', got %v", resp[0])
-	}
-
-	dirPath, ok := resp[1].(string)
-	if !ok {
-		return fmt.Errorf("Expected second element in response to be a string, got %T", resp[1])
-	}
-
-	if dirPath != tmpDir {
-		return fmt.Errorf("Expected second element in response to be %v, got %v", tmpDir, dirPath)
+	if err := commandTestCase.Run(client, logger); err != nil {
+		logFriendlyError(logger, err)
+		return err
 	}
 
 	client.Close()
