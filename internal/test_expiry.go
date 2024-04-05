@@ -55,6 +55,30 @@ func testExpiry(stageHarness *test_case_harness.TestCaseHarness) error {
 		return err
 	}
 
+	logger.Infof("Resetting the expiry time for %q to 200ms", randomKey)
+
+	setCommandTestCase = test_cases.SendCommandTestCase{
+		Command:   "set",
+		Args:      []string{randomKey, randomValue, "px", "200"},
+		Assertion: resp_assertions.NewStringAssertion("OK"),
+	}
+
+	logger.Debugf("Sleeping for 101ms")
+	time.Sleep(101 * time.Millisecond)
+
+	logger.Infof("Fetching key %q at %s (should not be expired)", randomKey, time.Now().Format("15:04:05.000"))
+
+	getCommandTestCase = test_cases.SendCommandTestCase{
+		Command:   "get",
+		Args:      []string{randomKey},
+		Assertion: resp_assertions.NewStringAssertion(randomValue),
+	}
+
+	if err := getCommandTestCase.Run(client, logger); err != nil {
+		logFriendlyError(logger, err)
+		return err
+	}
+
 	logger.Debugf("Sleeping for 101ms")
 	time.Sleep(101 * time.Millisecond)
 
@@ -70,7 +94,7 @@ func testExpiry(stageHarness *test_case_harness.TestCaseHarness) error {
 		logFriendlyError(logger, err)
 		return err
 	}
-
+	
 	client.Close()
 	return nil
 }
