@@ -62,8 +62,12 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 		}
 	}
 
+	logger.Successf("Sent 3 SET commands to master successfully.")
+
 	// We then assert that as a replica we receive the SET commands in order
 	for i := 1; i <= len(kvMap); i++ {
+		logger.Infof("replica: Expecting SET %s %s to be propagated", kvMap[i][0], kvMap[i][1])
+
 		receiveCommandTestCase := &test_cases.ReceiveValueTestCase{
 			Assertion:                 resp_assertions.NewCommandAssertion("SET", kvMap[i][0], kvMap[i][1]),
 			ShouldSkipUnreadDataCheck: i < len(kvMap), // Except in the last case, we're expecting more SET commands to be present
