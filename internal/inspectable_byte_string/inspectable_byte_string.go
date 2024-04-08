@@ -21,12 +21,12 @@ func NewInspectableByteString(bytes []byte) InspectableByteString {
 //
 // > Received: "+OK\r\n"
 // >                 ^ error
-func (s InspectableByteString) FormatWithHighlightedOffset(highlightOffset int, highlightText string, formattedStringPrefix string) string {
+func (s InspectableByteString) FormatWithHighlightedOffset(highlightOffset int, highlightText string, formattedStringPrefix string, formattedStringSuffix string) string {
 	s = s.TruncateAroundOffset(highlightOffset)
 
 	lines := []string{}
 
-	lines = append(lines, fmt.Sprintf("%s%s", formattedStringPrefix, s.FormattedString()))
+	lines = append(lines, fmt.Sprintf("%s%s%s", formattedStringPrefix, s.FormattedString(), formattedStringSuffix))
 
 	offsetPointerLine := ""
 	offsetPointerLine += strings.Repeat(" ", len(formattedStringPrefix)+s.GetOffsetInFormattedString(highlightOffset))

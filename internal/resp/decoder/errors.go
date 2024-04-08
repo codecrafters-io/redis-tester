@@ -33,7 +33,13 @@ func formatDetailedError(reader *bytes.Reader, message string) string {
 	receivedBytes := readBytesFromReader(reader)
 	receivedByteString := inspectable_byte_string.NewInspectableByteString(receivedBytes)
 
-	lines = append(lines, receivedByteString.FormatWithHighlightedOffset(offset, "error", "Received: "))
+	suffix := ""
+
+	if len(receivedBytes) == 0 {
+		suffix = " (no content received)"
+	}
+
+	lines = append(lines, receivedByteString.FormatWithHighlightedOffset(offset, "error", "Received: ", suffix))
 	lines = append(lines, fmt.Sprintf("Error: %s", message))
 
 	return strings.Join(lines, "\n")

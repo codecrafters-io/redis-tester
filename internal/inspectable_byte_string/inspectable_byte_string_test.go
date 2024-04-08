@@ -51,10 +51,10 @@ func TestFormatWithHighlightedOffset(t *testing.T) {
 	formattedStringPrefix := "Received: "
 
 	expected := strings.TrimSpace(`
-Received: "+OK\r\n"
+Received: "+OK\r\n (suffix)"
                 ^ error
 	`)
-	result := ibs.FormatWithHighlightedOffset(highlightOffset, highlightText, formattedStringPrefix)
+	result := ibs.FormatWithHighlightedOffset(highlightOffset, highlightText, formattedStringPrefix, " (suffix)")
 
 	assert.Equal(t, expected, result)
 }
