@@ -46,6 +46,10 @@ func SpawnReplicas(replicaCount int, stageHarness *test_case_harness.TestCaseHar
 			return nil, err
 		}
 
+		// The bytes received and sent during the handshake don't count towards offset.
+		// After finishing the handshake we reset the counters.
+		replica.ResetByteCounters()
+
 		replicas = append(replicas, replica)
 	}
 	return replicas, nil
