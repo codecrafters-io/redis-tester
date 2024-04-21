@@ -99,7 +99,7 @@ func (t SendReplicationHandshakeTestCase) RunReceiveRDBStep(client *resp_client.
 	client.ReadIntoBuffer() // Let's make sure there's no extra data
 
 	if client.UnreadBuffer.Len() > 0 {
-		return fmt.Errorf("Found extra data: %q", string(client.LastValueBytes)+client.UnreadBuffer.String())
+		return fmt.Errorf("Found extra data: %q", client.UnreadBuffer.String())
 	}
 
 	logger.Successf("Received RDB file")
