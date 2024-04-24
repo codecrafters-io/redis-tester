@@ -2,6 +2,7 @@ package test_cases
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	resp_client "github.com/codecrafters-io/redis-tester/internal/resp/connection"
@@ -31,7 +32,9 @@ func (t *SendCommandTestCase) Run(client *resp_client.RespConnection, logger *lo
 			logger.Debugf("Retrying... (%d/%d attempts)", attempt, t.Retries)
 		}
 
-		if err = client.SendCommand(t.Command, t.Args...); err != nil {
+		command := strings.ToUpper(t.Command)
+
+		if err = client.SendCommand(command, t.Args...); err != nil {
 			return err
 		}
 
