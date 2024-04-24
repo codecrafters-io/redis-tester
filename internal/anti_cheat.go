@@ -36,7 +36,7 @@ func antiCheatTest(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	if err == nil {
 		logger.Criticalf("anti-cheat (ac1) failed.")
-		logger.Criticalf("Are you sure you aren't running this against the actual Redis?")
+		logger.Criticalf("Please contact us at hello@codecrafters.io if you think is a mistake.")
 		return fmt.Errorf("anti-cheat (ac1) failed")
 	} else {
 		return nil
