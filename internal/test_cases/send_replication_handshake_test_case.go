@@ -17,12 +17,18 @@ import (
 // can run each step individually.
 type SendReplicationHandshakeTestCase struct{}
 
-func (t SendReplicationHandshakeTestCase) RunAll(client *resp_client.RespConnection, logger *logger.Logger) error {
+func (t SendReplicationHandshakeTestCase) RunAll(client *resp_client.RespConnection, logger *logger.Logger, listeningPort ...int) error {
 	if err := t.RunPingStep(client, logger); err != nil {
 		return err
 	}
 
-	if err := t.RunReplconfStep(client, logger); err != nil {
+	var currentListeningPort int
+	if listeningPort == nil {
+		currentListeningPort = 6380
+	} else {
+		currentListeningPort = listeningPort[0]
+	}
+	if err := t.RunReplconfStep(client, logger, currentListeningPort); err != nil {
 		return err
 	}
 
@@ -47,10 +53,10 @@ func (t SendReplicationHandshakeTestCase) RunPingStep(client *resp_client.RespCo
 	return commandTest.Run(client, logger)
 }
 
-func (t SendReplicationHandshakeTestCase) RunReplconfStep(client *resp_client.RespConnection, logger *logger.Logger) error {
+func (t SendReplicationHandshakeTestCase) RunReplconfStep(client *resp_client.RespConnection, logger *logger.Logger, listeningPort int) error {
 	commandTest := SendCommandTestCase{
 		Command:   "REPLCONF",
-		Args:      []string{"listening-port", "6380"},
+		Args:      []string{"listening-port", fmt.Sprintf("%d", listeningPort)},
 		Assertion: resp_assertions.NewStringAssertion("OK"),
 	}
 

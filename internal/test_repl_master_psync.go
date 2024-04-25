@@ -29,7 +29,7 @@ func testReplMasterPsync(stageHarness *test_case_harness.TestCaseHarness) error 
 		return err
 	}
 
-	if err := sendHandshakeTestCase.RunReplconfStep(client, logger); err != nil {
+	if err := sendHandshakeTestCase.RunReplconfStep(client, logger, 6380); err != nil {
 		return err
 	}
 

@@ -34,6 +34,7 @@ func SpawnReplicas(replicaCount int, stageHarness *test_case_harness.TestCaseHar
 	var replicas []*resp_connection.RespConnection
 	sendHandshakeTestCase := test_cases.SendReplicationHandshakeTestCase{}
 
+	listeningPort := 6380
 	for j := 0; j < replicaCount; j++ {
 		logger.Debugf("Creating replica: %v", j+1)
 		replica, err := instrumented_resp_connection.NewFromAddr(stageHarness, addr, fmt.Sprintf("replica-%v", j+1))
@@ -42,10 +43,10 @@ func SpawnReplicas(replicaCount int, stageHarness *test_case_harness.TestCaseHar
 			return nil, err
 		}
 
-		if err := sendHandshakeTestCase.RunAll(replica, logger); err != nil {
+		if err := sendHandshakeTestCase.RunAll(replica, logger, []int{listeningPort}...); err != nil {
 			return nil, err
 		}
-
+		listeningPort += 1
 		// The bytes received and sent during the handshake don't count towards offset.
 		// After finishing the handshake we reset the counters.
 		replica.ResetByteCounters()
