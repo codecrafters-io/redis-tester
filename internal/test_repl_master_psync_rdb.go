@@ -26,5 +26,5 @@ func testReplMasterPsyncRdb(stageHarness *test_case_harness.TestCaseHarness) err
 
 	sendHandshakeTestCase := test_cases.SendReplicationHandshakeTestCase{}
 
-	return sendHandshakeTestCase.RunAll(client, logger)
+	return sendHandshakeTestCase.RunAll(client, logger, 6380)
 }

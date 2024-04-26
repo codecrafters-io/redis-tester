@@ -29,5 +29,5 @@ func testReplMasterReplconf(stageHarness *test_case_harness.TestCaseHarness) err
 		return err
 	}
 
-	return sendHandshakeTestCase.RunReplconfStep(client, logger)
+	return sendHandshakeTestCase.RunReplconfStep(client, logger, 6380)
 }

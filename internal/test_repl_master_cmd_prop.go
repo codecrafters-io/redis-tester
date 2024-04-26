@@ -37,7 +37,7 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 	defer replicaClient.Close()
 
 	sendHandshakeTestCase := test_cases.SendReplicationHandshakeTestCase{}
-	if err := sendHandshakeTestCase.RunAll(replicaClient, logger); err != nil {
+	if err := sendHandshakeTestCase.RunAll(replicaClient, logger, 6380); err != nil {
 		return err
 	}
 
