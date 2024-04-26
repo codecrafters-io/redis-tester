@@ -17,18 +17,12 @@ import (
 // can run each step individually.
 type SendReplicationHandshakeTestCase struct{}
 
-func (t SendReplicationHandshakeTestCase) RunAll(client *resp_client.RespConnection, logger *logger.Logger, listeningPort ...int) error {
+func (t SendReplicationHandshakeTestCase) RunAll(client *resp_client.RespConnection, logger *logger.Logger, listeningPort int) error {
 	if err := t.RunPingStep(client, logger); err != nil {
 		return err
 	}
 
-	var currentListeningPort int
-	if listeningPort == nil {
-		currentListeningPort = 6380
-	} else {
-		currentListeningPort = listeningPort[0]
-	}
-	if err := t.RunReplconfStep(client, logger, currentListeningPort); err != nil {
+	if err := t.RunReplconfStep(client, logger, listeningPort); err != nil {
 		return err
 	}
 

@@ -43,7 +43,7 @@ func SpawnReplicas(replicaCount int, stageHarness *test_case_harness.TestCaseHar
 			return nil, err
 		}
 
-		if err := sendHandshakeTestCase.RunAll(replica, logger, []int{listeningPort}...); err != nil {
+		if err := sendHandshakeTestCase.RunAll(replica, logger, listeningPort); err != nil {
 			return nil, err
 		}
 		listeningPort += 1
