@@ -19,8 +19,6 @@ func testRdbReadValueWithExpiry(stageHarness *test_case_harness.TestCaseHarness)
 		return fmt.Errorf("CodeCrafters Tester Error: %s", err)
 	}
 
-	defer RDBFileCreator.Cleanup()
-
 	keyCount := testerutils_random.RandomInt(3, 6)
 	keys := testerutils_random.RandomWords(keyCount)
 	values := testerutils_random.RandomWords(keyCount)
@@ -51,7 +49,7 @@ func testRdbReadValueWithExpiry(stageHarness *test_case_harness.TestCaseHarness)
 		return fmt.Errorf("CodeCrafters Tester Error: %s", err)
 	}
 
-	b := redis_executable.NewRedisExecutable(stageHarness)
+	b := redis_executable.NewRedisExecutable(stageHarness, func() { RDBFileCreator.Cleanup() })
 	if err := b.Run("--dir", RDBFileCreator.Dir,
 		"--dbfilename", RDBFileCreator.Filename); err != nil {
 		return err

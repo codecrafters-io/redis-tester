@@ -18,8 +18,6 @@ func testRdbReadKey(stageHarness *test_case_harness.TestCaseHarness) error {
 		return fmt.Errorf("CodeCrafters Tester Error: %s", err)
 	}
 
-	defer RDBFileCreator.Cleanup()
-
 	randomKeyAndValue := testerutils_random.RandomWords(2)
 	randomKey := randomKeyAndValue[0]
 	randomValue := randomKeyAndValue[1]
@@ -31,7 +29,7 @@ func testRdbReadKey(stageHarness *test_case_harness.TestCaseHarness) error {
 	logger := stageHarness.Logger
 	logger.Infof("Created RDB file with single key: %q", randomKey)
 
-	b := redis_executable.NewRedisExecutable(stageHarness)
+	b := redis_executable.NewRedisExecutable(stageHarness, func() { RDBFileCreator.Cleanup() })
 	if err := b.Run("--dir", RDBFileCreator.Dir,
 		"--dbfilename", RDBFileCreator.Filename); err != nil {
 		return err

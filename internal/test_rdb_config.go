@@ -19,7 +19,6 @@ func testRdbConfig(stageHarness *test_case_harness.TestCaseHarness) error {
 	if err != nil {
 		return err
 	}
-	defer os.RemoveAll(tmpDir)
 
 	// On MacOS, the tmpDir is a symlink to a directory in /var/folders/...
 	realPath, err := filepath.EvalSymlinks(tmpDir)
@@ -28,7 +27,7 @@ func testRdbConfig(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 	tmpDir = realPath
 
-	b := redis_executable.NewRedisExecutable(stageHarness)
+	b := redis_executable.NewRedisExecutable(stageHarness, func() { os.RemoveAll(tmpDir) })
 	if err := b.Run("--dir", tmpDir,
 		"--dbfilename", fmt.Sprintf("%s.rdb", testerutils_random.RandomWord())); err != nil {
 		return err
