@@ -14,7 +14,7 @@ import (
 )
 
 func testRdbReadMultipleStringValues(stageHarness *test_case_harness.TestCaseHarness) error {
-	RDBFileCreator, err := NewRDBFileCreator(stageHarness)
+	RDBFileCreator, err := NewRDBFileCreator()
 	if err != nil {
 		return fmt.Errorf("CodeCrafters Tester Error: %s", err)
 	}
@@ -31,6 +31,13 @@ func testRdbReadMultipleStringValues(stageHarness *test_case_harness.TestCaseHar
 	formattedKeyValuePairs := make([]string, keyCount)
 	for i := 0; i < keyCount; i++ {
 		formattedKeyValuePairs[i] = fmt.Sprintf("%q=%q", keys[i], values[i])
+	}
+
+	keyValueMap := make(map[string]string)
+	for i := 0; i < keyCount; i++ {
+		key := keys[i]
+		value := values[i]
+		keyValueMap[key] = value
 	}
 
 	logger := stageHarness.Logger
@@ -53,13 +60,7 @@ func testRdbReadMultipleStringValues(stageHarness *test_case_harness.TestCaseHar
 	defer client.Close()
 
 	for i, key := range keys {
-		expectedValue := ""
-		for _, kv := range keyValuePairs {
-			if kv.key == key {
-				expectedValue = kv.value
-				break
-			}
-		}
+		expectedValue := keyValueMap[key]
 
 		commandTestCase := test_cases.SendCommandTestCase{
 			Command:                   "GET",

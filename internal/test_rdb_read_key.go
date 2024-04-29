@@ -13,14 +13,13 @@ import (
 )
 
 func testRdbReadKey(stageHarness *test_case_harness.TestCaseHarness) error {
-	RDBFileCreator, err := NewRDBFileCreator(stageHarness)
+	RDBFileCreator, err := NewRDBFileCreator()
 	if err != nil {
 		return fmt.Errorf("CodeCrafters Tester Error: %s", err)
 	}
 
 	randomKeyAndValue := testerutils_random.RandomWords(2)
-	randomKey := randomKeyAndValue[0]
-	randomValue := randomKeyAndValue[1]
+	randomKey, randomValue := randomKeyAndValue[0], randomKeyAndValue[1]
 
 	if err := RDBFileCreator.Write([]KeyValuePair{{key: randomKey, value: randomValue}}); err != nil {
 		return fmt.Errorf("CodeCrafters Tester Error: %s", err)

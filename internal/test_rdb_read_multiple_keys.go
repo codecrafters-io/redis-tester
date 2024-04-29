@@ -13,7 +13,7 @@ import (
 )
 
 func testRdbReadMultipleKeys(stageHarness *test_case_harness.TestCaseHarness) error {
-	RDBFileCreator, err := NewRDBFileCreator(stageHarness)
+	RDBFileCreator, err := NewRDBFileCreator()
 	if err != nil {
 		return fmt.Errorf("CodeCrafters Tester Error: %s", err)
 	}

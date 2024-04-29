@@ -14,7 +14,7 @@ import (
 )
 
 func testRdbReadValueWithExpiry(stageHarness *test_case_harness.TestCaseHarness) error {
-	RDBFileCreator, err := NewRDBFileCreator(stageHarness)
+	RDBFileCreator, err := NewRDBFileCreator()
 	if err != nil {
 		return fmt.Errorf("CodeCrafters Tester Error: %s", err)
 	}
@@ -24,7 +24,7 @@ func testRdbReadValueWithExpiry(stageHarness *test_case_harness.TestCaseHarness)
 	values := testerutils_random.RandomWords(keyCount)
 	expiringKeyIndex := testerutils_random.RandomInt(0, keyCount-1)
 
-	kv := make(map[string]string)
+	keyValueMap := make(map[string]string)
 	keyValuePairs := make([]KeyValuePair, keyCount)
 	for i := 0; i < keyCount; i++ {
 		if expiringKeyIndex == i {
@@ -40,9 +40,8 @@ func testRdbReadValueWithExpiry(stageHarness *test_case_harness.TestCaseHarness)
 				expiryTS: time.Date(2032, 1, 1, 0, 0, 0, 0, time.UTC).UnixMilli(),
 			}
 		}
-		key := keys[i]
-		value := values[i]
-		kv[key] = value
+		key, value := keys[i], values[i]
+		keyValueMap[key] = value
 	}
 
 	if err := RDBFileCreator.Write(keyValuePairs); err != nil {
@@ -78,7 +77,7 @@ func testRdbReadValueWithExpiry(stageHarness *test_case_harness.TestCaseHarness)
 			commandTestCase := test_cases.SendCommandTestCase{
 				Command:                   "GET",
 				Args:                      []string{key},
-				Assertion:                 resp_assertions.NewStringAssertion(kv[key]),
+				Assertion:                 resp_assertions.NewStringAssertion(keyValueMap[key]),
 				ShouldSkipUnreadDataCheck: false,
 			}
 			if err := commandTestCase.Run(client, logger); err != nil {
