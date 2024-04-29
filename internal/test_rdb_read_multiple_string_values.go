@@ -4,7 +4,10 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
@@ -45,16 +48,13 @@ func testRdbReadMultipleStringValues(stageHarness *test_case_harness.TestCaseHar
 		return err
 	}
 
-	client := NewRedisClient("localhost:6379")
+	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "client")
+	if err != nil {
+		return err
+	}
+	defer client.Close()
 
-	for _, key := range keys {
-		logger.Infof(fmt.Sprintf("$ redis-cli GET %s", key))
-		resp, err := client.Get(key).Result()
-		if err != nil {
-			logFriendlyError(logger, err)
-			return err
-		}
-
+	for i, key := range keys {
 		expectedValue := ""
 		for _, kv := range keyValuePairs {
 			if kv.key == key {
@@ -63,11 +63,17 @@ func testRdbReadMultipleStringValues(stageHarness *test_case_harness.TestCaseHar
 			}
 		}
 
-		if resp != expectedValue {
-			return fmt.Errorf("Expected response to be %v, got %v", expectedValue, resp)
+		commandTestCase := test_cases.SendCommandTestCase{
+			Command:                   "GET",
+			Args:                      []string{key},
+			Assertion:                 resp_assertions.NewStringAssertion(expectedValue),
+			ShouldSkipUnreadDataCheck: i < len(keys)-1,
+		}
+
+		if err := commandTestCase.Run(client, logger); err != nil {
+			return err
 		}
 	}
 
-	client.Close()
 	return nil
 }

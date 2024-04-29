@@ -36,15 +36,17 @@ func testRdbConfig(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	logger := stageHarness.Logger
 
-	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "")
+	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "client")
 	if err != nil {
 		return err
 	}
+	defer client.Close()
 
 	commandTestCase := test_cases.SendCommandTestCase{
-		Command:   "config",
-		Args:      []string{"get", "dir"},
-		Assertion: resp_assertions.NewStringArrayAssertion([]string{"dir", tmpDir}),
+		Command:                   "config",
+		Args:                      []string{"get", "dir"},
+		Assertion:                 resp_assertions.NewStringArrayAssertion([]string{"dir", tmpDir}),
+		ShouldSkipUnreadDataCheck: false,
 	}
 
 	if err := commandTestCase.Run(client, logger); err != nil {
@@ -52,6 +54,5 @@ func testRdbConfig(stageHarness *test_case_harness.TestCaseHarness) error {
 		return err
 	}
 
-	client.Close()
 	return nil
 }
