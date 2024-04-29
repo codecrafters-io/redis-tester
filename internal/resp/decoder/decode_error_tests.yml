@@ -4,13 +4,13 @@
   error: |
     Received: "" (no content received)
                ^ error
-    Error: Expected start of a new RESP value (either +, -, :, $ or *)
+    Error: Expected start of a new RESP2 value (either +, -, :, $ or *)
 
 - input: "K"
   error: |
     Received: "K"
                ^ error
-    Error: "K" is not a valid start of a RESP value (expected +, -, :, $ or *)
+    Error: "K" is not a valid start of a RESP2 value (expected +, -, :, $ or *)
 
 # Simple Strings
 
@@ -101,7 +101,6 @@
     Received: ":foo\r\n"
                 ^ error
     Error: Invalid integer: "foo", expected a number
-
 
 # Arrays
 

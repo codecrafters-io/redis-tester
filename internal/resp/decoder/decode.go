@@ -24,7 +24,7 @@ func doDecodeValue(reader *bytes.Reader) (resp_value.Value, error) {
 	if err == io.EOF {
 		return resp_value.Value{}, IncompleteInputError{
 			Reader:  reader,
-			Message: "Expected start of a new RESP value (either +, -, :, $ or *)",
+			Message: "Expected start of a new RESP2 value (either +, -, :, $ or *)",
 		}
 	}
 
@@ -44,7 +44,7 @@ func doDecodeValue(reader *bytes.Reader) (resp_value.Value, error) {
 
 		return resp_value.Value{}, InvalidInputError{
 			Reader:  reader,
-			Message: fmt.Sprintf("%q is not a valid start of a RESP value (expected +, -, :, $ or *)", string(firstByte)),
+			Message: fmt.Sprintf("%q is not a valid start of a RESP2 value (expected +, -, :, $ or *)", string(firstByte)),
 		}
 	}
 }
