@@ -29,7 +29,7 @@ func (t *SendCommandTestCase) Run(client *resp_client.RespConnection, logger *lo
 
 	for attempt := 0; attempt <= t.Retries; attempt++ {
 		if attempt > 0 {
-			logger.Debugf("Retrying... (%d/%d attempts)", attempt, t.Retries)
+			logger.Infof("Retrying... (%d/%d attempts)", attempt, t.Retries)
 		}
 
 		command := strings.ToUpper(t.Command)
