@@ -34,7 +34,7 @@ func (t *ReceiveCommandTestCase) Run(conn *resp_connection.RespConnection, logge
 		conn.ReadIntoBuffer() // Let's make sure there's no extra data
 
 		if conn.UnreadBuffer.Len() > 0 {
-			return fmt.Errorf("Found extra data: %q", string(conn.LastValueBytes)+conn.UnreadBuffer.String())
+			return fmt.Errorf("Found extra data: %q", conn.UnreadBuffer.String())
 		}
 	}
 

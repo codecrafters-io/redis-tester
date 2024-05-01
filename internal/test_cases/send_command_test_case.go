@@ -29,7 +29,7 @@ func (t *SendCommandTestCase) Run(client *resp_client.RespConnection, logger *lo
 
 	for attempt := 0; attempt <= t.Retries; attempt++ {
 		if attempt > 0 {
-			logger.Debugf("Retrying... (%d/%d attempts)", attempt, t.Retries)
+			logger.Infof("Retrying... (%d/%d attempts)", attempt, t.Retries)
 		}
 
 		command := strings.ToUpper(t.Command)
@@ -69,7 +69,7 @@ func (t *SendCommandTestCase) Run(client *resp_client.RespConnection, logger *lo
 		client.ReadIntoBuffer() // Let's make sure there's no extra data
 
 		if client.UnreadBuffer.Len() > 0 {
-			return fmt.Errorf("Found extra data: %q", string(client.LastValueBytes)+client.UnreadBuffer.String())
+			return fmt.Errorf("Found extra data: %q", client.UnreadBuffer.String())
 		}
 	}
 
