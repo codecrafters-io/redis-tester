@@ -107,6 +107,7 @@ func normalizeTesterOutput(testerOutput []byte) []byte {
 		"xadd_id":                 {regexp.MustCompile(`\d{13}-\d+`)},
 		"rdb_bytes":               {regexp.MustCompile(`"\$[0-9]+\\r\\nREDIS.*"`)},
 		"info_replication_bytes":  {regexp.MustCompile(`"\$[0-9]+\\r\\n# Replication\\r\\n[^"]+"`)},
+		"rdb_keys":                {regexp.MustCompile(`\[stage-11\] .*`)},
 	}
 
 	for replacement, regexes := range replacements {
