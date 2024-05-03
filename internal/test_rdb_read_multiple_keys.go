@@ -34,7 +34,8 @@ func testRdbReadMultipleKeys(stageHarness *test_case_harness.TestCaseHarness) er
 	logger := stageHarness.Logger
 	logger.Infof("Created RDB file with %d keys: %q", keyCount, keys)
 
-	b := redis_executable.NewRedisExecutable(stageHarness, func() { RDBFileCreator.Cleanup() })
+	b := redis_executable.NewRedisExecutable(stageHarness)
+	stageHarness.RegisterTeardownFunc(func() { RDBFileCreator.Cleanup() })
 	if err := b.Run("--dir", RDBFileCreator.Dir,
 		"--dbfilename", RDBFileCreator.Filename); err != nil {
 		return err
@@ -49,7 +50,7 @@ func testRdbReadMultipleKeys(stageHarness *test_case_harness.TestCaseHarness) er
 	commandTestCase := test_cases.SendCommandTestCase{
 		Command:                   "KEYS",
 		Args:                      []string{"*"},
-		Assertion:                 resp_assertions.NewStringArrayAssertion(keys, true),
+		Assertion:                 resp_assertions.NewOrderedStringArrayAssertion(keys),
 		ShouldSkipUnreadDataCheck: false,
 	}
 

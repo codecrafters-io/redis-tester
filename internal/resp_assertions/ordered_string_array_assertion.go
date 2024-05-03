@@ -7,16 +7,15 @@ import (
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 )
 
-type StringArrayAssertion struct {
-	ExpectedValue              []string
-	shouldSortBeforeComparison bool
+type OrderedStringArrayAssertion struct {
+	ExpectedValue []string
 }
 
-func NewStringArrayAssertion(expectedValue []string, shouldSortbeforeComparison bool) RESPAssertion {
-	return StringArrayAssertion{ExpectedValue: expectedValue, shouldSortBeforeComparison: shouldSortbeforeComparison}
+func NewOrderedStringArrayAssertion(expectedValue []string) RESPAssertion {
+	return OrderedStringArrayAssertion{ExpectedValue: expectedValue}
 }
 
-func (a StringArrayAssertion) Run(value resp_value.Value) error {
+func (a OrderedStringArrayAssertion) Run(value resp_value.Value) error {
 	if value.Type != resp_value.ARRAY {
 		return fmt.Errorf("Expected an array, got %s", value.Type)
 	}
@@ -34,16 +33,14 @@ func (a StringArrayAssertion) Run(value resp_value.Value) error {
 		actualElementStringArray[i] = value.Array()[i].String()
 	}
 
-	if a.shouldSortBeforeComparison {
-		sort.Strings(actualElementStringArray)
-		sort.Strings(a.ExpectedValue)
-	}
+	sort.Strings(actualElementStringArray)
+	sort.Strings(a.ExpectedValue)
 
 	for i, expectedValue := range a.ExpectedValue {
 		actualElement := actualElementStringArray[i]
 
 		if actualElement != expectedValue {
-			return fmt.Errorf("Expected element #%d to be %q, got %q", i+1, expectedValue, actualElement)
+			return fmt.Errorf("Value missing in correct position (#%d) of returned array: %q\nIncorrect value found in returned array: %q", i+1, expectedValue, actualElement)
 		}
 	}
 

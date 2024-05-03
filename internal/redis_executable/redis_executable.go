@@ -14,16 +14,13 @@ type RedisExecutable struct {
 	args       []string
 }
 
-func NewRedisExecutable(stageHarness *test_case_harness.TestCaseHarness, customTeardownFuncs ...func()) *RedisExecutable {
+func NewRedisExecutable(stageHarness *test_case_harness.TestCaseHarness) *RedisExecutable {
 	b := &RedisExecutable{
 		executable: stageHarness.NewExecutable(),
 		logger:     stageHarness.Logger,
 	}
 
 	stageHarness.RegisterTeardownFunc(func() { b.Kill() })
-	for _, teardownFunc := range customTeardownFuncs {
-		stageHarness.RegisterTeardownFunc(teardownFunc)
-	}
 
 	return b
 }

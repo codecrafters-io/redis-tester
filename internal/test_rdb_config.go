@@ -27,7 +27,8 @@ func testRdbConfig(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 	tmpDir = realPath
 
-	b := redis_executable.NewRedisExecutable(stageHarness, func() { os.RemoveAll(tmpDir) })
+	b := redis_executable.NewRedisExecutable(stageHarness)
+	stageHarness.RegisterTeardownFunc(func() { os.RemoveAll(tmpDir) })
 	if err := b.Run("--dir", tmpDir,
 		"--dbfilename", fmt.Sprintf("%s.rdb", testerutils_random.RandomWord())); err != nil {
 		return err
@@ -42,9 +43,9 @@ func testRdbConfig(stageHarness *test_case_harness.TestCaseHarness) error {
 	defer client.Close()
 
 	commandTestCase := test_cases.SendCommandTestCase{
-		Command:                   "config",
-		Args:                      []string{"get", "dir"},
-		Assertion:                 resp_assertions.NewStringArrayAssertion([]string{"dir", tmpDir}, false),
+		Command:                   "CONFIG",
+		Args:                      []string{"GET", "dir"},
+		Assertion:                 resp_assertions.NewUnorderedStringArrayAssertion([]string{"dir", tmpDir}),
 		ShouldSkipUnreadDataCheck: false,
 	}
 

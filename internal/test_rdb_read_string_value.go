@@ -28,7 +28,8 @@ func testRdbReadStringValue(stageHarness *test_case_harness.TestCaseHarness) err
 	logger := stageHarness.Logger
 	logger.Infof("Created RDB file with single key-value pair: %s=%q", randomKey, randomValue)
 
-	b := redis_executable.NewRedisExecutable(stageHarness, func() { RDBFileCreator.Cleanup() })
+	b := redis_executable.NewRedisExecutable(stageHarness)
+	stageHarness.RegisterTeardownFunc(func() { RDBFileCreator.Cleanup() })
 	if err := b.Run("--dir", RDBFileCreator.Dir,
 		"--dbfilename", RDBFileCreator.Filename); err != nil {
 		return err
