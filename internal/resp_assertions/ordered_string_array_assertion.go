@@ -6,7 +6,7 @@ import (
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 )
 
-// Ordered string array assertion: Order of the actual and expected values matters.
+// OrderedStringArrayAssertion : Order of the actual and expected values matters.
 // We don't alter the ordering.
 type OrderedStringArrayAssertion struct {
 	ExpectedValue []string

@@ -8,7 +8,7 @@ import (
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 )
 
-// Unordered string array assertion: Order of the actual and expected values doesn't matter.
+// UnorderedStringArrayAssertion : Order of the actual and expected values doesn't matter.
 // We sort the expected and actual values before comparing them.
 type UnorderedStringArrayAssertion struct {
 	ExpectedValue []string
