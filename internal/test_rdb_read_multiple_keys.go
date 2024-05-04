@@ -50,7 +50,7 @@ func testRdbReadMultipleKeys(stageHarness *test_case_harness.TestCaseHarness) er
 	commandTestCase := test_cases.SendCommandTestCase{
 		Command:                   "KEYS",
 		Args:                      []string{"*"},
-		Assertion:                 resp_assertions.NewOrderedStringArrayAssertion(keys),
+		Assertion:                 resp_assertions.NewUnorderedStringArrayAssertion(keys),
 		ShouldSkipUnreadDataCheck: false,
 	}
 

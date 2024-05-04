@@ -1,11 +1,15 @@
 package resp_assertions
 
 import (
+	"encoding/json"
 	"fmt"
+	"sort"
 
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 )
 
+// Unordered string array assertion: Order of the actual and expected values doesn't matter.
+// We sort the expected and actual values before comparing them.
 type UnorderedStringArrayAssertion struct {
 	ExpectedValue []string
 }
@@ -23,15 +27,24 @@ func (a UnorderedStringArrayAssertion) Run(value resp_value.Value) error {
 		return fmt.Errorf("Expected %d elements in array, got %d (%s)", len(a.ExpectedValue), len(value.Array()), value.FormattedString())
 	}
 
-	for i, expectedValue := range a.ExpectedValue {
+	actualElementStringArray := make([]string, len(value.Array()))
+	for i := range value.Array() {
 		actualElement := value.Array()[i]
-
 		if actualElement.Type != resp_value.BULK_STRING && actualElement.Type != resp_value.SIMPLE_STRING {
 			return fmt.Errorf("Expected element #%d to be a string, got %s", i+1, actualElement.Type)
 		}
+		actualElementStringArray[i] = value.Array()[i].String()
+	}
 
-		if actualElement.String() != expectedValue {
-			return fmt.Errorf("Expected element #%d to be %q, got %q", i+1, expectedValue, actualElement.String())
+	expectedValueArrayForPrinting, _ := json.Marshal(a.ExpectedValue)
+	sort.Strings(actualElementStringArray)
+	sort.Strings(a.ExpectedValue)
+
+	for i, expectedValue := range a.ExpectedValue {
+		actualElement := actualElementStringArray[i]
+
+		if actualElement != expectedValue {
+			return fmt.Errorf("Expected: %v (in any order), got %v", string(expectedValueArrayForPrinting), value.FormattedString())
 		}
 	}
 

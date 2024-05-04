@@ -2,11 +2,12 @@ package resp_assertions
 
 import (
 	"fmt"
-	"sort"
 
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 )
 
+// Ordered string array assertion: Order of the actual and expected values matters.
+// We don't alter the ordering.
 type OrderedStringArrayAssertion struct {
 	ExpectedValue []string
 }
@@ -24,23 +25,15 @@ func (a OrderedStringArrayAssertion) Run(value resp_value.Value) error {
 		return fmt.Errorf("Expected %d elements in array, got %d (%s)", len(a.ExpectedValue), len(value.Array()), value.FormattedString())
 	}
 
-	actualElementStringArray := make([]string, len(value.Array()))
-	for i := range value.Array() {
+	for i, expectedValue := range a.ExpectedValue {
 		actualElement := value.Array()[i]
+
 		if actualElement.Type != resp_value.BULK_STRING && actualElement.Type != resp_value.SIMPLE_STRING {
 			return fmt.Errorf("Expected element #%d to be a string, got %s", i+1, actualElement.Type)
 		}
-		actualElementStringArray[i] = value.Array()[i].String()
-	}
 
-	sort.Strings(actualElementStringArray)
-	sort.Strings(a.ExpectedValue)
-
-	for i, expectedValue := range a.ExpectedValue {
-		actualElement := actualElementStringArray[i]
-
-		if actualElement != expectedValue {
-			return fmt.Errorf("Value missing in correct position (#%d) of returned array: %q\nIncorrect value found in returned array: %q", i+1, expectedValue, actualElement)
+		if actualElement.String() != expectedValue {
+			return fmt.Errorf("Expected element #%d to be %q, got %q", i+1, expectedValue, actualElement.String())
 		}
 	}
 
