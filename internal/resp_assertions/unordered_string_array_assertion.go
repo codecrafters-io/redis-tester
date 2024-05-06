@@ -37,10 +37,12 @@ func (a UnorderedStringArrayAssertion) Run(value resp_value.Value) error {
 	}
 
 	expectedValueArrayForPrinting, _ := json.Marshal(a.ExpectedValue)
+	expectedValueStringArray := make([]string, len(a.ExpectedValue))
+	copy(expectedValueStringArray, a.ExpectedValue)
 	sort.Strings(actualElementStringArray)
-	sort.Strings(a.ExpectedValue)
+	sort.Strings(expectedValueStringArray)
 
-	for i, expectedValue := range a.ExpectedValue {
+	for i, expectedValue := range expectedValueStringArray {
 		actualElement := actualElementStringArray[i]
 
 		if actualElement != expectedValue {
