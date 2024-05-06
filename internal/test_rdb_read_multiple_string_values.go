@@ -4,19 +4,20 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
 func testRdbReadMultipleStringValues(stageHarness *test_case_harness.TestCaseHarness) error {
-	RDBFileCreator, err := NewRDBFileCreator(stageHarness)
+	RDBFileCreator, err := NewRDBFileCreator()
 	if err != nil {
 		return fmt.Errorf("CodeCrafters Tester Error: %s", err)
 	}
-
-	defer RDBFileCreator.Cleanup()
 
 	keyCount := testerutils_random.RandomInt(3, 6)
 	keys := testerutils_random.RandomWords(keyCount)
@@ -32,6 +33,13 @@ func testRdbReadMultipleStringValues(stageHarness *test_case_harness.TestCaseHar
 		formattedKeyValuePairs[i] = fmt.Sprintf("%q=%q", keys[i], values[i])
 	}
 
+	keyValueMap := make(map[string]string)
+	for i := 0; i < keyCount; i++ {
+		key := keys[i]
+		value := values[i]
+		keyValueMap[key] = value
+	}
+
 	logger := stageHarness.Logger
 	logger.Infof("Created RDB file with key-value pairs: %s", strings.Join(formattedKeyValuePairs, ", "))
 
@@ -40,34 +48,32 @@ func testRdbReadMultipleStringValues(stageHarness *test_case_harness.TestCaseHar
 	}
 
 	b := redis_executable.NewRedisExecutable(stageHarness)
+	stageHarness.RegisterTeardownFunc(func() { RDBFileCreator.Cleanup() })
 	if err := b.Run("--dir", RDBFileCreator.Dir,
 		"--dbfilename", RDBFileCreator.Filename); err != nil {
 		return err
 	}
 
-	client := NewRedisClient("localhost:6379")
+	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "client")
+	if err != nil {
+		return err
+	}
+	defer client.Close()
 
-	for _, key := range keys {
-		logger.Infof(fmt.Sprintf("$ redis-cli GET %s", key))
-		resp, err := client.Get(key).Result()
-		if err != nil {
-			logFriendlyError(logger, err)
+	for i, key := range keys {
+		expectedValue := keyValueMap[key]
+
+		commandTestCase := test_cases.SendCommandTestCase{
+			Command:                   "GET",
+			Args:                      []string{key},
+			Assertion:                 resp_assertions.NewStringAssertion(expectedValue),
+			ShouldSkipUnreadDataCheck: i < len(keys)-1,
+		}
+
+		if err := commandTestCase.Run(client, logger); err != nil {
 			return err
-		}
-
-		expectedValue := ""
-		for _, kv := range keyValuePairs {
-			if kv.key == key {
-				expectedValue = kv.value
-				break
-			}
-		}
-
-		if resp != expectedValue {
-			return fmt.Errorf("Expected response to be %v, got %v", expectedValue, resp)
 		}
 	}
 
-	client.Close()
 	return nil
 }

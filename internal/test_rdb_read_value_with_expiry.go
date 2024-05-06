@@ -4,26 +4,27 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
-	"github.com/go-redis/redis"
 )
 
 func testRdbReadValueWithExpiry(stageHarness *test_case_harness.TestCaseHarness) error {
-	RDBFileCreator, err := NewRDBFileCreator(stageHarness)
+	RDBFileCreator, err := NewRDBFileCreator()
 	if err != nil {
 		return fmt.Errorf("CodeCrafters Tester Error: %s", err)
 	}
-
-	defer RDBFileCreator.Cleanup()
 
 	keyCount := testerutils_random.RandomInt(3, 6)
 	keys := testerutils_random.RandomWords(keyCount)
 	values := testerutils_random.RandomWords(keyCount)
 	expiringKeyIndex := testerutils_random.RandomInt(0, keyCount-1)
 
+	keyValueMap := make(map[string]string)
 	keyValuePairs := make([]KeyValuePair, keyCount)
 	for i := 0; i < keyCount; i++ {
 		if expiringKeyIndex == i {
@@ -39,6 +40,8 @@ func testRdbReadValueWithExpiry(stageHarness *test_case_harness.TestCaseHarness)
 				expiryTS: time.Date(2032, 1, 1, 0, 0, 0, 0, time.UTC).UnixMilli(),
 			}
 		}
+		key, value := keys[i], values[i]
+		keyValueMap[key] = value
 	}
 
 	if err := RDBFileCreator.Write(keyValuePairs); err != nil {
@@ -46,49 +49,43 @@ func testRdbReadValueWithExpiry(stageHarness *test_case_harness.TestCaseHarness)
 	}
 
 	b := redis_executable.NewRedisExecutable(stageHarness)
+	stageHarness.RegisterTeardownFunc(func() { RDBFileCreator.Cleanup() })
 	if err := b.Run("--dir", RDBFileCreator.Dir,
 		"--dbfilename", RDBFileCreator.Filename); err != nil {
 		return err
 	}
 
 	logger := stageHarness.Logger
-	client := NewRedisClient("localhost:6379")
+
+	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "client")
+	if err != nil {
+		return err
+	}
+	defer client.Close()
 
 	for keyIndex, key := range keys {
-		logger.Infof(fmt.Sprintf("$ redis-cli GET %s", key))
-		resp, err := client.Get(key).Result()
-
 		if keyIndex == expiringKeyIndex {
-			if err != redis.Nil {
-				if err == nil {
-					logger.Debugf("Hint: Read about null bulk strings in the Redis protocol docs")
-					return fmt.Errorf("Expected null string, got %#v", resp)
-				} else {
-					logFriendlyError(logger, err)
-					return err
-				}
+			commandTestCase := test_cases.SendCommandTestCase{
+				Command:                   "GET",
+				Args:                      []string{key},
+				Assertion:                 resp_assertions.NewNilAssertion(),
+				ShouldSkipUnreadDataCheck: false,
 			}
-		} else {
-			if err != nil {
-				logFriendlyError(logger, err)
+			if err := commandTestCase.Run(client, logger); err != nil {
 				return err
 			}
-
-			expectedValue := ""
-			for _, kv := range keyValuePairs {
-				if kv.key == key {
-					expectedValue = kv.value
-					break
-				}
+		} else {
+			commandTestCase := test_cases.SendCommandTestCase{
+				Command:                   "GET",
+				Args:                      []string{key},
+				Assertion:                 resp_assertions.NewStringAssertion(keyValueMap[key]),
+				ShouldSkipUnreadDataCheck: false,
 			}
-
-			if resp != expectedValue {
-				return fmt.Errorf("Expected response to be %v, got %v", expectedValue, resp)
+			if err := commandTestCase.Run(client, logger); err != nil {
+				return err
 			}
 		}
-
 	}
 
-	client.Close()
 	return nil
 }

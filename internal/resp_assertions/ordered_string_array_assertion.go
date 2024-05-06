@@ -6,15 +6,17 @@ import (
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 )
 
-type StringArrayAssertion struct {
+// OrderedStringArrayAssertion : Order of the actual and expected values matters.
+// We don't alter the ordering.
+type OrderedStringArrayAssertion struct {
 	ExpectedValue []string
 }
 
-func NewStringArrayAssertion(expectedValue []string) RESPAssertion {
-	return StringArrayAssertion{ExpectedValue: expectedValue}
+func NewOrderedStringArrayAssertion(expectedValue []string) RESPAssertion {
+	return OrderedStringArrayAssertion{ExpectedValue: expectedValue}
 }
 
-func (a StringArrayAssertion) Run(value resp_value.Value) error {
+func (a OrderedStringArrayAssertion) Run(value resp_value.Value) error {
 	if value.Type != resp_value.ARRAY {
 		return fmt.Errorf("Expected an array, got %s", value.Type)
 	}
