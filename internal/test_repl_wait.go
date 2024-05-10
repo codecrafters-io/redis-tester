@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
@@ -111,6 +112,8 @@ func consumeReplicationStreamAndSendAcks(replicas []*resp_connection.RespConnect
 	for j := 0; j < len(replicas); j++ {
 		replica := replicas[j]
 		logger.Infof("Testing Replica : %v", j+1)
+		logger.Infof("replica-%d: Expecting \"%s\" to be propagated", j+1, strings.Join(command, " "))
+
 		receiveCommandTestCase := &test_cases.ReceiveValueTestCase{
 			Assertion:                 resp_assertions.NewCommandAssertion(command[0], command[1:]...),
 			ShouldSkipUnreadDataCheck: true,
@@ -131,6 +134,8 @@ func consumeReplicationStreamAndSendAcks(replicas []*resp_connection.RespConnect
 			}
 		}
 
+		logger.Infof("replica-%d: Expecting \"REPLCONF GETACK *\" from Master", j+1)
+
 		receiveGetackCommandTestCase := &test_cases.ReceiveValueTestCase{
 			Assertion:                 resp_assertions.NewCommandAssertion("REPLCONF", "GETACK", "*"),
 			ShouldSkipUnreadDataCheck: false,
@@ -140,10 +145,13 @@ func consumeReplicationStreamAndSendAcks(replicas []*resp_connection.RespConnect
 		}
 
 		if j < acksSentByReplicaSubsetCount {
+			logger.Debugf("replica-%d: Sending ACK to Master", j+1)
 			// Remove GETACK command bytes from offset before sending ACK.
 			if err := replica.SendCommand("REPLCONF", []string{"ACK", strconv.Itoa(replica.ReceivedBytes - len(replica.LastValueBytes))}...); err != nil {
 				return err
 			}
+		} else {
+			logger.Debugf("replica-%d: Not sending ACK to Master", j+1)
 		}
 	}
 	return err
