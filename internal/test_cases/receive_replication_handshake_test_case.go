@@ -44,8 +44,7 @@ func (t ReceiveReplicationHandshakeTestCase) RunAll(client *resp_connection.Resp
 }
 
 func (t ReceiveReplicationHandshakeTestCase) RunPingStep(client *resp_connection.RespConnection, logger *logger.Logger) error {
-	logger.Debugf("master: Waiting for replica to initiate Replication handshake.")
-	logger.Debugf("master: Waiting for replica to send %q command", "PING")
+	logger.Infof("master: Waiting for replica to initiate handshake with %q command", "PING")
 
 	commandTest := ReceiveCommandTestCase{
 		Assertion: resp_assertions.NewCommandAssertion("PING"),
@@ -56,7 +55,7 @@ func (t ReceiveReplicationHandshakeTestCase) RunPingStep(client *resp_connection
 }
 
 func (t ReceiveReplicationHandshakeTestCase) RunReplconfStep1(client *resp_connection.RespConnection, logger *logger.Logger) error {
-	logger.Debugf("master: Waiting for replica to send %q command", "REPLCONF listening-port")
+	logger.Infof("master: Waiting for replica to send %q command", "REPLCONF listening-port 6380")
 
 	commandTest := ReceiveCommandTestCase{
 		Assertion:                 resp_assertions.NewCommandAssertion("REPLCONF", "listening-port", "6380"),
@@ -68,7 +67,7 @@ func (t ReceiveReplicationHandshakeTestCase) RunReplconfStep1(client *resp_conne
 }
 
 func (t ReceiveReplicationHandshakeTestCase) RunReplconfStep2(client *resp_connection.RespConnection, logger *logger.Logger) error {
-	logger.Debugf("master: Waiting for replica to send %q command", "REPLCONF capa")
+	logger.Infof("master: Waiting for replica to send %q command", "REPLCONF capa")
 
 	commandTest := ReceiveCommandTestCase{
 		Assertion: resp_assertions.NewOnlyCommandAssertion("REPLCONF"),
@@ -114,7 +113,7 @@ func (t ReceiveReplicationHandshakeTestCase) RunReplconfStep2(client *resp_conne
 }
 
 func (t ReceiveReplicationHandshakeTestCase) RunPsyncStep(client *resp_connection.RespConnection, logger *logger.Logger) error {
-	logger.Debugf("master: Waiting for replica to send %q command", "PSYNC")
+	logger.Infof("master: Waiting for replica to send %q command", "PSYNC")
 
 	id := "75cd7bc10c49047e0d163660f3b90625b1af31dc"
 	commandTest := ReceiveCommandTestCase{
