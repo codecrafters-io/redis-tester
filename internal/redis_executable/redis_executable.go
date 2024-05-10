@@ -1,6 +1,8 @@
 package redis_executable
 
 import (
+	"strings"
+
 	executable "github.com/codecrafters-io/tester-utils/executable"
 	logger "github.com/codecrafters-io/tester-utils/logger"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
@@ -31,10 +33,10 @@ func (b *RedisExecutable) Run(args ...string) error {
 		var log string
 		log += "$ ./spawn_redis_server.sh"
 		for _, arg := range b.args {
-			if arg[0] == '-' {
-				log += " " + arg
-			} else {
+			if strings.Contains(arg, " ") {
 				log += " \"" + arg + "\""
+			} else {
+				log += " " + arg
 			}
 		}
 		b.logger.Infof(log)
