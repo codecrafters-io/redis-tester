@@ -4,7 +4,7 @@ short_name: "Redis"
 release_status: "live"
 
 description_md: |-
-  Redis is an in-memory data structure store often used as a database, cache, message broken and streaming engine. In this challenge
+  Redis is an in-memory data structure store often used as a database, cache, message broker and streaming engine. In this challenge
   you'll build your own Redis server that is capable of serving basic commands, reading RDB files and more.
 
   Along the way, you'll learn about TCP servers, the Redis Protocol and more.
@@ -22,6 +22,7 @@ languages:
   - slug: "crystal"
   - slug: "csharp"
   - slug: "elixir"
+  - slug: "gleam"
   - slug: "go"
   - slug: "haskell"
   - slug: "java"
@@ -30,6 +31,10 @@ languages:
   - slug: "python"
   - slug: "ruby"
   - slug: "rust"
+  - slug: "typescript"
+  - slug: "scala"
+    release_status: "beta"
+  - slug: "zig"
 
 marketing:
   difficulty: medium
@@ -87,7 +92,13 @@ extensions:
 stages:
   - slug: "init"
     concept_slugs:
-      ["network-protocols", "tcp-overview", "go-tcp-server", "rust-tcp-server"]
+      [
+        "network-protocols",
+        "tcp-overview",
+        "go-tcp-server",
+        "rust-tcp-server",
+        "python-tcp-server",
+      ]
     name: "Bind to a port"
     description_md: |-
       In this stage, you'll implement a TCP server that listens on port 6379.
@@ -120,7 +131,13 @@ stages:
 
   - slug: "ping-pong"
     concept_slugs:
-      ["network-protocols", "tcp-overview", "go-tcp-server", "rust-tcp-server"]
+      [
+        "network-protocols",
+        "tcp-overview",
+        "go-tcp-server",
+        "rust-tcp-server",
+        "python-tcp-server",
+      ]
     name: "Respond to PING"
     difficulty: easy
     description_md: |-
@@ -146,7 +163,7 @@ stages:
       It'll then send a `PING` command to your server and expect a `+PONG\r\n` response.
 
       ```bash
-      $ redis-cli ping
+      $ redis-cli PING
       ```
 
       Your server should respond with `+PONG\r\n`, which is "PONG" encoded as a [RESP simple string](https://redis.io/docs/reference/protocol-spec/#resp-simple-strings).
@@ -156,7 +173,7 @@ stages:
       - You can ignore the data that the tester sends you for this stage. We'll get to parsing
       client input in later stages. For now, you can just hardcode `+PONG\r\n` as the response.
       - You can also ignore handling multiple clients and handling multiple PING commands in the stage, we'll get to that in later stages.
-      - The exact bytes your program will receive won't be just `ping`, you'll receive something like this: `*1\r\n$4\r\nping\r\n`,
+      - The exact bytes your program will receive won't be just `PING`, you'll receive something like this: `*1\r\n$4\r\nPING\r\n`,
       which is the Redis protocol encoding of the `PING` command. We'll learn more about this in later stages.
     marketing_md: |
       In this stage, you'll respond to the
@@ -166,7 +183,13 @@ stages:
 
   - slug: "ping-pong-multiple"
     concept_slugs:
-      ["network-protocols", "tcp-overview", "go-tcp-server", "rust-tcp-server"]
+      [
+        "network-protocols",
+        "tcp-overview",
+        "go-tcp-server",
+        "rust-tcp-server",
+        "python-tcp-server",
+      ]
     name: "Respond to multiple PINGs"
     difficulty: easy
     description_md: |-
@@ -187,7 +210,7 @@ stages:
       It'll then send two PING commands using the same connection:
 
       ```bash
-      $ echo -e "ping\nping" | redis-cli
+      $ echo -e "PING\nPING" | redis-cli
       ```
 
       The tester will expect to receive two `+PONG\r\n` responses.
@@ -216,7 +239,13 @@ stages:
 
   - slug: "concurrent-clients"
     concept_slugs:
-      ["network-protocols", "tcp-overview", "go-tcp-server", "rust-tcp-server"]
+      [
+        "network-protocols",
+        "tcp-overview",
+        "go-tcp-server",
+        "rust-tcp-server",
+        "python-tcp-server",
+      ]
     name: "Handle concurrent clients"
     difficulty: medium
     description_md: |-
@@ -250,8 +279,8 @@ stages:
 
       ```bash
       # These two will be sent concurrently so that we test your server's ability to handle concurrent clients.
-      $ redis-cli ping
-      $ redis-cli ping
+      $ redis-cli PING
+      $ redis-cli PING
       ```
 
       The tester will expect to receive two `+PONG\r\n` responses.
@@ -278,9 +307,9 @@ stages:
       RESP bulk string.
 
       ```bash
-      $ redis-cli ping # The command you implemented in previous stages
+      $ redis-cli PING # The command you implemented in previous stages
       PONG
-      $ redis-cli echo hey # The command you'll implement in this stage
+      $ redis-cli ECHO hey # The command you'll implement in this stage
       hey
       ```
 
@@ -295,7 +324,7 @@ stages:
       It'll then send an `ECHO` command with an argument to your server:
 
       ```bash
-      $ redis-cli echo hey
+      $ redis-cli ECHO hey
       ```
 
       The tester will expect to receive `$3\r\nhey\r\n` as a response (that's the string `hey` encoded as a [RESP bulk string](https://redis.io/docs/reference/protocol-spec/#bulk-strings).
@@ -305,8 +334,8 @@ stages:
       - We suggest that you implement a proper Redis protocol parser in this stage. It'll come in handy in later stages.
       - Redis command names are case-insensitive, so `ECHO`, `echo` and `EcHo` are all valid commands.
       - The tester will send a random string as an argument to the `ECHO` command, so you won't be able to hardcode the response to pass this stage.
-      - The exact bytes your program will receive won't be just `echo hey`, you'll receive something like this: `*2\r\n$4\r\necho\r\n$3\r\nhey\r\n`. That's
-        `["echo", "hey"]` encoded using the [Redis protocol](https://redis.io/docs/reference/protocol-spec/).
+      - The exact bytes your program will receive won't be just `ECHO hey`, you'll receive something like this: `*2\r\n$4\r\nECHO\r\n$3\r\nhey\r\n`. That's
+        `["ECHO", "hey"]` encoded using the [Redis protocol](https://redis.io/docs/reference/protocol-spec/).
       - You can read more about how "commands" are handled in the Redis protocol [here](https://redis.io/docs/reference/protocol-spec/#sending-commands-to-a-redis-server).
     marketing_md: |-
       In this stage, you'll respond to the
@@ -326,9 +355,9 @@ stages:
       The `SET` command is used to set a key to a value. The `GET` command is used to retrieve the value of a key.
 
       ```bash
-      $ redis-cli set foo bar
+      $ redis-cli SET foo bar
       OK
-      $ redis-cli get foo
+      $ redis-cli GET foo
       bar
       ```
 
@@ -346,7 +375,7 @@ stages:
       It'll then send a `SET` command to your server:
 
       ```bash
-      $ redis-cli set foo bar
+      $ redis-cli SET foo bar
       ```
 
       The tester will expect to receive `+OK\r\n` as a response (that's the string `OK` encoded as a [RESP simple string](https://redis.io/docs/reference/protocol-spec/#resp-simple-strings)).
@@ -354,7 +383,7 @@ stages:
       This command will be followed by a `GET` command:
 
       ```bash
-      $ redis-cli get foo
+      $ redis-cli GET foo
       ```
 
       The tester will expect to receive `$3\r\nbar\r\n` as a response (that's the string `bar` encoded as a [RESP bulk string](https://redis.io/docs/reference/protocol-spec/#bulk-strings).
@@ -379,7 +408,7 @@ stages:
       The expiry for a key can be provided using the "PX" argument to the [SET](https://redis.io/commands/set) command. The expiry is provided in milliseconds.
 
       ```bash
-      $ redis-cli set foo bar px 100 # Sets the key "foo" to "bar" with an expiry of 100 milliseconds
+      $ redis-cli SET foo bar px 100 # Sets the key "foo" to "bar" with an expiry of 100 milliseconds
       OK
       ```
 
@@ -401,13 +430,13 @@ stages:
       It'll then send a `SET` command to your server to set a key with an expiry:
 
       ```bash
-      $ redis-cli set foo bar px 100
+      $ redis-cli SET foo bar px 100
       ```
 
       It'll then immediately send a `GET` command to retrieve the value:
 
       ```bash
-      $ redis-cli get foo
+      $ redis-cli GET foo
       ```
 
       It'll expect the response to be `bar` (encoded as a RESP bulk string).
@@ -415,7 +444,7 @@ stages:
       It'll then wait for the key to expire and send another `GET` command:
 
       ```bash
-      $ sleep 0.2 && redis-cli get foo
+      $ sleep 0.2 && redis-cli GET foo
       ```
 
       It'll expect the response to be `$-1\r\n` (a "null bulk string").
@@ -437,41 +466,67 @@ stages:
     name: "RDB file config"
     difficulty: easy
     description_md: |
-      Redis uses `.rdb` files for persistence. In this stage, you'll add support for reading the config values related to where RDB files are stored.
+      Welcome to the RDB Persistence Extension! In this extension, you'll add support for reading [RDB files](https://redis.io/docs/management/persistence/) (Redis Database files).
 
-      There are two config values that determine where RDB files are stored:
+      In this stage, you'll add support for two configuration parameters related to RDB persistence, as well as the [CONFIG GET](https://redis.io/docs/latest/commands/config-get/) command.
 
-      - `dir`: The directory where RDB files are stored
-      - `dbfilename`: The name of the RDB file
+      ### RDB files
 
-      These values will be passed into your program like this:
+      An RDB file is a point-in-time snapshot of a Redis dataset. When RDB persistence is enabled, the Redis server syncs its in-memory state with an RDB file, by doing the following:
 
+      1.  On startup, the Redis server loads the data from the RDB file.
+      2.  While running, the Redis server periodically takes new snapshots of the dataset, in order to update the RDB file.
+
+      ###  `dir` and `dbfilename`
+
+      The configuration parameters `dir` and `dbfilename` specify where an RDB file is stored:
+      -   `dir` - the path to the directory where the RDB file is stored (example: `/tmp/redis-data`)
+      -   `dbfilename` - the name of the RDB file (example: `rdbfile`)
+
+      ### The `CONFIG GET` command
+
+      The [`CONFIG GET`](https://redis.io/docs/latest/commands/config-get/) command returns the values of configuration parameters.
+
+      It takes in one or more configuration parameters and returns a [RESP array](https://redis.io/docs/latest/develop/reference/protocol-spec/#arrays) of key-value pairs:
+
+      ```bash
+      $ redis-cli CONFIG GET dir
+      1) "dir"
+      2) "/tmp/redis-data"
       ```
+
+      Although `CONFIG GET` can fetch multiple parameters at a time, the tester will only send `CONFIG GET` commands with one parameter at a time.
+
+      ### Tests
+
+      The tester will execute your program like this:
+
+      ```bash
       ./spawn_redis_server.sh --dir /tmp/redis-files --dbfilename dump.rdb
       ```
 
-      To verify whether your program is reading config values correctly, the tester will send you two commands:
+      It'll then send the following commands:
 
       ```bash
-      redis-cli CONFIG GET dir
-      redis-cli CONFIG GET dbfilename
+      $ redis-cli CONFIG GET dir
+      $ redis-cli CONFIG GET dbfilename
       ```
 
-      The response to `CONFIG GET <key>` should be a RESP array with two elements: the key and the value.
+      Your server must respond to each `CONFIG GET` command with a RESP array containing two elements:
 
-      For example, let's say the `dir` value is `/tmp/redis-files`. The expected response will be:
+      1.  The parameter **name**, encoded as a [RESP Bulk string](https://redis.io/docs/latest/develop/reference/protocol-spec/#bulk-strings)
+      2.  The parameter **value**, encoded as a RESP Bulk string
 
-      ```
+      For example, if the value of `dir` is `/tmp/redis-files`, then the expected response to `CONFIG GET dir` is:
+
+      ```bash
       *2\r\n$3\r\ndir\r\n$16\r\n/tmp/redis-files\r\n
       ```
 
-      - `*2\r\n` indicates that the array has two elements
-      - `$3\r\ndir\r\n` indicates that the first element is a bulk string with the value `dir`
-      - `$16\r\n/tmp/redis-files\r\n` indicates that the second element is a bulk string with the value `/tmp/redis-files`
+      ### Notes
 
-      **Note**: If your repository was created before 5th Oct 2023, it's possible that your `./spawn_redis_server.sh` script
-      might not be passing arguments on to your program. You'll need to edit `./spawn_redis_server.sh` to fix this, check
-      [this PR](https://github.com/codecrafters-io/build-your-own-redis/pull/89/files) for details.
+      1.  You don't need to read the RDB file in this stage, you only need to store `dir` and `dbfilename`. Reading from the file will be covered in later stages.
+      2.  If your repository was created before 5th Oct 2023, it's possible that your `./spawn_redis_server.sh` script is not passing arguments to your program. To fix this, you'll need to edit `./spawn_redis_server.sh`. Check the [update CLI args PR](https://github.com/codecrafters-io/build-your-own-redis/pull/89/files) for details on how to do this.
     marketing_md: |
       In this stage, you'll add support for reading the config values related to where RDB files are stored. You'll implement the `CONFIG GET` command.
 
@@ -493,13 +548,13 @@ stages:
       ./spawn_redis_server.sh --dir <dir> --dbfilename <filename>
       ```
 
-      It'll then send a `keys *` command to your server.
+      It'll then send a `KEYS *` command to your server.
 
       ```bash
-      $ redis-cli keys "*"
+      $ redis-cli KEYS "*"
       ```
 
-      The response to `keys *` should be a RESP array with one element: the key.
+      The response to `KEYS *` should be a RESP array with one element: the key.
 
       For example, let's say the RDB file contains a key called `foo`. The expected response will be:
 
@@ -533,13 +588,13 @@ stages:
       ./spawn_redis_server.sh --dir <dir> --dbfilename <filename>
       ```
 
-      It'll then send a `get <key>` command to your server.
+      It'll then send a `GET <key>` command to your server.
 
       ```bash
-      $ redis-cli get "foo"
+      $ redis-cli GET "foo"
       ```
 
-      The response to `get <key>` should be a RESP bulk string with the value of the key.
+      The response to `GET <key>` should be a RESP bulk string with the value of the key.
 
       For example, let's say the RDB file contains a key called `foo` with the value `bar`. The expected response will be `$3\r\nbar\r\n`.
 
@@ -568,13 +623,13 @@ stages:
       $ ./spawn_redis_server.sh --dir <dir> --dbfilename <filename>
       ```
 
-      It'll then send a `keys *` command to your server.
+      It'll then send a `KEYS *` command to your server.
 
       ```bash
-      $ redis-cli keys "*"
+      $ redis-cli KEYS "*"
       ```
 
-      The response to `keys *` should be a RESP array with the keys as elements.
+      The response to `KEYS *` should be a RESP array with the keys as elements.
 
       For example, let's say the RDB file contains two keys: `foo` and `bar`. The expected response will be:
 
@@ -601,14 +656,14 @@ stages:
       $ ./spawn_redis_server.sh --dir <dir> --dbfilename <filename>
       ```
 
-      It'll then send multiple `get <key>` commands to your server.
+      It'll then send multiple `GET <key>` commands to your server.
 
       ```bash
-      $ redis-cli get "foo"
-      $ redis-cli get "bar"
+      $ redis-cli GET "foo"
+      $ redis-cli GET "bar"
       ```
 
-      The response to each `get <key>` command should be a RESP bulk string with the value corresponding to the key.
+      The response to each `GET <key>` command should be a RESP bulk string with the value corresponding to the key.
     marketing_md: |
       In this stage, you'll add support for reading multiple string values from an RDB file.
 
@@ -628,11 +683,11 @@ stages:
       $ ./spawn_redis_server.sh --dir <dir> --dbfilename <filename>
       ```
 
-      It'll then send multiple `get <key>` commands to your server.
+      It'll then send multiple `GET <key>` commands to your server.
 
       ```bash
-      $ redis-cli get "foo"
-      $ redis-cli get "bar"
+      $ redis-cli GET "foo"
+      $ redis-cli GET "bar"
       ```
 
       When a key has expired, the expected response is `$-1\r\n` (a "null bulk string").
@@ -692,7 +747,7 @@ stages:
       When you run the `INFO` command against a Redis server, you'll see something like this:
 
       ```
-      $ redis-cli info replication
+      $ redis-cli INFO replication
       # Replication
       role:master
       connected_slaves:0
@@ -758,7 +813,7 @@ stages:
       Here's an example usage of the `--replicaof` flag:
 
       ```
-      ./spawn_redis_server.sh --port 6380 --replicaof localhost 6379
+      ./spawn_redis_server.sh --port 6380 --replicaof "localhost 6379"
       ```
 
       In this example, we're starting a Redis server in replica mode. The server itself will listen for connections on port 6380, but it'll
@@ -772,7 +827,7 @@ stages:
       The tester will execute your program like this:
 
       ```
-      ./spawn_redis_server.sh --port <PORT> --replicaof <MASTER_HOST> <MASTER_PORT>
+      ./spawn_redis_server.sh --port <PORT> --replicaof "<MASTER_HOST> <MASTER_PORT>"
       ```
 
       It'll then send the `INFO` command with `replication` as an argument to your server.
@@ -828,7 +883,7 @@ stages:
       It'll then send the `INFO` command with `replication` as an argument to your server.
 
       ```bash
-      $ redis-cli info replication
+      $ redis-cli INFO replication
       ```
 
       Your program should respond with a [Bulk string](https://redis.io/docs/reference/protocol-spec/#bulk-strings) where each line
@@ -867,14 +922,14 @@ stages:
       The tester will execute your program like this:
 
       ```
-      ./spawn_redis_server.sh --port <PORT> --replicaof <MASTER_HOST> <MASTER_PORT>
+      ./spawn_redis_server.sh --port <PORT> --replicaof "<MASTER_HOST> <MASTER_PORT>"
       ```
 
       It'll then assert that the replica connects to the master and sends the `PING` command.
 
       ### Notes
 
-      - The `PING` command should be sent as a RESP Array, like this : `*1\r\n$4\r\nping\r\n`
+      - The `PING` command should be sent as a RESP Array, like this : `*1\r\n$4\r\nPING\r\n`
     marketing_md: |
       In this stage, you'll add support for starting the handshake from the Replica side.
 
@@ -920,7 +975,7 @@ stages:
       The tester will execute your program like this:
 
       ```
-      ./spawn_redis_server.sh --port <PORT> --replicaof <MASTER_HOST> <MASTER_PORT>
+      ./spawn_redis_server.sh --port <PORT> --replicaof "<MASTER_HOST> <MASTER_PORT>"
       ```
 
       It'll then assert that the replica connects to the master and:
@@ -980,7 +1035,7 @@ stages:
       The tester will execute your program like this:
 
       ```
-      ./spawn_redis_server.sh --port <PORT> --replicaof <MASTER_HOST> <MASTER_PORT>
+      ./spawn_redis_server.sh --port <PORT> --replicaof "<MASTER_HOST> <MASTER_PORT>"
       ```
 
       It'll then assert that the replica connects to the master and:
@@ -1160,17 +1215,31 @@ stages:
 
       ### Command propagation
 
-      A master takes all write commands sent to it and propagates them to all connected replicas. The replicas
-      process these commands and apply them to their own state.
+      After the replication handshake is complete and the master has sent the RDB file to the replica, the
+      master starts propagating commands to the replica.
 
-      This propagation starts after the handshake is complete and the master has sent the RDB file to the replica.
+      When a master receives a "write" command from a client, it propagates the command to the replica. The
+      replica processes the command and updates its state. More on how this propagation works in the
+      "Replication connection" section below.
 
-      Every "write" command is sent to the replica as a RESP array, and the replica processes it as if it were a command sent by a client. Unlike
-      regular commands, the replica doesn't send a response to these commands. The master keeps propagating commands as they come in without stopping
-      to read responses from the replica.
+      Commands like `PING`, `ECHO` etc. are not considered "write" commands, so they aren't propagated. Commands like
+      `SET`, `DEL` etc. are considered "write" commands, so they are propagated.
 
-      Commands like `PING`, `ECHO` etc. are not considered "write" commands, so they aren't propagated. Commands like `SET`, `DEL` etc. are
-      considered "write" commands, so they are propagated.
+      ### Replication connection
+
+      Command propagation happens over the replication connection. This is the same connection that was used for the handshake.
+
+      Propagated commands are sent as RESP arrays. For example, if the master receives `SET foo bar` as a command from a client,
+      it'll send `*3\r\n$3\r\nSET\r\n$3\r\nfoo\r\n$3\r\nbar\r\n` to all connected replicas over their respective replication connections.
+
+      Replicas process commands received over the replication connection just like they would process commands received from a client,
+      but with one difference: Replicas don't send responses back to the master. They just process the command silently and update their
+      state.
+
+      Similarly, the master doesn't wait for a response from the replica when propagating commands. It just keeps sending commands as they
+      come in.
+
+      There is one exception to this "no response" rule, the `REPLCONF GETACK` command. We'll learn about this in later stages.
 
       ### Tests
 
@@ -1197,7 +1266,8 @@ stages:
       $ redis-cli SET baz 3
       ```
 
-      The tester will then assert that these commands were propagated to the replica server, in order.
+      It'll then assert that these commands were propagated to the replica, in order. The tester will
+      expect to receive these commands (encoded as RESP arrays) on the replication connection (the one used for the handshake).
 
       ### Notes
 
@@ -1255,15 +1325,15 @@ stages:
       will work exactly like a regular command sent by a client, except that the replica doesn't send a response
       back to the master.
 
-      For example, if the command `set foo 1` is propagated to the replica by a master, the replica must update
+      For example, if the command `SET foo 1` is propagated to the replica by a master, the replica must update
       its database to set the value of `foo` to `1`. Unlike commands from a regular client though, it must not reply with `+OK\r\n`.
 
       ### Tests
 
-      THe tester will spawn a Redis master, and it'll then execute your program like this:
+      The tester will spawn a Redis master, and it'll then execute your program as a replica like this:
 
       ```
-      ./spawn_redis_server.sh --port <PORT> --replicaof <MASTER_HOST> <MASTER_PORT>
+      ./spawn_redis_server.sh --port <PORT> --replicaof "<MASTER_HOST> <MASTER_PORT>"
       ```
 
       Just like in the previous stages, your replica should complete the handshake with the master and receive an empty RDB file.
@@ -1271,18 +1341,23 @@ stages:
       Once the RDB file is received, the master will propagate a series of write commands to your program.
 
       ```bash
-      set foo 1 # propagated from master to replica
-      set bar 2 # propagated from master to replica
-      set baz 3 # propagated from master to replica
+      SET foo 1 # propagated from master to replica
+      SET bar 2 # propagated from master to replica
+      SET baz 3 # propagated from master to replica
       ```
 
-      The tester will then issue `get` commands to your program to check if the commands were processed correctly.
+      The tester will then issue `GET` commands to your program to check if the commands were processed correctly.
 
       ```bash
       $ redis-cli GET foo # expecting `1` back
       $ redis-cli GET bar # expecting `2` back
       # ... and so on
       ```
+
+      ### Notes
+
+      - The propagated commands are sent as RESP arrays. So the command `SET foo 1` will be sent as `*3\r\n$3\r\nSET\r\n$3\r\nfoo\r\n$1\r\n1\r\n`.
+      - It is **not** guaranteed that propagated commands will be sent one at a time. One "TCP segment" might contain bytes for multiple commands.
     marketing_md: |
       In this stage, you'll add support for processing commands received by the replica from the master.
 
@@ -1295,40 +1370,48 @@ stages:
 
       ### ACKs
 
-      Unlike regular commands, when a master forwards commands to a replica via the replication connection, the replica doesn't
-      respond to each command. It just silently processes the commands and updates its state.
+      <details>
+        <summary>Click to expand/collapse</summary>
 
-      Since the master doesn't receive a response for each command, it needs another way to keep track of whether a replica is "in sync".
-      That's what ACKs are for.
+        Unlike regular commands, when a master forwards commands to a replica via the replication connection, the replica doesn't
+        respond to each command. It just silently processes the commands and updates its state.
 
-      ACK is short for "acknowledgement". Redis masters periodically ask replicas to send ACKs.
+        Since the master doesn't receive a response for each command, it needs another way to keep track of whether a replica is "in sync".
+        That's what ACKs are for.
 
-      Each ACK contains an "offset", which is the number of bytes of commands processed by the replica.
+        ACK is short for "acknowledgement". Redis masters periodically ask replicas to send ACKs.
 
-      We'll learn about how this offset is calculated and used in later stages. In this stage, we'll focus on implementing the
-      mechanism through which a master asks for an ACK from a replica: the `REPLCONF GETACK` command.
+        Each ACK contains an "offset", which is the number of bytes of commands processed by the replica.
+
+        We'll learn about how this offset is calculated and used in later stages. In this stage, we'll focus on implementing the
+        mechanism through which a master asks for an ACK from a replica: the `REPLCONF GETACK` command.
+      </details>
 
       ### The `REPLCONF GETACK` command
 
-      When a master requires an ACK from a replica, it sends a `REPLCONF GETACK *` command to the replica. This is sent over
-      the replication connection (i.e. the connection that remains after the replication handshake is complete).
+      <details>
+        <summary>Click to expand/collapse</summary>
 
-      When the replica receives this command, it responds with a `REPLCONF ACK <offset>` response. The offset is the
-      number of bytes of commands processed by the replica. It starts at 0 and is incremented for every command processed by the replica.
+        When a master requires an ACK from a replica, it sends a `REPLCONF GETACK *` command to the replica. This is sent over
+        the replication connection (i.e. the connection that remains after the replication handshake is complete).
 
-      In this stage, you'll implement support for receiving the `REPLCONF GETACK *` command and responding with `REPLCONF ACK 0`.
+        When the replica receives this command, it responds with a `REPLCONF ACK <offset>` response. The offset is the
+        number of bytes of commands processed by the replica. It starts at 0 and is incremented for every command processed by the replica.
 
-      You can hardcode the offset to 0 for now. We'll implement proper offset tracking in the next stage.
+        In this stage, you'll implement support for receiving the `REPLCONF GETACK *` command and responding with `REPLCONF ACK 0`.
 
-      The exact command received by the replica will look something like this: `*3\r\n$8\r\nreplconf\r\n$6\r\ngetack\r\n$1\r\n*\r\n` (that's
-      `["replconf", "getack", "*"]` encoded as a [RESP Array](https://redis.io/docs/reference/protocol-spec/#arrays)).
+        You can hardcode the offset to 0 for now. We'll implement proper offset tracking in the next stage.
+
+        The exact command received by the replica will look something like this: `*3\r\n$8\r\nreplconf\r\n$6\r\ngetack\r\n$1\r\n*\r\n` (that's
+        `["replconf", "getack", "*"]` encoded as a [RESP Array](https://redis.io/docs/reference/protocol-spec/#arrays)).
+      </details>
 
       ### Tests
 
       The tester will execute your program like this:
 
       ```
-      ./spawn_redis_server.sh --port <PORT> --replicaof <HOST> <PORT>
+      ./spawn_redis_server.sh --port <PORT> --replicaof "<HOST> <PORT>"
       ```
 
       Just like in the previous stages, your replica should complete the handshake with the master and receive an empty RDB file.
@@ -1350,24 +1433,48 @@ stages:
     name: "ACKs with commands"
     difficulty: medium
     description_md: |
-      <!--
-      In this stage, you will implement tracking of the number of bytes of commands processed by the replica. (Only for commands propagated from Master).
-      The correct offset value needs to be returned to master, after a GETACK command.
+      In this stage, you'll extend your `REPLCONF GETACK` implementation to respond with the number of bytes of commands processed by the replica.
 
-      When a MASTER sends `REPLCONF GETACK`, replica has to send back an `ACK` ASAP, with the offset processed upto before receiving the GETACK command.
+      ### Offset tracking
 
-      The exact command that will be sent is :
-      `*3\r\n$8\r\nREPLCONF\r\n$6\r\nGETACK\r\n$1\r\n*\r\n`
-      -->
+      <details>
+        <summary>Click to expand/collapse</summary>
+        As we saw in previous stages, when a replica receives a command from the master, it processes it and updates its state. In addition to processing
+        commands, the replica also keeps a running count of the number of bytes of commands it has processed.
 
-      **🚧 We're still working on instructions for this stage**. You can find notes on how the tester works below.
+        This count is called the "offset". When a master sends a `REPLCONF GETACK` command to a replica, the replica is expected to respond with
+        `REPLCONF ACK <offset>`. The returned `<offset>` should only include the number of bytes of commands processed **before** receiving the `REPLCONF GETACK` command.
+
+        As an example:
+
+        - Let's say a replica connects to a master and completes the handshake.
+        - The master then sends a `REPLCONF GETACK *` command.
+            - The replica should respond with `REPLCONF ACK 0`.
+            - The returned offset is 0 since no commands have been processed yet (before receiving the `REPLCONF GETACK` command)
+        - The master then sends `REPLCONF GETACK *` again.
+            - The replica should respond with `REPLCONF ACK 37`.
+            - The returned offset is 37 since the first `REPLCONF GETACK` command was processed, and it was 37 bytes long.
+            - The RESP encoding for the `REPLCONF GETACK` command looks like this: ``*3\r\n$8\r\nreplconf\r\n$6\r\ngetack\r\n$1\r\n*\r\n` (that's 37 bytes long)
+        - The master then sends a `PING` command to the replica (masters do this periodically to notify replicas that the master is still alive).
+            - The replica must silently process the `PING` command and update its offset. It should not send a response back to the master.
+        - The master then sends `REPLCONF GETACK *` again (this is the third REPLCONF GETACK command received by the replica)
+            - The replica should respond with `REPLCONF ACK 88`.
+            - The returned offset is 88 (37 + 37 + 14)
+                - 37 for the first `REPLCONF GETACK` command
+                - 37 for the second `REPLCONF GETACK` command
+                - 14 for the `PING` command
+            - Note that the third `REPLCONF GETACK` command is not included in the offset, since the value should
+            only include the number of bytes of commands processed **before** receiving the current `REPLCONF GETACK` command.
+        - ... and so on
+
+      </details>
 
       ### Tests
 
       The tester will execute your program like this:
 
       ```
-      ./spawn_redis_server.sh --port <PORT> --replicaof <HOST> <PORT>
+      ./spawn_redis_server.sh --port <PORT> --replicaof "<HOST> <PORT>"
       ```
 
       Just like in the previous stages, your replica should complete the handshake with the master and receive an empty RDB file.
@@ -1375,21 +1482,24 @@ stages:
       The master will then propagate a series of commands to your replica. These commands will be interleaved with `REPLCONF GETACK *` commands.
 
       ```bash
-      replconf getack * # expecting REPLCONF ACK 0, since 0 bytes have been processed
-      replconf getack * # expecting REPLCONF ACK 37 (0 + 37 for the replconf command)
+      REPLCONF getack * # expecting REPLCONF ACK 0, since 0 bytes have been processed
 
-      ping # master checking whether replica is alive
-      replconf getack * # expecting REPLCONF ACK 88 (37 + 37 for the replconf command + 14 for the ping command)
+      ping # master sending a ping command to notify the replica that it's still alive
+      REPLCONF getack * # expecting REPLCONF ACK 51 (37 for the first REPLCONF command + 14 for the ping command)
 
       set foo 1 # propagated from master to replica
-      replconf getack * # expecting REPLCONF ACK 154 (88 + 37 for the replconf command + 29 for the set command)
+      set bar 2 # propagated from master to replica
+      REPLCONF getack * # expecting REPLCONF ACK 109 (51 + 29 for the first set command + 29 for the second set command)
       ```
 
       ### Notes
 
-      - Although masters don't propagate `ping` commands when received from clients (since they aren't "write" commands),
-        they may send `ping` commands to replicas to check if they're alive.
-      - Replicas should update their offset to account for **all** commands propagated from the master, including `ping` and `replconf` itself.
+      - The offset should only include the number of bytes of commands processed **before** receiving the current `REPLCONF GETACK` command.
+      - Although masters don't propagate `PING` commands when received from clients (since they aren't "write" commands),
+        they may send `PING` commands to replicas to notify replicas that the master is still alive.
+      - Replicas should update their offset to account for **all** commands propagated from the master, including `PING` and `REPLCONF` itself.
+      - The response should be encoded as a [RESP Array](https://redis.io/docs/reference/protocol-spec/#arrays), like
+        this: `*3\r\n$8\r\nREPLCONF\r\n$3\r\nACK\r\n$3\r\n154\r\n`.
     marketing_md: |
       In this stage, you'll add support for returning an ACK back to master as a response to GETACK.
 
@@ -1415,17 +1525,17 @@ stages:
       ./spawn_redis_server.sh
       ```
 
-      A redis client will then connect to your master and send `wait 0 60000`:
+      A redis client will then connect to your master and send `WAIT 0 60000`:
 
       ```bash
-      $ redis-cli wait 0 60000
+      $ redis-cli WAIT 0 60000
       ```
 
       It'll expect to receive `0` back immediately, since no replicas are connected.
 
       ### Notes
 
-      - You can hardcode `0` as the response for the wait command in this stage. We'll get to tracking the number of replicas and responding
+      - You can hardcode `0` as the response for the WAIT command in this stage. We'll get to tracking the number of replicas and responding
         accordingly in the next stages.
     marketing_md: |
       In this stage, you'll start implementing the WAIT command on your master.
@@ -1494,21 +1604,21 @@ stages:
       It'll then start **multiple** replicas that connect to your server. Each will complete the handshake and expect to receive an empty RDB file.
 
       The tester will then connect to your master as a Redis client (not one of the replicas) and send multiple write commands interleaved
-      with `wait` commands:
+      with `WAIT` commands:
 
       ```bash
-      $ redis-cli set foo 123
-      $ redis-cli wait 1 500 # (must wait until either 1 replica has processed previous commands or 500ms have passed)
+      $ redis-cli SET foo 123
+      $ redis-cli WAIT 1 500 # (must wait until either 1 replica has processed previous commands or 500ms have passed)
 
-      $ redis-cli set bar 456
-      $ redis-cli wait 2 500 # (must wait until either 2 replicas have processed previous commands or 500ms have passed)
+      $ redis-cli SET bar 456
+      $ redis-cli WAIT 2 500 # (must wait until either 2 replicas have processed previous commands or 500ms have passed)
       ```
 
       ### Notes
 
-      - The `wait` command should return when either (a) the specified number of replicas have acknowledged the command, or (b) the timeout expires.
-      - The `wait` command should always return the number of replicas that have acknowledged the command, even if the timeout expires.
-      - The returned number of replicas might be lesser than or greater than the expected number of replicas specified in the `wait` command.
+      - The `WAIT` command should return when either (a) the specified number of replicas have acknowledged the command, or (b) the timeout expires.
+      - The `WAIT` command should always return the number of replicas that have acknowledged the command, even if the timeout expires.
+      - The returned number of replicas might be lesser than or greater than the expected number of replicas specified in the `WAIT` command.
     marketing_md: |
       In this stage, you'll finish implementing the WAIT command on your master.
 
@@ -1522,28 +1632,30 @@ stages:
 
       ### The TYPE command
 
-      [TYPE](https://redis.io/commands/type/) is the command used in order to get the type of a value stored at a given key. The different types that can be returned are: string, list, set, zset, hash, and stream.
+      The [TYPE](https://redis.io/commands/type/) command returns the type of value stored at a given key.
+
+      It returns one of the following types: string, list, set, zset, hash, and stream.
 
       Here's how it works:
 
       ```bash
-      $ redis-cli set some_key foo
+      $ redis-cli SET some_key foo
       "OK"
-      $ redis-cli type some_key
+      $ redis-cli TYPE some_key
       "string"
       ```
 
       If a key doesn't exist, the return value will be "none".
 
       ```bash
-      $ redis-cli type missing_key
+      $ redis-cli TYPE missing_key
       "none"
       ```
 
-      The return value of the type command is encoded as a [simple string](https://redis.io/docs/reference/protocol-spec/#simple-strings).
+      The return value is encoded as a [simple string](https://redis.io/docs/reference/protocol-spec/#simple-strings).
 
       ### Tests
-      
+
       The tester will execute your program like this:
 
       ```bash
@@ -1553,29 +1665,35 @@ stages:
       It'll then send a `SET` command to your server.
 
       ```bash
-      $ redis-cli set some_key foo
+      $ redis-cli SET some_key foo
       ```
 
       It'll then send a `TYPE` command to your server.
 
       ```bash
-      $ redis-cli type some_key
+      $ redis-cli TYPE some_key
       ```
 
-      Your server should respond with `+string\r\n`, which is `string` encoded as a RESP simple string. It'll then send another `TYPE` command with a missing key.
+      Your server should respond with `+string\r\n`, which is `string` encoded as a [RESP simple string](https://redis.io/docs/reference/protocol-spec/#simple-strings).
+
+      It'll then send another `TYPE` command with a missing key.
 
       ```bash
-      $ redis-cli type missing_key
+      $ redis-cli TYPE missing_key
       ```
 
-      Your server should respond with `+none\r\n`, which is `none` encoded as a RESP simple string.
+      Your server should respond with `+none\r\n`, which is `none` encoded as a [RESP simple string](https://redis.io/docs/reference/protocol-spec/#simple-strings).
+
+      ### Notes
+
+      - For now, you only need to handle the "string" and "none" types. We'll add support for the "stream" type in the next stage.
     marketing_md: |
       In this stage, you'll add support for the `TYPE` command.
 
   - slug: "streams-xadd"
     primary_extension_slug: "streams"
     name: "Create a stream"
-    difficulty: easy
+    difficulty: medium
     description_md: |
       In this stage, you'll add support for creating a [Redis stream](https://redis.io/docs/data-types/streams/) using the `XADD` command.
 
@@ -1588,35 +1706,37 @@ stages:
       For example, if you were using a Redis stream to store real-time data from a temperature & humidity monitor, the contents of the stream might look like this:
 
       ```yaml
-      - 1526985054069-0 # (ID of the first entry)
-        temperature: 36 # (A key value pair in the first entry)
-        humidity: 95 # (Another key value pair in the first entry)
+      entries:
+        - id: 1526985054069-0 # (ID of the first entry)
+          temperature: 36 # (A key value pair in the first entry)
+          humidity: 95 # (Another key value pair in the first entry)
 
-      - 1526985054079-0 # (ID of the second entry)
-        temperature: 37 # (A key value pair in the first entry)
-        humidity: 94 # (Another key value pair in the first entry)
+        - id: 1526985054079-0 # (ID of the second entry)
+          temperature: 37 # (A key value pair in the first entry)
+          humidity: 94 # (Another key value pair in the first entry)
 
-      # ... (and so on)
+        # ... (and so on)
       ```
 
-      The entry IDs will be looked at more closely in the upcoming stages.
+      We'll take a closer look at the format of entry IDs (`1526985054069-0` and `1526985054079-0` in the example above) in the upcoming stages.
 
       ### The XADD command
 
-      [XADD](https://redis.io/commands/xadd/) is the command used to append an entry to the stream. If a stream doesn't exist already, it is created.
+      The [XADD](https://redis.io/commands/xadd/) command appends an entry to a stream. If a stream doesn't exist already, it is created.
 
       Here's how it works:
 
       ```bash
-      $ redis-cli xadd some_key 1526919030474-0 temperature 36 humidity 95
-      "1526919030474-0"
+      $ redis-cli XADD stream_key 1526919030474-0 temperature 36 humidity 95
+      "1526919030474-0" # (ID of the entry created)
       ```
 
       The return value is the ID of the entry created, encoded as a [bulk string](https://redis.io/docs/reference/protocol-spec/#bulk-strings).
 
       `XADD` supports other optional arguments, but we won't deal with them in this challenge.
 
-      In this stage, we'll focus on adding support for explicit IDs and at least one key value pair.
+      `XADD` also supports auto-generating entry IDs. We'll add support for that in later stages. For now, we'll only deal with
+      explicit IDs (like `1526919030474-0` in the example above).
 
       ### Tests
 
@@ -1629,19 +1749,24 @@ stages:
       It'll then send an `XADD` command to your server and expect the ID as a response.
 
       ```bash
-      $ redis-cli xadd stream_key 0-1 foo bar
+      $ redis-cli XADD stream_key 0-1 foo bar
+      "0-1"
       ```
 
-      Your server should respond with `$3\r\n0-1\r\n`, which is `0-1` encoded as a RESP bulk string. The tester will then send a `TYPE` command to your server.
+      Your server should respond with `$3\r\n0-1\r\n`, which is `0-1` encoded as a [RESP bulk string](https://redis.io/docs/reference/protocol-spec/#bulk-strings).
+
+      The tester will then send a `TYPE` command to your server.
 
       ```bash
-      $ redis-cli type stream_key
+      $ redis-cli TYPE stream_key
+      "stream"
       ```
 
-      Your server should respond with `+stream\r\n`, which is `stream` encoded as a RESP simple string.
+      Your server should respond with `+stream\r\n`, which is `stream` encoded as a [RESP simple string](https://redis.io/docs/reference/protocol-spec/#simple-strings).
 
       ### Notes
-      - You can ignore the ability to parse multiple key value pairs.
+
+      - You still need to handle the "string" and "none" return values for the `TYPE` command. "stream" should only be returned for keys that are streams.
     marketing_md: |
       In this stage, you'll add support for creating a [Redis stream](https://redis.io/docs/data-types/streams/) using the `XADD` command.
 
@@ -1650,60 +1775,71 @@ stages:
     name: "Validating entry IDs"
     difficulty: easy
     description_md: |
-      In this stage, you'll enhance the `XADD` command by extending support for explicit IDs.
+      In this stage, you'll add support for validating entry IDs to the `XADD` command.
 
       ### Entry IDs
-      
-      Here's an example of stream entries in the previous stage:
+
+      Here's an example of stream entries from the previous stage:
 
       ```yaml
-      - 1526985054069-0 # (ID of the first entry)
-        temperature: 36 # (A key value pair in the first entry)
-        humidity: 95 # (Another key value pair in the first entry)
+      entries:
+        - id: 1526985054069-0 # (ID of the first entry)
+          temperature: 36 # (A key value pair in the first entry)
+          humidity: 95 # (Another key value pair in the first entry)
 
-      - 1526985054079-0 # (ID of the second entry)
-        temperature: 37 # (A key value pair in the first entry)
-        humidity: 94 # (Another key value pair in the first entry)
+        - id: 1526985054079-0 # (ID of the second entry)
+          temperature: 37 # (A key value pair in the first entry)
+          humidity: 94 # (Another key value pair in the first entry)
 
-      # ... (and so on)
+        # ... (and so on)
       ```
 
-      Entry IDs are always composed of two integers: `<millisecondsTime>-<sequenceNumber>`. 
+      Entry IDs are always composed of two integers: `<millisecondsTime>-<sequenceNumber>`.
+
+      Entry IDs are unique within a stream, and they're guaranteed to be incremental - i.e. an
+      entry added later will always have an ID greater than an entry added in the past. More
+      on this in the next section.
+
+      ### Specifying entry IDs in XADD
 
       There are multiple formats in which the ID can be specified in the XADD command:
+
       - Explicit ("1526919030474-0") (**This stage**)
       - Auto-generate only sequence number ("1526919030474-*") (Next stages)
       - Auto-generate time part and sequence number ("*") (Next stages)
 
-      IDs are guaranteed to be incremental within a stream - i.e. an entry added later will always have an ID greater than an entry added in the past.
+      In this stage, we'll only deal with explicit IDs. We'll add support for the other two cases in the next stages.
 
-      `millisecondsTime` should be equal to or greater than the `millisecondsTime` of the last entry. If they're equal, the `sequenceNumber` should be greater than the `sequenceNumber` of the last entry.
+      Your XADD implementation should validate the ID passed in.
 
-      Otherwise, the response would be an error.
+      - The ID should be greater than the ID of the last entry in the stream.
+        - The `millisecondsTime` part of the ID should be greater than or equal to the `millisecondsTime` of the last entry.
+        - If the `millisecondsTime` part of the ID is equal to the `millisecondsTime` of the last entry, the `sequenceNumber` part of the ID should be greater than the `sequenceNumber` of the last entry.
+      - If the stream is empty, the ID should be greater than `0-0`
 
-      Here's an example of that:
+      Here's an example of adding an entry with a valid ID followed by an invalid ID:
 
       ```bash
-      $ redis-cli xadd some_key 1-1 foo bar
+      $ redis-cli XADD some_key 1-1 foo bar
       "1-1"
-      $ redis-cli xadd some_key 1-1 bar baz
-      "(error) ERR The ID specified in XADD is equal or smaller than the target stream top item"
+      $ redis-cli XADD some_key 1-1 bar baz
+      (error) ERR The ID specified in XADD is equal or smaller than the target stream top item
       ```
 
-      Here's another example:
+      Here's another such example:
 
       ```bash
-      $ redis-cli xadd some_key 1-1 foo bar
+      $ redis-cli XADD some_key 1-1 foo bar
       "1-1"
-      $ redis-cli xadd some_key 0-2 bar baz
-      "(error) ERR The ID specified in XADD is equal or smaller than the target stream top item"
+      $ redis-cli XADD some_key 0-2 bar baz
+      (error) ERR The ID specified in XADD is equal or smaller than the target stream top item
       ```
 
-      The minimum explicit id that Redis supports is 0-1. Passing in an ID lower than that would result to an error.
+      The minimum entry ID that Redis supports is 0-1. Passing in an ID lower than should result in an error.
 
       ```bash
-      $ redis-cli xadd some_key 0-0 bar baz
-      "(error) ERR The ID specified in XADD must be greater than 0-0"
+      $ redis-cli XADD some_key 0-0 bar baz
+      (error) ERR The ID specified in XADD must be greater than 0-0
       ```
 
       ### Tests
@@ -1717,51 +1853,73 @@ stages:
       It'll create a few entries usind `XADD`.
 
       ```bash
-      $ redis-cli xadd stream_key 1-1 foo bar
-      $ redis-cli xadd stream_key 1-2 bar baz
+      $ redis-cli XADD stream_key 1-1 foo bar
+      "1-1"
+      $ redis-cli XADD stream_key 1-2 bar baz
+      "1-2"
       ```
 
       It'll send another `XADD` command with the same time and sequence number as the last entry.
 
       ```bash
-      $ redis-cli xadd stream_key 1-2 baz foo
+      $ redis-cli XADD stream_key 1-2 baz foo
+      (error) ERR The ID specified in XADD is equal or smaller than the target stream top item
       ```
 
-      Your server should respond with `-ERR The ID specified in XADD is equal or smaller than the target stream top item\r\n`, which is the error message in the example encoded as a [simple error](https://redis.io/docs/reference/protocol-spec/#simple-errors). It'll then send another `XADD` command with a smaller value for the time and a larger value for the sequence number.
+      Your server should respond with "-ERR The ID specified in XADD is equal or smaller than the target stream top item\r\n", which is the error message above encoded as a
+      [simple error](https://redis.io/docs/reference/protocol-spec/#simple-errors).
+
+      The tester will then send another `XADD` command with a smaller value for the time and a larger value for the sequence number.
 
       ```bash
-      $ redis-cli xadd stream_key 0-3 baz foo
+      $ redis-cli XADD stream_key 0-3 baz foo
+      (error) ERR The ID specified in XADD is equal or smaller than the target stream top item
       ```
 
-      Your server should also respond with the same error message encoded as a RESP simple error. It'll then send another `XADD` command with `0-0` as the ID.
+      Your server should also respond with the same error message.
+
+      After that, the tester will send another `XADD` command with `0-0` as the ID.
 
       ```bash
-      $ redis-cli xadd stream_key 0-0 baz foo
+      $ redis-cli XADD stream_key 0-0 baz foo
       ```
 
-      Your server should respond with `-ERR The ID specified in XADD must be greater than 0-0\r\n`, which is the error message in the example also encoded as a RESP simple error.
+      Your server should respond with "-ERR The ID specified in XADD must be greater than 0-0\r\n", which is the error message above encoded as a
+      [RESP simple error](https://redis.io/docs/reference/protocol-spec/#simple-errors).
     marketing_md: |
       In this stage, you'll enhance the `XADD` command by extending support for explicit IDs.
 
   - slug: "streams-xadd-partial-autoid"
     primary_extension_slug: "streams"
     name: "Partially auto-generated IDs"
-    difficulty: easy
+    difficulty: medium
     description_md: |
-      In this stage, you'll enhance the `XADD` command by adding the option to use `*` as the sequence number.
+      In this stage, you'll extend your `XADD` command implementation to support auto-generating the
+      sequence number part of the entry ID.
 
       ### Specifying entry IDs in XADD
 
       As a recap, there are multiple formats in which the ID can be specified in the `XADD` command:
+
       - Explicit ("1526919030473-0") (Previous stage)
       - Auto-generate only sequence number ("1526919030474-*") (**This stage**)
       - Auto-generate time part and sequence number ("*") (Next stage)
 
-      We dealt with explicit IDs in the last stage. Now, we'll handle the second case.
+      We dealt with explicit IDs in the last stage. We'll handle the second case in this stage.
 
-      When `*` is used  for the sequence number with the `XADD` command, Redis auto-generates a unique incrementing ID for the entry being appended to the stream.
+      When `*` is used for the sequence number, Redis picks the last sequence number used in the
+      stream (for the same time part) and increments it by 1.
 
-      The default sequence number is 0. The only exception is when the time is also 0. In that case, the default sequence number is 1.
+      The default sequence number is 0. The only exception is when the time part is also 0. In that case, the default sequence number is 1.
+
+      Here's an example of adding an entry with `*` as the sequence number:
+
+      ```bash
+      $ redis-cli XADD some_key "1-*" foo bar
+      "1-0" # If there are no entries, the sequence number will be 0
+      $ redis-cli XADD some_key "1-*" bar baz
+      "1-1" # Adding another entry will increment the sequence number
+      ```
 
       ### Tests
 
@@ -1774,44 +1932,55 @@ stages:
       It'll send an `XADD` command with `*` as the sequence number.
 
       ```bash
-      $ redis-cli xadd stream_key 0-* foo bar
+      $ redis-cli XADD stream_key 0-* foo bar
       ```
 
-      Your server should respond with `$3\r\n0-1\r\n`, which is `0-1` encoded as a RESP bulk string. It'll then send another `XADD` command with `*` as the sequence number, but this time with 1 as the time.
+      Your server should respond with `$3\r\n0-1\r\n`, which is `0-1` encoded as a RESP bulk string.
+
+      It'll then send another `XADD` command with `*` as the sequence number, but this time with a
+      random number as the time part.
 
       ```bash
-      $ redis-cli xadd stream_key 1-* foo bar
+      $ redis-cli XADD stream_key 5-* foo bar
       ```
 
-      Your server should respond with `$3\r\n1-0\r\n`, which is `1-0` encoded as a RESP bulk string. It'll send the same command again.
+      Your server should respond with `$3\r\n5-0\r\n`, which is `5-0` encoded as a [RESP bulk string](https://redis.io/docs/reference/protocol-spec/#bulk-strings)
+
+      It'll send the same command again.
 
       ```bash
-      $ redis-cli xadd stream_key 1-* bar baz
+      $ redis-cli XADD stream_key 5-* bar baz
       ```
 
-      Your server should respond with `$3\r\n1-1\r\n`, which is `1-1` encoded as a RESP bulk string.
+      Your server should respond with `$3\r\n5-1\r\n`, which is `5-1` encoded as a [RESP bulk string](https://redis.io/docs/reference/protocol-spec/#bulk-strings)
+
+      ### Notes
+
+      - The tester will use a random number for the time part (we use `5` in the example above).
     marketing_md: |
       In this stage, you'll enhance the `XADD` command by adding the option to use `*` as the sequence number.
 
   - slug: "streams-xadd-full-autoid"
     primary_extension_slug: "streams"
-    name: "Full auto-generated IDs"
-    difficulty: easy
+    name: "Fully auto-generated IDs"
+    difficulty: medium
     description_md: |
-      In this stage, you'll enhance the `XADD` command by adding the option to use `*` as the entry ID.
+      In this stage, you'll extend your `XADD` command implementation to support auto-generating entry IDs.
 
-      ### Specifying entry IDs in XADD (Continued)
+      ### Specifying entry IDs in XADD (Continued...)
 
       As a recap, there are multiple formats in which the ID can be specified in the `XADD` command:
+
       - Explicit ("1526919030474-0") (Previous stages)
       - Auto-generate only sequence number ("1526919030473-*") (Previous stages)
       - Auto-generate time part and sequence number ("*") (**This stage**)
 
       We'll now handle the third case.
 
-      When `*` is used with the `XADD` command, Redis takes care of generating a unique incrementing ID for the message being appended to the stream.
+      When `*` is used with the `XADD` command, Redis auto-generates a unique auto-incrementing ID for the message being appended to the stream.
 
-      Redis defaults to using the current unix time in milliseconds and 0 for the sequence number. If the time already exists in the stream, the sequence number for that record incremented by one will be used.
+      Redis defaults to using the current unix time in milliseconds for the time part and 0 for the sequence number. If the
+      time already exists in the stream, the sequence number for that record incremented by one will be used.
 
       ### Tests
 
@@ -1821,13 +1990,19 @@ stages:
       $ ./spawn_redis_server.sh
       ```
 
-      It'll create an entry with `*` as the ID.
+      It'll then create an entry with `*` as the ID.
 
       ```bash
-      $ redis-cli xadd stream_key * foo bar
+      $ redis-cli XADD stream_key * foo bar
       ```
 
-      Your server should respond with `$13\r\n<milliseconds>-0\r\n`, which is `<milliseconds>-0` encoded as a RESP bulk string.
+      Your server should respond with a string like `$15\r\n1526919030474-0\r\n`, which is `1526919030474-0` encoded as a RESP bulk string.
+
+      ### Notes
+
+      - The time part of the ID should be the current unix time in **milliseconds**, not seconds.
+      - The tester doesn't test the case where a time part already exists in the stream and the sequence
+        number is incremented. This is difficult to test reliably since we'd need to send 2 commands within the same millisecond.
     marketing_md: |
       In this stage, you'll enhance the `XADD` command by adding the option to use `*` as the entry ID.
 
@@ -1840,31 +2015,20 @@ stages:
 
       ### The XRANGE command
 
-      [XRANGE](https://redis.io/commands/xrange/) is the command is used for retrieving a range of entries from a stream within defined start and end IDs.
+      The [XRANGE](https://redis.io/commands/xrange/) command retrieves a range of entries from a stream.
 
-      Here's how it works:
-      We'll use our previous example for entries existing in a stream.
+      It takes two arguments: `start` and `end`. Both are entry IDs. The command returns all entries in the
+      stream with IDs between the `start` and `end` IDs. This range is "inclusive", which means that the response
+      will includes entries with IDs that are equal to the `start` and `end` IDs.
 
-      ```yaml
-      - 1526985054069-0 # (ID of the first entry)
-        temperature: 36 # (A key value pair in the first entry)
-        humidity: 95 # (Another key value pair in the first entry)
-
-      - 1526985054079-0 # (ID of the second entry)
-        temperature: 37 # (A key value pair in the first entry)
-        humidity: 94 # (Another key value pair in the first entry)
-
-      # ... (and so on)
-      ```
-
-      This is what the command looks like:
+      Here's an example of how it works:
 
       ```bash
-      $ redis-cli xadd some_key 1526985054069-0 temperature 36 humidity 95
-      "1526985054069-0"
-      $ redis-cli xadd some_key 1526985054079-0 temperature 37 humidity 94
+      $ redis-cli XADD some_key 1526985054069-0 temperature 36 humidity 95
+      "1526985054069-0" # (ID of the first added entry)
+      $ redis-cli XADD some_key 1526985054079-0 temperature 37 humidity 94
       "1526985054079-0"
-      $ redis-cli xrange some_key 1526985054069 1526985054079
+      $ redis-cli XRANGE some_key 1526985054069 1526985054079
       1) 1) 1526985054069-0
          2) 1) temperature
             2) 36
@@ -1877,11 +2041,17 @@ stages:
             4) 94
       ```
 
-      The sequence number doesn't need to be included in the start and end IDs provided to the command. If not provided, the it defaults to a sequence number of 0 for the start and the maximum sequence number for the end.
+      The sequence number doesn't need to be included in the start and end IDs provided to the command. If not provided,
+      XRANGE defaults to a sequence number of 0 for the start and the maximum sequence number for the end.
 
-      The start and end IDs are inclusive, which means that the response includes entries with IDs matching both the start and end. The only way to get a single value from a stream is through the `XRANGE` command with the same value for the start and end IDs.
+      The return value of the command is not exactly what is shown in the example above. This is already formatted by redis-cli.
 
-      The return value of the command is not exactly what is shown in the example above. This is already formatted by the CLI. What is instead returned is actually a [list](https://redis.io/docs/reference/protocol-spec/#arrays) of an array of two items. The items being the ID and a list of key value pairs.
+      The actual return value is a [RESP Array](https://redis.io/docs/reference/protocol-spec/#arrays) of arrays.
+
+      - Each inner array represents an entry.
+      - The first item in the inner array is the ID of the entry.
+      - The second item is a list of key value pairs, where the key value pairs are represented as a list of strings.
+        - The key value pairs are in the order they were added to the entry.
 
       The return value of the example above is actually something like this:
 
@@ -1919,6 +2089,7 @@ stages:
       $2\r\n36\r\n
       $8\r\nhumidity\r\n
       $2\r\n95\r\n
+      *2\r\n
       $15\r\n1526985054079-0\r\n
       *4\r\n
       $11\r\ntemperature\r\n
@@ -1927,7 +2098,8 @@ stages:
       $2\r\n94\r\n
       ```
 
-      The lines are separated into new lines for readability. The return value is just one value.
+      In the code block above, the response is separated into multiple lines for readability. The actual
+      return value doesn't contain any additional newlines.
 
       ### Tests
 
@@ -1940,37 +2112,40 @@ stages:
       First, it'll add a few entries.
 
       ```bash
-      $ redis-cli xadd stream_key 0-1 foo bar
-      $ redis-cli xadd stream_key 0-2 bar baz
-      $ redis-cli xadd stream_key 0-3 baz foo
+      $ redis-cli XADD stream_key 0-1 foo bar
+      "0-1"
+      $ redis-cli XADD stream_key 0-2 bar baz
+      "0-2"
+      $ redis-cli XADD stream_key 0-3 baz foo
+      "0-3"
       ```
 
       Then, it'll send an `XRANGE` command to your server.
 
       ```bash
-      $ redis-cli xrange stream_key 0-2 0-3
+      $ redis-cli XRANGE stream_key 0-2 0-3
       ```
 
-      Your server should respond with the following:
+      Your server should respond with the following (encoded as a RESP Array):
 
-      ```text
-      *2\r\n
-      *2\r\n
-      $3\r\n0-2\r\n
-      *2\r\n
-      $3\r\nbar\r\n
-      $3\r\nbaz\r\n
-      *2\r\n
-      $3\r\n0-3\r\n
-      *2\r\n
-      $3\r\nbaz\r\n
-      $3\r\nfoo\r\n
+      ```json
+      [
+        [
+          "0-2",
+          [
+            "bar",
+            "baz"
+          ]
+        ],
+        [
+          "0-3",
+          [
+            "baz",
+            "foo"
+          ]
+        ]
+      ]
       ```
-
-      This is the RESP encoded representation of `[["0-2", ["bar", "baz"]], ["0-3", ["baz", "foo"]]]`. 
-
-      ### Notes
-      - In the response, the items are separated onto new lines for readability. The tester expects all of these to be in one line.
     marketing_md: |
       In this stage, you'll add support for querying data from a stream using the `XRANGE` command.
 
@@ -1982,32 +2157,19 @@ stages:
       In this stage, you'll extend support for `XRANGE` to allow querying using `-`.
 
       ### Using XRANGE with -
-      
+
       In the previous stage, we saw that `XRANGE` takes `start` and `end` as arguments.
 
       In addition to accepting an explicit entry ID, `start` can also be specified as `-`. When `-` is used, `XRANGE` retrieves entries from the beginning of the stream.
 
-      Here's an example of how that works:
-      We'll use our previous example for entries existing in a stream.
-
-      ```yaml
-      - 1526985054069-0 # (ID of the first entry)
-        temperature: 36 # (A key value pair in the first entry)
-        humidity: 95 # (Another key value pair in the first entry)
-
-      - 1526985054079-0 # (ID of the second entry)
-        temperature: 37 # (A key value pair in the first entry)
-        humidity: 94 # (Another key value pair in the first entry)
-
-      # ... (and so on)
-      ```
+      Here's an example of how that works.
 
       ```bash
-      $ redis-cli xadd some_key 1526985054069-0 temperature 36 humidity 95
+      $ redis-cli XADD some_key 1526985054069-0 temperature 36 humidity 95
       "1526985054069-0"
-      $ redis-cli xadd some_key 1526985054079-0 temperature 37 humidity 94
+      $ redis-cli XADD some_key 1526985054079-0 temperature 37 humidity 94
       "1526985054079-0"
-      $ redis-cli xrange some_key - 1526985054079
+      $ redis-cli XRANGE some_key - 1526985054079
       1) 1) 1526985054069-0
          2) 1) temperature
             2) 36
@@ -2020,6 +2182,8 @@ stages:
             4) 94
       ```
 
+      In the example above, `XRANGE` retrieves all entries from the beginning of the stream to the entry with ID `1526985054079-0`.
+
       ### Tests
 
       The tester will execute your program like this:
@@ -2031,37 +2195,46 @@ stages:
       It'll then create a few entries.
 
       ```bash
-      $ redis-cli xadd stream_key 0-1 foo bar
-      $ redis-cli xadd stream_key 0-2 bar baz
-      $ redis-cli xadd stream_key 0-3 baz foo
+      $ redis-cli XADD stream_key 0-1 foo bar
+      "0-1"
+      $ redis-cli XADD stream_key 0-2 bar baz
+      "0-2"
+      $ redis-cli XADD stream_key 0-3 baz foo
+      "0-3"
       ```
 
       It'll then send an `XRANGE` command to your server.
 
       ```bash
-      $ redis-cli xrange stream_key - 0-2
+      $ redis-cli XRANGE stream_key - 0-2
+      1) 1) 0-1
+         2) 1) foo
+            2) bar
+      2) 1) 0-2
+         2) 1) bar
+            2) baz
       ```
 
-      Your server should respond with the following:
+      Your server should respond with the following, encoded as a [RESP Array](https://redis.io/docs/reference/protocol-spec/#arrays):
 
-      ```text
-      *2\r\n
-      *2\r\n
-      $3\r\n0-1\r\n
-      *2\r\n
-      $3\r\nfoo\r\n
-      $3\r\nbar\r\n
-      *2\r\n
-      $3\r\n0-2\r\n
-      *2\r\n
-      $3\r\nbar\r\n
-      $3\r\nbaz\r\n
+      ```json
+      [
+        [
+          "0-1",
+          [
+            "foo",
+            "bar"
+          ]
+        ],
+        [
+          "0-2",
+          [
+            "bar",
+            "baz"
+          ]
+        ]
+      ]
       ```
-
-      This is the RESP encoded representation of `[["0-1", ["foo", "bar"]], ["0-2", ["bar", "baz"]]]`.
-
-      ### Notes
-      - In the response, the items are separated onto new lines for readability. The tester expects all of these to be in one line.
     marketing_md: |
       In this stage, you'll extend support for `XRANGE` to allow querying using `-`.
 
@@ -2073,20 +2246,21 @@ stages:
       In this stage, you'll extend support for `XRANGE` to allow querying using `+`.
 
       ### Using XRANGE with +
-      
+
       In the previous stage, we saw that `XRANGE` takes `start` and `end` as arguments.
 
       In addition to accepting an explicit entry ID, `end` can also be specified as `+`. When `+` is used, `XRANGE` retrieves entries until the end of the stream.
 
-      Here's an example of how that works:
+      Here's an example of how that works.
+
       We'll use our previous example for entries existing in a stream.
 
       ```bash
-      $ redis-cli xadd some_key 1526985054069-0 temperature 36 humidity 95
+      $ redis-cli XADD some_key 1526985054069-0 temperature 36 humidity 95
       "1526985054069-0"
-      $ redis-cli xadd some_key 1526985054079-0 temperature 37 humidity 94
+      $ redis-cli XADD some_key 1526985054079-0 temperature 37 humidity 94
       "1526985054079-0"
-      $ redis-cli xrange some_key 1526985054069 +
+      $ redis-cli XRANGE some_key 1526985054069 +
       1) 1) 1526985054069-0
          2) 1) temperature
             2) 36
@@ -2110,15 +2284,15 @@ stages:
       It'll then create a few entries.
 
       ```bash
-      $ redis-cli xadd stream_key 0-1 foo bar
-      $ redis-cli xadd stream_key 0-2 bar baz
-      $ redis-cli xadd stream_key 0-3 baz foo
+      $ redis-cli XADD stream_key 0-1 foo bar
+      $ redis-cli XADD stream_key 0-2 bar baz
+      $ redis-cli XADD stream_key 0-3 baz foo
       ```
 
       It'll then send an `XRANGE` command to your server.
 
       ```bash
-      $ redis-cli xrange stream_key 0-2 +
+      $ redis-cli XRANGE stream_key 0-2 +
       ```
 
       Your server should respond with the following:
@@ -2137,7 +2311,26 @@ stages:
       $3\r\nfoo\r\n
       ```
 
-      This is the RESP encoded representation of [["0-2", ["bar", "baz"]], ["0-3", ["baz", "foo"]]].
+      This is the RESP encoded representation of the following.
+
+      ```json
+      [
+        [
+          "0-2",
+          [
+            "bar",
+            "baz"
+          ]
+        ],
+        [
+          "0-3",
+          [
+            "baz",
+            "foo"
+          ]
+        ]
+      ]
+      ```
 
       ### Notes
       - In the response, the items are separated onto new lines for readability. The tester expects all of these to be in one line.
@@ -2152,29 +2345,32 @@ stages:
       In this stage, you'll add support to querying a stream using the `XREAD` command.
 
       ### The XREAD command
-    
+
       [XREAD](https://redis.io/commands/xread/) is used to read data from one or more streams, starting from a specified entry ID.
 
-      Here's how it works. Let's use the entries previously shown as an example:
+      Here's how it works.
+
+      Let's use the entries previously shown as an example.
 
       ```yaml
-      - 1526985054069-0 # (ID of the first entry)
-        temperature: 36 # (A key value pair in the first entry)
-        humidity: 95 # (Another key value pair in the first entry)
+      entries:
+        - id: 1526985054069-0 # (ID of the first entry)
+          temperature: 36 # (A key value pair in the first entry)
+          humidity: 95 # (Another key value pair in the first entry)
 
-      - 1526985054079-0 # (ID of the second entry)
-        temperature: 37 # (A key value pair in the first entry)
-        humidity: 94 # (Another key value pair in the first entry)
+        - id: 1526985054079-0 # (ID of the second entry)
+          temperature: 37 # (A key value pair in the first entry)
+          humidity: 94 # (Another key value pair in the first entry)
 
-      # ... (and so on)
+        # ... (and so on)
       ```
 
       ```bash
-      $ redis-cli xadd some_key 1526985054069-0 temperature 36 humidity 95
+      $ redis-cli XADD some_key 1526985054069-0 temperature 36 humidity 95
       "1526985054069-0"
-      $ redis-cli xadd some_key 1526985054079-0 temperature 37 humidity 94
+      $ redis-cli XADD some_key 1526985054079-0 temperature 37 humidity 94
       "1526985054079-0"
-      $ redis-cli xread streams some_key 1526985054069-0
+      $ redis-cli XREAD streams some_key 1526985054069-0
       1) 1) "some_key"
          2) 1) 1) 1526985054079-0
                2) 1) temperature
@@ -2241,13 +2437,13 @@ stages:
       First, an entry will be added.
 
       ```bash
-      $ redis-cli xadd stream_key 0-1 temperature 96
+      $ redis-cli XADD stream_key 0-1 temperature 96
       ```
 
       It'll then send an `XREAD` command to your server.
 
       ```bash
-      $ redis-cli xread streams stream_key 0-0
+      $ redis-cli XREAD streams stream_key 0-0
       ```
 
       Your server should respond with the following:
@@ -2264,7 +2460,24 @@ stages:
       $2\r\n96\r\n
       ```
 
-      This is the RESP encoded representation of `["stream_key", [["0-1", ["temperature", "96"]]]]`.
+      This is the RESP encoded representation of the following.
+
+      ```json
+      [
+        [
+          "stream_key",
+          [
+            [
+              "0-1",
+              [
+                "temperature",
+                "96"
+              ]
+            ]
+          ]
+        ]
+      ]
+      ```
 
       ### Notes
       - In the response, the items are separated onto new lines for readability. The tester expects all of these to be in one line.
@@ -2289,14 +2502,14 @@ stages:
       First, an entry will be added to a couple of streams.
 
       ```bash
-      $ redis-cli xadd stream_key 0-1 temperature 95
-      $ redis-cli xadd other_stream_key 0-2 humidity 97
+      $ redis-cli XADD stream_key 0-1 temperature 95
+      $ redis-cli XADD other_stream_key 0-2 humidity 97
       ```
 
       It'll then send an `XREAD` command to your server with multiple streams.
 
       ```bash
-      $ redis-cli xread streams stream_key other_stream_key 0-0 0-1
+      $ redis-cli XREAD streams stream_key other_stream_key 0-0 0-1
       ```
 
       Your server should respond with the following:
@@ -2321,7 +2534,36 @@ stages:
       $2\r\n97\r\n
       ```
 
-      This is the RESP encoded representation of `[["stream_key", [["0-1", ["foo", "bar"]]]], ["other_stream_key", [["0-2", ["bar", "baz"]]]]]`.
+      This is the RESP encoded representation of the following.
+
+      ```json
+      [
+        [
+          "stream_key",
+          [
+            [
+              "0-1",
+              [
+                "foo",
+                "bar"
+              ]
+            ]
+          ]
+        ],
+        [
+          "other_stream_key",
+          [
+            [
+              "0-2",
+              [
+                "bar",
+                "baz"
+              ]
+            ]
+          ]
+        ]
+      ]
+      ```
 
       ### Notes
       - In the response, the items are separated onto new lines for readability. The tester expects all of these to be in one line.
@@ -2330,54 +2572,57 @@ stages:
 
   - slug: "streams-xread-block"
     primary_extension_slug: "streams"
-    name: "Support blocking reads"
+    name: "Blocking reads"
     difficulty: hard
     description_md: |
-      In this stage, you'll add extend support to `XREAD` to allow for turning it into a blocking command.
+      In this stage, you'll extend support to `XREAD` to allow for turning it into a blocking command.
 
       ### Understanding blocking
-      
+
       `BLOCK` is one of the optional parameters that could be passed in to the `XREAD` command.
 
-      Without blocking, the current implementation of our command is synchronous. This means that the command can get new data as long as there are items available. 
+      Without blocking, the current implementation of our command is synchronous. This means that the command can get new data as long as there are items available.
 
       If we want to wait for new data coming in, we need blocking.
 
-      Here's how it works. Let's use the entries previously shown as an example.
+      Here's how it works.
+
+      Let's use the entries previously shown as an example.
 
       ```yaml
-      - 1526985054069-0 # (ID of the first entry)
-        temperature: 36 # (A key value pair in the first entry)
-        humidity: 95 # (Another key value pair in the first entry)
+      entries:
+        - id: 1526985054069-0 # (ID of the first entry)
+          temperature: 36 # (A key value pair in the first entry)
+          humidity: 95 # (Another key value pair in the first entry)
 
-      - 1526985054079-0 # (ID of the second entry)
-        temperature: 37 # (A key value pair in the first entry)
-        humidity: 94 # (Another key value pair in the first entry)
+        - id: 1526985054079-0 # (ID of the second entry)
+          temperature: 37 # (A key value pair in the first entry)
+          humidity: 94 # (Another key value pair in the first entry)
 
-      # ... (and so on)
+        # ... (and so on)
       ```
 
       On one instance of the redis-cli, we'd add an entry and send  a blocking `XREAD` command.
 
       ```bash
-      $ redis-cli xadd some_key 1526985054069-0 temperature 36 humidity 95
+      $ redis-cli XADD some_key 1526985054069-0 temperature 36 humidity 95
       "1526985054069-0"
-      $ redis-cli xread block 1000 streams some_key 1526985054069-0
+      $ redis-cli XREAD block 1000 streams some_key 1526985054069-0
       ```
 
       Then, on another instance of the redis-cli, we add another entry.
 
       ```bash
-      $ other-redis-cli xadd some_key 1526985054079-0 temperature 37 humidity 94
+      $ other-redis-cli XADD some_key 1526985054079-0 temperature 37 humidity 94
       "1526985054079-0"
       ```
 
       If the command was sent within 1000 milliseconds, the redis-cli will respond with the added entry.
 
       ```bash
-      $ redis-cli xadd some_key 1526985054069-0 temperature 36 humidity 95
+      $ redis-cli XADD some_key 1526985054069-0 temperature 36 humidity 95
       "1526985054069-0"
-      $ redis-cli xread block 1000 streams some_key 1526985054069-0
+      $ redis-cli XREAD block 1000 streams some_key 1526985054069-0
       1) 1) "some_key"
          2) 1) 1) 1526985054079-0
                2) 1) temperature
@@ -2386,12 +2631,12 @@ stages:
                   4) 94
       ```
 
-      If not, the response would be nil encoded as a bulk string.
+      If not, the response would be a null representation of a bulk string.
 
       ```bash
-      $ redis-cli xadd some_key 1526985054069-0 temperature 36 humidity 95
+      $ redis-cli XADD some_key 1526985054069-0 temperature 36 humidity 95
       "1526985054069-0"
-      $ redis-cli xread block 1000 streams some_key 1526985054069-0
+      $ redis-cli XREAD block 1000 streams some_key 1526985054069-0
       (nil)
       ```
 
@@ -2406,19 +2651,19 @@ stages:
       First, an entry will be added to a stream.
 
       ```bash
-      $ redis-cli xadd stream_key 0-1 temperature 96
+      $ redis-cli XADD stream_key 0-1 temperature 96
       ```
 
       It'll then send an `XREAD` command to your server with the `BLOCK` command.
 
       ```bash
-      $ redis-cli xread block 1000 streams stream_key 0-0
+      $ redis-cli XREAD block 1000 streams stream_key 0-1
       ```
 
       On another instance of the redis-cli, another entry will be added in 500 milliseconds after sending the `XREAD` command.
 
       ```bash
-      $ redis-cli xadd stream_key 0-2 temperature 95
+      $ redis-cli XADD stream_key 0-2 temperature 95
       ```
 
       Your server should respond with the following:
@@ -2435,13 +2680,30 @@ stages:
       $3\r\n96\r\n
       ```
 
-      This is the RESP encoded representation of `[["stream_key", ["0-2", ["temperature", "96"]]]]`. It'll send another `XREAD` command to your server with the `BLOCK` command but this time, it'll wait for 2000 milliseconds before checking the response of your server.
+      This is the RESP encoded representation of the following.
 
-      ```bash
-      $ redis-cli xread block 1000 streams stream_key 0-2
+      ```json
+      [
+        [
+          "stream_key",
+          [
+            "0-2",
+            [
+              "temperature",
+              "96"
+            ]
+          ]
+        ]
+      ]
       ```
 
-      Your server should respond with `$3\r\nnil\r\n` which is nil RESP encoded as a bulk string.
+      It'll send another `XREAD` command to your server with the `BLOCK` command but this time, it'll wait for 2000 milliseconds before checking the response of your server.
+
+      ```bash
+      $ redis-cli XREAD block 1000 streams stream_key 0-2
+      ```
+
+      Your server should respond with `$-1\r\n` which is a `null` representation of a RESP bulk string.
 
       ### Notes
       - In the response, the items are separated onto new lines for readability. The tester expects all of these to be in one line.
@@ -2450,48 +2712,51 @@ stages:
 
   - slug: "streams-xread-block-no-timeout"
     primary_extension_slug: "streams"
-    name: "Support blocking reads without timeout"
+    name: "Blocking reads without timeout"
     difficulty: medium
     description_md: |
-      In this stage, you'll add extend support to `XREAD` to allow for the blocking command not timing out.
+      In this stage, you'll extend support to `XREAD` to allow for the blocking command not timing out.
 
-      ### Understandign blocking without timeout
-      
-      Here's how it works. Let's use the entries previously shown as an example.
+      ### Understanding blocking without timeout
+
+      Here's how it works.
+
+      Let's use the entries previously shown as an example.
 
       ```yaml
-      - 1526985054069-0 # (ID of the first entry)
-        temperature: 36 # (A key value pair in the first entry)
-        humidity: 95 # (Another key value pair in the first entry)
+      entries:
+        - id: 1526985054069-0 # (ID of the first entry)
+          temperature: 36 # (A key value pair in the first entry)
+          humidity: 95 # (Another key value pair in the first entry)
 
-      - 1526985054079-0 # (ID of the second entry)
-        temperature: 37 # (A key value pair in the first entry)
-        humidity: 94 # (Another key value pair in the first entry)
+        - id: 1526985054079-0 # (ID of the second entry)
+          temperature: 37 # (A key value pair in the first entry)
+          humidity: 94 # (Another key value pair in the first entry)
 
-      # ... (and so on)
+        # ... (and so on)
       ```
 
       On one instance of the redis-cli, we'd add an entry and send a blocking `XREAD` command with 0 as the time passed in.
 
       ```bash
-      $ redis-cli xadd some_key 1526985054069-0 temperature 36 humidity 95
+      $ redis-cli XADD some_key 1526985054069-0 temperature 36 humidity 95
       "1526985054069-0"
-      $ redis-cli xread block 1000 streams some_key 1526985054069-0
+      $ redis-cli XREAD block 0 streams some_key 1526985054069-0
       ```
 
       Then, on another instance of the redis-cli, we add another entry.
 
       ```bash
-      $ other-redis-cli xadd some_key 1526985054079-0 temperature 37 humidity 94
+      $ other-redis-cli XADD some_key 1526985054079-0 temperature 37 humidity 94
       "1526985054079-0"
       ```
 
-      The difference now is that the first instance of the redis-cli doesn't time out and responds with nil no matter how much time passes. It will wait until another entry is added. The return value after an entry is added is similar to the last stage.
+      The difference now is that the first instance of the redis-cli doesn't time out and responds with null no matter how much time passes. It will wait until another entry is added. The return value after an entry is added is similar to the last stage.
 
       ```bash
-      $ redis-cli xadd some_key 1526985054069-0 temperature 36 humidity 95
+      $ redis-cli XADD some_key 1526985054069-0 temperature 36 humidity 95
       "1526985054069-0"
-      $ redis-cli xread block 1000 streams some_key 1526985054069-0
+      $ redis-cli XREAD block 0 streams some_key 1526985054069-0
       1) 1) "some_key"
          2) 1) 1) 1526985054079-0
                2) 1) temperature
@@ -2511,19 +2776,19 @@ stages:
       First, an entry will be added to a stream.
 
       ```bash
-      $ redis-cli xadd stream_key 0-1 temperature 96
+      $ redis-cli XADD stream_key 0-1 temperature 96
       ```
 
       It'll then send an `XREAD` command to your server with the `BLOCK` command with the time passed in being 0.
 
       ```bash
-      $ redis-cli xread block 0 streams stream_key 0-0
+      $ redis-cli XREAD block 0 streams stream_key 0-0
       ```
 
       It'll then wait for 1000 milliseconds before checking if there is a response. Your server should not have a new response. It'll then add another entry.
 
       ```bash
-      $ redis-cli xadd stream_key 0-2 temperature 95
+      $ redis-cli XADD stream_key 0-2 temperature 95
       ```
 
       Your server should respond with the following:
@@ -2540,7 +2805,22 @@ stages:
       $3\r\n95\r\n
       ```
 
-      This is the RESP encoded representation of `[["stream_key", ["0-2", ["temperature", "95"]]]]`.
+      This is the RESP encoded representation of the following.
+
+      ```json
+      [
+        [
+          "stream_key",
+          [
+            "0-2",
+            [
+              "temperature",
+              "95"
+            ]
+          ]
+        ]
+      ]
+      ```
 
       ### Notes
       - In the response, the items are separated onto new lines for readability. The tester expects all of these to be in one line.
@@ -2549,50 +2829,53 @@ stages:
 
   - slug: "streams-xread-block-max-id"
     primary_extension_slug: "streams"
-    name: "Support blocking reads using $"
+    name: "Blocking reads using $"
     difficulty: easy
     description_md: |
-      In this stage, you'll add extend support to `XREAD` to allow for passing in `$` as the ID for a blocking command.
+      In this stage, you'll extend support to `XREAD` to allow for passing in `$` as the ID for a blocking command.
 
       ### Understanding $
 
       Using `$` as the ID passed to a blocking `XREAD` command signals that we only want new entries. This is similar to passing in the maximum ID we currently have in the stream.
 
-      Here's how it works. Let's use the entries previously shown as an example.
+      Here's how it works.
+
+      Let's use the entries previously shown as an example.
 
       ```yaml
-      - 1526985054069-0 # (ID of the first entry)
-        temperature: 36 # (A key value pair in the first entry)
-        humidity: 95 # (Another key value pair in the first entry)
+      entries:
+        - id: 1526985054069-0 # (ID of the first entry)
+          temperature: 36 # (A key value pair in the first entry)
+          humidity: 95 # (Another key value pair in the first entry)
 
-      - 1526985054079-0 # (ID of the second entry)
-        temperature: 37 # (A key value pair in the first entry)
-        humidity: 94 # (Another key value pair in the first entry)
+        - id: 1526985054079-0 # (ID of the second entry)
+          temperature: 37 # (A key value pair in the first entry)
+          humidity: 94 # (Another key value pair in the first entry)
 
-      # ... (and so on)
+        # ... (and so on)
       ```
 
-      On one instance of the redis-cli, we'd add an entry and send a blocking `XREAD` command with 0 as the time passed in.
+      On one instance of the redis-cli, we'd add an entry and send a blocking `XREAD` command with `1000` as the time passed in and `$` as the id passed in.
 
       ```bash
-      $ redis-cli xadd some_key 1526985054069-0 temperature 36 humidity 95
+      $ redis-cli XADD some_key 1526985054069-0 temperature 36 humidity 95
       "1526985054069-0"
-      $ redis-cli xread block 1000 streams some_key $
+      $ redis-cli XREAD block 1000 streams some_key $
       ```
 
       Then, on another instance of the redis-cli, we add another entry.
 
       ```bash
-      $ other-redis-cli xadd some_key 1526985054079-0 temperature 37 humidity 94
+      $ other-redis-cli XADD some_key 1526985054079-0 temperature 37 humidity 94
       "1526985054079-0"
       ```
 
       Similar to the behavior detailed in the earlier stages, if the command was sent within 1000 milliseconds, the redis-cli will respond with the new entry.
 
       ```bash
-      $ redis-cli xadd some_key 1526985054069-0 temperature 36 humidity 95
+      $ redis-cli XADD some_key 1526985054069-0 temperature 36 humidity 95
       "1526985054069-0"
-      $ redis-cli xread block 1000 streams some_key 1526985054069-0
+      $ redis-cli XREAD block 1000 streams some_key 1526985054069-0
       1) 1) "some_key"
          2) 1) 1) 1526985054079-0
                2) 1) temperature
@@ -2601,12 +2884,12 @@ stages:
                   4) 94
       ```
 
-      If not, the return type would still nil encoded as a bulk string.
+      If not, the return type would still be a null representation of a bulk string.
 
       ```bash
-      $ redis-cli xadd some_key 1526985054069-0 temperature 36 humidity 95
+      $ redis-cli XADD some_key 1526985054069-0 temperature 36 humidity 95
       "1526985054069-0"
-      $ redis-cli xread block 1000 streams some_key 1526985054069-0
+      $ redis-cli XREAD block 1000 streams some_key 1526985054069-0
       (nil)
       ```
 
@@ -2621,19 +2904,19 @@ stages:
       First, an entry will be added to a stream.
 
       ```bash
-      $ redis-cli xadd stream_key 0-1 temperature 96
+      $ redis-cli XADD stream_key 0-1 temperature 96
       ```
 
-      It'll then send an `XREAD` command to your server with the `BLOCK` command with `$` as the ID.
+      It'll then send an `XREAD` command to your server with the `BLOCK` command with `0` as the time and `$` as the ID.
 
       ```bash
-      $ redis-cli xread block 0 streams stream_key $
+      $ redis-cli XREAD block 0 streams stream_key $
       ```
 
       On another instance of the redis-cli, another entry will be added in 500 milliseconds after sending the `XREAD` command.
 
       ```bash
-      $ redis-cli xadd stream_key 0-2 temperature 95
+      $ redis-cli XADD stream_key 0-2 temperature 95
       ```
 
       Your server should respond with the following:
@@ -2650,13 +2933,30 @@ stages:
       $3\r\n96\r\n
       ```
 
-      This is the RESP encoded representation of `[["stream_key", ["0-2", ["temperature", "95"]]]]`. It'll send another `XREAD` command to your server with the `BLOCK` command but this time, it'll wait for 2000 milliseconds before checking the response of your server.
+      This is the RESP encoded representation of the following.
 
-      ```bash
-      $ redis-cli xread block 1000 streams stream_key $
+      ```json
+      [
+        [
+          "stream_key",
+          [
+            "0-2",
+            [
+              "temperature",
+              "95"
+            ]
+          ]
+        ]
+      ]
       ```
 
-      Your server should respond with `$3\r\nnil\r\n` which is a `nil` encoded as a RESP bulk string.
+      It'll send another `XREAD` command to your server with the `BLOCK` command but this time, it'll wait for 2000 milliseconds before checking the response of your server.
+
+      ```bash
+      $ redis-cli XREAD block 1000 streams stream_key $
+      ```
+
+      Your server should respond with `$-1\r\n` which is a `null` representation of a RESP bulk string.
 
       ### Notes
       - In the response, the items are separated onto new lines for readability. The tester expects all of these to be in one line.
