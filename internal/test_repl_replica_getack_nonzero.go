@@ -28,7 +28,7 @@ func testReplGetaAckNonZero(stageHarness *test_case_harness.TestCaseHarness) err
 
 	replica := redis_executable.NewRedisExecutable(stageHarness)
 	if err := replica.Run("--port", "6380",
-		"--replicaof", "localhost", "6379"); err != nil {
+		"--replicaof", "localhost 6379"); err != nil {
 		return err
 	}
 
