@@ -3,6 +3,7 @@ package internal
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"reflect"
 	"strconv"
 
@@ -12,7 +13,7 @@ import (
 )
 
 func testStreamsXrangeMaxID(stageHarness *test_case_harness.TestCaseHarness) error {
-	b := NewRedisBinary(stageHarness)
+	b := redis_executable.NewRedisExecutable(stageHarness)
 	if err := b.Run(); err != nil {
 		return err
 	}
@@ -78,10 +79,10 @@ func testStreamsXrangeMaxID(stageHarness *test_case_harness.TestCaseHarness) err
 	}
 
 	if !reflect.DeepEqual(resp, expectedResp) {
-		logger.Infof("Received response: \"%q\"", string(respJSON))
-		return fmt.Errorf("Expected %q, got %q", string(expectedRespJSON), string(respJSON))
+		logger.Infof("Received response: \"%v\"", string(respJSON))
+		return fmt.Errorf("Expected %v, got %v", string(expectedRespJSON), string(respJSON))
 	} else {
-		logger.Successf("Received response: \"%q\"", string(respJSON))
+		logger.Successf("Received response: \"%v\"", string(respJSON))
 	}
 
 	return nil

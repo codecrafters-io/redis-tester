@@ -1,46 +1,37 @@
 package internal
 
 import (
-	"fmt"
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
 func testReplMasterPsync(stageHarness *test_case_harness.TestCaseHarness) error {
-	master := NewRedisBinary(stageHarness)
-	master.args = []string{
-		"--port", "6379",
-	}
-
-	if err := master.Run(); err != nil {
+	master := redis_executable.NewRedisExecutable(stageHarness)
+	if err := master.Run("--port", "6379"); err != nil {
 		return err
 	}
 
 	logger := stageHarness.Logger
 
-	conn, err := NewRedisConn("", "localhost:6379")
+	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "client")
 	if err != nil {
-		fmt.Println("Error connecting to TCP server:", err)
+		logFriendlyError(logger, err)
+		return err
+	}
+	defer client.Close()
+
+	sendHandshakeTestCase := test_cases.SendReplicationHandshakeTestCase{}
+
+	if err := sendHandshakeTestCase.RunPingStep(client, logger); err != nil {
 		return err
 	}
 
-	replica := NewFakeRedisReplica(conn, logger)
-
-	err = replica.Ping()
-	if err != nil {
+	if err := sendHandshakeTestCase.RunReplconfStep(client, logger, 6380); err != nil {
 		return err
 	}
 
-	err = replica.ReplConfPort()
-	if err != nil {
-		return err
-	}
-
-	err = replica.Psync()
-	if err != nil {
-		return err
-	}
-
-	conn.Close()
-	return nil
+	return sendHandshakeTestCase.RunPsyncStep(client, logger)
 }

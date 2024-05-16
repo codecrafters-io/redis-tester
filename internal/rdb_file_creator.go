@@ -24,7 +24,7 @@ type RDBFileCreator struct {
 	StageHarness *test_case_harness.TestCaseHarness
 }
 
-func NewRDBFileCreator(stageHarness *test_case_harness.TestCaseHarness) (*RDBFileCreator, error) {
+func NewRDBFileCreator() (*RDBFileCreator, error) {
 	tmpDir, err := os.MkdirTemp("", "rdbfiles")
 	if err != nil {
 		return &RDBFileCreator{}, err

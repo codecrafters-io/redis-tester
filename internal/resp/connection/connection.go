@@ -1,4 +1,4 @@
-package resp_client
+package resp_connection
 
 import (
 	"bytes"
@@ -11,10 +11,14 @@ import (
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 )
 
-type RespClientCallbacks struct {
+type RespConnectionCallbacks struct {
 	// BeforeSendCommand is called when a command is sent to the server.
 	// This can be useful for info logs.
 	BeforeSendCommand func(command string, args ...string)
+
+	// BeforeSendValue is called when a value is sent using SendValue.
+	// It is NOT called when using SendCommand
+	BeforeSendValue func(response resp_value.Value)
 
 	// BeforeSendBytes is called when raw bytes are sent to the server.
 	// This can be useful for debug logs.
@@ -29,7 +33,7 @@ type RespClientCallbacks struct {
 	AfterReadValue func(value resp_value.Value)
 }
 
-type RespClient struct {
+type RespConnection struct {
 	// Conn is the underlying connection to the Redis server.
 	Conn net.Conn
 
@@ -40,42 +44,44 @@ type RespClient struct {
 	// LastValueBytes contains the bytes of the last value that was decoded.
 	LastValueBytes []byte
 
-	// Callbacks is a set of functions that are called at various points in the client's lifecycle.
-	Callbacks RespClientCallbacks
+	// Callbacks is a set of functions that are called at various points in the connection's lifecycle.
+	Callbacks RespConnectionCallbacks
+
+	// Offset tracking:
+	// SentBytes is the number of bytes sent using this connection.
+	SentBytes int
+
+	// ReceivedBytes is the number of bytes received using this connection.
+	ReceivedBytes int
 }
 
-func NewRespClient(addr string) (*RespClient, error) {
+func NewRespConnectionFromAddr(addr string, callbacks RespConnectionCallbacks) (*RespConnection, error) {
 	conn, err := newConn(addr)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return &RespClient{
-		Conn:         conn,
-		UnreadBuffer: bytes.Buffer{},
-	}, nil
-}
-
-func NewRespClientWithCallbacks(addr string, callbacks RespClientCallbacks) (*RespClient, error) {
-	conn, err := newConn(addr)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &RespClient{
+	return &RespConnection{
 		Conn:         conn,
 		UnreadBuffer: bytes.Buffer{},
 		Callbacks:    callbacks,
 	}, nil
 }
 
-func (c *RespClient) Close() error {
+func NewRespConnectionFromConn(conn net.Conn, callbacks RespConnectionCallbacks) (*RespConnection, error) {
+	return &RespConnection{
+		Conn:         conn,
+		UnreadBuffer: bytes.Buffer{},
+		Callbacks:    callbacks,
+	}, nil
+}
+
+func (c *RespConnection) Close() error {
 	return c.Conn.Close()
 }
 
-func (c *RespClient) SendCommand(command string, args ...string) error {
+func (c *RespConnection) SendCommand(command string, args ...string) error {
 	if c.Callbacks.BeforeSendCommand != nil {
 		c.Callbacks.BeforeSendCommand(command, args...)
 	}
@@ -84,7 +90,16 @@ func (c *RespClient) SendCommand(command string, args ...string) error {
 	return c.SendBytes(encodedValue)
 }
 
-func (c *RespClient) SendBytes(bytes []byte) error {
+func (c *RespConnection) SendValue(response resp_value.Value) error {
+	if c.Callbacks.BeforeSendValue != nil {
+		c.Callbacks.BeforeSendValue(response)
+	}
+
+	encodedValue := resp_encoder.Encode(response)
+	return c.SendBytes(encodedValue)
+}
+
+func (c *RespConnection) SendBytes(bytes []byte) error {
 	if c.Callbacks.BeforeSendBytes != nil {
 		c.Callbacks.BeforeSendBytes(bytes)
 	}
@@ -94,6 +109,8 @@ func (c *RespClient) SendBytes(bytes []byte) error {
 		return err
 	}
 
+	c.SentBytes += len(bytes)
+
 	// TODO: Check when this happens - is it a valid error?
 	if n != len(bytes) {
 		return errors.New("failed to write entire bytes to connection")
@@ -102,7 +119,7 @@ func (c *RespClient) SendBytes(bytes []byte) error {
 	return nil
 }
 
-func (c *RespClient) ReadFullResyncRDBFile() ([]byte, error) {
+func (c *RespConnection) ReadFullResyncRDBFile() ([]byte, error) {
 	shouldStopReadingIntoBuffer := func(buf []byte) bool {
 		_, _, err := resp_decoder.DecodeFullResyncRDBFile(c.UnreadBuffer.Bytes())
 
@@ -120,13 +137,16 @@ func (c *RespClient) ReadFullResyncRDBFile() ([]byte, error) {
 	c.readIntoBufferUntil(shouldStopReadingIntoBuffer, 2*time.Second)
 
 	value, readBytesCount, err := resp_decoder.DecodeFullResyncRDBFile(c.UnreadBuffer.Bytes())
-	if err != nil {
-		if c.Callbacks.AfterBytesReceived != nil {
-			c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes())
-		}
 
+	if c.Callbacks.AfterBytesReceived != nil && readBytesCount > 0 {
+		c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes()[:readBytesCount])
+	}
+
+	if err != nil {
 		return nil, err
 	}
+
+	c.ReceivedBytes += readBytesCount
 
 	// We've read a value! Let's remove the bytes we've read from the buffer
 	c.LastValueBytes = c.UnreadBuffer.Bytes()[:readBytesCount]
@@ -135,11 +155,11 @@ func (c *RespClient) ReadFullResyncRDBFile() ([]byte, error) {
 	return value, nil
 }
 
-func (c *RespClient) ReadValue() (resp_value.Value, error) {
+func (c *RespConnection) ReadValue() (resp_value.Value, error) {
 	return c.ReadValueWithTimeout(2 * time.Second)
 }
 
-func (c *RespClient) ReadIntoBuffer() error {
+func (c *RespConnection) ReadIntoBuffer() error {
 	// We don't want to block indefinitely, so we'll set a read deadline
 	c.Conn.SetReadDeadline(time.Now().Add(1 * time.Millisecond))
 
@@ -153,7 +173,7 @@ func (c *RespClient) ReadIntoBuffer() error {
 	return err
 }
 
-func (c *RespClient) ReadValueWithTimeout(timeout time.Duration) (resp_value.Value, error) {
+func (c *RespConnection) ReadValueWithTimeout(timeout time.Duration) (resp_value.Value, error) {
 	shouldStopReadingIntoBuffer := func(buf []byte) bool {
 		_, _, err := resp_decoder.Decode(buf)
 
@@ -171,13 +191,16 @@ func (c *RespClient) ReadValueWithTimeout(timeout time.Duration) (resp_value.Val
 	c.readIntoBufferUntil(shouldStopReadingIntoBuffer, timeout)
 
 	value, readBytesCount, err := resp_decoder.Decode(c.UnreadBuffer.Bytes())
-	if err != nil {
-		if c.Callbacks.AfterBytesReceived != nil {
-			c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes())
-		}
 
+	if c.Callbacks.AfterBytesReceived != nil && readBytesCount > 0 {
+		c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes()[:readBytesCount])
+	}
+
+	if err != nil {
 		return resp_value.Value{}, err
 	}
+
+	c.ReceivedBytes += readBytesCount
 
 	// We've read a value! Let's remove the bytes we've read from the buffer
 	c.LastValueBytes = c.UnreadBuffer.Bytes()[:readBytesCount]
@@ -190,7 +213,7 @@ func (c *RespClient) ReadValueWithTimeout(timeout time.Duration) (resp_value.Val
 	return value, nil
 }
 
-func (c *RespClient) readIntoBufferUntil(condition func([]byte) bool, timeout time.Duration) {
+func (c *RespConnection) readIntoBufferUntil(condition func([]byte) bool, timeout time.Duration) {
 	deadline := time.Now().Add(timeout)
 
 	for {
@@ -207,6 +230,11 @@ func (c *RespClient) readIntoBufferUntil(condition func([]byte) bool, timeout ti
 			time.Sleep(10 * time.Millisecond) // Let's wait a bit before trying again
 		}
 	}
+}
+
+func (c *RespConnection) ResetByteCounters() {
+	c.ReceivedBytes = 0
+	c.SentBytes = 0
 }
 
 func newConn(address string) (net.Conn, error) {

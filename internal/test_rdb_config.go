@@ -5,6 +5,11 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
+
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
@@ -14,7 +19,6 @@ func testRdbConfig(stageHarness *test_case_harness.TestCaseHarness) error {
 	if err != nil {
 		return err
 	}
-	defer os.RemoveAll(tmpDir)
 
 	// On MacOS, the tmpDir is a symlink to a directory in /var/folders/...
 	realPath, err := filepath.EvalSymlinks(tmpDir)
@@ -23,43 +27,32 @@ func testRdbConfig(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 	tmpDir = realPath
 
-	b := NewRedisBinary(stageHarness)
-	b.args = []string{
-		"--dir", tmpDir,
-		"--dbfilename", fmt.Sprintf("%s.rdb", testerutils_random.RandomWord()),
-	}
-
-	if err := b.Run(); err != nil {
+	b := redis_executable.NewRedisExecutable(stageHarness)
+	stageHarness.RegisterTeardownFunc(func() { os.RemoveAll(tmpDir) })
+	if err := b.Run("--dir", tmpDir,
+		"--dbfilename", fmt.Sprintf("%s.rdb", testerutils_random.RandomWord())); err != nil {
 		return err
 	}
 
 	logger := stageHarness.Logger
-	client := NewRedisClient("localhost:6379")
 
-	logger.Infof("$ redis-cli CONFIG GET dir")
-	resp, err := client.ConfigGet("dir").Result()
+	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "client")
 	if err != nil {
+		return err
+	}
+	defer client.Close()
+
+	commandTestCase := test_cases.SendCommandTestCase{
+		Command:                   "CONFIG",
+		Args:                      []string{"GET", "dir"},
+		Assertion:                 resp_assertions.NewOrderedStringArrayAssertion([]string{"dir", tmpDir}),
+		ShouldSkipUnreadDataCheck: false,
+	}
+
+	if err := commandTestCase.Run(client, logger); err != nil {
 		logFriendlyError(logger, err)
 		return err
 	}
 
-	if len(resp) != 2 {
-		return fmt.Errorf("Expected 2 elements in response, got %d", len(resp))
-	}
-
-	if resp[0] != "dir" {
-		return fmt.Errorf("Expected first element in response to be 'dir', got %v", resp[0])
-	}
-
-	dirPath, ok := resp[1].(string)
-	if !ok {
-		return fmt.Errorf("Expected second element in response to be a string, got %T", resp[1])
-	}
-
-	if dirPath != tmpDir {
-		return fmt.Errorf("Expected second element in response to be %v, got %v", tmpDir, dirPath)
-	}
-
-	client.Close()
 	return nil
 }

@@ -3,8 +3,15 @@ package internal
 import (
 	"fmt"
 	"net"
-	"strings"
+	"regexp"
 
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
+
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
+
+	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	loggerutils "github.com/codecrafters-io/tester-utils/logger"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
@@ -17,17 +24,13 @@ func testReplInfoReplica(stageHarness *test_case_harness.TestCaseHarness) error 
 		logFriendlyBindError(logger, err)
 		return fmt.Errorf("Error starting TCP server: %v", err)
 	}
-
 	defer listener.Close()
+
 	logger.Infof("Master is running on port 6379")
 
-	replica := NewRedisBinary(stageHarness)
-	replica.args = []string{
-		"--port", "6380",
-		"--replicaof", "localhost", "6379",
-	}
-
-	if err := replica.Run(); err != nil {
+	replica := redis_executable.NewRedisExecutable(stageHarness)
+	if err := replica.Run("--port", "6380",
+		"--replicaof", "localhost 6379"); err != nil {
 		return err
 	}
 
@@ -38,37 +41,55 @@ func testReplInfoReplica(stageHarness *test_case_harness.TestCaseHarness) error 
 			logger.Debugf("Error accepting: %s", err.Error())
 			return err
 		}
+		defer conn.Close()
 
 		quietLogger := loggerutils.GetQuietLogger("")
-		master := NewFakeRedisMaster(conn, quietLogger)
-		master.Handshake()
+		master, err := instrumented_resp_connection.NewFromConn(stageHarness, conn, "master")
+		if err != nil {
+			logFriendlyError(quietLogger, err)
+			return err
+		}
+		receiveReplicationHandshakeTestCase := test_cases.ReceiveReplicationHandshakeTestCase{}
 
-		conn.Close()
+		_ = receiveReplicationHandshakeTestCase.RunAll(master, quietLogger)
 		return nil
 	}(listener)
 
-	client := NewRedisClient("localhost:6380")
-
-	logger.Infof("$ redis-cli INFO replication")
-	resp, err := client.Info("replication").Result()
-	lines := strings.Split(resp, "\n")
-	infoMap := parseInfoOutput(lines, ":")
-	key := "role"
-	role := infoMap[key]
-
+	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6380", "client")
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
 	}
+	defer client.Close()
 
-	if key != "role" {
-		return fmt.Errorf("Expected: 'role' and actual: '%v' keys in INFO replication don't match", key)
+	commandTestCase := test_cases.SendCommandTestCase{
+		Command:                   "INFO",
+		Args:                      []string{"replication"},
+		Assertion:                 resp_assertions.NewNoopAssertion(),
+		ShouldSkipUnreadDataCheck: true,
 	}
 
-	if role != "slave" {
-		return fmt.Errorf("Expected: 'role' and actual: '%v' roles in INFO replication don't match", role)
+	if err := commandTestCase.Run(client, logger); err != nil {
+		return err
 	}
 
-	client.Close()
-	return nil
+	responseValue := commandTestCase.ReceivedResponse
+
+	if responseValue.Type != resp_value.BULK_STRING && responseValue.Type != resp_value.SIMPLE_STRING {
+		return fmt.Errorf("Expected simple string or bulk string, got %s", responseValue.Type)
+	}
+
+	var patternMatchError error
+
+	if !regexp.MustCompile("role:").Match([]byte(responseValue.String())) {
+		patternMatchError = fmt.Errorf("Expected role to be present in response. Got: %q", responseValue.String())
+	}
+
+	if regexp.MustCompile("role:slave").Match([]byte(responseValue.String())) {
+		logger.Successf("Found role:slave in response.")
+	} else {
+		patternMatchError = fmt.Errorf("Expected role to be slave in response. Got: %q", responseValue.String())
+	}
+
+	return patternMatchError
 }

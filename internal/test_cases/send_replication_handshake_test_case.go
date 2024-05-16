@@ -4,9 +4,9 @@ import (
 	"bytes"
 	"fmt"
 
-	resp_client "github.com/codecrafters-io/redis-tester/internal/resp/client"
+	resp_client "github.com/codecrafters-io/redis-tester/internal/resp/connection"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
-	logger "github.com/codecrafters-io/tester-utils/logger"
+	"github.com/codecrafters-io/tester-utils/logger"
 	rdb_parser "github.com/hdt3213/rdb/parser"
 )
 
@@ -17,12 +17,12 @@ import (
 // can run each step individually.
 type SendReplicationHandshakeTestCase struct{}
 
-func (t SendReplicationHandshakeTestCase) RunAll(client *resp_client.RespClient, logger *logger.Logger) error {
+func (t SendReplicationHandshakeTestCase) RunAll(client *resp_client.RespConnection, logger *logger.Logger, listeningPort int) error {
 	if err := t.RunPingStep(client, logger); err != nil {
 		return err
 	}
 
-	if err := t.RunReplconfStep(client, logger); err != nil {
+	if err := t.RunReplconfStep(client, logger, listeningPort); err != nil {
 		return err
 	}
 
@@ -37,8 +37,8 @@ func (t SendReplicationHandshakeTestCase) RunAll(client *resp_client.RespClient,
 	return nil
 }
 
-func (t SendReplicationHandshakeTestCase) RunPingStep(client *resp_client.RespClient, logger *logger.Logger) error {
-	commandTest := CommandTestCase{
+func (t SendReplicationHandshakeTestCase) RunPingStep(client *resp_client.RespConnection, logger *logger.Logger) error {
+	commandTest := SendCommandTestCase{
 		Command:   "PING",
 		Args:      []string{},
 		Assertion: resp_assertions.NewStringAssertion("PONG"),
@@ -47,10 +47,10 @@ func (t SendReplicationHandshakeTestCase) RunPingStep(client *resp_client.RespCl
 	return commandTest.Run(client, logger)
 }
 
-func (t SendReplicationHandshakeTestCase) RunReplconfStep(client *resp_client.RespClient, logger *logger.Logger) error {
-	commandTest := CommandTestCase{
+func (t SendReplicationHandshakeTestCase) RunReplconfStep(client *resp_client.RespConnection, logger *logger.Logger, listeningPort int) error {
+	commandTest := SendCommandTestCase{
 		Command:   "REPLCONF",
-		Args:      []string{"listening-port", "6380"},
+		Args:      []string{"listening-port", fmt.Sprintf("%d", listeningPort)},
 		Assertion: resp_assertions.NewStringAssertion("OK"),
 	}
 
@@ -58,7 +58,7 @@ func (t SendReplicationHandshakeTestCase) RunReplconfStep(client *resp_client.Re
 		return err
 	}
 
-	commandTest = CommandTestCase{
+	commandTest = SendCommandTestCase{
 		Command:   "REPLCONF",
 		Args:      []string{"capa", "psync2"},
 		Assertion: resp_assertions.NewStringAssertion("OK"),
@@ -67,8 +67,8 @@ func (t SendReplicationHandshakeTestCase) RunReplconfStep(client *resp_client.Re
 	return commandTest.Run(client, logger)
 }
 
-func (t SendReplicationHandshakeTestCase) RunPsyncStep(client *resp_client.RespClient, logger *logger.Logger) error {
-	commandTest := CommandTestCase{
+func (t SendReplicationHandshakeTestCase) RunPsyncStep(client *resp_client.RespConnection, logger *logger.Logger) error {
+	commandTest := SendCommandTestCase{
 		Command:                   "PSYNC",
 		Args:                      []string{"?", "-1"},
 		Assertion:                 resp_assertions.NewRegexStringAssertion("FULLRESYNC \\w+ 0"),
@@ -78,7 +78,7 @@ func (t SendReplicationHandshakeTestCase) RunPsyncStep(client *resp_client.RespC
 	return commandTest.Run(client, logger)
 }
 
-func (t SendReplicationHandshakeTestCase) RunReceiveRDBStep(client *resp_client.RespClient, logger *logger.Logger) error {
+func (t SendReplicationHandshakeTestCase) RunReceiveRDBStep(client *resp_client.RespConnection, logger *logger.Logger) error {
 	logger.Debugln("Reading RDB file...")
 
 	rdbFileBytes, err := client.ReadFullResyncRDBFile()
@@ -99,9 +99,9 @@ func (t SendReplicationHandshakeTestCase) RunReceiveRDBStep(client *resp_client.
 	client.ReadIntoBuffer() // Let's make sure there's no extra data
 
 	if client.UnreadBuffer.Len() > 0 {
-		return fmt.Errorf("Found extra data: %q", string(client.LastValueBytes)+client.UnreadBuffer.String())
+		return fmt.Errorf("Found extra data: %q", client.UnreadBuffer.String())
 	}
 
-	logger.Successf("Received RDB file.")
+	logger.Successf("Received RDB file")
 	return nil
 }

@@ -2,15 +2,15 @@
 
 - input: ""
   error: |
-    Received: ""
+    Received: "" (no content received)
                ^ error
-    Error: Expected start of a new RESP value (either +, -, :, $ or *)
+    Error: Expected start of a new RESP2 value (either +, -, :, $ or *)
 
 - input: "K"
   error: |
     Received: "K"
                ^ error
-    Error: "K" is not a valid start of a RESP value (expected +, -, :, $ or *)
+    Error: "K" is not a valid start of a RESP2 value (expected +, -, :, $ or *)
 
 # Simple Strings
 
@@ -64,11 +64,43 @@
                      ^ error
     Error: Expected 3 bytes of data in bulk string, got 0
 
+- input: "$2\r\nabc\r\n"
+  error: |
+    Received: "$2\r\nabc\r\n"
+                       ^ error
+    Error: Expected \r\n after 2 bytes of data in bulk string
+
 - input: "$3\r\nabc"
   error: |
     Received: "$3\r\nabc"
                         ^ error
-    Error: Expected \r\n at the end of a bulk string
+    Error: Expected \r\n after 3 bytes of data in bulk string
+
+# Integers
+
+- input: ":17"
+  error: |
+    Received: ":17"
+                  ^ error
+    Error: Expected \r\n at the end of an integer
+
+- input: ":17\r"
+  error: |
+    Received: ":17\r"
+                    ^ error
+    Error: Expected \r\n at the end of an integer
+
+- input: ":17\n"
+  error: |
+    Received: ":17\n"
+                    ^ error
+    Error: Expected \r\n at the end of an integer
+
+- input: ":foo\r\n"
+  error: |
+    Received: ":foo\r\n"
+                ^ error
+    Error: Invalid integer: "foo", expected a number
 
 # Arrays
 

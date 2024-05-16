@@ -96,12 +96,18 @@ func TestStages(t *testing.T) {
 
 func normalizeTesterOutput(testerOutput []byte) []byte {
 	replacements := map[string][]*regexp.Regexp{
-		"tcp_port":       {regexp.MustCompile(`read tcp 127.0.0.1:\d+->127.0.0.1:6379: read: connection reset by peer`)},
-		" tmp_dir ":      {regexp.MustCompile(` /private/var/folders/[^ ]+ `), regexp.MustCompile(` /tmp/[^ ]+ `)},
-		"timestamp":      {regexp.MustCompile(`\d{2}:\d{2}:\d{2}\.\d{3}`)},
-		"replication_id": {regexp.MustCompile(`FULLRESYNC [A-Za-z0-9]+ 0`)},
-		"wait_timeout":   {regexp.MustCompile(`WAIT command returned after [0-9]+ ms`)},
-		"xadd_id":        {regexp.MustCompile(`\d{13}-\d+`)},
+		"tcp_port":                {regexp.MustCompile(`read tcp 127.0.0.1:\d+->127.0.0.1:6379: read: connection reset by peer`)},
+		" tmp_dir ":               {regexp.MustCompile(` /private/var/folders/[^ ]+ `), regexp.MustCompile(` /tmp/[^ ]+ `)},
+		"$length\\r\\ntmp_dir\\r": {regexp.MustCompile(`\$\d+\\r\\n/private/var/folders/[^ ]+\\r\\n`), regexp.MustCompile(`\$\d+\\r\\n/tmp/[^ ]+\\r\\n`)},
+		"\"tmp_dir\"":             {regexp.MustCompile(`"/private/var/folders/[^"]+"`), regexp.MustCompile(`"/tmp/[^"]+"`)},
+		"timestamp":               {regexp.MustCompile(`\d{2}:\d{2}:\d{2}\.\d{3}`)},
+		"info_replication":        {regexp.MustCompile(`"# Replication\\r\\n[^"]+"`)},
+		"replication_id":          {regexp.MustCompile(`FULLRESYNC [A-Za-z0-9]+ 0`)},
+		"wait_timeout":            {regexp.MustCompile(`WAIT command returned after [0-9]+ ms`)},
+		"xadd_id":                 {regexp.MustCompile(`\d{13}-\d+`)},
+		"rdb_bytes":               {regexp.MustCompile(`"\$[0-9]+\\r\\nREDIS.*"`)},
+		"info_replication_bytes":  {regexp.MustCompile(`"\$[0-9]+\\r\\n# Replication\\r\\n[^"]+"`)},
+		"rdb_keys":                {regexp.MustCompile(`\[stage-11\] .*Received .*`)},
 	}
 
 	for replacement, regexes := range replacements {

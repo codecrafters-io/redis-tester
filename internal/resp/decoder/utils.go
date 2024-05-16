@@ -2,7 +2,6 @@ package resp_decoder
 
 import (
 	"bytes"
-	"fmt"
 	"io"
 )
 
@@ -10,8 +9,8 @@ func readUntilCRLF(r *bytes.Reader) ([]byte, error) {
 	return readUntil(r, []byte("\r\n"))
 }
 
-func readCRLF(reader *bytes.Reader, locationDescriptor string) (err error) {
-	errorMessage := fmt.Sprintf(`Expected \r\n %s`, locationDescriptor)
+func readCRLF(reader *bytes.Reader, errorMessage string) (err error) {
+	offsetBeforeCRLF := getReaderOffset(reader)
 
 	b, err := reader.ReadByte()
 	if err == io.EOF {
@@ -22,6 +21,8 @@ func readCRLF(reader *bytes.Reader, locationDescriptor string) (err error) {
 	}
 
 	if b != '\r' {
+		reader.Seek(int64(offsetBeforeCRLF), io.SeekStart)
+
 		return InvalidInputError{
 			Reader:  reader,
 			Message: errorMessage,
@@ -37,6 +38,8 @@ func readCRLF(reader *bytes.Reader, locationDescriptor string) (err error) {
 	}
 
 	if b != '\n' {
+		reader.Seek(int64(offsetBeforeCRLF), io.SeekStart)
+
 		return InvalidInputError{
 			Reader:  reader,
 			Message: errorMessage,

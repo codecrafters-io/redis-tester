@@ -1,53 +1,39 @@
 package internal
 
 import (
-	"fmt"
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
 func testReplMultipleReplicas(stageHarness *test_case_harness.TestCaseHarness) error {
 	deleteRDBfile()
-	master := NewRedisBinary(stageHarness)
-	master.args = []string{
-		"--port", "6379",
-	}
-
-	if err := master.Run(); err != nil {
+	master := redis_executable.NewRedisExecutable(stageHarness)
+	if err := master.Run("--port", "6379"); err != nil {
 		return err
 	}
 
 	logger := stageHarness.Logger
 
-	var replicas []*FakeRedisReplica
-
-	for j := 0; j < 3; j++ {
-		conn, err := NewRedisConn("", "localhost:6379")
-		if err != nil {
-			fmt.Println("Error connecting to TCP server:", err)
-			return err
-		}
-		defer conn.Close()
-		replica := NewFakeRedisReplica(conn, logger)
-		replicas = append(replicas, replica)
-		replica.LogPrefix = fmt.Sprintf("[replica-%v] ", j+1)
-	}
-
-	conn, err := NewRedisConn("", "localhost:6379")
+	// We use one client to send commands to the master
+	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "client")
 	if err != nil {
-		fmt.Println("Error connecting to TCP server:", err)
+		logFriendlyError(logger, err)
 		return err
 	}
-	defer conn.Close()
-	client := NewFakeRedisMaster(conn, logger)
-	client.LogPrefix = "[client] "
+	defer client.Close()
 
-	for i := 0; i < len(replicas); i++ {
-		replica := replicas[i]
-		err = replica.Handshake()
-		if err != nil {
-			return err
-		}
+	replicaCount := 3
+	// We use multiple replicas to assert whether sent commands are replicated from the master (user's code)
+	replicas, err := SpawnReplicas(replicaCount, stageHarness, logger, "localhost:6379")
+	if err != nil {
+		return err
+	}
+	for _, replica := range replicas {
+		defer replica.Close()
 	}
 
 	kvMap := map[int][]string{
@@ -55,30 +41,41 @@ func testReplMultipleReplicas(stageHarness *test_case_harness.TestCaseHarness) e
 		2: {"bar", "456"},
 		3: {"baz", "789"},
 	}
+
+	// We send SET commands to the master in order (user's code)
 	for i := 1; i <= len(kvMap); i++ {
-		// We need order of commands preserved
 		key, value := kvMap[i][0], kvMap[i][1]
-		client.Log(fmt.Sprintf("Setting key %s to %s", key, value))
-		client.Send([]string{"SET", key, value})
-	}
-
-	for j := 0; j < 3; j++ {
-		replica := replicas[j]
-		logger.Infof("Testing Replica : %v", j+1)
-
-		// Redis will send SELECT, but not expected from Users.
-		_, err = replica.readAndAssertMessagesWithSkip([]string{"SET", "foo", "123"}, "SELECT", true)
-		if err != nil {
+		setCommandTestCase := test_cases.SendCommandTestCase{
+			Command:   "SET",
+			Args:      []string{key, value},
+			Assertion: resp_assertions.NewStringAssertion("OK"),
+		}
+		if err := setCommandTestCase.Run(client, logger); err != nil {
 			return err
 		}
+	}
 
-		for i := 2; i <= len(kvMap); i++ {
-			// We need order of commands preserved
-			key, value := kvMap[i][0], kvMap[i][1]
+	// We then assert that across all the replicas we receive the SET commands in order
+	for j, replica := range replicas {
+		logger.Infof("Testing Replica: %d/%d", j+1, replicaCount)
+		for i := 1; i <= len(kvMap); i++ {
+			logger.Infof("replica-%d: Expecting \"SET %s %s\" to be propagated", j+1, kvMap[i][0], kvMap[i][1])
 
-			_, err = replica.readAndAssertMessages([]string{"SET", key, value}, true)
-			if err != nil {
-				return err
+			receiveValueTestCase := &test_cases.ReceiveValueTestCase{
+				Assertion:                 resp_assertions.NewCommandAssertion("SET", kvMap[i][0], kvMap[i][1]),
+				ShouldSkipUnreadDataCheck: i < len(kvMap), // Except in the last case, we're expecting more SET commands to be present
+			}
+
+			if err := receiveValueTestCase.Run(replica, logger); err != nil {
+				// Redis sends a SELECT command, but we don't expect it from users.
+				// If the first command is a SELECT command, we'll re-run the test case to test the next command instead
+				if i == 1 && IsSelectCommand(receiveValueTestCase.ActualValue) {
+					if err := receiveValueTestCase.Run(replica, logger); err != nil {
+						return err
+					}
+				} else {
+					return err
+				}
 			}
 		}
 	}

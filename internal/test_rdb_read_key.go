@@ -3,21 +3,23 @@ package internal
 import (
 	"fmt"
 
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
+
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
 func testRdbReadKey(stageHarness *test_case_harness.TestCaseHarness) error {
-	RDBFileCreator, err := NewRDBFileCreator(stageHarness)
+	RDBFileCreator, err := NewRDBFileCreator()
 	if err != nil {
 		return fmt.Errorf("CodeCrafters Tester Error: %s", err)
 	}
 
-	defer RDBFileCreator.Cleanup()
-
 	randomKeyAndValue := testerutils_random.RandomWords(2)
-	randomKey := randomKeyAndValue[0]
-	randomValue := randomKeyAndValue[1]
+	randomKey, randomValue := randomKeyAndValue[0], randomKeyAndValue[1]
 
 	if err := RDBFileCreator.Write([]KeyValuePair{{key: randomKey, value: randomValue}}); err != nil {
 		return fmt.Errorf("CodeCrafters Tester Error: %s", err)
@@ -26,33 +28,25 @@ func testRdbReadKey(stageHarness *test_case_harness.TestCaseHarness) error {
 	logger := stageHarness.Logger
 	logger.Infof("Created RDB file with single key: %q", randomKey)
 
-	b := NewRedisBinary(stageHarness)
-	b.args = []string{
-		"--dir", RDBFileCreator.Dir,
-		"--dbfilename", RDBFileCreator.Filename,
-	}
-
-	if err := b.Run(); err != nil {
+	b := redis_executable.NewRedisExecutable(stageHarness)
+	stageHarness.RegisterTeardownFunc(func() { RDBFileCreator.Cleanup() })
+	if err := b.Run("--dir", RDBFileCreator.Dir,
+		"--dbfilename", RDBFileCreator.Filename); err != nil {
 		return err
 	}
 
-	client := NewRedisClient("localhost:6379")
-
-	logger.Infof("$ redis-cli KEYS *")
-	resp, err := client.Keys("*").Result()
+	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "client")
 	if err != nil {
-		logFriendlyError(logger, err)
 		return err
 	}
+	defer client.Close()
 
-	if len(resp) != 1 {
-		return fmt.Errorf("Expected response to contain exactly one element, got %v", len(resp))
+	commandTestCase := test_cases.SendCommandTestCase{
+		Command:                   "KEYS",
+		Args:                      []string{"*"},
+		Assertion:                 resp_assertions.NewCommandAssertion(randomKey),
+		ShouldSkipUnreadDataCheck: false,
 	}
 
-	if resp[0] != randomKey {
-		return fmt.Errorf("Expected first element of response to be %v, got %v", randomKey, resp[0])
-	}
-
-	client.Close()
-	return nil
+	return commandTestCase.Run(client, logger)
 }

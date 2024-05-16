@@ -3,7 +3,7 @@ package test_cases
 import (
 	"fmt"
 
-	resp_client "github.com/codecrafters-io/redis-tester/internal/resp/client"
+	resp_client "github.com/codecrafters-io/redis-tester/internal/resp/connection"
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	logger "github.com/codecrafters-io/tester-utils/logger"
@@ -17,7 +17,7 @@ type ReceiveValueTestCase struct {
 	ActualValue resp_value.Value
 }
 
-func (t *ReceiveValueTestCase) Run(client *resp_client.RespClient, logger *logger.Logger) error {
+func (t *ReceiveValueTestCase) Run(client *resp_client.RespConnection, logger *logger.Logger) error {
 	value, err := client.ReadValue()
 	if err != nil {
 		return err
@@ -33,7 +33,7 @@ func (t *ReceiveValueTestCase) Run(client *resp_client.RespClient, logger *logge
 		client.ReadIntoBuffer() // Let's make sure there's no extra data
 
 		if client.UnreadBuffer.Len() > 0 {
-			return fmt.Errorf("Found extra data: %q", string(client.LastValueBytes)+client.UnreadBuffer.String())
+			return fmt.Errorf("Found extra data: %q", client.UnreadBuffer.String())
 		}
 	}
 

@@ -24,6 +24,10 @@ func Encode(v resp_value.Value) []byte {
 	}
 }
 
+func EncodeFullResyncRDBFile(fileContents []byte) []byte {
+	return []byte(fmt.Sprintf("$%d\r\n%s", len(fileContents), fileContents))
+}
+
 func encodeInteger(v resp_value.Value) []byte {
 	int_value, err := strconv.Atoi(v.String())
 	if err != nil {

@@ -2,19 +2,21 @@ package internal
 
 import (
 	"fmt"
-	"sort"
+
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
 func testRdbReadMultipleKeys(stageHarness *test_case_harness.TestCaseHarness) error {
-	RDBFileCreator, err := NewRDBFileCreator(stageHarness)
+	RDBFileCreator, err := NewRDBFileCreator()
 	if err != nil {
 		return fmt.Errorf("CodeCrafters Tester Error: %s", err)
 	}
-
-	defer RDBFileCreator.Cleanup()
 
 	keyCount := testerutils_random.RandomInt(3, 6)
 	keys := testerutils_random.RandomWords(keyCount)
@@ -32,41 +34,25 @@ func testRdbReadMultipleKeys(stageHarness *test_case_harness.TestCaseHarness) er
 	logger := stageHarness.Logger
 	logger.Infof("Created RDB file with %d keys: %q", keyCount, keys)
 
-	b := NewRedisBinary(stageHarness)
-	b.args = []string{
-		"--dir", RDBFileCreator.Dir,
-		"--dbfilename", RDBFileCreator.Filename,
-	}
-
-	if err := b.Run(); err != nil {
+	b := redis_executable.NewRedisExecutable(stageHarness)
+	stageHarness.RegisterTeardownFunc(func() { RDBFileCreator.Cleanup() })
+	if err := b.Run("--dir", RDBFileCreator.Dir,
+		"--dbfilename", RDBFileCreator.Filename); err != nil {
 		return err
 	}
 
-	client := NewRedisClient("localhost:6379")
-
-	logger.Infof("$ redis-cli KEYS *")
-	resp, err := client.Keys("*").Result()
+	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "client")
 	if err != nil {
-		logFriendlyError(logger, err)
 		return err
 	}
+	defer client.Close()
 
-	if len(resp) != len(keys) {
-		return fmt.Errorf("Expected response to contain exactly %v elements, got %v", len(keys), len(resp))
+	commandTestCase := test_cases.SendCommandTestCase{
+		Command:                   "KEYS",
+		Args:                      []string{"*"},
+		Assertion:                 resp_assertions.NewUnorderedStringArrayAssertion(keys),
+		ShouldSkipUnreadDataCheck: false,
 	}
 
-	expectedKeysSorted := make([]string, len(keys))
-	copy(expectedKeysSorted, keys)
-	sort.Strings(expectedKeysSorted)
-
-	actualKeysSorted := make([]string, len(resp))
-	copy(actualKeysSorted, resp)
-	sort.Strings(actualKeysSorted)
-
-	if fmt.Sprintf("%v", actualKeysSorted) != fmt.Sprintf("%v", expectedKeysSorted) {
-		return fmt.Errorf("Expected response to be %v, got %v (sorted alphabetically for comparison)", expectedKeysSorted, actualKeysSorted)
-	}
-
-	client.Close()
-	return nil
+	return commandTestCase.Run(client, logger)
 }
