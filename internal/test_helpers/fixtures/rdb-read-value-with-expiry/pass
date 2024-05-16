@@ -1,7 +1,7 @@
 Debug = true
 
-[33m[stage-13] [0m[94mRunning tests for Stage #13: rdb-read-value-with-expiry[0m
-[33m[stage-13] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/rdbfiles3027591544 --dbfilename pear.rdb[0m
+[33m[stage-13] [0m[94mRunning tests for Stage #13: sm4[0m
+[33m[stage-13] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles930858323 --dbfilename pear.rdb[0m
 [33m[stage-13] [0m[94mclient: $ redis-cli GET orange[0m
 [33m[stage-13] [0m[36mclient: Sent bytes: "*2\r\n$3\r\nGET\r\n$6\r\norange\r\n"[0m
 [33m[stage-13] [0m[36mclient: Received bytes: "$10\r\nstrawberry\r\n"[0m
@@ -21,9 +21,9 @@ Debug = true
 [33m[stage-13] [0m[36mTerminating program[0m
 [33m[stage-13] [0m[36mProgram terminated successfully[0m
 
-[33m[stage-12] [0m[94mRunning tests for Stage #12: rdb-read-multiple-string-values[0m
+[33m[stage-12] [0m[94mRunning tests for Stage #12: dq3[0m
 [33m[stage-12] [0m[94mCreated RDB file with key-value pairs: "grape"="pineapple", "apple"="raspberry", "banana"="apple", "mango"="orange", "orange"="pear"[0m
-[33m[stage-12] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/rdbfiles4230549431 --dbfilename raspberry.rdb[0m
+[33m[stage-12] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles291464650 --dbfilename raspberry.rdb[0m
 [33m[stage-12] [0m[94mclient: $ redis-cli GET grape[0m
 [33m[stage-12] [0m[36mclient: Sent bytes: "*2\r\n$3\r\nGET\r\n$5\r\ngrape\r\n"[0m
 [33m[stage-12] [0m[36mclient: Received bytes: "$9\r\npineapple\r\n"[0m
@@ -53,21 +53,21 @@ Debug = true
 [33m[stage-12] [0m[36mTerminating program[0m
 [33m[stage-12] [0m[36mProgram terminated successfully[0m
 
-[33m[stage-11] [0m[94mRunning tests for Stage #11: rdb-read-multiple-keys[0m
+[33m[stage-11] [0m[94mRunning tests for Stage #11: jw4[0m
 [33m[stage-11] [0m[94mCreated RDB file with 3 keys: ["banana" "apple" "blueberry"][0m
-[33m[stage-11] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/rdbfiles1567495839 --dbfilename blueberry.rdb[0m
+[33m[stage-11] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles3424348494 --dbfilename blueberry.rdb[0m
 [33m[stage-11] [0m[94mclient: $ redis-cli KEYS *[0m
 [33m[stage-11] [0m[36mclient: Sent bytes: "*2\r\n$4\r\nKEYS\r\n$1\r\n*\r\n"[0m
-[33m[stage-11] [0m[36mclient: Received bytes: "*3\r\n$5\r\napple\r\n$6\r\nbanana\r\n$9\r\nblueberry\r\n"[0m
-[33m[stage-11] [0m[36mclient: Received RESP value: ["apple", "banana", "blueberry"][0m
-[33m[stage-11] [0m[92mReceived ["apple", "banana", "blueberry"][0m
+[33m[stage-11] [0m[36mclient: Received bytes: "*3\r\n$5\r\napple\r\n$9\r\nblueberry\r\n$6\r\nbanana\r\n"[0m
+[33m[stage-11] [0m[36mclient: Received RESP value: ["apple", "blueberry", "banana"][0m
+[33m[stage-11] [0m[92mReceived ["apple", "blueberry", "banana"][0m
 [33m[stage-11] [0m[92mTest passed.[0m
 [33m[stage-11] [0m[36mTerminating program[0m
 [33m[stage-11] [0m[36mProgram terminated successfully[0m
 
-[33m[stage-10] [0m[94mRunning tests for Stage #10: rdb-read-string-value[0m
+[33m[stage-10] [0m[94mRunning tests for Stage #10: gc6[0m
 [33m[stage-10] [0m[94mCreated RDB file with single key-value pair: grape="pineapple"[0m
-[33m[stage-10] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/rdbfiles775229267 --dbfilename orange.rdb[0m
+[33m[stage-10] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles1667355668 --dbfilename orange.rdb[0m
 [33m[stage-10] [0m[94mclient: $ redis-cli GET grape[0m
 [33m[stage-10] [0m[36mclient: Sent bytes: "*2\r\n$3\r\nGET\r\n$5\r\ngrape\r\n"[0m
 [33m[stage-10] [0m[36mclient: Received bytes: "$9\r\npineapple\r\n"[0m
@@ -77,9 +77,9 @@ Debug = true
 [33m[stage-10] [0m[36mTerminating program[0m
 [33m[stage-10] [0m[36mProgram terminated successfully[0m
 
-[33m[stage-9] [0m[94mRunning tests for Stage #9: rdb-read-key[0m
+[33m[stage-9] [0m[94mRunning tests for Stage #9: jz6[0m
 [33m[stage-9] [0m[94mCreated RDB file with single key: "mango"[0m
-[33m[stage-9] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/rdbfiles1527972385 --dbfilename pear.rdb[0m
+[33m[stage-9] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles4106213172 --dbfilename pear.rdb[0m
 [33m[stage-9] [0m[94mclient: $ redis-cli KEYS *[0m
 [33m[stage-9] [0m[36mclient: Sent bytes: "*2\r\n$4\r\nKEYS\r\n$1\r\n*\r\n"[0m
 [33m[stage-9] [0m[36mclient: Received bytes: "*1\r\n$5\r\nmango\r\n"[0m
@@ -89,33 +89,33 @@ Debug = true
 [33m[stage-9] [0m[36mTerminating program[0m
 [33m[stage-9] [0m[36mProgram terminated successfully[0m
 
-[33m[stage-8] [0m[94mRunning tests for Stage #8: rdb-config[0m
-[33m[stage-8] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/rdbfiles1821958071 --dbfilename blueberry.rdb[0m
+[33m[stage-8] [0m[94mRunning tests for Stage #8: zg5[0m
+[33m[stage-8] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles3669335023 --dbfilename blueberry.rdb[0m
 [33m[stage-8] [0m[94mclient: $ redis-cli CONFIG GET dir[0m
 [33m[stage-8] [0m[36mclient: Sent bytes: "*3\r\n$6\r\nCONFIG\r\n$3\r\nGET\r\n$3\r\ndir\r\n"[0m
-[33m[stage-8] [0m[36mclient: Received bytes: "*2\r\n$3\r\ndir\r\n$75\r\n/private/var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/rdbfiles1821958071\r\n"[0m
-[33m[stage-8] [0m[36mclient: Received RESP value: ["dir", "/private/var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/rdbfiles1821958071"][0m
-[33m[stage-8] [0m[92mReceived ["dir", "/private/var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/rdbfiles1821958071"][0m
+[33m[stage-8] [0m[36mclient: Received bytes: "*2\r\n$3\r\ndir\r\n$75\r\n/private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles3669335023\r\n"[0m
+[33m[stage-8] [0m[36mclient: Received RESP value: ["dir", "/private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles3669335023"][0m
+[33m[stage-8] [0m[92mReceived ["dir", "/private/var/folders/79/lp3v5_c16v979pz111l0v__m0000gn/T/rdbfiles3669335023"][0m
 [33m[stage-8] [0m[92mTest passed.[0m
 [33m[stage-8] [0m[36mTerminating program[0m
 [33m[stage-8] [0m[36mProgram terminated successfully[0m
 
-[33m[stage-7] [0m[94mRunning tests for Stage #7: expiry[0m
+[33m[stage-7] [0m[94mRunning tests for Stage #7: yz1[0m
 [33m[stage-7] [0m[94m$ ./spawn_redis_server.sh[0m
 [33m[stage-7] [0m[94m$ redis-cli SET strawberry pear px 100[0m
 [33m[stage-7] [0m[36mSent bytes: "*5\r\n$3\r\nSET\r\n$10\r\nstrawberry\r\n$4\r\npear\r\n$2\r\npx\r\n$3\r\n100\r\n"[0m
 [33m[stage-7] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[stage-7] [0m[36mReceived RESP value: "OK"[0m
 [33m[stage-7] [0m[92mReceived "OK"[0m
-[33m[stage-7] [0m[92mReceived OK at 21:36:24.124[0m
-[33m[stage-7] [0m[94mFetching key "strawberry" at 21:36:24.124 (should not be expired)[0m
+[33m[stage-7] [0m[92mReceived OK at 02:05:11.019[0m
+[33m[stage-7] [0m[94mFetching key "strawberry" at 02:05:11.019 (should not be expired)[0m
 [33m[stage-7] [0m[94m$ redis-cli GET strawberry[0m
 [33m[stage-7] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$10\r\nstrawberry\r\n"[0m
 [33m[stage-7] [0m[36mReceived bytes: "$4\r\npear\r\n"[0m
 [33m[stage-7] [0m[36mReceived RESP value: "pear"[0m
 [33m[stage-7] [0m[92mReceived "pear"[0m
 [33m[stage-7] [0m[36mSleeping for 101ms[0m
-[33m[stage-7] [0m[94mFetching key "strawberry" at 21:36:24.227 (should be expired)[0m
+[33m[stage-7] [0m[94mFetching key "strawberry" at 02:05:11.122 (should be expired)[0m
 [33m[stage-7] [0m[94m$ redis-cli GET strawberry[0m
 [33m[stage-7] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$10\r\nstrawberry\r\n"[0m
 [33m[stage-7] [0m[36mReceived bytes: "$-1\r\n"[0m
@@ -125,7 +125,7 @@ Debug = true
 [33m[stage-7] [0m[36mTerminating program[0m
 [33m[stage-7] [0m[36mProgram terminated successfully[0m
 
-[33m[stage-6] [0m[94mRunning tests for Stage #6: set_get[0m
+[33m[stage-6] [0m[94mRunning tests for Stage #6: la7[0m
 [33m[stage-6] [0m[94m$ ./spawn_redis_server.sh[0m
 [33m[stage-6] [0m[36mSetting key grape to raspberry[0m
 [33m[stage-6] [0m[94m$ redis-cli SET grape raspberry[0m
@@ -143,7 +143,7 @@ Debug = true
 [33m[stage-6] [0m[36mTerminating program[0m
 [33m[stage-6] [0m[36mProgram terminated successfully[0m
 
-[33m[stage-5] [0m[94mRunning tests for Stage #5: echo[0m
+[33m[stage-5] [0m[94mRunning tests for Stage #5: qq0[0m
 [33m[stage-5] [0m[94m$ ./spawn_redis_server.sh[0m
 [33m[stage-5] [0m[94m$ redis-cli ECHO mango[0m
 [33m[stage-5] [0m[36mSent bytes: "*2\r\n$4\r\nECHO\r\n$5\r\nmango\r\n"[0m
@@ -154,7 +154,7 @@ Debug = true
 [33m[stage-5] [0m[36mTerminating program[0m
 [33m[stage-5] [0m[36mProgram terminated successfully[0m
 
-[33m[stage-4] [0m[94mRunning tests for Stage #4: concurrent-clients[0m
+[33m[stage-4] [0m[94mRunning tests for Stage #4: zu2[0m
 [33m[stage-4] [0m[94m$ ./spawn_redis_server.sh[0m
 [33m[stage-4] [0m[94mclient-1: $ redis-cli PING[0m
 [33m[stage-4] [0m[36mclient-1: Sent bytes: "*1\r\n$4\r\nPING\r\n"[0m
@@ -193,7 +193,7 @@ Debug = true
 [33m[stage-4] [0m[36mTerminating program[0m
 [33m[stage-4] [0m[36mProgram terminated successfully[0m
 
-[33m[stage-3] [0m[94mRunning tests for Stage #3: ping-pong-multiple[0m
+[33m[stage-3] [0m[94mRunning tests for Stage #3: wy1[0m
 [33m[stage-3] [0m[94m$ ./spawn_redis_server.sh[0m
 [33m[stage-3] [0m[94mclient-1: $ redis-cli PING[0m
 [33m[stage-3] [0m[36mclient-1: Sent bytes: "*1\r\n$4\r\nPING\r\n"[0m
@@ -215,7 +215,7 @@ Debug = true
 [33m[stage-3] [0m[36mTerminating program[0m
 [33m[stage-3] [0m[36mProgram terminated successfully[0m
 
-[33m[stage-2] [0m[94mRunning tests for Stage #2: ping-pong[0m
+[33m[stage-2] [0m[94mRunning tests for Stage #2: rg2[0m
 [33m[stage-2] [0m[94m$ ./spawn_redis_server.sh[0m
 [33m[stage-2] [0m[36mConnection established, sending ping command...[0m
 [33m[stage-2] [0m[94m$ redis-cli PING[0m
@@ -227,7 +227,7 @@ Debug = true
 [33m[stage-2] [0m[36mTerminating program[0m
 [33m[stage-2] [0m[36mProgram terminated successfully[0m
 
-[33m[stage-1] [0m[94mRunning tests for Stage #1: init[0m
+[33m[stage-1] [0m[94mRunning tests for Stage #1: jm1[0m
 [33m[stage-1] [0m[94m$ ./spawn_redis_server.sh[0m
 [33m[stage-1] [0m[94mConnecting to port 6379...[0m
 [33m[stage-1] [0m[36mConnection successful[0m
