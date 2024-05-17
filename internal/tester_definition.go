@@ -16,180 +16,180 @@ var testerDefinition = tester_definition.TesterDefinition{
 	ExecutableFileName: "spawn_redis_server.sh",
 	TestCases: []tester_definition.TestCase{
 		{
-			Slug:     "init",
+			Slug:     "jm1",
 			TestFunc: testBindToPort,
 			Timeout:  15 * time.Second,
 		},
 		{
-			Slug:     "ping-pong",
+			Slug:     "rg2",
 			TestFunc: testPingPongOnce,
 		},
 		{
-			Slug:     "ping-pong-multiple",
+			Slug:     "wy1",
 			TestFunc: testPingPongMultiple,
 		},
 		{
-			Slug:     "concurrent-clients",
+			Slug:     "zu2",
 			TestFunc: testPingPongConcurrent,
 		},
 		{
-			Slug:     "echo",
+			Slug:     "qq0",
 			TestFunc: testEcho,
 		},
 		{
-			Slug:     "set_get",
+			Slug:     "la7",
 			TestFunc: testGetSet,
 		},
 		{
-			Slug:     "expiry",
+			Slug:     "yz1",
 			TestFunc: testExpiry,
 		},
 		{
-			Slug:     "rdb-config",
+			Slug:     "zg5",
 			TestFunc: testRdbConfig,
 		},
 		{
-			Slug:     "rdb-read-key",
+			Slug:     "jz6",
 			TestFunc: testRdbReadKey,
 		},
 		{
-			Slug:     "rdb-read-string-value",
+			Slug:     "gc6",
 			TestFunc: testRdbReadStringValue,
 		},
 		{
-			Slug:     "rdb-read-multiple-keys",
+			Slug:     "jw4",
 			TestFunc: testRdbReadMultipleKeys,
 		},
 		{
-			Slug:     "rdb-read-multiple-string-values",
+			Slug:     "dq3",
 			TestFunc: testRdbReadMultipleStringValues,
 		},
 		{
-			Slug:     "rdb-read-value-with-expiry",
+			Slug:     "sm4",
 			TestFunc: testRdbReadValueWithExpiry,
 		},
 		{
-			Slug:     "repl-custom-port",
+			Slug:     "bw1",
 			TestFunc: testReplBindToCustomPort,
 		},
 		{
-			Slug:     "repl-info",
+			Slug:     "ye5",
 			TestFunc: testReplInfo,
 		},
 		{
-			Slug:     "repl-info-replica",
+			Slug:     "hc6",
 			TestFunc: testReplInfoReplica,
 		},
 		{
-			Slug:     "repl-id",
+			Slug:     "xc1",
 			TestFunc: testReplReplicationID,
 		},
 		{
-			Slug:     "repl-replica-ping",
+			Slug:     "gl7",
 			TestFunc: testReplReplicaSendsPing,
 		},
 		{
-			Slug:     "repl-replica-replconf",
+			Slug:     "eh4",
 			TestFunc: testReplReplicaSendsReplconf,
 		},
 		{
-			Slug:     "repl-replica-psync",
+			Slug:     "ju6",
 			TestFunc: testReplReplicaSendsPsync,
 		},
 		{
-			Slug:     "repl-master-replconf",
+			Slug:     "fj0",
 			TestFunc: testReplMasterReplconf,
 		},
 		{
-			Slug:     "repl-master-psync",
+			Slug:     "vm3",
 			TestFunc: testReplMasterPsync,
 		},
 		{
-			Slug:     "repl-master-psync-rdb",
+			Slug:     "cf8",
 			TestFunc: testReplMasterPsyncRdb,
 		},
 		{
-			Slug:     "repl-master-cmd-prop",
+			Slug:     "zn8",
 			TestFunc: testReplMasterCmdProp,
 		},
 		{
-			Slug:     "repl-multiple-replicas",
+			Slug:     "hd5",
 			TestFunc: testReplMultipleReplicas,
 		},
 		{
-			Slug:     "repl-cmd-processing",
+			Slug:     "yg4",
 			TestFunc: testReplCmdProcessing,
 		},
 		{
-			Slug:     "repl-replica-getack",
+			Slug:     "xv6",
 			TestFunc: testReplGetaAckZero,
 		},
 		{
-			Slug:     "repl-replica-getack-nonzero",
+			Slug:     "yd3",
 			TestFunc: testReplGetaAckNonZero,
 		},
 		{
-			Slug:     "repl-wait-zero-replicas",
+			Slug:     "my8",
 			TestFunc: testWaitZeroReplicas,
 		},
 		{
-			Slug:     "repl-wait-zero-offset",
+			Slug:     "tu8",
 			TestFunc: testWaitZeroOffset,
 		},
 		{
-			Slug:     "repl-wait",
+			Slug:     "na2",
 			TestFunc: testWait,
 		},
 		{
-			Slug:     "streams-type",
+			Slug:     "cc3",
 			TestFunc: testStreamsType,
 		},
 		{
-			Slug:     "streams-xadd",
+			Slug:     "cf6",
 			TestFunc: testStreamsXadd,
 		},
 		{
-			Slug:     "streams-xadd-validate-id",
+			Slug:     "hq8",
 			TestFunc: testStreamsXaddValidateID,
 		},
 		{
-			Slug:     "streams-xadd-partial-autoid",
+			Slug:     "yh3",
 			TestFunc: testStreamsXaddPartialAutoid,
 		},
 		{
-			Slug:     "streams-xadd-full-autoid",
+			Slug:     "xu6",
 			TestFunc: testStreamsXaddFullAutoid,
 		},
 		{
-			Slug:     "streams-xrange",
+			Slug:     "zx1",
 			TestFunc: testStreamsXrange,
 		},
 		{
-			Slug:     "streams-xrange-min-id",
+			Slug:     "yp1",
 			TestFunc: testStreamsXrangeMinID,
 		},
 		{
-			Slug:     "streams-xrange-max-id",
+			Slug:     "fs1",
 			TestFunc: testStreamsXrangeMaxID,
 		},
 		{
-			Slug:     "streams-xread",
+			Slug:     "um0",
 			TestFunc: testStreamsXread,
 		},
 		{
-			Slug:     "streams-xread-multiple",
+			Slug:     "ru9",
 			TestFunc: testStreamsXreadMultiple,
 		},
 		{
-			Slug:     "streams-xread-block",
+			Slug:     "bs1",
 			TestFunc: testStreamsXreadBlock,
 		},
 		{
-			Slug:     "streams-xread-block-no-timeout",
+			Slug:     "hw1",
 			TestFunc: testStreamsXreadBlockNoTimeout,
 		},
 		{
-			Slug:     "streams-xread-block-max-id",
+			Slug:     "xu1",
 			TestFunc: testStreamsXreadBlockMaxID,
 		},
 	},
