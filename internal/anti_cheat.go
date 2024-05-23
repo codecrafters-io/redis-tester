@@ -13,7 +13,7 @@ import (
 func antiCheatTest(stageHarness *test_case_harness.TestCaseHarness) error {
 	b := redis_executable.NewRedisExecutable(stageHarness)
 	if err := b.Run(); err != nil {
-		return err
+		return fmt.Errorf("CodeCrafters internal error. Error instantiating executable: %v", err)
 	}
 
 	logger := stageHarness.Logger
@@ -21,7 +21,7 @@ func antiCheatTest(stageHarness *test_case_harness.TestCaseHarness) error {
 	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "replica")
 	if err != nil {
 		logFriendlyError(logger, err)
-		return err
+		return fmt.Errorf("CodeCrafters internal error. Error creating connection to redis server: %v", err)
 	}
 	defer client.Close()
 
