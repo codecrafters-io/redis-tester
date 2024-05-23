@@ -11,17 +11,21 @@ import (
 )
 
 func antiCheatTest(stageHarness *test_case_harness.TestCaseHarness) error {
+	logger := stageHarness.Logger
+
 	b := redis_executable.NewRedisExecutable(stageHarness)
 	if err := b.Run(); err != nil {
-		return fmt.Errorf("CodeCrafters internal error. Error instantiating executable: %v", err)
+		logger.Criticalf("CodeCrafters internal error. Error instantiating executable: %v", err)
+		logger.Criticalf("Try again? Please contact us at hello@codecrafters.io if this persists.")
+		return fmt.Errorf("anti-cheat (ac1) failed")
 	}
-
-	logger := stageHarness.Logger
 
 	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "replica")
 	if err != nil {
 		logFriendlyError(logger, err)
-		return fmt.Errorf("CodeCrafters internal error. Error creating connection to redis server: %v", err)
+		logger.Criticalf("CodeCrafters internal error. Error creating connection to redis server: %v", err)
+		logger.Criticalf("Try again? Please contact us at hello@codecrafters.io if this persists.")
+		return fmt.Errorf("anti-cheat (ac1) failed")
 	}
 	defer client.Close()
 
@@ -36,7 +40,7 @@ func antiCheatTest(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	if err == nil {
 		logger.Criticalf("anti-cheat (ac1) failed.")
-		logger.Criticalf("Please contact us at hello@codecrafters.io if you think is a mistake.")
+		logger.Criticalf("Please contact us at hello@codecrafters.io if you think this is a mistake.")
 		return fmt.Errorf("anti-cheat (ac1) failed")
 	} else {
 		return nil
