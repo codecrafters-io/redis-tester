@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	inspectable_byte_string "github.com/codecrafters-io/redis-tester/internal/inspectable_byte_string"
+	inspectable_byte_string "github.com/codecrafters-io/tester-utils/inspectable_byte_string"
 )
 
 type IncompleteInputError struct {
