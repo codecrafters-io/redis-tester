@@ -113,7 +113,7 @@ func (v *Value) FormattedString() string {
 	case ERROR:
 		return fmt.Sprintf("%q", "ERR: "+v.String())
 	case NIL:
-		return "$-1\\r\\n"
+		return "\"$-1\\r\\n\""
 	}
 
 	return ""

@@ -1,7 +1,7 @@
 Debug = true
 
 [33m[stage-13] [0m[94mRunning tests for Stage #13: sm4[0m
-[33m[stage-13] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/rdbfiles235325156 --dbfilename pear.rdb[0m
+[33m[stage-13] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/rdbfiles388319618 --dbfilename pear.rdb[0m
 [33m[stage-13] [0m[94mclient: $ redis-cli GET orange[0m
 [33m[stage-13] [0m[36mclient: Sent bytes: "*2\r\n$3\r\nGET\r\n$6\r\norange\r\n"[0m
 [33m[stage-13] [0m[36mclient: Received bytes: "$10\r\nstrawberry\r\n"[0m
@@ -10,8 +10,8 @@ Debug = true
 [33m[stage-13] [0m[94mclient: $ redis-cli GET mango[0m
 [33m[stage-13] [0m[36mclient: Sent bytes: "*2\r\n$3\r\nGET\r\n$5\r\nmango\r\n"[0m
 [33m[stage-13] [0m[36mclient: Received bytes: "$-1\r\n"[0m
-[33m[stage-13] [0m[36mclient: Received RESP nil: $-1\r\n[0m
-[33m[stage-13] [0m[92mReceived $-1\r\n[0m
+[33m[stage-13] [0m[36mclient: Received RESP null bulk string: "$-1\r\n"[0m
+[33m[stage-13] [0m[92mReceived "$-1\r\n"[0m
 [33m[stage-13] [0m[94mclient: $ redis-cli GET pineapple[0m
 [33m[stage-13] [0m[36mclient: Sent bytes: "*2\r\n$3\r\nGET\r\n$9\r\npineapple\r\n"[0m
 [33m[stage-13] [0m[36mclient: Received bytes: "$9\r\nblueberry\r\n"[0m
@@ -23,7 +23,7 @@ Debug = true
 
 [33m[stage-12] [0m[94mRunning tests for Stage #12: dq3[0m
 [33m[stage-12] [0m[94mCreated RDB file with key-value pairs: "grape"="pineapple", "apple"="raspberry", "banana"="apple", "mango"="orange", "orange"="pear"[0m
-[33m[stage-12] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/rdbfiles577431708 --dbfilename raspberry.rdb[0m
+[33m[stage-12] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/rdbfiles2171782643 --dbfilename raspberry.rdb[0m
 [33m[stage-12] [0m[94mclient: $ redis-cli GET grape[0m
 [33m[stage-12] [0m[36mclient: Sent bytes: "*2\r\n$3\r\nGET\r\n$5\r\ngrape\r\n"[0m
 [33m[stage-12] [0m[36mclient: Received bytes: "$9\r\npineapple\r\n"[0m
@@ -55,19 +55,19 @@ Debug = true
 
 [33m[stage-11] [0m[94mRunning tests for Stage #11: jw4[0m
 [33m[stage-11] [0m[94mCreated RDB file with 3 keys: ["banana" "apple" "blueberry"][0m
-[33m[stage-11] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/rdbfiles230748225 --dbfilename blueberry.rdb[0m
+[33m[stage-11] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/rdbfiles1209284205 --dbfilename blueberry.rdb[0m
 [33m[stage-11] [0m[94mclient: $ redis-cli KEYS *[0m
 [33m[stage-11] [0m[36mclient: Sent bytes: "*2\r\n$4\r\nKEYS\r\n$1\r\n*\r\n"[0m
-[33m[stage-11] [0m[36mclient: Received bytes: "*3\r\n$5\r\napple\r\n$6\r\nbanana\r\n$9\r\nblueberry\r\n"[0m
-[33m[stage-11] [0m[36mclient: Received RESP array: ["apple", "banana", "blueberry"][0m
-[33m[stage-11] [0m[92mReceived ["apple", "banana", "blueberry"][0m
+[33m[stage-11] [0m[36mclient: Received bytes: "*3\r\n$5\r\napple\r\n$9\r\nblueberry\r\n$6\r\nbanana\r\n"[0m
+[33m[stage-11] [0m[36mclient: Received RESP array: ["apple", "blueberry", "banana"][0m
+[33m[stage-11] [0m[92mReceived ["apple", "blueberry", "banana"][0m
 [33m[stage-11] [0m[92mTest passed.[0m
 [33m[stage-11] [0m[36mTerminating program[0m
 [33m[stage-11] [0m[36mProgram terminated successfully[0m
 
 [33m[stage-10] [0m[94mRunning tests for Stage #10: gc6[0m
 [33m[stage-10] [0m[94mCreated RDB file with single key-value pair: grape="pineapple"[0m
-[33m[stage-10] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/rdbfiles2095626595 --dbfilename orange.rdb[0m
+[33m[stage-10] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/rdbfiles384942019 --dbfilename orange.rdb[0m
 [33m[stage-10] [0m[94mclient: $ redis-cli GET grape[0m
 [33m[stage-10] [0m[36mclient: Sent bytes: "*2\r\n$3\r\nGET\r\n$5\r\ngrape\r\n"[0m
 [33m[stage-10] [0m[36mclient: Received bytes: "$9\r\npineapple\r\n"[0m
@@ -79,7 +79,7 @@ Debug = true
 
 [33m[stage-9] [0m[94mRunning tests for Stage #9: jz6[0m
 [33m[stage-9] [0m[94mCreated RDB file with single key: "mango"[0m
-[33m[stage-9] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/rdbfiles58668727 --dbfilename pear.rdb[0m
+[33m[stage-9] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/rdbfiles3198695930 --dbfilename pear.rdb[0m
 [33m[stage-9] [0m[94mclient: $ redis-cli KEYS *[0m
 [33m[stage-9] [0m[36mclient: Sent bytes: "*2\r\n$4\r\nKEYS\r\n$1\r\n*\r\n"[0m
 [33m[stage-9] [0m[36mclient: Received bytes: "*1\r\n$5\r\nmango\r\n"[0m
@@ -90,12 +90,12 @@ Debug = true
 [33m[stage-9] [0m[36mProgram terminated successfully[0m
 
 [33m[stage-8] [0m[94mRunning tests for Stage #8: zg5[0m
-[33m[stage-8] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/rdbfiles1682149838 --dbfilename blueberry.rdb[0m
+[33m[stage-8] [0m[94m$ ./spawn_redis_server.sh --dir /private/var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/rdbfiles825729594 --dbfilename blueberry.rdb[0m
 [33m[stage-8] [0m[94mclient: $ redis-cli CONFIG GET dir[0m
 [33m[stage-8] [0m[36mclient: Sent bytes: "*3\r\n$6\r\nCONFIG\r\n$3\r\nGET\r\n$3\r\ndir\r\n"[0m
-[33m[stage-8] [0m[36mclient: Received bytes: "*2\r\n$3\r\ndir\r\n$75\r\n/private/var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/rdbfiles1682149838\r\n"[0m
-[33m[stage-8] [0m[36mclient: Received RESP array: ["dir", "/private/var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/rdbfiles1682149838"][0m
-[33m[stage-8] [0m[92mReceived ["dir", "/private/var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/rdbfiles1682149838"][0m
+[33m[stage-8] [0m[36mclient: Received bytes: "*2\r\n$3\r\ndir\r\n$74\r\n/private/var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/rdbfiles825729594\r\n"[0m
+[33m[stage-8] [0m[36mclient: Received RESP array: ["dir", "/private/var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/rdbfiles825729594"][0m
+[33m[stage-8] [0m[92mReceived ["dir", "/private/var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/rdbfiles825729594"][0m
 [33m[stage-8] [0m[92mTest passed.[0m
 [33m[stage-8] [0m[36mTerminating program[0m
 [33m[stage-8] [0m[36mProgram terminated successfully[0m
@@ -107,20 +107,20 @@ Debug = true
 [33m[stage-7] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[stage-7] [0m[36mReceived RESP simple string: "OK"[0m
 [33m[stage-7] [0m[92mReceived "OK"[0m
-[33m[stage-7] [0m[92mReceived OK at 00:14:57.717[0m
-[33m[stage-7] [0m[94mFetching key "strawberry" at 00:14:57.717 (should not be expired)[0m
+[33m[stage-7] [0m[92mReceived OK at 20:40:46.013[0m
+[33m[stage-7] [0m[94mFetching key "strawberry" at 20:40:46.013 (should not be expired)[0m
 [33m[stage-7] [0m[94m$ redis-cli GET strawberry[0m
 [33m[stage-7] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$10\r\nstrawberry\r\n"[0m
 [33m[stage-7] [0m[36mReceived bytes: "$4\r\npear\r\n"[0m
 [33m[stage-7] [0m[36mReceived RESP bulk string: "pear"[0m
 [33m[stage-7] [0m[92mReceived "pear"[0m
 [33m[stage-7] [0m[36mSleeping for 101ms[0m
-[33m[stage-7] [0m[94mFetching key "strawberry" at 00:14:57.820 (should be expired)[0m
+[33m[stage-7] [0m[94mFetching key "strawberry" at 20:40:46.116 (should be expired)[0m
 [33m[stage-7] [0m[94m$ redis-cli GET strawberry[0m
 [33m[stage-7] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$10\r\nstrawberry\r\n"[0m
 [33m[stage-7] [0m[36mReceived bytes: "$-1\r\n"[0m
-[33m[stage-7] [0m[36mReceived RESP nil: $-1\r\n[0m
-[33m[stage-7] [0m[92mReceived $-1\r\n[0m
+[33m[stage-7] [0m[36mReceived RESP null bulk string: "$-1\r\n"[0m
+[33m[stage-7] [0m[92mReceived "$-1\r\n"[0m
 [33m[stage-7] [0m[92mTest passed.[0m
 [33m[stage-7] [0m[36mTerminating program[0m
 [33m[stage-7] [0m[36mProgram terminated successfully[0m

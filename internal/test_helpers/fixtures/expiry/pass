@@ -7,20 +7,20 @@ Debug = true
 [33m[stage-7] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[stage-7] [0m[36mReceived RESP simple string: "OK"[0m
 [33m[stage-7] [0m[92mReceived "OK"[0m
-[33m[stage-7] [0m[92mReceived OK at 00:14:54.979[0m
-[33m[stage-7] [0m[94mFetching key "apple" at 00:14:54.979 (should not be expired)[0m
+[33m[stage-7] [0m[92mReceived OK at 20:39:57.019[0m
+[33m[stage-7] [0m[94mFetching key "apple" at 20:39:57.019 (should not be expired)[0m
 [33m[stage-7] [0m[94m$ redis-cli GET apple[0m
 [33m[stage-7] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$5\r\napple\r\n"[0m
 [33m[stage-7] [0m[36mReceived bytes: "$9\r\nblueberry\r\n"[0m
 [33m[stage-7] [0m[36mReceived RESP bulk string: "blueberry"[0m
 [33m[stage-7] [0m[92mReceived "blueberry"[0m
 [33m[stage-7] [0m[36mSleeping for 101ms[0m
-[33m[stage-7] [0m[94mFetching key "apple" at 00:14:55.083 (should be expired)[0m
+[33m[stage-7] [0m[94mFetching key "apple" at 20:39:57.122 (should be expired)[0m
 [33m[stage-7] [0m[94m$ redis-cli GET apple[0m
 [33m[stage-7] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$5\r\napple\r\n"[0m
 [33m[stage-7] [0m[36mReceived bytes: "$-1\r\n"[0m
-[33m[stage-7] [0m[36mReceived RESP nil: $-1\r\n[0m
-[33m[stage-7] [0m[92mReceived $-1\r\n[0m
+[33m[stage-7] [0m[36mReceived RESP null bulk string: "$-1\r\n"[0m
+[33m[stage-7] [0m[92mReceived "$-1\r\n"[0m
 [33m[stage-7] [0m[92mTest passed.[0m
 [33m[stage-7] [0m[36mTerminating program[0m
 [33m[stage-7] [0m[36mProgram terminated successfully[0m
