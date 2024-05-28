@@ -28,7 +28,12 @@ func defaultCallbacks(stageHarness *test_case_harness.TestCaseHarness, logPrefix
 			stageHarness.Logger.Debugf("%sReceived bytes: %q", logPrefix, string(bytes))
 		},
 		AfterReadValue: func(value resp_value.Value) {
-			stageHarness.Logger.Debugf("%sReceived RESP value: %s", logPrefix, value.FormattedString())
+			valueTypeLowerCase := strings.ReplaceAll(strings.ToLower(value.Type), "_", " ")
+			if valueTypeLowerCase == "nil" {
+				valueTypeLowerCase = "null bulk string"
+			}
+			stageHarness.Logger.Debugf("%sReceived RESP %s: %s", logPrefix, valueTypeLowerCase, value.FormattedString())
+
 		},
 	}
 }
