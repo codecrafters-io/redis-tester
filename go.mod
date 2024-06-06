@@ -3,7 +3,7 @@ module github.com/codecrafters-io/redis-tester
 go 1.21
 
 require (
-	github.com/codecrafters-io/tester-utils v0.2.24
+	github.com/codecrafters-io/tester-utils v0.2.25
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/hdt3213/rdb v1.0.16
 	github.com/stretchr/testify v1.9.0
@@ -19,7 +19,7 @@ require (
 	github.com/onsi/ginkgo v1.11.0 // indirect
 	github.com/onsi/gomega v1.8.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	golang.org/x/sys v0.20.0 // indirect
+	golang.org/x/sys v0.21.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
 
