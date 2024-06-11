@@ -85,8 +85,9 @@ func (c *RespConnection) SendCommand(command string, args ...string) error {
 	if c.Callbacks.BeforeSendCommand != nil {
 		if c.SentBytes > 0 {
 			c.Callbacks.BeforeSendCommand(true, command, args...)
+		} else {
+			c.Callbacks.BeforeSendCommand(false, command, args...)
 		}
-		c.Callbacks.BeforeSendCommand(false, command, args...)
 	}
 
 	encodedValue := resp_encoder.Encode(resp_value.NewStringArrayValue(append([]string{command}, args...)))
