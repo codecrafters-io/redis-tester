@@ -14,7 +14,7 @@ import (
 type RespConnectionCallbacks struct {
 	// BeforeSendCommand is called when a command is sent to the server.
 	// This can be useful for info logs.
-	BeforeSendCommand func(command string, args ...string)
+	BeforeSendCommand func(reusedConnection bool, command string, args ...string)
 
 	// BeforeSendValue is called when a value is sent using SendValue.
 	// It is NOT called when using SendCommand
@@ -83,7 +83,10 @@ func (c *RespConnection) Close() error {
 
 func (c *RespConnection) SendCommand(command string, args ...string) error {
 	if c.Callbacks.BeforeSendCommand != nil {
-		c.Callbacks.BeforeSendCommand(command, args...)
+		if c.SentBytes > 0 {
+			c.Callbacks.BeforeSendCommand(true, command, args...)
+		}
+		c.Callbacks.BeforeSendCommand(false, command, args...)
 	}
 
 	encodedValue := resp_encoder.Encode(resp_value.NewStringArrayValue(append([]string{command}, args...)))
