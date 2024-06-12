@@ -50,3 +50,13 @@ test_rdb_with_redis: build
 	CODECRAFTERS_SUBMISSION_DIR=./internal/test_helpers/pass_all \
 	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\":\"zg5\",\"tester_log_prefix\":\"stage-201\",\"title\":\"Stage #1: RDB Config\"}, {\"slug\":\"jz6\",\"tester_log_prefix\":\"stage-202\",\"title\":\"Stage #2: RDB Read Key\"}, {\"slug\":\"gc6\",\"tester_log_prefix\":\"stage-203\",\"title\":\"Stage #3: RDB String Value\"}, {\"slug\":\"jw4\",\"tester_log_prefix\":\"stage-204\",\"title\":\"Stage #4: RDB Read Multiple Keys\"}, {\"slug\":\"dq3\",\"tester_log_prefix\":\"stage-205\",\"title\":\"Stage #5: RDB Read Multiple String Values\"}, {\"slug\":\"sm4\",\"tester_log_prefix\":\"stage-206\",\"title\":\"Stage #6: RDB Read Value With Expiry\"}]" \
 	dist/main.out
+
+test_streams_with_redis: build
+	CODECRAFTERS_SUBMISSION_DIR=./internal/test_helpers/pass_all \
+	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\": \"cc3\", \"tester_log_prefix\": \"stage-301\", \"title\": \"stage #01: StreamsType\"},{\"slug\": \"cf6\", \"tester_log_prefix\": \"stage-302\", \"title\": \"stage #02: StreamsXadd\"},{\"slug\": \"hq8\", \"tester_log_prefix\": \"stage-303\", \"title\": \"stage #03: StreamsXaddValidateID\"},{\"slug\": \"yh3\", \"tester_log_prefix\": \"stage-304\", \"title\": \"stage #04: StreamsXaddPartialAutoid\"},{\"slug\": \"xu6\", \"tester_log_prefix\": \"stage-305\", \"title\": \"stage #05: StreamsXaddFullAutoid\"},{\"slug\": \"zx1\", \"tester_log_prefix\": \"stage-306\", \"title\": \"stage #06: StreamsXrange\"},{\"slug\": \"yp1\", \"tester_log_prefix\": \"stage-307\", \"title\": \"stage #07: StreamsXrangeMinID\"},{\"slug\": \"fs1\", \"tester_log_prefix\": \"stage-308\", \"title\": \"stage #08: StreamsXrangeMaxID\"},{\"slug\": \"um0\", \"tester_log_prefix\": \"stage-309\", \"title\": \"stage #09: StreamsXread\"},{\"slug\": \"ru9\", \"tester_log_prefix\": \"stage-310\", \"title\": \"stage #10: StreamsXreadMultiple\"},{\"slug\": \"bs1\", \"tester_log_prefix\": \"stage-311\", \"title\": \"stage #11: StreamsXreadBlock\"},{\"slug\": \"hw1\", \"tester_log_prefix\": \"stage-312\", \"title\": \"stage #12: StreamsXreadBlockNoTimeout\"},{\"slug\": \"xu1\", \"tester_log_prefix\": \"stage-313\", \"title\": \"stage #13: StreamsXreadBlockMaxID\"}]"  \
+	dist/main.out
+
+test_dev: build
+	CODECRAFTERS_SUBMISSION_DIR=./internal/test_helpers/pass_all \
+	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\":\"yg4\",\"tester_log_prefix\":\"stage-113\",\"title\":\"Stage #113: Command Processing\"}]" \
+	dist/main.out
