@@ -11,11 +11,18 @@ import (
 
 func defaultCallbacks(stageHarness *test_case_harness.TestCaseHarness, logPrefix string) resp_connection.RespConnectionCallbacks {
 	return resp_connection.RespConnectionCallbacks{
-		BeforeSendCommand: func(command string, args ...string) {
-			if len(args) > 0 {
-				stageHarness.Logger.Infof("%s$ redis-cli %s %s", logPrefix, command, strings.Join(args, " "))
+		BeforeSendCommand: func(reusedConnection bool, command string, args ...string) {
+			var commandPrefix string
+			if reusedConnection {
+				commandPrefix = ">"
 			} else {
-				stageHarness.Logger.Infof("%s$ redis-cli %s", logPrefix, command)
+				commandPrefix = "$ redis-cli"
+			}
+
+			if len(args) > 0 {
+				stageHarness.Logger.Infof("%s%s %s %s", logPrefix, commandPrefix, command, strings.Join(args, " "))
+			} else {
+				stageHarness.Logger.Infof("%s%s %s", logPrefix, commandPrefix, command)
 			}
 		},
 		BeforeSendValue: func(value resp_value.Value) {
