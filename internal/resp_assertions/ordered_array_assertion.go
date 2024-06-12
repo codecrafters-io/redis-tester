@@ -34,9 +34,15 @@ func (a OrderedArrayAssertion) Run(value resp_value.Value) error {
 			return fmt.Errorf("Expected element #%d to be a %s, got %s", i+1, expectedValue.Type, actualElement.Type)
 		}
 
+		if expectedValue.Bytes() == nil {
+			// This should never happen, but just in case
+			// This is the case for ArrayValues
+			return fmt.Errorf("CodeCrafters internal error. expectedValue Bytes of type: %s is nil", expectedValue.Type)
+		}
+
 		// ToDo: Equal or EqualFold ?
 		if !bytes.Equal(actualElement.Bytes(), expectedValue.Bytes()) {
-			return fmt.Errorf("Expected element #%d to be %q, got %q", i+1, expectedValue.FormattedString(), actualElement.FormattedString())
+			return fmt.Errorf("Expected element #%d to be %s, got %s", i+1, expectedValue.FormattedString(), actualElement.FormattedString())
 		}
 	}
 

@@ -41,6 +41,7 @@ func NewIntegerValue(i int) Value {
 	return Value{
 		Type:    INTEGER,
 		integer: i,
+		bytes:   []byte(fmt.Sprintf("%d", i)),
 	}
 }
 
@@ -70,7 +71,8 @@ func NewArrayValue(arr []Value) Value {
 
 func NewNilValue() Value {
 	return Value{
-		Type: NIL,
+		Type:  NIL,
+		bytes: []byte("$-1\r\n"),
 	}
 }
 
