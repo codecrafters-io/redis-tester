@@ -7,10 +7,11 @@ import (
 	"github.com/codecrafters-io/tester-utils/logger"
 )
 
-// TransactionTestCase is a test case where we connect to a master
-// as a replica and perform either all or a subset of the replication handshake.
+// TransactionTestCase is a test case where we initiate a transaction by sending "MULTI" command
+// Send a series of commands to the server expected back "QUEUED" for each command
+// Finally send "EXEC" command and expect the response to be the same as ResultArray
 //
-// RunAll will run all the steps in the replication handshake. Alternatively, you
+// RunAll will run all the steps in the Transaction execution. Alternatively, you
 // can run each step individually.
 type TransactionTestCase struct {
 	// All the CommandQueue will be sent in order to client
