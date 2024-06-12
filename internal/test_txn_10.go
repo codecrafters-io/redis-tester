@@ -45,46 +45,14 @@ func testTxErr(stageHarness *test_case_harness.TestCaseHarness) error {
 		return err
 	}
 
-	setCommandTestCase = test_cases.SendCommandTestCase{
-		Command:   "MULTI",
-		Args:      []string{},
-		Assertion: resp_assertions.NewStringAssertion("OK"),
+	transactionTestCase := test_cases.TransactionTestCase{
+		CommandQueue: [][]string{
+			{"INCR", "foo"},
+			{"INCR", "bar"},
+		},
+		ResultArray: []resp_value.Value{
+			resp_value.NewErrorValue("ERR value is not an integer or out of range"), resp_value.NewIntegerValue(8)},
 	}
 
-	if err := setCommandTestCase.Run(client, logger); err != nil {
-		return err
-	}
-
-	setCommandTestCase = test_cases.SendCommandTestCase{
-		Command:   "INCR",
-		Args:      []string{"foo"},
-		Assertion: resp_assertions.NewStringAssertion("QUEUED"),
-	}
-
-	if err := setCommandTestCase.Run(client, logger); err != nil {
-		return err
-	}
-
-	setCommandTestCase = test_cases.SendCommandTestCase{
-		Command:   "INCR",
-		Args:      []string{"bar"},
-		Assertion: resp_assertions.NewStringAssertion("QUEUED"),
-	}
-
-	if err := setCommandTestCase.Run(client, logger); err != nil {
-		return err
-	}
-
-	setCommandTestCase = test_cases.SendCommandTestCase{
-		Command: "EXEC",
-		Args:    []string{},
-		Assertion: resp_assertions.NewOrderedArrayAssertion([]resp_value.Value{
-			resp_value.NewErrorValue("ERR value is not an integer or out of range"), resp_value.NewIntegerValue(8)}),
-	}
-
-	if err := setCommandTestCase.Run(client, logger); err != nil {
-		return err
-	}
-
-	return nil
+	return transactionTestCase.RunAll(client, logger)
 }
