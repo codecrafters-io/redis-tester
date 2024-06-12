@@ -192,6 +192,11 @@ var testerDefinition = tester_definition.TesterDefinition{
 			Slug:     "xu1",
 			TestFunc: testStreamsXreadBlockMaxID,
 		},
+		// ToDo: Slugs are placeholders
+		{
+			Slug:     "xv0",
+			TestFunc: testTxDiscard,
+		},
 		{
 			Slug:     "xv1",
 			TestFunc: testTxSuccess,
