@@ -200,5 +200,9 @@ var testerDefinition = tester_definition.TesterDefinition{
 			Slug:     "jy1",
 			TestFunc: testTxErr,
 		},
+		{
+			Slug:     "fg4",
+			TestFunc: testTxMulti,
+		},
 	},
 }
