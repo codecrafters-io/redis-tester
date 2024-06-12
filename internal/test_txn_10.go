@@ -25,23 +25,18 @@ func testTxErr(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 	defer client.Close()
 
-	setCommandTestCase := test_cases.SendCommandTestCase{
-		Command:   "SET",
-		Args:      []string{"foo", "abc"},
-		Assertion: resp_assertions.NewStringAssertion("OK"),
+	multiCommandTestCase := test_cases.MultiCommandTestCase{
+		Commands: [][]string{
+			{"SET", "foo", "abc"},
+			{"SET", "bar", "7"},
+		},
+		Assertions: []resp_assertions.RESPAssertion{
+			resp_assertions.NewStringAssertion("OK"),
+			resp_assertions.NewStringAssertion("OK"),
+		},
 	}
 
-	if err := setCommandTestCase.Run(client, logger); err != nil {
-		return err
-	}
-
-	setCommandTestCase = test_cases.SendCommandTestCase{
-		Command:   "SET",
-		Args:      []string{"bar", "7"},
-		Assertion: resp_assertions.NewStringAssertion("OK"),
-	}
-
-	if err := setCommandTestCase.Run(client, logger); err != nil {
+	if err := multiCommandTestCase.RunAll(client, logger); err != nil {
 		return err
 	}
 

@@ -32,44 +32,46 @@ func testTxMulti(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 
 	for i, client := range clients {
-		commandTestCase := test_cases.SendCommandTestCase{
-			Command:   "SET",
-			Args:      []string{"bar", "7"},
-			Assertion: resp_assertions.NewStringAssertion("OK"),
-		}
-
-		if err := commandTestCase.Run(client, logger); err != nil {
-			return err
-		}
-
-		commandTestCase = test_cases.SendCommandTestCase{
-			Command:   "INCR",
-			Args:      []string{"foo"},
-			Assertion: resp_assertions.NewIntegerAssertion(i + 1),
-		}
-
-		if err := commandTestCase.Run(client, logger); err != nil {
-			return err
-		}
-	}
-
-	for _, client := range clients {
-		transactionTestCase := test_cases.TransactionTestCase{
-			CommandQueue: [][]string{
+		multiCommandTestCase := test_cases.MultiCommandTestCase{
+			Commands: [][]string{
+				{"SET", "bar", "7"},
 				{"INCR", "foo"},
-				{"INCR", "bar"},
 			},
-			ResultArray: []resp_value.Value{},
+			Assertions: []resp_assertions.RESPAssertion{
+				resp_assertions.NewStringAssertion("OK"),
+				resp_assertions.NewIntegerAssertion(i + 1),
+			},
 		}
-		if err := transactionTestCase.RunAll(client, logger); err != nil {
+
+		if err := multiCommandTestCase.RunAll(client, logger); err != nil {
 			return err
 		}
 	}
 
 	for i, client := range clients {
 		transactionTestCase := test_cases.TransactionTestCase{
-			CommandQueue: [][]string{},
-			ResultArray:  []resp_value.Value{resp_value.NewIntegerValue(4 + i), resp_value.NewIntegerValue(8 + i)},
+			CommandQueue: [][]string{
+				{"INCR", "foo"},
+				{"INCR", "bar"},
+			},
+			ResultArray: []resp_value.Value{resp_value.NewIntegerValue(4 + i), resp_value.NewIntegerValue(8 + i)},
+		}
+		if err := transactionTestCase.RunMulti(client, logger); err != nil {
+			return err
+		}
+
+		if err := transactionTestCase.RunQueueAll(client, logger); err != nil {
+			return err
+		}
+	}
+
+	for i, client := range clients {
+		transactionTestCase := test_cases.TransactionTestCase{
+			CommandQueue: [][]string{
+				{"INCR", "foo"},
+				{"INCR", "bar"},
+			},
+			ResultArray: []resp_value.Value{resp_value.NewIntegerValue(4 + i), resp_value.NewIntegerValue(8 + i)},
 		}
 		if err := transactionTestCase.RunExec(client, logger); err != nil {
 			return err
