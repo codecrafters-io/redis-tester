@@ -96,6 +96,10 @@ func (v *Value) Integer() int {
 	return v.integer
 }
 
+func (v *Value) Error() string {
+	return string(v.String())
+}
+
 func (v *Value) FormattedString() string {
 	switch v.Type {
 	case SIMPLE_STRING:
