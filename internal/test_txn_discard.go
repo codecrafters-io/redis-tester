@@ -40,14 +40,11 @@ func testTxDiscard(stageHarness *test_case_harness.TestCaseHarness) error {
 			{"SET", "foo", "41"},
 			{"INCR", "foo"},
 		},
-		ResultArray: []resp_value.Value{},
+		ResultArray:    []resp_value.Value{},
+		ShouldSkipExec: true,
 	}
 
-	if err := transactionTestCase.RunMulti(client, logger); err != nil {
-		return err
-	}
-
-	if err := transactionTestCase.RunQueueAll(client, logger); err != nil {
+	if err := transactionTestCase.RunAll(client, logger); err != nil {
 		return err
 	}
 

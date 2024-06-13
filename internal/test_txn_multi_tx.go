@@ -48,13 +48,10 @@ func testTxMultiTx(stageHarness *test_case_harness.TestCaseHarness) error {
 				{"INCR", "foo"},
 				{"INCR", "bar"},
 			},
-			ResultArray: []resp_value.Value{resp_value.NewIntegerValue(4 + i), resp_value.NewIntegerValue(8 + i)},
+			ResultArray:    []resp_value.Value{resp_value.NewIntegerValue(4 + i), resp_value.NewIntegerValue(8 + i)},
+			ShouldSkipExec: true,
 		}
-		if err := transactionTestCase.RunMulti(client, logger); err != nil {
-			return err
-		}
-
-		if err := transactionTestCase.RunQueueAll(client, logger); err != nil {
+		if err := transactionTestCase.RunAll(client, logger); err != nil {
 			return err
 		}
 	}
