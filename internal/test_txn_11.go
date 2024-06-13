@@ -1,6 +1,8 @@
 package internal
 
 import (
+	"fmt"
+
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	resp_connection "github.com/codecrafters-io/redis-tester/internal/resp/connection"
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
@@ -11,7 +13,7 @@ import (
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
-func testTxMulti(stageHarness *test_case_harness.TestCaseHarness) error {
+func testTxMultiTx(stageHarness *test_case_harness.TestCaseHarness) error {
 	b := redis_executable.NewRedisExecutable(stageHarness)
 	if err := b.Run(); err != nil {
 		return err
@@ -22,7 +24,7 @@ func testTxMulti(stageHarness *test_case_harness.TestCaseHarness) error {
 	var clients []*resp_connection.RespConnection
 
 	for i := 0; i < 3; i++ {
-		client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "client1")
+		client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", fmt.Sprintf("client-%d", i+1))
 		if err != nil {
 			logFriendlyError(logger, err)
 			return err

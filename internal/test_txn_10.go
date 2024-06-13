@@ -1,7 +1,10 @@
 package internal
 
 import (
+	"fmt"
+
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	resp_connection "github.com/codecrafters-io/redis-tester/internal/resp/connection"
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
@@ -18,12 +21,17 @@ func testTxErr(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	logger := stageHarness.Logger
 
-	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "client1")
-	if err != nil {
-		logFriendlyError(logger, err)
-		return err
+	var clients []*resp_connection.RespConnection
+
+	for i := 0; i < 2; i++ {
+		client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", fmt.Sprintf("client-%d", i+1))
+		if err != nil {
+			logFriendlyError(logger, err)
+			return err
+		}
+		clients = append(clients, client)
+		defer client.Close()
 	}
-	defer client.Close()
 
 	multiCommandTestCase := test_cases.MultiCommandTestCase{
 		Commands: [][]string{
@@ -36,7 +44,7 @@ func testTxErr(stageHarness *test_case_harness.TestCaseHarness) error {
 		},
 	}
 
-	if err := multiCommandTestCase.RunAll(client, logger); err != nil {
+	if err := multiCommandTestCase.RunAll(clients[0], logger); err != nil {
 		return err
 	}
 
@@ -49,5 +57,20 @@ func testTxErr(stageHarness *test_case_harness.TestCaseHarness) error {
 			resp_value.NewErrorValue("ERR value is not an integer or out of range"), resp_value.NewIntegerValue(8)},
 	}
 
-	return transactionTestCase.RunAll(client, logger)
+	if err := transactionTestCase.RunAll(clients[0], logger); err != nil {
+		return err
+	}
+
+	multiCommandTestCase = test_cases.MultiCommandTestCase{
+		Commands: [][]string{
+			{"GET", "bar"},
+			{"GET", "foo"},
+		},
+		Assertions: []resp_assertions.RESPAssertion{
+			resp_assertions.NewStringAssertion("8"),
+			resp_assertions.NewStringAssertion("abc"),
+		},
+	}
+
+	return multiCommandTestCase.RunAll(clients[1], logger)
 }

@@ -18,12 +18,22 @@ func testTxDiscard(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	logger := stageHarness.Logger
 
-	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "client1")
+	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "client")
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
 	}
 	defer client.Close()
+
+	commandTestCase := test_cases.SendCommandTestCase{
+		Command:   "SET",
+		Args:      []string{"bar", "42"},
+		Assertion: resp_assertions.NewStringAssertion("OK"),
+	}
+
+	if err := commandTestCase.Run(client, logger); err != nil {
+		return err
+	}
 
 	transactionTestCase := test_cases.TransactionTestCase{
 		CommandQueue: [][]string{
@@ -45,11 +55,13 @@ func testTxDiscard(stageHarness *test_case_harness.TestCaseHarness) error {
 		Commands: [][]string{
 			{"DISCARD"},
 			{"GET", "foo"},
+			{"GET", "bar"},
 			{"DISCARD"},
 		},
 		Assertions: []resp_assertions.RESPAssertion{
 			resp_assertions.NewStringAssertion("OK"),
 			resp_assertions.NewNilAssertion(),
+			resp_assertions.NewStringAssertion("42"),
 			resp_assertions.NewErrorAssertion("ERR DISCARD without MULTI"),
 		},
 	}
