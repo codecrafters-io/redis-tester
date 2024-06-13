@@ -19,9 +19,13 @@ type TransactionTestCase struct {
 	CommandQueue [][]string
 
 	// After queueing all the commands,
-	// if ResultArray is not empty, "EXEC" is sent
+	// if ShouldSkipExec is false, "EXEC" is sent
 	// And the response is compared with this ResultArray
 	ResultArray []resp_value.Value
+
+	// ShouldSkipExec is a flag to indicate if we should skip running the
+	// "EXEC" command, this way we can run empty transactions too
+	ShouldSkipExec bool
 }
 
 func (t TransactionTestCase) RunAll(client *resp_client.RespConnection, logger *logger.Logger) error {
@@ -33,7 +37,7 @@ func (t TransactionTestCase) RunAll(client *resp_client.RespConnection, logger *
 		return err
 	}
 
-	if len(t.ResultArray) > 0 {
+	if !t.ShouldSkipExec {
 		if err := t.RunExec(client, logger); err != nil {
 			return err
 		}
