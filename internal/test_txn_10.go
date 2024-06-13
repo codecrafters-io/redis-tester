@@ -17,7 +17,7 @@ func testTxErr(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	logger := stageHarness.Logger
 
-	clients, err := spawnClients(2, "localhost:6379", stageHarness, logger)
+	clients, err := SpawnClients(2, "localhost:6379", stageHarness, logger)
 	if err != nil {
 		return err
 	}

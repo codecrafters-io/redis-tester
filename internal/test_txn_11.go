@@ -17,7 +17,7 @@ func testTxMultiTx(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	logger := stageHarness.Logger
 
-	clients, err := spawnClients(3, "localhost:6379", stageHarness, logger)
+	clients, err := SpawnClients(3, "localhost:6379", stageHarness, logger)
 	if err != nil {
 		return err
 	}
