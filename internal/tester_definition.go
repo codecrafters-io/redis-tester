@@ -192,5 +192,49 @@ var testerDefinition = tester_definition.TesterDefinition{
 			Slug:     "xu1",
 			TestFunc: testStreamsXreadBlockMaxID,
 		},
+		{
+			Slug:     "si4",
+			TestFunc: testTxIncr1,
+		},
+		{
+			Slug:     "lz8",
+			TestFunc: testTxIncr2,
+		},
+		{
+			Slug:     "mk1",
+			TestFunc: testTxIncr3,
+		},
+		{
+			Slug:     "pn0",
+			TestFunc: testTxMulti,
+		},
+		{
+			Slug:     "lo4",
+			TestFunc: testTxExec,
+		},
+		{
+			Slug:     "we1",
+			TestFunc: testTxEmpty,
+		},
+		{
+			Slug:     "rs9",
+			TestFunc: testTxQueue,
+		},
+		{
+			Slug:     "fy6",
+			TestFunc: testTxSuccess,
+		},
+		{
+			Slug:     "rl9",
+			TestFunc: testTxDiscard,
+		},
+		{
+			Slug:     "sg9",
+			TestFunc: testTxErr,
+		},
+		{
+			Slug:     "jf8",
+			TestFunc: testTxMultiTx,
+		},
 	},
 }
