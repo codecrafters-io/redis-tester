@@ -1,14 +1,10 @@
 package internal
 
 import (
-	"fmt"
-
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
-	resp_connection "github.com/codecrafters-io/redis-tester/internal/resp/connection"
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 
-	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
@@ -21,15 +17,11 @@ func testTxQueue(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	logger := stageHarness.Logger
 
-	var clients []*resp_connection.RespConnection
-
-	for i := 0; i < 2; i++ {
-		client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", fmt.Sprintf("client-%d", i+1))
-		if err != nil {
-			logFriendlyError(logger, err)
-			return err
-		}
-		clients = append(clients, client)
+	clients, err := spawnClients(2, "localhost:6379", stageHarness, logger)
+	if err != nil {
+		return err
+	}
+	for _, client := range clients {
 		defer client.Close()
 	}
 
