@@ -39,7 +39,7 @@ func testTxSuccess(stageHarness *test_case_harness.TestCaseHarness) error {
 			{"INCR", key2},
 			{"GET", key2},
 		},
-		ResultArray: []resp_value.Value{resp_value.NewSimpleStringValue("OK"), resp_value.NewIntegerValue(randomIntegerValue + 1), resp_value.NewIntegerValue(1), resp_value.NewBulkStringValue("1")},
+		ExpectedResponseArray: []resp_value.Value{resp_value.NewSimpleStringValue("OK"), resp_value.NewIntegerValue(randomIntegerValue + 1), resp_value.NewIntegerValue(1), resp_value.NewBulkStringValue("1")},
 	}
 
 	if err := transactionTestCase.RunAll(clients[0], logger); err != nil {

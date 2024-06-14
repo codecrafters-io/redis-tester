@@ -9,7 +9,7 @@ import (
 
 // TransactionTestCase is a test case where we initiate a transaction by sending "MULTI" command
 // Send a series of commands to the server expected back "QUEUED" for each command
-// Finally send "EXEC" command and expect the response to be the same as ResultArray
+// Finally send "EXEC" command and expect the response to be the same as ExpectedResponseArray
 //
 // RunAll will run all the steps in the Transaction execution. Alternatively, you
 // can run each step individually.
@@ -20,8 +20,8 @@ type TransactionTestCase struct {
 
 	// After queueing all the commands,
 	// if ShouldSkipExec is false, "EXEC" is sent
-	// And the response is compared with this ResultArray
-	ResultArray []resp_value.Value
+	// And the response is compared with this ExpectedResponseArray
+	ExpectedResponseArray []resp_value.Value
 }
 
 func (t TransactionTestCase) RunAll(client *resp_client.RespConnection, logger *logger.Logger) error {
@@ -64,7 +64,7 @@ func (t TransactionTestCase) RunMulti(client *resp_client.RespConnection, logger
 
 func (t TransactionTestCase) RunQueueAll(client *resp_client.RespConnection, logger *logger.Logger) error {
 	for i, v := range t.CommandQueue {
-		logger.Debugf("Sent #%d command", i)
+		logger.Debugf("Sending command: #%d/#%d", i, len(t.CommandQueue))
 		commandTest := SendCommandTestCase{
 			Command:   v[0],
 			Args:      v[1:],
@@ -82,7 +82,7 @@ func (t TransactionTestCase) RunExec(client *resp_client.RespConnection, logger 
 	setCommandTestCase := SendCommandTestCase{
 		Command:   "EXEC",
 		Args:      []string{},
-		Assertion: resp_assertions.NewOrderedArrayAssertion(t.ResultArray),
+		Assertion: resp_assertions.NewOrderedArrayAssertion(t.ExpectedResponseArray),
 	}
 
 	return setCommandTestCase.Run(client, logger)

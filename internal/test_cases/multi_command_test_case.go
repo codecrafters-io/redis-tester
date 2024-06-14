@@ -16,7 +16,7 @@ type MultiCommandTestCase struct {
 
 func (t *MultiCommandTestCase) RunAll(client *resp_client.RespConnection, logger *logger.Logger) error {
 	if len(t.Assertions) != len(t.Commands) {
-		return fmt.Errorf("Number of commands and assertions should be equal")
+		return fmt.Errorf("CodeCrafters internal error. Number of commands and assertions should be equal in MultiCommandTestCase")
 	}
 
 	for i, command := range t.Commands {

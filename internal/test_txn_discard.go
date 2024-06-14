@@ -47,7 +47,7 @@ func testTxDiscard(stageHarness *test_case_harness.TestCaseHarness) error {
 			{"SET", key1, fmt.Sprint(randomInt1)},
 			{"INCR", key1},
 		},
-		ResultArray: []resp_value.Value{},
+		ExpectedResponseArray: []resp_value.Value{},
 	}
 
 	if err := transactionTestCase.RunWithoutExec(client, logger); err != nil {

@@ -26,8 +26,8 @@ func testTxEmpty(stageHarness *test_case_harness.TestCaseHarness) error {
 	defer client.Close()
 
 	emptyTransactionTestCase := test_cases.TransactionTestCase{
-		CommandQueue: [][]string{},
-		ResultArray:  []resp_value.Value{},
+		CommandQueue:          [][]string{},
+		ExpectedResponseArray: []resp_value.Value{},
 	}
 
 	if err := emptyTransactionTestCase.RunAll(client, logger); err != nil {

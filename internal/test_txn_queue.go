@@ -36,7 +36,7 @@ func testTxQueue(stageHarness *test_case_harness.TestCaseHarness) error {
 			{"SET", key, fmt.Sprint(randomIntegerValue)},
 			{"INCR", key},
 		},
-		ResultArray: []resp_value.Value{},
+		ExpectedResponseArray: []resp_value.Value{},
 	}
 
 	if err := transactionTestCase.RunWithoutExec(clients[0], logger); err != nil {

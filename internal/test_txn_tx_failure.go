@@ -53,7 +53,7 @@ func testTxErr(stageHarness *test_case_harness.TestCaseHarness) error {
 			{"INCR", key1},
 			{"INCR", key2},
 		},
-		ResultArray: []resp_value.Value{
+		ExpectedResponseArray: []resp_value.Value{
 			resp_value.NewErrorValue("ERR value is not an integer or out of range"), resp_value.NewIntegerValue(randomIntegerValue + 1)},
 	}
 
