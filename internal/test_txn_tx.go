@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
-	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
@@ -39,7 +38,7 @@ func testTxSuccess(stageHarness *test_case_harness.TestCaseHarness) error {
 			{"INCR", key2},
 			{"GET", key2},
 		},
-		ExpectedResponseArray: []resp_value.Value{resp_value.NewSimpleStringValue("OK"), resp_value.NewIntegerValue(randomIntegerValue + 1), resp_value.NewIntegerValue(1), resp_value.NewBulkStringValue("1")},
+		ExpectedResponseArray: []resp_assertions.RESPAssertion{resp_assertions.NewStringAssertion("OK"), resp_assertions.NewIntegerAssertion(randomIntegerValue + 1), resp_assertions.NewIntegerAssertion(1), resp_assertions.NewStringAssertion("1")},
 	}
 
 	if err := transactionTestCase.RunAll(clients[0], logger); err != nil {

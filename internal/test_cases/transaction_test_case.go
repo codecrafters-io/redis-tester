@@ -2,7 +2,6 @@ package test_cases
 
 import (
 	resp_client "github.com/codecrafters-io/redis-tester/internal/resp/connection"
-	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/tester-utils/logger"
 )
@@ -19,9 +18,10 @@ type TransactionTestCase struct {
 	CommandQueue [][]string
 
 	// After queueing all the commands,
-	// if ShouldSkipExec is false, "EXEC" is sent
-	// And the response is compared with this ExpectedResponseArray
-	ExpectedResponseArray []resp_value.Value
+	// if "EXEC" is sent (based on which function is called)
+	// The elements in the response array are asserted based on the
+	// assertions in the  ExpectedResponseArray
+	ExpectedResponseArray []resp_assertions.RESPAssertion
 }
 
 func (t TransactionTestCase) RunAll(client *resp_client.RespConnection, logger *logger.Logger) error {

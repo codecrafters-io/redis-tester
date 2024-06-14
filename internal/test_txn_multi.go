@@ -2,7 +2,6 @@ package internal
 
 import (
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
-	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
@@ -24,10 +23,7 @@ func testTxMulti(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 	defer client.Close()
 
-	transactionTestCase := test_cases.TransactionTestCase{
-		CommandQueue:          [][]string{},
-		ExpectedResponseArray: []resp_value.Value{},
-	}
+	transactionTestCase := test_cases.TransactionTestCase{}
 
 	return transactionTestCase.RunMulti(client, logger)
 }

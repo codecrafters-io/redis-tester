@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
-	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
@@ -36,7 +35,6 @@ func testTxQueue(stageHarness *test_case_harness.TestCaseHarness) error {
 			{"SET", key, fmt.Sprint(randomIntegerValue)},
 			{"INCR", key},
 		},
-		ExpectedResponseArray: []resp_value.Value{},
 	}
 
 	if err := transactionTestCase.RunWithoutExec(clients[0], logger); err != nil {

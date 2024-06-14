@@ -2,7 +2,6 @@ package internal
 
 import (
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
-	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
@@ -25,10 +24,7 @@ func testTxEmpty(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 	defer client.Close()
 
-	emptyTransactionTestCase := test_cases.TransactionTestCase{
-		CommandQueue:          [][]string{},
-		ExpectedResponseArray: []resp_value.Value{},
-	}
+	emptyTransactionTestCase := test_cases.TransactionTestCase{}
 
 	if err := emptyTransactionTestCase.RunAll(client, logger); err != nil {
 		return err

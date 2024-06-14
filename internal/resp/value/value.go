@@ -41,7 +41,6 @@ func NewIntegerValue(i int) Value {
 	return Value{
 		Type:    INTEGER,
 		integer: i,
-		bytes:   []byte(fmt.Sprintf("%d", i)),
 	}
 }
 
@@ -71,8 +70,7 @@ func NewArrayValue(arr []Value) Value {
 
 func NewNilValue() Value {
 	return Value{
-		Type:  NIL,
-		bytes: []byte("$-1\r\n"),
+		Type: NIL,
 	}
 }
 
@@ -97,7 +95,10 @@ func (v *Value) Integer() int {
 }
 
 func (v *Value) Error() string {
-	return string(v.String())
+	if v.Type == ERROR {
+		return string(v.String())
+	}
+	return ""
 }
 
 func (v *Value) FormattedString() string {

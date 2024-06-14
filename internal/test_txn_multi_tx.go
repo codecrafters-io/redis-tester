@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
-	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
@@ -68,7 +67,7 @@ func testTxMultiTx(stageHarness *test_case_harness.TestCaseHarness) error {
 			// Inside each transaction, we run 1x INCR key1, key2
 			// So it increases by 1 for each transaction
 			// `i` here is 0-indexed, so we add 1 to the expected value
-			ExpectedResponseArray: []resp_value.Value{resp_value.NewIntegerValue(3 + (1 + i)), resp_value.NewIntegerValue(randomIntegerValue + (1 + i))},
+			ExpectedResponseArray: []resp_assertions.RESPAssertion{resp_assertions.NewIntegerAssertion(3 + (1 + i)), resp_assertions.NewIntegerAssertion(randomIntegerValue + (1 + i))},
 		}
 		if err := transactionTestCase.RunExec(client, logger); err != nil {
 			return err

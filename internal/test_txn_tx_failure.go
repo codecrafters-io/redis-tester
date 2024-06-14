@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
-	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
@@ -53,8 +52,8 @@ func testTxErr(stageHarness *test_case_harness.TestCaseHarness) error {
 			{"INCR", key1},
 			{"INCR", key2},
 		},
-		ExpectedResponseArray: []resp_value.Value{
-			resp_value.NewErrorValue("ERR value is not an integer or out of range"), resp_value.NewIntegerValue(randomIntegerValue + 1)},
+		ExpectedResponseArray: []resp_assertions.RESPAssertion{
+			resp_assertions.NewErrorAssertion("ERR value is not an integer or out of range"), resp_assertions.NewIntegerAssertion(randomIntegerValue + 1)},
 	}
 
 	if err := transactionTestCase.RunAll(clients[0], logger); err != nil {

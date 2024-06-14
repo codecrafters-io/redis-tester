@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
-	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
@@ -47,7 +46,6 @@ func testTxDiscard(stageHarness *test_case_harness.TestCaseHarness) error {
 			{"SET", key1, fmt.Sprint(randomInt1)},
 			{"INCR", key1},
 		},
-		ExpectedResponseArray: []resp_value.Value{},
 	}
 
 	if err := transactionTestCase.RunWithoutExec(client, logger); err != nil {
