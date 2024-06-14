@@ -28,7 +28,7 @@ func testTxDiscard(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 	defer client.Close()
 
-	uniqueKeys := random.RandomWords(3)
+	uniqueKeys := random.RandomWords(2)
 	key1, key2 := uniqueKeys[0], uniqueKeys[1]
 	randomInt1, randomInt2 := random.RandomInt(1, 100), random.RandomInt(1, 100)
 

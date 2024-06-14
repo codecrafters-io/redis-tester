@@ -1,11 +1,14 @@
 package internal
 
 import (
+	"fmt"
+
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
+	"github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
@@ -25,10 +28,13 @@ func testTxQueue(stageHarness *test_case_harness.TestCaseHarness) error {
 		defer client.Close()
 	}
 
+	key := random.RandomWord()
+	randomIntegerValue := random.RandomInt(1, 100)
+
 	transactionTestCase := test_cases.TransactionTestCase{
 		CommandQueue: [][]string{
-			{"SET", "foo", "41"},
-			{"INCR", "foo"},
+			{"SET", key, fmt.Sprint(randomIntegerValue)},
+			{"INCR", key},
 		},
 		ResultArray: []resp_value.Value{},
 	}
@@ -39,7 +45,7 @@ func testTxQueue(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	commandTestCase := test_cases.SendCommandTestCase{
 		Command:   "GET",
-		Args:      []string{"foo"},
+		Args:      []string{key},
 		Assertion: resp_assertions.NewNilAssertion(),
 	}
 
