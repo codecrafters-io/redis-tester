@@ -28,7 +28,8 @@ func testTxSuccess(stageHarness *test_case_harness.TestCaseHarness) error {
 		defer client.Close()
 	}
 
-	key1, key2 := random.RandomWord(), random.RandomWord()
+	uniqueKeys := random.RandomWords(2)
+	key1, key2 := uniqueKeys[0], uniqueKeys[1]
 	randomIntegerValue := random.RandomInt(1, 100)
 
 	transactionTestCase := test_cases.TransactionTestCase{
