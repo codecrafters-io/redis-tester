@@ -53,7 +53,9 @@ func testTxErr(stageHarness *test_case_harness.TestCaseHarness) error {
 			{"INCR", key2},
 		},
 		ExpectedResponseArray: []resp_assertions.RESPAssertion{
-			resp_assertions.NewErrorAssertion("ERR value is not an integer or out of range"), resp_assertions.NewIntegerAssertion(randomIntegerValue + 1)},
+			resp_assertions.NewErrorAssertion("ERR value is not an integer or out of range"),
+			resp_assertions.NewIntegerAssertion(randomIntegerValue + 1),
+		},
 	}
 
 	if err := transactionTestCase.RunAll(clients[0], logger); err != nil {
