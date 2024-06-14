@@ -2,7 +2,7 @@ package internal
 
 import (
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
-	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
@@ -24,11 +24,11 @@ func testTxMulti(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 	defer client.Close()
 
-	commandTestCase := test_cases.SendCommandTestCase{
-		Command:   "MULTI",
-		Args:      []string{},
-		Assertion: resp_assertions.NewStringAssertion("OK"),
+	transactionTestCase := test_cases.TransactionTestCase{
+		CommandQueue:   [][]string{},
+		ResultArray:    []resp_value.Value{},
+		ShouldSkipExec: true,
 	}
 
-	return commandTestCase.Run(client, logger)
+	return transactionTestCase.RunMulti(client, logger)
 }
