@@ -55,3 +55,20 @@ func SpawnReplicas(replicaCount int, stageHarness *test_case_harness.TestCaseHar
 	}
 	return replicas, nil
 }
+
+// SpawnClients creates `clientCount` clients connected to the given address.
+// The clients are created using the `instrumented_resp_connection.NewFromAddr` function.
+// Clients are supposed to be closed after use.
+func SpawnClients(clientCount int, addr string, stageHarness *test_case_harness.TestCaseHarness, logger *logger.Logger) ([]*resp_connection.RespConnection, error) {
+	var clients []*resp_connection.RespConnection
+
+	for i := 0; i < clientCount; i++ {
+		client, err := instrumented_resp_connection.NewFromAddr(stageHarness, addr, fmt.Sprintf("client-%d", i+1))
+		if err != nil {
+			logFriendlyError(logger, err)
+			return nil, err
+		}
+		clients = append(clients, client)
+	}
+	return clients, nil
+}
