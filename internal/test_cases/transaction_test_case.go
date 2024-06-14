@@ -22,10 +22,6 @@ type TransactionTestCase struct {
 	// if ShouldSkipExec is false, "EXEC" is sent
 	// And the response is compared with this ResultArray
 	ResultArray []resp_value.Value
-
-	// ShouldSkipExec is a flag to indicate if we should skip running the
-	// "EXEC" command, this way we can run empty transactions too
-	ShouldSkipExec bool
 }
 
 func (t TransactionTestCase) RunAll(client *resp_client.RespConnection, logger *logger.Logger) error {
@@ -37,10 +33,20 @@ func (t TransactionTestCase) RunAll(client *resp_client.RespConnection, logger *
 		return err
 	}
 
-	if !t.ShouldSkipExec {
-		if err := t.RunExec(client, logger); err != nil {
-			return err
-		}
+	if err := t.RunExec(client, logger); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (t TransactionTestCase) RunWithoutExec(client *resp_client.RespConnection, logger *logger.Logger) error {
+	if err := t.RunMulti(client, logger); err != nil {
+		return err
+	}
+
+	if err := t.RunQueueAll(client, logger); err != nil {
+		return err
 	}
 
 	return nil

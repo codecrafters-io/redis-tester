@@ -25,9 +25,8 @@ func testTxMulti(stageHarness *test_case_harness.TestCaseHarness) error {
 	defer client.Close()
 
 	transactionTestCase := test_cases.TransactionTestCase{
-		CommandQueue:   [][]string{},
-		ResultArray:    []resp_value.Value{},
-		ShouldSkipExec: true,
+		CommandQueue: [][]string{},
+		ResultArray:  []resp_value.Value{},
 	}
 
 	return transactionTestCase.RunMulti(client, logger)

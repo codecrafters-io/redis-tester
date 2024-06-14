@@ -30,11 +30,10 @@ func testTxQueue(stageHarness *test_case_harness.TestCaseHarness) error {
 			{"SET", "foo", "41"},
 			{"INCR", "foo"},
 		},
-		ResultArray:    []resp_value.Value{},
-		ShouldSkipExec: true,
+		ResultArray: []resp_value.Value{},
 	}
 
-	if err := transactionTestCase.RunAll(clients[0], logger); err != nil {
+	if err := transactionTestCase.RunWithoutExec(clients[0], logger); err != nil {
 		return err
 	}
 
