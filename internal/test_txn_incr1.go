@@ -28,11 +28,12 @@ func testTxIncr1(stageHarness *test_case_harness.TestCaseHarness) error {
 	defer client.Close()
 
 	randomValue := random.RandomInt(1, 100)
+	randomKey := random.RandomWord()
 
 	multiCommandTestCase := test_cases.MultiCommandTestCase{
 		Commands: [][]string{
-			{"SET", "foo", fmt.Sprint(randomValue)},
-			{"INCR", "foo"},
+			{"SET", randomKey, fmt.Sprint(randomValue)},
+			{"INCR", randomKey},
 		},
 		Assertions: []resp_assertions.RESPAssertion{
 			resp_assertions.NewStringAssertion("OK"),

@@ -6,6 +6,7 @@ import (
 
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
+	"github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
@@ -24,12 +25,13 @@ func testTxIncr3(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 	defer client.Close()
 
-	randomValue := "xyz"
+	uniqueKeys := random.RandomWords(2)
+	randomKey, randomValue := uniqueKeys[0], uniqueKeys[1]
 
 	multiCommandTestCase := test_cases.MultiCommandTestCase{
 		Commands: [][]string{
-			{"SET", "foo", randomValue},
-			{"INCR", "foo"},
+			{"SET", randomKey, randomValue},
+			{"INCR", randomKey},
 		},
 		Assertions: []resp_assertions.RESPAssertion{
 			resp_assertions.NewStringAssertion("OK"),
