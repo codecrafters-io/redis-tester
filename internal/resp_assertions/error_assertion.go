@@ -20,7 +20,7 @@ func (a ErrorAssertion) Run(value resp_value.Value) error {
 	}
 
 	if value.Error() != a.ExpectedValue {
-		return fmt.Errorf("Expected %s, got %s", a.ExpectedValue, value.Error())
+		return fmt.Errorf("Expected %q, got %q", a.ExpectedValue, value.Error())
 	}
 
 	return nil
