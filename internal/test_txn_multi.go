@@ -9,7 +9,7 @@ import (
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
-func testTxSuccess(stageHarness *test_case_harness.TestCaseHarness) error {
+func testTxMulti(stageHarness *test_case_harness.TestCaseHarness) error {
 	b := redis_executable.NewRedisExecutable(stageHarness)
 	if err := b.Run(); err != nil {
 		return err
@@ -17,7 +17,7 @@ func testTxSuccess(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	logger := stageHarness.Logger
 
-	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "client1")
+	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "client")
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
@@ -25,14 +25,9 @@ func testTxSuccess(stageHarness *test_case_harness.TestCaseHarness) error {
 	defer client.Close()
 
 	transactionTestCase := test_cases.TransactionTestCase{
-		CommandQueue: [][]string{
-			{"SET", "foo", "6"},
-			{"INCR", "foo"},
-			{"INCR", "bar"},
-			{"GET", "bar"},
-		},
-		ResultArray: []resp_value.Value{resp_value.NewSimpleStringValue("OK"), resp_value.NewIntegerValue(7), resp_value.NewIntegerValue(1), resp_value.NewBulkStringValue("1")},
+		CommandQueue: [][]string{},
+		ResultArray:  []resp_value.Value{},
 	}
 
-	return transactionTestCase.RunAll(client, logger)
+	return transactionTestCase.RunMulti(client, logger)
 }
