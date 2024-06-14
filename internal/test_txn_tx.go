@@ -1,11 +1,14 @@
 package internal
 
 import (
+	"fmt"
+
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
+	"github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
@@ -25,14 +28,17 @@ func testTxSuccess(stageHarness *test_case_harness.TestCaseHarness) error {
 		defer client.Close()
 	}
 
+	key1, key2 := random.RandomWord(), random.RandomWord()
+	randomIntegerValue := random.RandomInt(1, 100)
+
 	transactionTestCase := test_cases.TransactionTestCase{
 		CommandQueue: [][]string{
-			{"SET", "foo", "6"},
-			{"INCR", "foo"},
-			{"INCR", "bar"},
-			{"GET", "bar"},
+			{"SET", key1, fmt.Sprint(randomIntegerValue)},
+			{"INCR", key1},
+			{"INCR", key2},
+			{"GET", key2},
 		},
-		ResultArray: []resp_value.Value{resp_value.NewSimpleStringValue("OK"), resp_value.NewIntegerValue(7), resp_value.NewIntegerValue(1), resp_value.NewBulkStringValue("1")},
+		ResultArray: []resp_value.Value{resp_value.NewSimpleStringValue("OK"), resp_value.NewIntegerValue(randomIntegerValue + 1), resp_value.NewIntegerValue(1), resp_value.NewBulkStringValue("1")},
 	}
 
 	if err := transactionTestCase.RunAll(clients[0], logger); err != nil {
@@ -41,8 +47,8 @@ func testTxSuccess(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	commandTestCase := test_cases.SendCommandTestCase{
 		Command:   "GET",
-		Args:      []string{"foo"},
-		Assertion: resp_assertions.NewStringAssertion("7"),
+		Args:      []string{key1},
+		Assertion: resp_assertions.NewStringAssertion(fmt.Sprint(randomIntegerValue + 1)),
 	}
 
 	return commandTestCase.Run(clients[1], logger)
