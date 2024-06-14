@@ -1,12 +1,15 @@
 package internal
 
 import (
+	"fmt"
+
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
+	"github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
@@ -25,9 +28,13 @@ func testTxDiscard(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 	defer client.Close()
 
+	uniqueKeys := random.RandomWords(3)
+	key1, key2 := uniqueKeys[0], uniqueKeys[1]
+	randomInt1, randomInt2 := random.RandomInt(1, 100), random.RandomInt(1, 100)
+
 	commandTestCase := test_cases.SendCommandTestCase{
 		Command:   "SET",
-		Args:      []string{"bar", "42"},
+		Args:      []string{key2, fmt.Sprint(randomInt2)},
 		Assertion: resp_assertions.NewStringAssertion("OK"),
 	}
 
@@ -37,8 +44,8 @@ func testTxDiscard(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	transactionTestCase := test_cases.TransactionTestCase{
 		CommandQueue: [][]string{
-			{"SET", "foo", "41"},
-			{"INCR", "foo"},
+			{"SET", key1, fmt.Sprint(randomInt1)},
+			{"INCR", key1},
 		},
 		ResultArray: []resp_value.Value{},
 	}
@@ -50,14 +57,14 @@ func testTxDiscard(stageHarness *test_case_harness.TestCaseHarness) error {
 	multiCommandTestCase := test_cases.MultiCommandTestCase{
 		Commands: [][]string{
 			{"DISCARD"},
-			{"GET", "foo"},
-			{"GET", "bar"},
+			{"GET", key1},
+			{"GET", key2},
 			{"DISCARD"},
 		},
 		Assertions: []resp_assertions.RESPAssertion{
 			resp_assertions.NewStringAssertion("OK"),
 			resp_assertions.NewNilAssertion(),
-			resp_assertions.NewStringAssertion("42"),
+			resp_assertions.NewStringAssertion(fmt.Sprint(randomInt2)),
 			resp_assertions.NewErrorAssertion("ERR DISCARD without MULTI"),
 		},
 	}
