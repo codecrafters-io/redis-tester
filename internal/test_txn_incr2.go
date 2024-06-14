@@ -31,10 +31,12 @@ func testTxIncr2(stageHarness *test_case_harness.TestCaseHarness) error {
 		Commands: [][]string{
 			{"INCR", randomKey},
 			{"INCR", randomKey},
+			{"GET", randomKey},
 		},
 		Assertions: []resp_assertions.RESPAssertion{
 			resp_assertions.NewIntegerAssertion(1),
 			resp_assertions.NewIntegerAssertion(2),
+			resp_assertions.NewStringAssertion("2"),
 		},
 	}
 
