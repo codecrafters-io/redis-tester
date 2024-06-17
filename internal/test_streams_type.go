@@ -2,9 +2,13 @@ package internal
 
 import (
 	"fmt"
-	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 
-	testerutils_random "github.com/codecrafters-io/tester-utils/random"
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
+
+	"github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
@@ -16,53 +20,28 @@ func testStreamsType(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	logger := stageHarness.Logger
 
-	client := NewRedisClient("localhost:6379")
-
-	randomKey := testerutils_random.RandomWord()
-	randomValue := testerutils_random.RandomWord()
-
-	logger.Infof("$ redis-cli set %q %q", randomKey, randomValue)
-	resp, err := client.Set(randomKey, randomValue, 0).Result()
-
+	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "client")
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
 	}
+	defer client.Close()
 
-	if resp != "OK" {
-		logger.Infof("Received response: \"%q\"", resp)
-		return fmt.Errorf("Expected \"OK\", got %q", resp)
-	} else {
-		logger.Successf("Received response: \"%q\"", resp)
+	randomKey := random.RandomWord()
+	randomValue := random.RandomWord()
+
+	multiCommandTestCase := test_cases.MultiCommandTestCase{
+		Commands: [][]string{
+			{"SET", randomKey, randomValue},
+			{"TYPE", randomKey},
+			{"TYPE", fmt.Sprintf("missing_key_%s", randomValue)},
+		},
+		Assertions: []resp_assertions.RESPAssertion{
+			resp_assertions.NewStringAssertion("OK"),
+			resp_assertions.NewStringAssertion("string"),
+			resp_assertions.NewStringAssertion("none"),
+		},
 	}
 
-	logger.Infof("$ redis-cli type %q", randomKey)
-	resp, err = client.Type(randomKey).Result()
-
-	if err != nil {
-		logFriendlyError(logger, err)
-		return err
-	}
-
-	if resp != "string" {
-		return fmt.Errorf("Expected \"string\", got %q", resp)
-	} else {
-		logger.Successf("Type of %q is %q", randomKey, resp)
-	}
-
-	logger.Infof("$ redis-cli type %q", "missing_key"+"_"+randomValue)
-	resp, err = client.Type("missing_key" + "_" + randomValue).Result()
-
-	if err != nil {
-		logFriendlyError(logger, err)
-		return err
-	}
-
-	if resp != "none" {
-		return fmt.Errorf("Expected \"none\", got %q", resp)
-	} else {
-		logger.Successf("Type of missing_key_%q is %q", randomValue, resp)
-	}
-
-	return nil
+	return multiCommandTestCase.RunAll(client, logger)
 }

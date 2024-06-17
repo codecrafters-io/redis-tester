@@ -2,11 +2,15 @@ package internal
 
 import (
 	"fmt"
-	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"strings"
 
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
+
 	"github.com/codecrafters-io/tester-utils/logger"
-	testerutils_random "github.com/codecrafters-io/tester-utils/random"
+	"github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 	"github.com/go-redis/redis"
 )
@@ -68,36 +72,26 @@ func testStreamsXadd(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 
 	logger := stageHarness.Logger
-	client := NewRedisClient("localhost:6379")
 
-	randomKey := testerutils_random.RandomWord()
-
-	xaddTest := &XADDTest{
-		streamKey:        randomKey,
-		id:               "0-1",
-		values:           map[string]interface{}{"foo": "bar"},
-		expectedResponse: "0-1",
-	}
-
-	err := xaddTest.Run(client, logger)
-
-	if err != nil {
-		return err
-	}
-
-	logger.Infof("$ redis-cli type %q", randomKey)
-	resp, err := client.Type(randomKey).Result()
-
+	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "client")
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
 	}
+	defer client.Close()
 
-	if resp != "stream" {
-		return fmt.Errorf("Expected \"stream\", got %q", resp)
-	} else {
-		logger.Successf("Type of %q is %q", randomKey, resp)
+	randomKey := random.RandomWord()
+
+	multiCommandTestCase := test_cases.MultiCommandTestCase{
+		Commands: [][]string{
+			{"XADD", randomKey, "0-1", "foo", "bar"},
+			{"TYPE", randomKey},
+		},
+		Assertions: []resp_assertions.RESPAssertion{
+			resp_assertions.NewStringAssertion("0-1"),
+			resp_assertions.NewStringAssertion("stream"),
+		},
 	}
 
-	return nil
+	return multiCommandTestCase.RunAll(client, logger)
 }
