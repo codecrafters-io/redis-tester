@@ -2,14 +2,18 @@ package internal
 
 import (
 	"fmt"
-	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"strconv"
 	"strings"
 	"time"
 
-	testerutils_random "github.com/codecrafters-io/tester-utils/random"
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
+	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
+
+	"github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
-	"github.com/go-redis/redis"
 )
 
 func testStreamsXaddFullAutoid(stageHarness *test_case_harness.TestCaseHarness) error {
@@ -19,31 +23,37 @@ func testStreamsXaddFullAutoid(stageHarness *test_case_harness.TestCaseHarness) 
 	}
 
 	logger := stageHarness.Logger
-	client := NewRedisClient("localhost:6379")
 
-	randomKey := testerutils_random.RandomWord()
-
-	logger.Infof("$ redis-cli xadd %q * foo bar", randomKey)
-
-	resp, err := client.XAdd(&redis.XAddArgs{
-		Stream: randomKey,
-		ID:     "*",
-		Values: map[string]interface{}{
-			"foo": "bar",
-		},
-	}).Result()
-
+	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "client")
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
 	}
+	defer client.Close()
 
-	logger.Infof("Received response: \"%q\"", resp)
+	randomKey := random.RandomWord()
 
-	parts := strings.Split(resp, "-")
+	commandTestCase := &test_cases.SendCommandTestCase{
+		Command:                   "XADD",
+		Args:                      []string{randomKey, "*", "foo", "bar"},
+		Assertion:                 resp_assertions.NewNoopAssertion(),
+		ShouldSkipUnreadDataCheck: true,
+	}
+
+	if err := commandTestCase.Run(client, logger); err != nil {
+		return err
+	}
+
+	responseValue := commandTestCase.ReceivedResponse
+
+	if responseValue.Type != resp_value.BULK_STRING {
+		return fmt.Errorf("Expected bulk string, got %s", responseValue.Type)
+	}
+
+	parts := strings.Split(responseValue.String(), "-")
 
 	if len(parts) != 2 {
-		return fmt.Errorf("Expected a string in the form \"<millisecondsTime>-<sequenceNumber>\", got %q", resp)
+		return fmt.Errorf("Expected a string in the form \"<millisecondsTime>-<sequenceNumber>\", got %q", responseValue)
 	}
 
 	timeStr, sequenceNumber := parts[0], parts[1]
@@ -54,7 +64,7 @@ func testStreamsXaddFullAutoid(stageHarness *test_case_harness.TestCaseHarness) 
 
 	if len(timeStr) != 13 {
 		return fmt.Errorf("Expected the first part of the ID to be a unix timestamp (%d characters), got %d characters", len(strconv.FormatInt(now, 10)), len(timeStr))
-	} else if !(timeInt64 > oneSecondAgo && timeInt64 < oneSecondLater) {
+	} else if timeInt64 <= oneSecondAgo || timeInt64 >= oneSecondLater {
 		return fmt.Errorf("Expected the first part of the ID to be a valid unix timestamp, got %q", timeStr)
 	} else {
 		logger.Successf("The first part of the ID is a valid unix milliseconds timestamp")
