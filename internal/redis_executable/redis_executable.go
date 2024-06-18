@@ -1,6 +1,8 @@
 package redis_executable
 
 import (
+	"fmt"
+	"path"
 	"strings"
 
 	executable "github.com/codecrafters-io/tester-utils/executable"
@@ -28,10 +30,10 @@ func NewRedisExecutable(stageHarness *test_case_harness.TestCaseHarness) *RedisE
 func (b *RedisExecutable) Run(args ...string) error {
 	b.args = args
 	if b.args == nil || len(b.args) == 0 {
-		b.logger.Infof("$ ./spawn_redis_server.sh")
+		b.logger.Infof("$ ./%s", path.Base(b.executable.Path))
 	} else {
 		var log string
-		log += "$ ./spawn_redis_server.sh"
+		log += fmt.Sprintf("$ ./%s", path.Base(b.executable.Path))
 		for _, arg := range b.args {
 			if strings.Contains(arg, " ") {
 				log += " \"" + arg + "\""

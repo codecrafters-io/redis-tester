@@ -3,7 +3,7 @@ module github.com/codecrafters-io/redis-tester
 go 1.21
 
 require (
-	github.com/codecrafters-io/tester-utils v0.2.25
+	github.com/codecrafters-io/tester-utils v0.2.26
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/hdt3213/rdb v1.0.16
 	github.com/stretchr/testify v1.9.0
