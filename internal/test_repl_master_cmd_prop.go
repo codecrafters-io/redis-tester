@@ -6,15 +6,13 @@ import (
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
-	"github.com/codecrafters-io/tester-utils/logger"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
 func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) error {
 	deleteRDBfile()
 
-	defaultLogger := stageHarness.Logger
-	logger := updateLogContext(stageHarness, "  setup  ", defaultLogger)
+	logger := stageHarness.Logger
 
 	// Run the user's code as a master
 	masterBinary := redis_executable.NewRedisExecutable(stageHarness)
@@ -22,7 +20,7 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 		return err
 	}
 
-	logger = updateLogContext(stageHarness, "handshake", defaultLogger)
+	logger.UpdateSecondaryPrefix("handshake")
 
 	// We use one client to send commands to the master
 	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "client")
@@ -45,7 +43,7 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 		return err
 	}
 
-	logger = updateLogContext(stageHarness, "test", defaultLogger)
+	logger.UpdateSecondaryPrefix("test")
 
 	kvMap := map[int][]string{
 		1: {"foo", "123"},
@@ -92,17 +90,6 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 		}
 	}
 
-	resetLogContext(stageHarness, defaultLogger)
+	logger.UpdateSecondaryPrefix("")
 	return nil
-}
-
-func updateLogContext(stageHarness *test_case_harness.TestCaseHarness, logPrefix string, defaultLogger *logger.Logger) *logger.Logger {
-	customLogger := defaultLogger.GetLoggerWithAppendedPrefix(logPrefix)
-	stageHarness.Logger = customLogger
-
-	return customLogger
-}
-
-func resetLogContext(stageHarness *test_case_harness.TestCaseHarness, defaultLogger *logger.Logger) {
-	stageHarness.Logger = defaultLogger
 }

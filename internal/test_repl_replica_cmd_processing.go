@@ -16,8 +16,7 @@ import (
 func testReplCmdProcessing(stageHarness *test_case_harness.TestCaseHarness) error {
 	deleteRDBfile()
 
-	defaultLogger := stageHarness.Logger
-	logger := updateLogContext(stageHarness, "  setup  ", defaultLogger)
+	logger := stageHarness.Logger
 
 	listener, err := net.Listen("tcp", ":6379")
 	if err != nil {
@@ -34,7 +33,7 @@ func testReplCmdProcessing(stageHarness *test_case_harness.TestCaseHarness) erro
 		return err
 	}
 
-	logger = updateLogContext(stageHarness, "handshake", defaultLogger)
+	logger.UpdateSecondaryPrefix("handshake")
 
 	conn, err := listener.Accept()
 	if err != nil {
@@ -55,7 +54,7 @@ func testReplCmdProcessing(stageHarness *test_case_harness.TestCaseHarness) erro
 		return err
 	}
 
-	logger = updateLogContext(stageHarness, "propagate", defaultLogger)
+	logger.UpdateSecondaryPrefix("propagation")
 
 	replicaClient, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6380", "client")
 	if err != nil {
@@ -78,7 +77,7 @@ func testReplCmdProcessing(stageHarness *test_case_harness.TestCaseHarness) erro
 		}
 	}
 
-	logger = updateLogContext(stageHarness, "test", defaultLogger)
+	logger.UpdateSecondaryPrefix("test")
 
 	for i := 1; i <= len(kvMap); i++ {
 		key, value := kvMap[i][0], kvMap[i][1]
@@ -98,6 +97,6 @@ func testReplCmdProcessing(stageHarness *test_case_harness.TestCaseHarness) erro
 		}
 	}
 
-	resetLogContext(stageHarness, defaultLogger)
+	logger.UpdateSecondaryPrefix("")
 	return nil
 }
