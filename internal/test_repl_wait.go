@@ -58,6 +58,7 @@ func testWait(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 
 	logger := stageHarness.Logger
+	defer logger.ResetSecondaryPrefix()
 
 	// Step 2: Spawn multiple replicas and have each perform a handshake
 	replicaCount := testerutils_random.RandomInt(3, 5)
@@ -78,6 +79,8 @@ func testWait(stageHarness *test_case_harness.TestCaseHarness) error {
 		return err
 	}
 	defer client.Close()
+
+	logger.UpdateSecondaryPrefix("test")
 
 	if err = RunWaitTest(client, replicas, WaitTest{
 		WriteCommand:        []string{"SET", "foo", "123"},

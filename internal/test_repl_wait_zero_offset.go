@@ -18,6 +18,7 @@ func testWaitZeroOffset(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 
 	logger := stageHarness.Logger
+	defer logger.ResetSecondaryPrefix()
 
 	replicaCount := testerutils_random.RandomInt(3, 9)
 	logger.Infof("Proceeding to create %v replicas.", replicaCount)
@@ -36,6 +37,8 @@ func testWaitZeroOffset(stageHarness *test_case_harness.TestCaseHarness) error {
 		return err
 	}
 	defer client.Close()
+
+	logger.UpdateSecondaryPrefix("test")
 
 	diff := ((replicaCount + 3) - 3) / 3
 	safeDiff := max(1, diff) // If diff is 0, it will get stuck in an infinite loop

@@ -12,13 +12,16 @@ import (
 func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) error {
 	deleteRDBfile()
 
+	logger := stageHarness.Logger
+	defer logger.ResetSecondaryPrefix()
+
 	// Run the user's code as a master
 	masterBinary := redis_executable.NewRedisExecutable(stageHarness)
 	if err := masterBinary.Run("--port", "6379"); err != nil {
 		return err
 	}
 
-	logger := stageHarness.Logger
+	logger.UpdateSecondaryPrefix("handshake")
 
 	// We use one client to send commands to the master
 	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "client")
@@ -41,6 +44,8 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 		return err
 	}
 
+	logger.UpdateSecondaryPrefix("test")
+
 	kvMap := map[int][]string{
 		1: {"foo", "123"},
 		2: {"bar", "456"},
@@ -55,6 +60,7 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 			Command:   "SET",
 			Args:      []string{key, value},
 			Assertion: resp_assertions.NewStringAssertion("OK"),
+			// Assertion: resp_assertions.NewStringAssertion("OK"),
 		}
 
 		if err := setCommandTestCase.Run(client, logger); err != nil {

@@ -15,6 +15,7 @@ func testReplGetaAckZero(stageHarness *test_case_harness.TestCaseHarness) error 
 	deleteRDBfile()
 
 	logger := stageHarness.Logger
+	defer logger.ResetSecondaryPrefix()
 
 	listener, err := net.Listen("tcp", ":6379")
 	if err != nil {
@@ -44,11 +45,15 @@ func testReplGetaAckZero(stageHarness *test_case_harness.TestCaseHarness) error 
 		return err
 	}
 
+	logger.UpdateSecondaryPrefix("handshake")
+
 	receiveReplicationHandshakeTestCase := test_cases.ReceiveReplicationHandshakeTestCase{}
 
 	if err := receiveReplicationHandshakeTestCase.RunAll(master, logger); err != nil {
 		return err
 	}
+
+	logger.UpdateSecondaryPrefix("test")
 
 	getAckTestCase := test_cases.GetAckTestCase{}
 
