@@ -13,6 +13,7 @@ func testReplMultipleReplicas(stageHarness *test_case_harness.TestCaseHarness) e
 	deleteRDBfile()
 
 	logger := stageHarness.Logger
+	defer logger.ResetSecondaryPrefix()
 
 	master := redis_executable.NewRedisExecutable(stageHarness)
 	if err := master.Run("--port", "6379"); err != nil {
@@ -85,6 +86,5 @@ func testReplMultipleReplicas(stageHarness *test_case_harness.TestCaseHarness) e
 		}
 	}
 
-	logger.UpdateSecondaryPrefix("")
 	return nil
 }

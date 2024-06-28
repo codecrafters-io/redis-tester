@@ -13,6 +13,7 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 	deleteRDBfile()
 
 	logger := stageHarness.Logger
+	defer logger.ResetSecondaryPrefix()
 
 	// Run the user's code as a master
 	masterBinary := redis_executable.NewRedisExecutable(stageHarness)
@@ -59,6 +60,7 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 			Command:   "SET",
 			Args:      []string{key, value},
 			Assertion: resp_assertions.NewStringAssertion("OK"),
+			// Assertion: resp_assertions.NewStringAssertion("OK"),
 		}
 
 		if err := setCommandTestCase.Run(client, logger); err != nil {
@@ -90,6 +92,5 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 		}
 	}
 
-	logger.UpdateSecondaryPrefix("")
 	return nil
 }

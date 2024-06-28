@@ -18,6 +18,7 @@ import (
 
 func testReplInfoReplica(stageHarness *test_case_harness.TestCaseHarness) error {
 	logger := stageHarness.Logger
+	defer logger.ResetSecondaryPrefix()
 
 	listener, err := net.Listen("tcp", ":6379")
 	if err != nil {
@@ -51,7 +52,10 @@ func testReplInfoReplica(stageHarness *test_case_harness.TestCaseHarness) error 
 		}
 		receiveReplicationHandshakeTestCase := test_cases.ReceiveReplicationHandshakeTestCase{}
 
+		logger.UpdateSecondaryPrefix("handshake")
 		_ = receiveReplicationHandshakeTestCase.RunAll(master, quietLogger)
+		logger.ResetSecondaryPrefix()
+
 		return nil
 	}(listener)
 
@@ -61,6 +65,8 @@ func testReplInfoReplica(stageHarness *test_case_harness.TestCaseHarness) error 
 		return err
 	}
 	defer client.Close()
+
+	logger.UpdateSecondaryPrefix("test")
 
 	commandTestCase := test_cases.SendCommandTestCase{
 		Command:                   "INFO",

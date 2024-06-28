@@ -17,6 +17,7 @@ func testReplCmdProcessing(stageHarness *test_case_harness.TestCaseHarness) erro
 	deleteRDBfile()
 
 	logger := stageHarness.Logger
+	defer logger.ResetSecondaryPrefix()
 
 	listener, err := net.Listen("tcp", ":6379")
 	if err != nil {
@@ -97,6 +98,5 @@ func testReplCmdProcessing(stageHarness *test_case_harness.TestCaseHarness) erro
 		}
 	}
 
-	logger.UpdateSecondaryPrefix("")
 	return nil
 }
