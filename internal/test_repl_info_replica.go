@@ -45,16 +45,14 @@ func testReplInfoReplica(stageHarness *test_case_harness.TestCaseHarness) error 
 		defer conn.Close()
 
 		quietLogger := loggerutils.GetQuietLogger("")
-		master, err := instrumented_resp_connection.NewFromConn(logger, conn, "master")
+		master, err := instrumented_resp_connection.NewFromConn(quietLogger, conn, "master")
 		if err != nil {
 			logFriendlyError(quietLogger, err)
 			return err
 		}
 		receiveReplicationHandshakeTestCase := test_cases.ReceiveReplicationHandshakeTestCase{}
 
-		logger.UpdateSecondaryPrefix("handshake")
 		_ = receiveReplicationHandshakeTestCase.RunAll(master, quietLogger)
-		logger.ResetSecondaryPrefix()
 
 		return nil
 	}(listener)
