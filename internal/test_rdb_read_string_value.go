@@ -35,7 +35,7 @@ func testRdbReadStringValue(stageHarness *test_case_harness.TestCaseHarness) err
 		return err
 	}
 
-	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "client")
+	client, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client")
 	if err != nil {
 		return err
 	}

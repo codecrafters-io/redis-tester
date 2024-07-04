@@ -43,7 +43,7 @@ func testReplCmdProcessing(stageHarness *test_case_harness.TestCaseHarness) erro
 	}
 	defer conn.Close()
 
-	master, err := instrumented_resp_connection.NewFromConn(stageHarness, conn, "master")
+	master, err := instrumented_resp_connection.NewFromConn(logger, conn, "master")
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
@@ -57,7 +57,7 @@ func testReplCmdProcessing(stageHarness *test_case_harness.TestCaseHarness) erro
 
 	logger.UpdateSecondaryPrefix("propagation")
 
-	replicaClient, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6380", "client")
+	replicaClient, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6380", "client")
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err

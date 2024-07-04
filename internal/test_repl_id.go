@@ -22,7 +22,7 @@ func testReplReplicationID(stageHarness *test_case_harness.TestCaseHarness) erro
 
 	logger := stageHarness.Logger
 
-	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "client")
+	client, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client")
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err

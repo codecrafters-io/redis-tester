@@ -45,7 +45,7 @@ func testReplInfoReplica(stageHarness *test_case_harness.TestCaseHarness) error 
 		defer conn.Close()
 
 		quietLogger := loggerutils.GetQuietLogger("")
-		master, err := instrumented_resp_connection.NewFromConn(stageHarness, conn, "master")
+		master, err := instrumented_resp_connection.NewFromConn(logger, conn, "master")
 		if err != nil {
 			logFriendlyError(quietLogger, err)
 			return err
@@ -59,7 +59,7 @@ func testReplInfoReplica(stageHarness *test_case_harness.TestCaseHarness) error 
 		return nil
 	}(listener)
 
-	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6380", "client")
+	client, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6380", "client")
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err

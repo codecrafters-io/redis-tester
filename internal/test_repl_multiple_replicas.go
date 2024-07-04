@@ -23,7 +23,7 @@ func testReplMultipleReplicas(stageHarness *test_case_harness.TestCaseHarness) e
 	logger.UpdateSecondaryPrefix("handshake")
 
 	// We use one client to send commands to the master
-	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "client")
+	client, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client")
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err

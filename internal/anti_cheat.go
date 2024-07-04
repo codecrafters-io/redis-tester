@@ -20,7 +20,7 @@ func antiCheatTest(stageHarness *test_case_harness.TestCaseHarness) error {
 		return fmt.Errorf("anti-cheat (ac1) failed")
 	}
 
-	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "replica")
+	client, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "replica")
 	if err != nil {
 		logFriendlyError(logger, err)
 		logger.Criticalf("CodeCrafters internal error. Error creating connection to redis server: %v", err)

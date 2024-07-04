@@ -24,7 +24,7 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 	logger.UpdateSecondaryPrefix("handshake")
 
 	// We use one client to send commands to the master
-	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "client")
+	client, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client")
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
@@ -32,7 +32,7 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 	defer client.Close()
 
 	// We use another client to assert whether sent commands are replicated from the master (user's code)
-	replicaClient, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "replica")
+	replicaClient, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "replica")
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
