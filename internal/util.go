@@ -37,15 +37,20 @@ func SpawnReplicas(replicaCount int, stageHarness *test_case_harness.TestCaseHar
 	listeningPort := 6380
 	for j := 0; j < replicaCount; j++ {
 		logger.Debugf("Creating replica: %v", j+1)
-		replica, err := instrumented_resp_connection.NewFromAddr(stageHarness, addr, fmt.Sprintf("replica-%v", j+1))
+		replica, err := instrumented_resp_connection.NewFromAddr(logger, addr, fmt.Sprintf("replica-%v", j+1))
 		if err != nil {
 			logFriendlyError(logger, err)
 			return nil, err
 		}
 
+		logger.UpdateSecondaryPrefix("handshake")
+
 		if err := sendHandshakeTestCase.RunAll(replica, logger, listeningPort); err != nil {
 			return nil, err
 		}
+
+		logger.ResetSecondaryPrefix()
+
 		listeningPort += 1
 		// The bytes received and sent during the handshake don't count towards offset.
 		// After finishing the handshake we reset the counters.
@@ -63,7 +68,7 @@ func SpawnClients(clientCount int, addr string, stageHarness *test_case_harness.
 	var clients []*resp_connection.RespConnection
 
 	for i := 0; i < clientCount; i++ {
-		client, err := instrumented_resp_connection.NewFromAddr(stageHarness, addr, fmt.Sprintf("client-%d", i+1))
+		client, err := instrumented_resp_connection.NewFromAddr(logger, addr, fmt.Sprintf("client-%d", i+1))
 		if err != nil {
 			logFriendlyError(logger, err)
 			return nil, err

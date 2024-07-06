@@ -36,7 +36,7 @@ func testReplReplicaSendsPing(stageHarness *test_case_harness.TestCaseHarness) e
 	}
 	defer conn.Close()
 
-	master, err := instrumented_resp_connection.NewFromConn(stageHarness, conn, "master")
+	master, err := instrumented_resp_connection.NewFromConn(logger, conn, "master")
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err

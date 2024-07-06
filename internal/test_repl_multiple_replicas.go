@@ -11,15 +11,19 @@ import (
 
 func testReplMultipleReplicas(stageHarness *test_case_harness.TestCaseHarness) error {
 	deleteRDBfile()
+
+	logger := stageHarness.Logger
+	defer logger.ResetSecondaryPrefix()
+
 	master := redis_executable.NewRedisExecutable(stageHarness)
 	if err := master.Run("--port", "6379"); err != nil {
 		return err
 	}
 
-	logger := stageHarness.Logger
+	logger.UpdateSecondaryPrefix("handshake")
 
 	// We use one client to send commands to the master
-	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "client")
+	client, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client")
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
@@ -35,6 +39,8 @@ func testReplMultipleReplicas(stageHarness *test_case_harness.TestCaseHarness) e
 	for _, replica := range replicas {
 		defer replica.Close()
 	}
+
+	logger.UpdateSecondaryPrefix("test")
 
 	kvMap := map[int][]string{
 		1: {"foo", "123"},

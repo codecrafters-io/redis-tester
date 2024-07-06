@@ -18,7 +18,7 @@ func testPingPongOnce(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	logger := stageHarness.Logger
 
-	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "")
+	client, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "")
 	if err != nil {
 		return err
 	}
@@ -46,7 +46,7 @@ func testPingPongMultiple(stageHarness *test_case_harness.TestCaseHarness) error
 	}
 
 	logger := stageHarness.Logger
-	client, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "client-1")
+	client, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client-1")
 	if err != nil {
 		return err
 	}
@@ -70,7 +70,7 @@ func testPingPongConcurrent(stageHarness *test_case_harness.TestCaseHarness) err
 	}
 
 	logger := stageHarness.Logger
-	client1, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "client-1")
+	client1, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client-1")
 	if err != nil {
 		return err
 	}
@@ -79,7 +79,7 @@ func testPingPongConcurrent(stageHarness *test_case_harness.TestCaseHarness) err
 		return err
 	}
 
-	client2, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "client-2")
+	client2, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client-2")
 	if err != nil {
 		return err
 	}
@@ -101,7 +101,7 @@ func testPingPongConcurrent(stageHarness *test_case_harness.TestCaseHarness) err
 	logger.Debugf("client-%d: Success, closing connection...", 1)
 	client1.Close()
 
-	client3, err := instrumented_resp_connection.NewFromAddr(stageHarness, "localhost:6379", "client-3")
+	client3, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client-3")
 	if err != nil {
 		return err
 	}
