@@ -60,7 +60,6 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 			Command:   "SET",
 			Args:      []string{key, value},
 			Assertion: resp_assertions.NewStringAssertion("OK"),
-			// Assertion: resp_assertions.NewStringAssertion("OK"),
 		}
 
 		if err := setCommandTestCase.Run(client, logger); err != nil {
