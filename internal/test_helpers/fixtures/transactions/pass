@@ -371,7 +371,7 @@ Debug = true
 [33m[stage-44] [0m[94m$ ./spawn_redis_server.sh[0m
 [33m[stage-44] [0m[94m$ redis-cli xadd "apple" "0-1" "temperature 10"[0m
 [33m[stage-44] [0m[92mReceived response: ""0-1""[0m
-[33m[stage-44] [0m[94m$ redis-cli xread block '\x00' streams "apple 0-1"[0m
+[33m[stage-44] [0m[94m$ redis-cli xread block 0 streams "apple 0-1"[0m
 [33m[stage-44] [0m[94m$ redis-cli xadd "apple" "0-2" "temperature 10"[0m
 [33m[stage-44] [0m[92mReceived response: ""0-2""[0m
 [33m[stage-44] [0m[92mReceived response: "[[0m
@@ -395,7 +395,7 @@ Debug = true
 [33m[stage-43] [0m[94m$ ./spawn_redis_server.sh[0m
 [33m[stage-43] [0m[94m$ redis-cli xadd "banana" "0-1" "temperature 91"[0m
 [33m[stage-43] [0m[92mReceived response: ""0-1""[0m
-[33m[stage-43] [0m[94m$ redis-cli xread block '\x00' streams "banana 0-1"[0m
+[33m[stage-43] [0m[94m$ redis-cli xread block 0 streams "banana 0-1"[0m
 [33m[stage-43] [0m[94m$ redis-cli xadd "banana" "0-2" "temperature 91"[0m
 [33m[stage-43] [0m[92mReceived response: ""0-2""[0m
 [33m[stage-43] [0m[92mReceived response: "[[0m
@@ -419,7 +419,7 @@ Debug = true
 [33m[stage-42] [0m[94m$ ./spawn_redis_server.sh[0m
 [33m[stage-42] [0m[94m$ redis-cli xadd "orange" "0-1" "temperature 2"[0m
 [33m[stage-42] [0m[92mReceived response: ""0-1""[0m
-[33m[stage-42] [0m[94m$ redis-cli xread block 'Ϩ' streams "orange 0-1"[0m
+[33m[stage-42] [0m[94m$ redis-cli xread block 1000 streams "orange 0-1"[0m
 [33m[stage-42] [0m[94m$ redis-cli xadd "orange" "0-2" "temperature 2"[0m
 [33m[stage-42] [0m[92mReceived response: ""0-2""[0m
 [33m[stage-42] [0m[92mReceived response: "[[0m
@@ -435,7 +435,7 @@ Debug = true
 [33m[stage-42] [0m[92m    ][0m
 [33m[stage-42] [0m[92m  }[0m
 [33m[stage-42] [0m[92m]"[0m
-[33m[stage-42] [0m[94m$ redis-cli xread block 'Ϩ' streams "orange 0-2"[0m
+[33m[stage-42] [0m[94m$ redis-cli xread block 1000 streams "orange 0-2"[0m
 [33m[stage-42] [0m[92mReceived nil response[0m
 [33m[stage-42] [0m[92mTest passed.[0m
 [33m[stage-42] [0m[36mTerminating program[0m
