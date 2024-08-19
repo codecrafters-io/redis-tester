@@ -3,11 +3,12 @@ package internal
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"reflect"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 
 	"github.com/codecrafters-io/tester-utils/logger"
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
@@ -33,7 +34,7 @@ func (t *XREADTest) Run(client *redis.Client, logger *logger.Logger) error {
 			Block:   -1 * time.Millisecond, // Zero value for Block in XReadArgs struct is 0. Need a negative value to indicate no block.
 		}).Result()
 	} else {
-		logger.Infof("$ redis-cli xread block %q streams %q", t.block.Milliseconds(), strings.Join(t.streams, " "))
+		logger.Infof("$ redis-cli xread block %d streams %v", t.block.Milliseconds(), strings.Join(t.streams, " "))
 
 		resp, err = client.XRead(&redis.XReadArgs{
 			Streams: t.streams,

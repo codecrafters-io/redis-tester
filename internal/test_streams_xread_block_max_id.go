@@ -43,7 +43,7 @@ func testStreamsXreadBlockMaxID(stageHarness *test_case_harness.TestCaseHarness)
 	respChan := make(chan *[]redis.XStream, 1)
 
 	go func() error {
-		logger.Infof("$ redis-cli xread block %d streams \"%v\"", 0, strings.Join([]string{randomKey, "0-1"}, " "))
+		logger.Infof("$ redis-cli xread block %d streams %v", 0, strings.Join([]string{randomKey, "0-1"}, " "))
 
 		resp, err := client.XRead(&redis.XReadArgs{
 			Streams: []string{randomKey, "$"},

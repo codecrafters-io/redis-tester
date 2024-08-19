@@ -45,7 +45,7 @@ func testStreamsXreadBlock(stageHarness *test_case_harness.TestCaseHarness) erro
 	done := make(chan bool)
 
 	go func() error {
-		logger.Infof("$ redis-cli xread block %d streams \"%v\"", 1000, strings.Join([]string{randomKey, "0-1"}, " "))
+		logger.Infof("$ redis-cli xread block %d streams %v", 1000, strings.Join([]string{randomKey, "0-1"}, " "))
 
 		resp, err = client.XRead(&redis.XReadArgs{
 			Streams: []string{randomKey, "0-1"},
@@ -111,7 +111,7 @@ func testStreamsXreadBlock(stageHarness *test_case_harness.TestCaseHarness) erro
 		logger.Successf("Received response: \"%v\"", string(respJSON))
 	}
 
-	logger.Infof("$ redis-cli xread block %d streams \"%v\"", 1000, strings.Join([]string{randomKey, "0-2"}, " "))
+	logger.Infof("$ redis-cli xread block %d streams %v", 1000, strings.Join([]string{randomKey, "0-2"}, " "))
 
 	resp, err = client.XRead(&redis.XReadArgs{
 		Streams: []string{randomKey, "0-2"},
