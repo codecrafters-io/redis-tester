@@ -27,7 +27,7 @@ func (t *XREADTest) Run(client *redis.Client, logger *logger.Logger) error {
 	var err error
 
 	if t.block == nil {
-		logger.Infof("$ redis-cli xread streams %q", strings.Join(t.streams, " "))
+		logger.Infof("$ redis-cli xread streams %v", strings.Join(t.streams, " "))
 
 		resp, err = client.XRead(&redis.XReadArgs{
 			Streams: t.streams,

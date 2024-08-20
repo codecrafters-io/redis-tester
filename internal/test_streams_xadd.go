@@ -30,7 +30,7 @@ func (t *XADDTest) Run(client *redis.Client, logger *logger.Logger) error {
 		values = append(values, key, fmt.Sprintf("%v", value))
 	}
 
-	logger.Infof("$ redis-cli xadd %q %q %q", t.streamKey, t.id, strings.Join(values, " "))
+	logger.Infof("$ redis-cli xadd %v %v %v", t.streamKey, t.id, strings.Join(values, " "))
 
 	resp, err := client.XAdd(&redis.XAddArgs{
 		Stream: t.streamKey,
@@ -48,18 +48,18 @@ func (t *XADDTest) Run(client *redis.Client, logger *logger.Logger) error {
 			return fmt.Errorf("Expected %q, got %q", t.expectedError, err.Error())
 		}
 
-		logger.Successf("Received error: \"%q\"", err.Error())
+		logger.Successf("Received error: %q", err.Error())
 		return nil
 	}
 
 	if resp != t.expectedResponse && t.expectedError != "" {
-		logger.Infof("Received response: \"%q\"", resp)
+		logger.Infof("Received response: %q", resp)
 		return fmt.Errorf("Expected an error as the response, got %q", resp)
 	} else if resp != t.expectedResponse {
-		logger.Infof("Received response: \"%q\"", resp)
+		logger.Infof("Received response: %q", resp)
 		return fmt.Errorf("Expected %q, got %q", t.expectedResponse, resp)
 	} else {
-		logger.Successf("Received response: \"%q\"", resp)
+		logger.Successf("Received response: %q", resp)
 	}
 
 	return nil
