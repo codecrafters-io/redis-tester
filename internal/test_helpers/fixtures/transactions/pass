@@ -369,11 +369,11 @@ Debug = true
 
 [33m[stage-44] [0m[94mRunning tests for Stage #44: xu1[0m
 [33m[stage-44] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[stage-44] [0m[94m$ redis-cli xadd "apple" "0-1" "temperature 10"[0m
-[33m[stage-44] [0m[92mReceived response: ""0-1""[0m
+[33m[stage-44] [0m[94m$ redis-cli xadd apple 0-1 temperature 10[0m
+[33m[stage-44] [0m[92mReceived response: "0-1"[0m
 [33m[stage-44] [0m[94m$ redis-cli xread block 0 streams apple 0-1[0m
-[33m[stage-44] [0m[94m$ redis-cli xadd "apple" "0-2" "temperature 10"[0m
-[33m[stage-44] [0m[92mReceived response: ""0-2""[0m
+[33m[stage-44] [0m[94m$ redis-cli xadd apple 0-2 temperature 10[0m
+[33m[stage-44] [0m[92mReceived response: "0-2"[0m
 [33m[stage-44] [0m[92mReceived response: "[[0m
 [33m[stage-44] [0m[92m  {[0m
 [33m[stage-44] [0m[92m    "Stream": "apple",[0m
@@ -393,11 +393,11 @@ Debug = true
 
 [33m[stage-43] [0m[94mRunning tests for Stage #43: hw1[0m
 [33m[stage-43] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[stage-43] [0m[94m$ redis-cli xadd "banana" "0-1" "temperature 91"[0m
-[33m[stage-43] [0m[92mReceived response: ""0-1""[0m
+[33m[stage-43] [0m[94m$ redis-cli xadd banana 0-1 temperature 91[0m
+[33m[stage-43] [0m[92mReceived response: "0-1"[0m
 [33m[stage-43] [0m[94m$ redis-cli xread block 0 streams banana 0-1[0m
-[33m[stage-43] [0m[94m$ redis-cli xadd "banana" "0-2" "temperature 91"[0m
-[33m[stage-43] [0m[92mReceived response: ""0-2""[0m
+[33m[stage-43] [0m[94m$ redis-cli xadd banana 0-2 temperature 91[0m
+[33m[stage-43] [0m[92mReceived response: "0-2"[0m
 [33m[stage-43] [0m[92mReceived response: "[[0m
 [33m[stage-43] [0m[92m  {[0m
 [33m[stage-43] [0m[92m    "Stream": "banana",[0m
@@ -417,11 +417,11 @@ Debug = true
 
 [33m[stage-42] [0m[94mRunning tests for Stage #42: bs1[0m
 [33m[stage-42] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[stage-42] [0m[94m$ redis-cli xadd "orange" "0-1" "temperature 2"[0m
-[33m[stage-42] [0m[92mReceived response: ""0-1""[0m
+[33m[stage-42] [0m[94m$ redis-cli xadd orange 0-1 temperature 2[0m
+[33m[stage-42] [0m[92mReceived response: "0-1"[0m
 [33m[stage-42] [0m[94m$ redis-cli xread block 1000 streams orange 0-1[0m
-[33m[stage-42] [0m[94m$ redis-cli xadd "orange" "0-2" "temperature 2"[0m
-[33m[stage-42] [0m[92mReceived response: ""0-2""[0m
+[33m[stage-42] [0m[94m$ redis-cli xadd orange 0-2 temperature 2[0m
+[33m[stage-42] [0m[92mReceived response: "0-2"[0m
 [33m[stage-42] [0m[92mReceived response: "[[0m
 [33m[stage-42] [0m[92m  {[0m
 [33m[stage-42] [0m[92m    "Stream": "orange",[0m
@@ -443,11 +443,11 @@ Debug = true
 
 [33m[stage-41] [0m[94mRunning tests for Stage #41: ru9[0m
 [33m[stage-41] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[stage-41] [0m[94m$ redis-cli xadd "pineapple" "0-1" "temperature 99"[0m
-[33m[stage-41] [0m[92mReceived response: ""0-1""[0m
-[33m[stage-41] [0m[94m$ redis-cli xadd "orange" "0-2" "humidity 37"[0m
-[33m[stage-41] [0m[92mReceived response: ""0-2""[0m
-[33m[stage-41] [0m[94m$ redis-cli xread streams "pineapple orange 0-0 0-1"[0m
+[33m[stage-41] [0m[94m$ redis-cli xadd pineapple 0-1 temperature 99[0m
+[33m[stage-41] [0m[92mReceived response: "0-1"[0m
+[33m[stage-41] [0m[94m$ redis-cli xadd orange 0-2 humidity 37[0m
+[33m[stage-41] [0m[92mReceived response: "0-2"[0m
+[33m[stage-41] [0m[94m$ redis-cli xread streams pineapple orange 0-0 0-1[0m
 [33m[stage-41] [0m[92mReceived response: "[[0m
 [33m[stage-41] [0m[92m  {[0m
 [33m[stage-41] [0m[92m    "Stream": "pineapple",[0m
@@ -478,9 +478,9 @@ Debug = true
 
 [33m[stage-40] [0m[94mRunning tests for Stage #40: um0[0m
 [33m[stage-40] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[stage-40] [0m[94m$ redis-cli xadd "apple" "0-1" "temperature 88"[0m
-[33m[stage-40] [0m[92mReceived response: ""0-1""[0m
-[33m[stage-40] [0m[94m$ redis-cli xread streams "apple 0-0"[0m
+[33m[stage-40] [0m[94m$ redis-cli xadd apple 0-1 temperature 88[0m
+[33m[stage-40] [0m[92mReceived response: "0-1"[0m
+[33m[stage-40] [0m[94m$ redis-cli xread streams apple 0-0[0m
 [33m[stage-40] [0m[92mReceived response: "[[0m
 [33m[stage-40] [0m[92m  {[0m
 [33m[stage-40] [0m[92m    "Stream": "apple",[0m
@@ -500,15 +500,15 @@ Debug = true
 
 [33m[stage-39] [0m[94mRunning tests for Stage #39: fs1[0m
 [33m[stage-39] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[stage-39] [0m[94m$ redis-cli xadd "apple" "0-1" "foo bar"[0m
-[33m[stage-39] [0m[92mReceived response: ""0-1""[0m
-[33m[stage-39] [0m[94m$ redis-cli xadd "apple" "0-2" "foo bar"[0m
-[33m[stage-39] [0m[92mReceived response: ""0-2""[0m
-[33m[stage-39] [0m[94m$ redis-cli xadd "apple" "0-3" "foo bar"[0m
-[33m[stage-39] [0m[92mReceived response: ""0-3""[0m
-[33m[stage-39] [0m[94m$ redis-cli xadd "apple" "0-4" "foo bar"[0m
-[33m[stage-39] [0m[92mReceived response: ""0-4""[0m
-[33m[stage-39] [0m[94m$ redis-cli xrange "apple" 0-2 +[0m
+[33m[stage-39] [0m[94m$ redis-cli xadd apple 0-1 foo bar[0m
+[33m[stage-39] [0m[92mReceived response: "0-1"[0m
+[33m[stage-39] [0m[94m$ redis-cli xadd apple 0-2 foo bar[0m
+[33m[stage-39] [0m[92mReceived response: "0-2"[0m
+[33m[stage-39] [0m[94m$ redis-cli xadd apple 0-3 foo bar[0m
+[33m[stage-39] [0m[92mReceived response: "0-3"[0m
+[33m[stage-39] [0m[94m$ redis-cli xadd apple 0-4 foo bar[0m
+[33m[stage-39] [0m[92mReceived response: "0-4"[0m
+[33m[stage-39] [0m[94m$ redis-cli xrange apple 0-2 +[0m
 [33m[stage-39] [0m[92mReceived response: "[[0m
 [33m[stage-39] [0m[92m  {[0m
 [33m[stage-39] [0m[92m    "ID": "0-2",[0m
@@ -535,15 +535,15 @@ Debug = true
 
 [33m[stage-38] [0m[94mRunning tests for Stage #38: yp1[0m
 [33m[stage-38] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[stage-38] [0m[94m$ redis-cli xadd "blueberry" "0-1" "foo bar"[0m
-[33m[stage-38] [0m[92mReceived response: ""0-1""[0m
-[33m[stage-38] [0m[94m$ redis-cli xadd "blueberry" "0-2" "foo bar"[0m
-[33m[stage-38] [0m[92mReceived response: ""0-2""[0m
-[33m[stage-38] [0m[94m$ redis-cli xadd "blueberry" "0-3" "foo bar"[0m
-[33m[stage-38] [0m[92mReceived response: ""0-3""[0m
-[33m[stage-38] [0m[94m$ redis-cli xadd "blueberry" "0-4" "foo bar"[0m
-[33m[stage-38] [0m[92mReceived response: ""0-4""[0m
-[33m[stage-38] [0m[94m$ redis-cli xrange "blueberry" - "0-3"[0m
+[33m[stage-38] [0m[94m$ redis-cli xadd blueberry 0-1 foo bar[0m
+[33m[stage-38] [0m[92mReceived response: "0-1"[0m
+[33m[stage-38] [0m[94m$ redis-cli xadd blueberry 0-2 foo bar[0m
+[33m[stage-38] [0m[92mReceived response: "0-2"[0m
+[33m[stage-38] [0m[94m$ redis-cli xadd blueberry 0-3 foo bar[0m
+[33m[stage-38] [0m[92mReceived response: "0-3"[0m
+[33m[stage-38] [0m[94m$ redis-cli xadd blueberry 0-4 foo bar[0m
+[33m[stage-38] [0m[92mReceived response: "0-4"[0m
+[33m[stage-38] [0m[94m$ redis-cli xrange blueberry - 0-3[0m
 [33m[stage-38] [0m[92mReceived response: "[[0m
 [33m[stage-38] [0m[92m  {[0m
 [33m[stage-38] [0m[92m    "ID": "0-1",[0m
@@ -570,15 +570,15 @@ Debug = true
 
 [33m[stage-37] [0m[94mRunning tests for Stage #37: zx1[0m
 [33m[stage-37] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[stage-37] [0m[94m$ redis-cli xadd "grape" "0-1" "foo bar"[0m
-[33m[stage-37] [0m[92mReceived response: ""0-1""[0m
-[33m[stage-37] [0m[94m$ redis-cli xadd "grape" "0-2" "foo bar"[0m
-[33m[stage-37] [0m[92mReceived response: ""0-2""[0m
-[33m[stage-37] [0m[94m$ redis-cli xadd "grape" "0-3" "foo bar"[0m
-[33m[stage-37] [0m[92mReceived response: ""0-3""[0m
-[33m[stage-37] [0m[94m$ redis-cli xadd "grape" "0-4" "foo bar"[0m
-[33m[stage-37] [0m[92mReceived response: ""0-4""[0m
-[33m[stage-37] [0m[94m$ redis-cli xrange "grape" 0-2 "0-4"[0m
+[33m[stage-37] [0m[94m$ redis-cli xadd grape 0-1 foo bar[0m
+[33m[stage-37] [0m[92mReceived response: "0-1"[0m
+[33m[stage-37] [0m[94m$ redis-cli xadd grape 0-2 foo bar[0m
+[33m[stage-37] [0m[92mReceived response: "0-2"[0m
+[33m[stage-37] [0m[94m$ redis-cli xadd grape 0-3 foo bar[0m
+[33m[stage-37] [0m[92mReceived response: "0-3"[0m
+[33m[stage-37] [0m[94m$ redis-cli xadd grape 0-4 foo bar[0m
+[33m[stage-37] [0m[92mReceived response: "0-4"[0m
+[33m[stage-37] [0m[94m$ redis-cli xrange grape 0-2 0-4[0m
 [33m[stage-37] [0m[92mReceived response: "[[0m
 [33m[stage-37] [0m[92m  {[0m
 [33m[stage-37] [0m[92m    "ID": "0-2",[0m
