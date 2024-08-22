@@ -3,9 +3,10 @@ package internal
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"reflect"
 	"strconv"
+
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
@@ -55,7 +56,7 @@ func testStreamsXrange(stageHarness *test_case_harness.TestCaseHarness) error {
 	maxID := "0-" + strconv.Itoa(randomNumber)
 	expectedResp = expectedResp[1:]
 
-	logger.Infof("$ redis-cli xrange %q 0-2 %q", randomKey, maxID)
+	logger.Infof("$ redis-cli xrange %v 0-2 %v", randomKey, maxID)
 	resp, err := client.XRange(randomKey, "0-2", maxID).Result()
 
 	if err != nil {
