@@ -14,6 +14,7 @@ func antiCheatTest(stageHarness *test_case_harness.TestCaseHarness) error {
 	logger := stageHarness.Logger
 
 	b := redis_executable.NewRedisExecutable(stageHarness)
+	// If we can't run the executable, it must be an internal error.
 	if err := b.Run(); err != nil {
 		logger.Criticalf("CodeCrafters internal error. Error instantiating executable: %v", err)
 		logger.Criticalf("Try again? Please contact us at hello@codecrafters.io if this persists.")
@@ -21,11 +22,9 @@ func antiCheatTest(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 
 	client, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "replica")
+	// If we are unable to connect to the redis server, it is okay to skip anti-cheat in that case, their server must not be working.
 	if err != nil {
-		logFriendlyError(logger, err)
-		logger.Criticalf("CodeCrafters internal error. Error creating connection to redis server: %v", err)
-		logger.Criticalf("Try again? Please contact us at hello@codecrafters.io if this persists.")
-		return fmt.Errorf("anti-cheat (ac1) failed")
+		return nil
 	}
 	defer client.Close()
 
