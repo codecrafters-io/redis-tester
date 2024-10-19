@@ -30,7 +30,12 @@ func (t BindTestCase) Run(executable *redis_executable.RedisExecutable, logger *
 
 		if err != nil {
 			if executable.HasExited() {
-				return fmt.Errorf("Looks like your program has terminated. A redis server is expected to be a long-running process.")
+				// We don't need to mention that the user's program exited or is expected to be a long-running process as
+				// this could be confusing in early stages where the user is expected to only handle a single request from
+				// a single client.
+				//
+				// Let's just exit early and not retry if this happens.
+				return fmt.Errorf("Failed to connect to port %d.", t.Port)
 			}
 
 			// Don't print errors in the first second
