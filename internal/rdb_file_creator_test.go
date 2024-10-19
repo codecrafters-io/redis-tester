@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -26,7 +25,6 @@ func TestRDBFileCreator(t *testing.T) {
 
 	fh, _ := os.Open(filepath.Join(RDBFileCreator.Dir, RDBFileCreator.Filename))
 	defer fh.Close()
-	fmt.Println("File content:")
 	data, err := io.ReadAll(fh)
 	if err != nil {
 		t.Fatalf("CodeCrafters Tester Error: %s", err)
@@ -37,5 +35,4 @@ func TestRDBFileCreator(t *testing.T) {
 	version := versionData[5:9]
 	assert.Equal(t, "REDIS", magicString)
 	assert.Equal(t, "0011", version)
-	t.Logf("Version: %s", version)
 }
