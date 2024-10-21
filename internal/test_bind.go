@@ -16,7 +16,7 @@ func testBindToPort(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	bindTestCase := test_cases.BindTestCase{
 		Port:    6379,
-		Retries: 15,
+		Retries: 5,
 	}
 
 	return bindTestCase.Run(b, logger)

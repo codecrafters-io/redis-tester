@@ -21,7 +21,7 @@ func testReplBindToCustomPort(stageHarness *test_case_harness.TestCaseHarness) e
 
 	bindTestCase := test_cases.BindTestCase{
 		Port:    port,
-		Retries: 15,
+		Retries: 5,
 	}
 
 	return bindTestCase.Run(b, logger)
