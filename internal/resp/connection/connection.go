@@ -48,11 +48,15 @@ type RespConnection struct {
 	Callbacks RespConnectionCallbacks
 
 	// Offset tracking:
-	// SentBytes is the number of bytes sent using this connection.
+	// SentBytes is the number of bytes sent using this connection, but this can be mutated when it makes sense (ex: handshake bytes are not counted by redis for acks)
 	SentBytes int
 
 	// ReceivedBytes is the number of bytes received using this connection.
 	ReceivedBytes int
+
+	// TotalSentBytes is the total number of bytes sent using this connection, and is not reset or changed when the connection is reset
+	// This should be used for deciding if connection is new / reused and commands be logged as such
+	TotalSentBytes int
 }
 
 func NewRespConnectionFromAddr(addr string, callbacks RespConnectionCallbacks) (*RespConnection, error) {
@@ -83,7 +87,7 @@ func (c *RespConnection) Close() error {
 
 func (c *RespConnection) SendCommand(command string, args ...string) error {
 	if c.Callbacks.BeforeSendCommand != nil {
-		if c.SentBytes > 0 {
+		if c.TotalSentBytes > 0 {
 			c.Callbacks.BeforeSendCommand(true, command, args...)
 		} else {
 			c.Callbacks.BeforeSendCommand(false, command, args...)
@@ -114,6 +118,7 @@ func (c *RespConnection) SendBytes(bytes []byte) error {
 	}
 
 	c.SentBytes += len(bytes)
+	c.TotalSentBytes += len(bytes)
 
 	// TODO: Check when this happens - is it a valid error?
 	if n != len(bytes) {
