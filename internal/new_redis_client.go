@@ -10,7 +10,7 @@ import (
 func NewRedisClient(addr string) *redis.Client {
 	return redis.NewClient(&redis.Options{
 		Addr:        addr,
-		DialTimeout: 5 * time.Second,
+		DialTimeout: 2 * time.Second,
 		Dialer: func() (net.Conn, error) {
 			attempts := 0
 
@@ -29,8 +29,8 @@ func NewRedisClient(addr string) *redis.Client {
 					return nil, err
 				}
 
-				// 50 * 100ms = 5s
-				if attempts > 50 {
+				// 20 * 100ms = 2s
+				if attempts > 20 {
 					return nil, err
 				}
 
