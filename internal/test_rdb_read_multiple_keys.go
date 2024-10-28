@@ -32,7 +32,10 @@ func testRdbReadMultipleKeys(stageHarness *test_case_harness.TestCaseHarness) er
 	}
 
 	logger := stageHarness.Logger
-	logger.Infof("Created RDB file with %d keys: %q", keyCount, keys)
+	logger.Infof("Created RDB file with %d keys: %v", keyCount, FormatKeys(keys))
+	if err := RDBFileCreator.PrintContentHexdump(logger); err != nil {
+		return fmt.Errorf("CodeCrafters Tester Error: %s", err)
+	}
 
 	b := redis_executable.NewRedisExecutable(stageHarness)
 	stageHarness.RegisterTeardownFunc(func() { RDBFileCreator.Cleanup() })

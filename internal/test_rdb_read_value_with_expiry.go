@@ -48,14 +48,18 @@ func testRdbReadValueWithExpiry(stageHarness *test_case_harness.TestCaseHarness)
 		return fmt.Errorf("CodeCrafters Tester Error: %s", err)
 	}
 
+	logger := stageHarness.Logger
+	logger.Infof("Created RDB file with %d key-value pairs: %s", len(keys), FormatKeyValuePairs(keys, values))
+	if err := RDBFileCreator.PrintContentHexdump(logger); err != nil {
+		return fmt.Errorf("CodeCrafters Tester Error: %s", err)
+	}
+
 	b := redis_executable.NewRedisExecutable(stageHarness)
 	stageHarness.RegisterTeardownFunc(func() { RDBFileCreator.Cleanup() })
 	if err := b.Run("--dir", RDBFileCreator.Dir,
 		"--dbfilename", RDBFileCreator.Filename); err != nil {
 		return err
 	}
-
-	logger := stageHarness.Logger
 
 	client, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client")
 	if err != nil {
