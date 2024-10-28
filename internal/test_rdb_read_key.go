@@ -26,7 +26,10 @@ func testRdbReadKey(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 
 	logger := stageHarness.Logger
-	logger.Infof("Created RDB file with single key: %q", randomKey)
+	logger.Infof("Created RDB file with a single key: [%q]", randomKey)
+	if err := RDBFileCreator.PrintContentHexdump(logger); err != nil {
+		return fmt.Errorf("CodeCrafters Tester Error: %s", err)
+	}
 
 	b := redis_executable.NewRedisExecutable(stageHarness)
 	stageHarness.RegisterTeardownFunc(func() { RDBFileCreator.Cleanup() })

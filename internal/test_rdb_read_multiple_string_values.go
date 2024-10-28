@@ -2,7 +2,6 @@ package internal
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
@@ -28,11 +27,6 @@ func testRdbReadMultipleStringValues(stageHarness *test_case_harness.TestCaseHar
 		keyValuePairs[i] = KeyValuePair{key: keys[i], value: values[i]}
 	}
 
-	formattedKeyValuePairs := make([]string, keyCount)
-	for i := 0; i < keyCount; i++ {
-		formattedKeyValuePairs[i] = fmt.Sprintf("%q=%q", keys[i], values[i])
-	}
-
 	keyValueMap := make(map[string]string)
 	for i := 0; i < keyCount; i++ {
 		key := keys[i]
@@ -40,10 +34,13 @@ func testRdbReadMultipleStringValues(stageHarness *test_case_harness.TestCaseHar
 		keyValueMap[key] = value
 	}
 
-	logger := stageHarness.Logger
-	logger.Infof("Created RDB file with key-value pairs: %s", strings.Join(formattedKeyValuePairs, ", "))
-
 	if err := RDBFileCreator.Write(keyValuePairs); err != nil {
+		return fmt.Errorf("CodeCrafters Tester Error: %s", err)
+	}
+
+	logger := stageHarness.Logger
+	logger.Infof("Created RDB file with %d key-value pairs: %s", len(keys), FormatKeyValuePairs(keys, values))
+	if err := RDBFileCreator.PrintContentHexdump(logger); err != nil {
 		return fmt.Errorf("CodeCrafters Tester Error: %s", err)
 	}
 
