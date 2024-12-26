@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
@@ -73,11 +72,7 @@ func testStreamsXadd(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	logger := stageHarness.Logger
 
-	client, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client")
-	if err != nil {
-		logFriendlyError(logger, err)
-		return err
-	}
+	client := NewRedisClient("localhost:6379")
 	defer client.Close()
 
 	randomKey := random.RandomWord()
