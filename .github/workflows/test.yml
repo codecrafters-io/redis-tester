@@ -6,29 +6,12 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Set up Go
-        uses: actions/setup-go@v1
-        with:
-          go-version: 1.21.x
+      - id: setup-env
+        name: Setup test environment
+        uses: codecrafters-io/codecrafters-action/.github/actions/redis-setup@ef5aeb9504e08cccfe71e1dbcf806fab3738019d
 
-      # Required for tests
-      - name: Install Redis
-        run: |-
-          curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg
-          echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/redis.list
-          sudo apt-get update
-          sudo apt-get install redis
-
-      - name: "Stop redis service"
-        run: sudo service redis-server stop
-
-      - uses: actions/setup-python@v2
-        with:
-          python-version: "3.x" # Version range or exact version of a Python version to use, using SemVer's version range syntax
-
-      - run: make test
+      - name: Run tests
+        run: make test
 
   lint:
     runs-on: ubuntu-latest
