@@ -51,7 +51,7 @@ func testPingPongMultiple(stageHarness *test_case_harness.TestCaseHarness) error
 		return err
 	}
 
-	for i := 1; i <= 3; i++ {
+	for i := 1; i <= 5; i++ {
 		if err := runPing(logger, client); err != nil {
 			return err
 		}
