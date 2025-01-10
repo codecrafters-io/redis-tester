@@ -61,7 +61,7 @@ test_all_with_redis:
 	make test_streams_with_redis || true
 	make test_txn_with_redis || true
 
-setup_redis:
+setup:
 	echo "Setting up redis-tester prerequisites for Linux"
 	
 	curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg
