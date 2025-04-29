@@ -1,18 +1,16 @@
 package internal
 
 import (
-	"encoding/json"
-	"fmt"
-	"reflect"
 	"strconv"
-	"strings"
 	"time"
 
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
-	"github.com/go-redis/redis"
 )
 
 func testStreamsXreadBlockMaxID(stageHarness *test_case_harness.TestCaseHarness) error {
@@ -22,93 +20,88 @@ func testStreamsXreadBlockMaxID(stageHarness *test_case_harness.TestCaseHarness)
 	}
 
 	logger := stageHarness.Logger
-	client := NewRedisClient("localhost:6379")
+
+	client1, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "redis-cli")
+	if err != nil {
+		logFriendlyError(logger, err)
+		return err
+	}
+	defer client1.Close()
 
 	randomKey := testerutils_random.RandomWord()
 	randomInt := testerutils_random.RandomInt(1, 100)
 
-	xaddTest := &XADDTest{
-		streamKey:        randomKey,
-		id:               "0-1",
-		values:           map[string]interface{}{"temperature": randomInt},
-		expectedResponse: "0-1",
+	xaddCommandTestCase := &test_cases.SendCommandTestCase{
+		Command:                   "XADD",
+		Args:                      []string{randomKey, "0-1", "temperature", strconv.Itoa(randomInt)},
+		Assertion:                 resp_assertions.NewStringAssertion("0-1"),
+		ShouldSkipUnreadDataCheck: true,
 	}
 
-	err := xaddTest.Run(client, logger)
-
-	if err != nil {
+	if err := xaddCommandTestCase.Run(client1, logger); err != nil {
 		return err
 	}
 
-	respChan := make(chan *[]redis.XStream, 1)
+	waitChan := make(chan bool, 1)
+	randomInt = testerutils_random.RandomInt(1, 100)
 
 	go func() error {
-		logger.Infof("$ redis-cli xread block %d streams %v", 0, strings.Join([]string{randomKey, "0-1"}, " "))
+		expectedValue := [][]interface{}{
+			{
+				randomKey,
+				[]interface{}{
+					[]interface{}{"0-2", []interface{}{"temperature", strconv.Itoa(randomInt)}},
+				},
+			},
+		}
+		assertion := resp_assertions.NewStreamAssertion(expectedValue)
+		xreadCommandTestCase := &test_cases.SendCommandTestCase{
+			Command:                   "XREAD",
+			Args:                      []string{"block", "0", "streams", randomKey, "$"},
+			Assertion:                 assertion,
+			ShouldSkipUnreadDataCheck: true,
+		}
 
-		resp, err := client.XRead(&redis.XReadArgs{
-			Streams: []string{randomKey, "$"},
-			Block:   0,
-		}).Result()
-
-		if err != nil {
-			logger.Errorf("Error: %q", err)
+		if err := xreadCommandTestCase.Run(client1, logger); err != nil {
+			logger.Errorf("Error: %v", err)
 			return err
 		}
 
-		respChan <- &resp
-
+		waitChan <- true
 		return nil
 	}()
 
 	time.Sleep(1000 * time.Millisecond)
 
-	xaddTest = &XADDTest{
-		streamKey:        randomKey,
-		id:               "0-2",
-		values:           map[string]interface{}{"temperature": randomInt},
-		expectedResponse: "0-2",
-	}
-
-	err = xaddTest.Run(client, logger)
-
-	if err != nil {
-		return err
-	}
-
-	resp := <-respChan
-
-	expectedResp := &[]redis.XStream{
-		{
-			Stream: randomKey,
-			Messages: []redis.XMessage{
-				{
-					ID:     "0-2",
-					Values: map[string]interface{}{"temperature": strconv.Itoa(randomInt)},
-				},
-			},
-		},
-	}
-
-	expectedRespJSON, err := json.MarshalIndent(expectedResp, "", "  ")
-
+	client2, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "other-redis-cli")
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
 	}
+	defer client2.Close()
 
-	respJSON, err := json.MarshalIndent(resp, "", "  ")
+	xaddCommandTestCase = &test_cases.SendCommandTestCase{
+		Command:                   "XADD",
+		Args:                      []string{randomKey, "0-2", "temperature", strconv.Itoa(randomInt)},
+		Assertion:                 resp_assertions.NewStringAssertion("0-2"),
+		ShouldSkipUnreadDataCheck: true,
+	}
 
-	if err != nil {
-		logFriendlyError(logger, err)
+	if err := xaddCommandTestCase.Run(client2, logger); err != nil {
 		return err
 	}
 
-	if !reflect.DeepEqual(resp, expectedResp) {
-		logger.Infof("Received response: \"%v\"", string(respJSON))
-		return fmt.Errorf("Expected %v, got %v", string(expectedRespJSON), string(respJSON))
-	} else {
-		logger.Successf("Received response: \"%v\"", string(respJSON))
+	<-waitChan
+
+	xreadCommandTestCase := &test_cases.SendCommandTestCase{
+		Command:                   "XREAD",
+		Args:                      []string{"block", "1000", "streams", randomKey, "$"},
+		Assertion:                 resp_assertions.NewNilAssertion(),
+		ShouldSkipUnreadDataCheck: false,
 	}
 
+	if err := xreadCommandTestCase.Run(client1, logger); err != nil {
+		return err
+	}
 	return nil
 }

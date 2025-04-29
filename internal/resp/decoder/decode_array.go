@@ -31,7 +31,11 @@ func decodeArray(reader *bytes.Reader) (resp_value.Value, error) {
 		}
 	}
 
-	if length < 0 {
+	if length == -1 {
+		return resp_value.NewNilValue(), nil
+	}
+
+	if length < -1 {
 		// Ensure error points to the correct byte
 		reader.Seek(int64(offsetBeforeLength), io.SeekStart)
 
