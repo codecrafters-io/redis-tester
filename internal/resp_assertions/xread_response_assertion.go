@@ -22,6 +22,10 @@ type XReadResponseAssertion struct {
 	ExpectedStreamResponses []StreamResponse
 }
 
+func NewXReadResponseAssertion(expectedValue []StreamResponse) RESPAssertion {
+	return XReadResponseAssertion{ExpectedStreamResponses: expectedValue}
+}
+
 func (a XReadResponseAssertion) Run(value resp_value.Value) error {
 	if value.Type != resp_value.ARRAY {
 		return fmt.Errorf("Expected array, got %s", value.Type)

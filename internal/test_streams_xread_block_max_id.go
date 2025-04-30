@@ -46,15 +46,13 @@ func testStreamsXreadBlockMaxID(stageHarness *test_case_harness.TestCaseHarness)
 	randomInt = testerutils_random.RandomInt(1, 100)
 
 	go func() error {
-		assertion := resp_assertions.XReadResponseAssertion{
-			ExpectedStreamResponses: []resp_assertions.StreamResponse{{
-				Key: randomKey,
-				Entries: []resp_assertions.StreamEntry{{
-					Id:              "0-2",
-					FieldValuePairs: [][]string{{"temperature", strconv.Itoa(randomInt)}},
-				}},
+		assertion := resp_assertions.NewXReadResponseAssertion([]resp_assertions.StreamResponse{{
+			Key: randomKey,
+			Entries: []resp_assertions.StreamEntry{{
+				Id:              "0-2",
+				FieldValuePairs: [][]string{{"temperature", strconv.Itoa(randomInt)}},
 			}},
-		}
+		}})
 		xreadCommandTestCase := &test_cases.SendCommandTestCase{
 			Command:                   "XREAD",
 			Args:                      []string{"block", "0", "streams", randomKey, "$"},
