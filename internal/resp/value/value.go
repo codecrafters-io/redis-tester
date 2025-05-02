@@ -125,3 +125,19 @@ func (v *Value) FormattedString() string {
 
 	return ""
 }
+
+func (v Value) ToSerializable() interface{} {
+	switch v.Type {
+	case BULK_STRING:
+		return v.String()
+	case ARRAY:
+		arr := v.Array()
+		result := make([]interface{}, len(arr))
+		for i, elem := range arr {
+			result[i] = elem.ToSerializable()
+		}
+		return result
+	default:
+		return v.String()
+	}
+}
