@@ -42,7 +42,8 @@ func testStreamsXreadBlockMaxID(stageHarness *test_case_harness.TestCaseHarness)
 		return err
 	}
 
-	waitChan := make(chan bool, 1)
+	xReadDone := make(chan bool, 1)
+	xAddDone := make(chan bool, 1)
 	randomInt = testerutils_random.RandomInt(1, 100)
 
 	go func() error {
@@ -53,20 +54,16 @@ func testStreamsXreadBlockMaxID(stageHarness *test_case_harness.TestCaseHarness)
 				FieldValuePairs: [][]string{{"temperature", strconv.Itoa(randomInt)}},
 			}},
 		}})
-		xreadCommandTestCase := &test_cases.SendCommandTestCase{
+		awaitXReadTestCase := &test_cases.AwaitCommandTestCase{
 			Command:                   "XREAD",
 			Args:                      []string{"block", "0", "streams", randomKey, "$"},
 			Assertion:                 assertion,
 			ShouldSkipUnreadDataCheck: true,
+			AwaitChan:                 xAddDone,
+			DoneChan:                  xReadDone,
 		}
 
-		if err := xreadCommandTestCase.Run(client1, logger); err != nil {
-			logger.Errorf("Error: %v", err)
-			return err
-		}
-
-		waitChan <- true
-		return nil
+		return awaitXReadTestCase.Run(client1, logger)
 	}()
 
 	time.Sleep(1000 * time.Millisecond)
@@ -89,7 +86,8 @@ func testStreamsXreadBlockMaxID(stageHarness *test_case_harness.TestCaseHarness)
 		return err
 	}
 
-	<-waitChan
+	xAddDone <- true
+	<-xReadDone
 
 	xreadCommandTestCase := &test_cases.SendCommandTestCase{
 		Command:                   "XREAD",
