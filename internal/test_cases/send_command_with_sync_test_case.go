@@ -22,8 +22,8 @@ type SendCommandWithSyncTestCase struct {
 	// ReceivedResponse is set after the test case is run
 	ReceivedResponse resp_value.Value
 
-	AwaitChan chan bool
-	DoneChan  chan bool
+	WaitChan chan bool
+	DoneChan chan bool
 }
 
 func (t *SendCommandWithSyncTestCase) Run(client *resp_client.RespConnection, logger *logger.Logger) error {
@@ -41,7 +41,7 @@ func (t *SendCommandWithSyncTestCase) Run(client *resp_client.RespConnection, lo
 			return err
 		}
 
-		<-t.AwaitChan
+		<-t.WaitChan
 
 		value, err = client.ReadValue()
 		if err != nil {

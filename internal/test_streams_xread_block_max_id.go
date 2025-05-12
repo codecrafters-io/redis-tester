@@ -59,7 +59,7 @@ func testStreamsXreadBlockMaxID(stageHarness *test_case_harness.TestCaseHarness)
 			Args:                      []string{"block", "0", "streams", randomKey, "$"},
 			Assertion:                 assertion,
 			ShouldSkipUnreadDataCheck: true,
-			AwaitChan:                 xAddDone,
+			WaitChan:                  xAddDone,
 			DoneChan:                  xReadDone,
 		}
 
