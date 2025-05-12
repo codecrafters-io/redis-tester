@@ -54,7 +54,7 @@ func testStreamsXreadBlockMaxID(stageHarness *test_case_harness.TestCaseHarness)
 				FieldValuePairs: [][]string{{"temperature", strconv.Itoa(randomInt)}},
 			}},
 		}})
-		awaitXReadTestCase := &test_cases.AwaitCommandTestCase{
+		xReadWithSyncTestCase := &test_cases.SendCommandWithSyncTestCase{
 			Command:                   "XREAD",
 			Args:                      []string{"block", "0", "streams", randomKey, "$"},
 			Assertion:                 assertion,
@@ -63,7 +63,7 @@ func testStreamsXreadBlockMaxID(stageHarness *test_case_harness.TestCaseHarness)
 			DoneChan:                  xReadDone,
 		}
 
-		return awaitXReadTestCase.Run(client1, logger)
+		return xReadWithSyncTestCase.Run(client1, logger)
 	}()
 
 	time.Sleep(1000 * time.Millisecond)

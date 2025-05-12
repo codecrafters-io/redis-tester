@@ -11,7 +11,7 @@ import (
 	"github.com/codecrafters-io/tester-utils/logger"
 )
 
-type AwaitCommandTestCase struct {
+type SendCommandWithSyncTestCase struct {
 	Command                   string
 	Args                      []string
 	Assertion                 resp_assertions.RESPAssertion
@@ -26,7 +26,7 @@ type AwaitCommandTestCase struct {
 	DoneChan  chan bool
 }
 
-func (t *AwaitCommandTestCase) Run(client *resp_client.RespConnection, logger *logger.Logger) error {
+func (t *SendCommandWithSyncTestCase) Run(client *resp_client.RespConnection, logger *logger.Logger) error {
 	var value resp_value.Value
 	var err error
 
@@ -40,6 +40,8 @@ func (t *AwaitCommandTestCase) Run(client *resp_client.RespConnection, logger *l
 		if err = client.SendCommand(command, t.Args...); err != nil {
 			return err
 		}
+
+		<-t.AwaitChan
 
 		value, err = client.ReadValue()
 		if err != nil {
@@ -63,8 +65,6 @@ func (t *AwaitCommandTestCase) Run(client *resp_client.RespConnection, logger *l
 	}
 
 	t.ReceivedResponse = value
-
-	<-t.AwaitChan
 
 	if err = t.Assertion.Run(value); err != nil {
 		return err
