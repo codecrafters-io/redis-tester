@@ -3,6 +3,7 @@ package test_cases
 import (
 	"fmt"
 	"strings"
+	"sync"
 	"time"
 
 	resp_client "github.com/codecrafters-io/redis-tester/internal/resp/connection"
@@ -21,6 +22,8 @@ type SendCommandTestCase struct {
 
 	// ReceivedResponse is set after the test case is run
 	ReceivedResponse resp_value.Value
+
+	readMutex sync.Mutex
 }
 
 func (t *SendCommandTestCase) Run(client *resp_client.RespConnection, logger *logger.Logger) error {
@@ -38,7 +41,10 @@ func (t *SendCommandTestCase) Run(client *resp_client.RespConnection, logger *lo
 			return err
 		}
 
+		t.readMutex.Lock()
 		value, err = client.ReadValue()
+		t.readMutex.Unlock()
+
 		if err != nil {
 			return err
 		}
@@ -75,4 +81,12 @@ func (t *SendCommandTestCase) Run(client *resp_client.RespConnection, logger *lo
 
 	logger.Successf("Received %s", value.FormattedString())
 	return nil
+}
+
+func (t *SendCommandTestCase) PauseReadingResponse() {
+	t.readMutex.Lock()
+}
+
+func (t *SendCommandTestCase) ResumeReadingResponse() {
+	t.readMutex.Unlock()
 }
