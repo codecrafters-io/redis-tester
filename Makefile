@@ -29,6 +29,19 @@ record_fixtures:
 update_tester_utils:
 	go get -u github.com/codecrafters-io/tester-utils
 
+TEST_TARGET ?= test
+RUNS ?= 100
+test_flakiness:
+	@$(foreach i,$(shell seq 1 $(RUNS)), \
+		echo "Running iteration $(i)/$(RUNS) of \"make $(TEST_TARGET)\"" ; \
+		make $(TEST_TARGET) > /tmp/test ; \
+		if [ "$$?" -ne 0 ]; then \
+			echo "Test failed on iteration $(i)" ; \
+			cat /tmp/test ; \
+			exit 1 ; \
+		fi ;\
+	)
+
 test_base_with_redis: build
 	CODECRAFTERS_REPOSITORY_DIR=./internal/test_helpers/pass_all \
 	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\":\"jm1\",\"tester_log_prefix\":\"stage-1\",\"title\":\"Stage #1: Bind to a port\"},{\"slug\":\"rg2\",\"tester_log_prefix\":\"stage-2\",\"title\":\"Stage #2: Respond to PING\"},{\"slug\":\"wy1\",\"tester_log_prefix\":\"stage-3\",\"title\":\"Stage #3: Respond to multiple PINGs\"},{\"slug\":\"zu2\",\"tester_log_prefix\":\"stage-4\",\"title\":\"Stage #4: Handle concurrent clients\"},{\"slug\":\"qq0\",\"tester_log_prefix\":\"stage-5\",\"title\":\"Stage #5: Implement the ECHO command\"},{\"slug\":\"la7\",\"tester_log_prefix\":\"stage-6\",\"title\":\"Stage #6: Implement the SET \u0026 GET commands\"},{\"slug\":\"yz1\",\"tester_log_prefix\":\"stage-7\",\"title\":\"Stage #7: Expiry\"}]" \

@@ -42,30 +42,29 @@ func testStreamsXreadBlockMaxID(stageHarness *test_case_harness.TestCaseHarness)
 		return err
 	}
 
-	waitChan := make(chan bool, 1)
+	xReadDone := make(chan bool, 1)
 	randomInt = testerutils_random.RandomInt(1, 100)
 
-	go func() error {
-		assertion := resp_assertions.NewXReadResponseAssertion([]resp_assertions.StreamResponse{{
-			Key: randomKey,
-			Entries: []resp_assertions.StreamEntry{{
-				Id:              "0-2",
-				FieldValuePairs: [][]string{{"temperature", strconv.Itoa(randomInt)}},
-			}},
-		}})
-		xreadCommandTestCase := &test_cases.SendCommandTestCase{
-			Command:                   "XREAD",
-			Args:                      []string{"block", "0", "streams", randomKey, "$"},
-			Assertion:                 assertion,
-			ShouldSkipUnreadDataCheck: true,
-		}
+	xReadAssertion := resp_assertions.NewXReadResponseAssertion([]resp_assertions.StreamResponse{{
+		Key: randomKey,
+		Entries: []resp_assertions.StreamEntry{{
+			Id:              "0-2",
+			FieldValuePairs: [][]string{{"temperature", strconv.Itoa(randomInt)}},
+		}},
+	}})
+	xReadTestCase := &test_cases.SendCommandTestCase{
+		Command:                   "XREAD",
+		Args:                      []string{"block", "0", "streams", randomKey, "$"},
+		Assertion:                 xReadAssertion,
+		ShouldSkipUnreadDataCheck: true,
+	}
+	xReadTestCase.PauseReadingResponse()
 
-		if err := xreadCommandTestCase.Run(client1, logger); err != nil {
-			logger.Errorf("Error: %v", err)
+	go func() error {
+		if err := xReadTestCase.Run(client1, logger); err != nil {
 			return err
 		}
-
-		waitChan <- true
+		xReadDone <- true
 		return nil
 	}()
 
@@ -89,7 +88,9 @@ func testStreamsXreadBlockMaxID(stageHarness *test_case_harness.TestCaseHarness)
 		return err
 	}
 
-	<-waitChan
+	// Ensure the responses of XAdd and XRead are fixed in the fixture
+	xReadTestCase.ResumeReadingResponse()
+	<-xReadDone
 
 	xreadCommandTestCase := &test_cases.SendCommandTestCase{
 		Command:                   "XREAD",
