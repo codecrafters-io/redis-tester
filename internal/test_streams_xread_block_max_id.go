@@ -88,6 +88,7 @@ func testStreamsXreadBlockMaxID(stageHarness *test_case_harness.TestCaseHarness)
 		return err
 	}
 
+	// Ensure the responses of XAdd and XRead are fixed in the fixture
 	xReadTestCase.ResumeReadingResponse()
 	<-xReadDone
 

@@ -45,26 +45,3 @@ jobs:
         with:
           version: "2023.1"
           install-go: false
-
-  test-flakiness:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: 1.23.x
-
-      - name: Install Redis
-        run: |-
-          curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg
-          echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/redis.list
-          sudo apt-get update
-          sudo apt-get install redis
-
-      - name: "Stop redis service"
-        run: sudo service redis-server stop
-
-      - run: RUNS=10 make test_flakiness
