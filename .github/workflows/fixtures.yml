@@ -12,7 +12,7 @@ on:
 jobs:
   regenerate_fixtures:
     if: github.event.label.name == 'regenerate-fixtures'
-    uses: codecrafters-io/tester-utils/.github/workflows/fixtures.yml@ci-make-setup
+    uses: codecrafters-io/tester-utils/.github/workflows/fixtures.yml@master
     with:
       tester_repo: redis-tester
     secrets: inherit
