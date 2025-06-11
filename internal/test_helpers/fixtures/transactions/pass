@@ -601,9 +601,9 @@ Debug = true
 [33m[stage-36] [0m[94m$ ./spawn_redis_server.sh[0m
 [33m[stage-36] [0m[94mclient: $ redis-cli XADD raspberry * foo bar[0m
 [33m[stage-36] [0m[36mclient: Sent bytes: "*5\r\n$4\r\nXADD\r\n$9\r\nraspberry\r\n$1\r\n*\r\n$3\r\nfoo\r\n$3\r\nbar\r\n"[0m
-[33m[stage-36] [0m[36mclient: Received bytes: "$15\r\n1749667606539-0\r\n"[0m
-[33m[stage-36] [0m[36mclient: Received RESP bulk string: "1749667606539-0"[0m
-[33m[stage-36] [0m[92mReceived "1749667606539-0"[0m
+[33m[stage-36] [0m[36mclient: Received bytes: "$15\r\n1749668389782-0\r\n"[0m
+[33m[stage-36] [0m[36mclient: Received RESP bulk string: "1749668389782-0"[0m
+[33m[stage-36] [0m[92mReceived "1749668389782-0"[0m
 [33m[stage-36] [0m[92mThe first part of the ID is a valid unix milliseconds timestamp[0m
 [33m[stage-36] [0m[92mThe second part of the ID is a valid sequence number[0m
 [33m[stage-36] [0m[92mTest passed.[0m
@@ -720,11 +720,11 @@ Debug = true
 [33m[stage-31] [handshake] [0m[92mReceived "OK"[0m
 [33m[stage-31] [handshake] [0m[94mreplica-1: > PSYNC ? -1[0m
 [33m[stage-31] [handshake] [0m[36mreplica-1: Sent bytes: "*3\r\n$5\r\nPSYNC\r\n$1\r\n?\r\n$2\r\n-1\r\n"[0m
-[33m[stage-31] [handshake] [0m[36mreplica-1: Received bytes: "+FULLRESYNC 9a0f49bc6a3afb6792a129279d1b9b2ca8f34141 0\r\n"[0m
-[33m[stage-31] [handshake] [0m[36mreplica-1: Received RESP simple string: "FULLRESYNC 9a0f49bc6a3afb6792a129279d1b9b2ca8f34141 0"[0m
-[33m[stage-31] [handshake] [0m[92mReceived "FULLRESYNC 9a0f49bc6a3afb6792a129279d1b9b2ca8f34141 0"[0m
+[33m[stage-31] [handshake] [0m[36mreplica-1: Received bytes: "+FULLRESYNC 0d5dfe89044ce9587cdab2efef276c2701b983fa 0\r\n"[0m
+[33m[stage-31] [handshake] [0m[36mreplica-1: Received RESP simple string: "FULLRESYNC 0d5dfe89044ce9587cdab2efef276c2701b983fa 0"[0m
+[33m[stage-31] [handshake] [0m[92mReceived "FULLRESYNC 0d5dfe89044ce9587cdab2efef276c2701b983fa 0"[0m
 [33m[stage-31] [handshake] [0m[36mReading RDB file...[0m
-[33m[stage-31] [handshake] [0m[36mreplica-1: Received bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2\x17\xcfIh\xfa\bused-mem\xc2\xf0C\v\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(9a0f49bc6a3afb6792a129279d1b9b2ca8f34141\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff\\\xd7u-wRa\n"[0m
+[33m[stage-31] [handshake] [0m[36mreplica-1: Received bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2&\xd2Ih\xfa\bused-mem\xc2\xf0C\v\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(0d5dfe89044ce9587cdab2efef276c2701b983fa\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff7<&+%:\af"[0m
 [33m[stage-31] [handshake] [0m[92mReceived RDB file[0m
 [33m[stage-31] [0m[36mCreating replica: 2[0m
 [33m[stage-31] [handshake] [0m[94mreplica-2: $ redis-cli PING[0m
@@ -744,11 +744,11 @@ Debug = true
 [33m[stage-31] [handshake] [0m[92mReceived "OK"[0m
 [33m[stage-31] [handshake] [0m[94mreplica-2: > PSYNC ? -1[0m
 [33m[stage-31] [handshake] [0m[36mreplica-2: Sent bytes: "*3\r\n$5\r\nPSYNC\r\n$1\r\n?\r\n$2\r\n-1\r\n"[0m
-[33m[stage-31] [handshake] [0m[36mreplica-2: Received bytes: "+FULLRESYNC 9a0f49bc6a3afb6792a129279d1b9b2ca8f34141 0\r\n"[0m
-[33m[stage-31] [handshake] [0m[36mreplica-2: Received RESP simple string: "FULLRESYNC 9a0f49bc6a3afb6792a129279d1b9b2ca8f34141 0"[0m
-[33m[stage-31] [handshake] [0m[92mReceived "FULLRESYNC 9a0f49bc6a3afb6792a129279d1b9b2ca8f34141 0"[0m
+[33m[stage-31] [handshake] [0m[36mreplica-2: Received bytes: "+FULLRESYNC 0d5dfe89044ce9587cdab2efef276c2701b983fa 0\r\n"[0m
+[33m[stage-31] [handshake] [0m[36mreplica-2: Received RESP simple string: "FULLRESYNC 0d5dfe89044ce9587cdab2efef276c2701b983fa 0"[0m
+[33m[stage-31] [handshake] [0m[92mReceived "FULLRESYNC 0d5dfe89044ce9587cdab2efef276c2701b983fa 0"[0m
 [33m[stage-31] [handshake] [0m[36mReading RDB file...[0m
-[33m[stage-31] [handshake] [0m[36mreplica-2: Received bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2\x17\xcfIh\xfa\bused-mem\xc2\xe0\xe9\v\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(9a0f49bc6a3afb6792a129279d1b9b2ca8f34141\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff\x0f\x1a\x1e\x1bL\xfbU\x87"[0m
+[33m[stage-31] [handshake] [0m[36mreplica-2: Received bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2&\xd2Ih\xfa\bused-mem\xc2\xe0\xe9\v\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(0d5dfe89044ce9587cdab2efef276c2701b983fa\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xffd\xf1M\x1d\x1e\x933\xeb"[0m
 [33m[stage-31] [handshake] [0m[92mReceived RDB file[0m
 [33m[stage-31] [0m[36mCreating replica: 3[0m
 [33m[stage-31] [handshake] [0m[94mreplica-3: $ redis-cli PING[0m
@@ -768,11 +768,11 @@ Debug = true
 [33m[stage-31] [handshake] [0m[92mReceived "OK"[0m
 [33m[stage-31] [handshake] [0m[94mreplica-3: > PSYNC ? -1[0m
 [33m[stage-31] [handshake] [0m[36mreplica-3: Sent bytes: "*3\r\n$5\r\nPSYNC\r\n$1\r\n?\r\n$2\r\n-1\r\n"[0m
-[33m[stage-31] [handshake] [0m[36mreplica-3: Received bytes: "+FULLRESYNC 9a0f49bc6a3afb6792a129279d1b9b2ca8f34141 0\r\n"[0m
-[33m[stage-31] [handshake] [0m[36mreplica-3: Received RESP simple string: "FULLRESYNC 9a0f49bc6a3afb6792a129279d1b9b2ca8f34141 0"[0m
-[33m[stage-31] [handshake] [0m[92mReceived "FULLRESYNC 9a0f49bc6a3afb6792a129279d1b9b2ca8f34141 0"[0m
+[33m[stage-31] [handshake] [0m[36mreplica-3: Received bytes: "+FULLRESYNC 0d5dfe89044ce9587cdab2efef276c2701b983fa 0\r\n"[0m
+[33m[stage-31] [handshake] [0m[36mreplica-3: Received RESP simple string: "FULLRESYNC 0d5dfe89044ce9587cdab2efef276c2701b983fa 0"[0m
+[33m[stage-31] [handshake] [0m[92mReceived "FULLRESYNC 0d5dfe89044ce9587cdab2efef276c2701b983fa 0"[0m
 [33m[stage-31] [handshake] [0m[36mReading RDB file...[0m
-[33m[stage-31] [handshake] [0m[36mreplica-3: Received bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2\x17\xcfIh\xfa\bused-mem\xc2P\xf3\v\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(9a0f49bc6a3afb6792a129279d1b9b2ca8f34141\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff\xc0\xb4\xf9\x1c)@۷"[0m
+[33m[stage-31] [handshake] [0m[36mreplica-3: Received bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2&\xd2Ih\xfa\bused-mem\xc2P\xf3\v\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(0d5dfe89044ce9587cdab2efef276c2701b983fa\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff\xab_\xaa\x1a{(\xbd\xdb"[0m
 [33m[stage-31] [handshake] [0m[92mReceived RDB file[0m
 [33m[stage-31] [0m[36mCreating replica: 4[0m
 [33m[stage-31] [handshake] [0m[94mreplica-4: $ redis-cli PING[0m
@@ -792,11 +792,11 @@ Debug = true
 [33m[stage-31] [handshake] [0m[92mReceived "OK"[0m
 [33m[stage-31] [handshake] [0m[94mreplica-4: > PSYNC ? -1[0m
 [33m[stage-31] [handshake] [0m[36mreplica-4: Sent bytes: "*3\r\n$5\r\nPSYNC\r\n$1\r\n?\r\n$2\r\n-1\r\n"[0m
-[33m[stage-31] [handshake] [0m[36mreplica-4: Received bytes: "+FULLRESYNC 9a0f49bc6a3afb6792a129279d1b9b2ca8f34141 0\r\n"[0m
-[33m[stage-31] [handshake] [0m[36mreplica-4: Received RESP simple string: "FULLRESYNC 9a0f49bc6a3afb6792a129279d1b9b2ca8f34141 0"[0m
-[33m[stage-31] [handshake] [0m[92mReceived "FULLRESYNC 9a0f49bc6a3afb6792a129279d1b9b2ca8f34141 0"[0m
+[33m[stage-31] [handshake] [0m[36mreplica-4: Received bytes: "+FULLRESYNC 0d5dfe89044ce9587cdab2efef276c2701b983fa 0\r\n"[0m
+[33m[stage-31] [handshake] [0m[36mreplica-4: Received RESP simple string: "FULLRESYNC 0d5dfe89044ce9587cdab2efef276c2701b983fa 0"[0m
+[33m[stage-31] [handshake] [0m[92mReceived "FULLRESYNC 0d5dfe89044ce9587cdab2efef276c2701b983fa 0"[0m
 [33m[stage-31] [handshake] [0m[36mReading RDB file...[0m
-[33m[stage-31] [handshake] [0m[36mreplica-4: Received bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2\x17\xcfIh\xfa\bused-mem\xc2\xc0\xfc\v\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(9a0f49bc6a3afb6792a129279d1b9b2ca8f34141\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff\xed\xecn\x10\x87\xce\x12S"[0m
+[33m[stage-31] [handshake] [0m[36mreplica-4: Received bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2&\xd2Ih\xfa\bused-mem\xc2\xc0\xfc\v\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(0d5dfe89044ce9587cdab2efef276c2701b983fa\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff\x86\a=\x16զt?"[0m
 [33m[stage-31] [handshake] [0m[92mReceived RDB file[0m
 [33m[stage-31] [test] [0m[94mclient: $ redis-cli SET foo 123[0m
 [33m[stage-31] [test] [0m[36mclient: Sent bytes: "*3\r\n$3\r\nSET\r\n$3\r\nfoo\r\n$3\r\n123\r\n"[0m
@@ -913,7 +913,7 @@ Debug = true
 [33m[stage-31] [test] [0m[36mreplica-4: Not sending ACK to Master[0m
 [33m[stage-31] [test] [0m[36mclient: Received bytes: ":3\r\n"[0m
 [33m[stage-31] [test] [0m[36mclient: Received RESP integer: 3[0m
-[33m[stage-31] [test] [0m[94mWAIT command returned after 2089 ms[0m
+[33m[stage-31] [test] [0m[94mWAIT command returned after 2091 ms[0m
 [33m[stage-31] [0m[92mTest passed.[0m
 [33m[stage-31] [0m[36mTerminating program[0m
 [33m[stage-31] [0m[36mProgram terminated successfully[0m
@@ -939,11 +939,11 @@ Debug = true
 [33m[stage-30] [handshake] [0m[92mReceived "OK"[0m
 [33m[stage-30] [handshake] [0m[94mreplica-1: > PSYNC ? -1[0m
 [33m[stage-30] [handshake] [0m[36mreplica-1: Sent bytes: "*3\r\n$5\r\nPSYNC\r\n$1\r\n?\r\n$2\r\n-1\r\n"[0m
-[33m[stage-30] [handshake] [0m[36mreplica-1: Received bytes: "+FULLRESYNC a99ebca38ec84700bb6e577a347b4d8d61003c1f 0\r\n"[0m
-[33m[stage-30] [handshake] [0m[36mreplica-1: Received RESP simple string: "FULLRESYNC a99ebca38ec84700bb6e577a347b4d8d61003c1f 0"[0m
-[33m[stage-30] [handshake] [0m[92mReceived "FULLRESYNC a99ebca38ec84700bb6e577a347b4d8d61003c1f 0"[0m
+[33m[stage-30] [handshake] [0m[36mreplica-1: Received bytes: "+FULLRESYNC a9bbb9223dca77e5904a362c5b7b38c2ebf3df85 0\r\n"[0m
+[33m[stage-30] [handshake] [0m[36mreplica-1: Received RESP simple string: "FULLRESYNC a9bbb9223dca77e5904a362c5b7b38c2ebf3df85 0"[0m
+[33m[stage-30] [handshake] [0m[92mReceived "FULLRESYNC a9bbb9223dca77e5904a362c5b7b38c2ebf3df85 0"[0m
 [33m[stage-30] [handshake] [0m[36mReading RDB file...[0m
-[33m[stage-30] [handshake] [0m[36mreplica-1: Received bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2\x19\xcfIh\xfa\bused-mem\xc2\xf0C\v\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(a99ebca38ec84700bb6e577a347b4d8d61003c1f\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff,\xdfZ\xcc\xf7\xb3t$"[0m
+[33m[stage-30] [handshake] [0m[36mreplica-1: Received bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2(\xd2Ih\xfa\bused-mem\xc2\xf0C\v\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(a9bbb9223dca77e5904a362c5b7b38c2ebf3df85\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff\x03\xe1\x11i\xcf\\\xdeT"[0m
 [33m[stage-30] [handshake] [0m[92mReceived RDB file[0m
 [33m[stage-30] [0m[36mCreating replica: 2[0m
 [33m[stage-30] [handshake] [0m[94mreplica-2: $ redis-cli PING[0m
@@ -963,11 +963,11 @@ Debug = true
 [33m[stage-30] [handshake] [0m[92mReceived "OK"[0m
 [33m[stage-30] [handshake] [0m[94mreplica-2: > PSYNC ? -1[0m
 [33m[stage-30] [handshake] [0m[36mreplica-2: Sent bytes: "*3\r\n$5\r\nPSYNC\r\n$1\r\n?\r\n$2\r\n-1\r\n"[0m
-[33m[stage-30] [handshake] [0m[36mreplica-2: Received bytes: "+FULLRESYNC a99ebca38ec84700bb6e577a347b4d8d61003c1f 0\r\n"[0m
-[33m[stage-30] [handshake] [0m[36mreplica-2: Received RESP simple string: "FULLRESYNC a99ebca38ec84700bb6e577a347b4d8d61003c1f 0"[0m
-[33m[stage-30] [handshake] [0m[92mReceived "FULLRESYNC a99ebca38ec84700bb6e577a347b4d8d61003c1f 0"[0m
+[33m[stage-30] [handshake] [0m[36mreplica-2: Received bytes: "+FULLRESYNC a9bbb9223dca77e5904a362c5b7b38c2ebf3df85 0\r\n"[0m
+[33m[stage-30] [handshake] [0m[36mreplica-2: Received RESP simple string: "FULLRESYNC a9bbb9223dca77e5904a362c5b7b38c2ebf3df85 0"[0m
+[33m[stage-30] [handshake] [0m[92mReceived "FULLRESYNC a9bbb9223dca77e5904a362c5b7b38c2ebf3df85 0"[0m
 [33m[stage-30] [handshake] [0m[36mReading RDB file...[0m
-[33m[stage-30] [handshake] [0m[36mreplica-2: Received bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2\x19\xcfIh\xfa\bused-mem\xc2\xe0\xe9\v\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(a99ebca38ec84700bb6e577a347b4d8d61003c1f\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff\x7f\x121\xfa\xcc\x1a@\xa9"[0m
+[33m[stage-30] [handshake] [0m[36mreplica-2: Received bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2)\xd2Ih\xfa\bused-mem\xc2\xe0\xe9\v\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(a9bbb9223dca77e5904a362c5b7b38c2ebf3df85\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff\xa5\xd9\";\x0fD\xbc\a"[0m
 [33m[stage-30] [handshake] [0m[92mReceived RDB file[0m
 [33m[stage-30] [0m[36mCreating replica: 3[0m
 [33m[stage-30] [handshake] [0m[94mreplica-3: $ redis-cli PING[0m
@@ -987,11 +987,11 @@ Debug = true
 [33m[stage-30] [handshake] [0m[92mReceived "OK"[0m
 [33m[stage-30] [handshake] [0m[94mreplica-3: > PSYNC ? -1[0m
 [33m[stage-30] [handshake] [0m[36mreplica-3: Sent bytes: "*3\r\n$5\r\nPSYNC\r\n$1\r\n?\r\n$2\r\n-1\r\n"[0m
-[33m[stage-30] [handshake] [0m[36mreplica-3: Received bytes: "+FULLRESYNC a99ebca38ec84700bb6e577a347b4d8d61003c1f 0\r\n"[0m
-[33m[stage-30] [handshake] [0m[36mreplica-3: Received RESP simple string: "FULLRESYNC a99ebca38ec84700bb6e577a347b4d8d61003c1f 0"[0m
-[33m[stage-30] [handshake] [0m[92mReceived "FULLRESYNC a99ebca38ec84700bb6e577a347b4d8d61003c1f 0"[0m
+[33m[stage-30] [handshake] [0m[36mreplica-3: Received bytes: "+FULLRESYNC a9bbb9223dca77e5904a362c5b7b38c2ebf3df85 0\r\n"[0m
+[33m[stage-30] [handshake] [0m[36mreplica-3: Received RESP simple string: "FULLRESYNC a9bbb9223dca77e5904a362c5b7b38c2ebf3df85 0"[0m
+[33m[stage-30] [handshake] [0m[92mReceived "FULLRESYNC a9bbb9223dca77e5904a362c5b7b38c2ebf3df85 0"[0m
 [33m[stage-30] [handshake] [0m[36mReading RDB file...[0m
-[33m[stage-30] [handshake] [0m[36mreplica-3: Received bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2\x19\xcfIh\xfa\bused-mem\xc2P\xf3\v\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(a99ebca38ec84700bb6e577a347b4d8d61003c1f\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff\xb0\xbc\xd6\xfd\xa9\xa1Ι"[0m
+[33m[stage-30] [handshake] [0m[36mreplica-3: Received bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2)\xd2Ih\xfa\bused-mem\xc2P\xf3\v\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(a9bbb9223dca77e5904a362c5b7b38c2ebf3df85\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xffjw\xc5<j\xff27"[0m
 [33m[stage-30] [handshake] [0m[92mReceived RDB file[0m
 [33m[stage-30] [0m[36mCreating replica: 4[0m
 [33m[stage-30] [handshake] [0m[94mreplica-4: $ redis-cli PING[0m
@@ -1011,11 +1011,11 @@ Debug = true
 [33m[stage-30] [handshake] [0m[92mReceived "OK"[0m
 [33m[stage-30] [handshake] [0m[94mreplica-4: > PSYNC ? -1[0m
 [33m[stage-30] [handshake] [0m[36mreplica-4: Sent bytes: "*3\r\n$5\r\nPSYNC\r\n$1\r\n?\r\n$2\r\n-1\r\n"[0m
-[33m[stage-30] [handshake] [0m[36mreplica-4: Received bytes: "+FULLRESYNC a99ebca38ec84700bb6e577a347b4d8d61003c1f 0\r\n"[0m
-[33m[stage-30] [handshake] [0m[36mreplica-4: Received RESP simple string: "FULLRESYNC a99ebca38ec84700bb6e577a347b4d8d61003c1f 0"[0m
-[33m[stage-30] [handshake] [0m[92mReceived "FULLRESYNC a99ebca38ec84700bb6e577a347b4d8d61003c1f 0"[0m
+[33m[stage-30] [handshake] [0m[36mreplica-4: Received bytes: "+FULLRESYNC a9bbb9223dca77e5904a362c5b7b38c2ebf3df85 0\r\n"[0m
+[33m[stage-30] [handshake] [0m[36mreplica-4: Received RESP simple string: "FULLRESYNC a9bbb9223dca77e5904a362c5b7b38c2ebf3df85 0"[0m
+[33m[stage-30] [handshake] [0m[92mReceived "FULLRESYNC a9bbb9223dca77e5904a362c5b7b38c2ebf3df85 0"[0m
 [33m[stage-30] [handshake] [0m[36mReading RDB file...[0m
-[33m[stage-30] [handshake] [0m[36mreplica-4: Received bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2\x19\xcfIh\xfa\bused-mem\xc2\xc0\xfc\v\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(a99ebca38ec84700bb6e577a347b4d8d61003c1f\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff\x9d\xe4A\xf1\a/\a}"[0m
+[33m[stage-30] [handshake] [0m[36mreplica-4: Received bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2)\xd2Ih\xfa\bused-mem\xc2\xc0\xfc\v\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(a9bbb9223dca77e5904a362c5b7b38c2ebf3df85\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xffG/R0\xc4q\xfb\xd3"[0m
 [33m[stage-30] [handshake] [0m[92mReceived RDB file[0m
 [33m[stage-30] [test] [0m[94mclient: $ redis-cli WAIT 3 500[0m
 [33m[stage-30] [test] [0m[36mclient: Sent bytes: "*3\r\n$4\r\nWAIT\r\n$1\r\n3\r\n$3\r\n500\r\n"[0m
@@ -1224,11 +1224,11 @@ Debug = true
 [33m[stage-25] [handshake] [0m[92mReceived "OK"[0m
 [33m[stage-25] [handshake] [0m[94mreplica-1: > PSYNC ? -1[0m
 [33m[stage-25] [handshake] [0m[36mreplica-1: Sent bytes: "*3\r\n$5\r\nPSYNC\r\n$1\r\n?\r\n$2\r\n-1\r\n"[0m
-[33m[stage-25] [handshake] [0m[36mreplica-1: Received bytes: "+FULLRESYNC 698c9754445c802e2aebaf7bdba3d2eba37901d7 0\r\n"[0m
-[33m[stage-25] [handshake] [0m[36mreplica-1: Received RESP simple string: "FULLRESYNC 698c9754445c802e2aebaf7bdba3d2eba37901d7 0"[0m
-[33m[stage-25] [handshake] [0m[92mReceived "FULLRESYNC 698c9754445c802e2aebaf7bdba3d2eba37901d7 0"[0m
+[33m[stage-25] [handshake] [0m[36mreplica-1: Received bytes: "+FULLRESYNC fa956d2762b0a481fda47c076c364fa6b4a6467b 0\r\n"[0m
+[33m[stage-25] [handshake] [0m[36mreplica-1: Received RESP simple string: "FULLRESYNC fa956d2762b0a481fda47c076c364fa6b4a6467b 0"[0m
+[33m[stage-25] [handshake] [0m[92mReceived "FULLRESYNC fa956d2762b0a481fda47c076c364fa6b4a6467b 0"[0m
 [33m[stage-25] [handshake] [0m[36mReading RDB file...[0m
-[33m[stage-25] [handshake] [0m[36mreplica-1: Received bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2\x1b\xcfIh\xfa\bused-mem\xc2@\x89\v\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(698c9754445c802e2aebaf7bdba3d2eba37901d7\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff\xc6w\xb4%\x80\xc6\xd4\x19"[0m
+[33m[stage-25] [handshake] [0m[36mreplica-1: Received bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2+\xd2Ih\xfa\bused-mem\xc2@\x89\v\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(fa956d2762b0a481fda47c076c364fa6b4a6467b\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff\x10\xc0:\xb9fD\xac\xba"[0m
 [33m[stage-25] [handshake] [0m[92mReceived RDB file[0m
 [33m[stage-25] [0m[36mCreating replica: 2[0m
 [33m[stage-25] [handshake] [0m[94mreplica-2: $ redis-cli PING[0m
@@ -1248,11 +1248,11 @@ Debug = true
 [33m[stage-25] [handshake] [0m[92mReceived "OK"[0m
 [33m[stage-25] [handshake] [0m[94mreplica-2: > PSYNC ? -1[0m
 [33m[stage-25] [handshake] [0m[36mreplica-2: Sent bytes: "*3\r\n$5\r\nPSYNC\r\n$1\r\n?\r\n$2\r\n-1\r\n"[0m
-[33m[stage-25] [handshake] [0m[36mreplica-2: Received bytes: "+FULLRESYNC 698c9754445c802e2aebaf7bdba3d2eba37901d7 0\r\n"[0m
-[33m[stage-25] [handshake] [0m[36mreplica-2: Received RESP simple string: "FULLRESYNC 698c9754445c802e2aebaf7bdba3d2eba37901d7 0"[0m
-[33m[stage-25] [handshake] [0m[92mReceived "FULLRESYNC 698c9754445c802e2aebaf7bdba3d2eba37901d7 0"[0m
+[33m[stage-25] [handshake] [0m[36mreplica-2: Received bytes: "+FULLRESYNC fa956d2762b0a481fda47c076c364fa6b4a6467b 0\r\n"[0m
+[33m[stage-25] [handshake] [0m[36mreplica-2: Received RESP simple string: "FULLRESYNC fa956d2762b0a481fda47c076c364fa6b4a6467b 0"[0m
+[33m[stage-25] [handshake] [0m[92mReceived "FULLRESYNC fa956d2762b0a481fda47c076c364fa6b4a6467b 0"[0m
 [33m[stage-25] [handshake] [0m[36mReading RDB file...[0m
-[33m[stage-25] [handshake] [0m[36mreplica-2: Received bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2\x1b\xcfIh\xfa\bused-mem\xc2 /\f\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(698c9754445c802e2aebaf7bdba3d2eba37901d7\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff\xff\x8b\x1e9\x8c)R\xd3"[0m
+[33m[stage-25] [handshake] [0m[36mreplica-2: Received bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2+\xd2Ih\xfa\bused-mem\xc2 /\f\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(fa956d2762b0a481fda47c076c364fa6b4a6467b\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff)<\x90\xa5j\xab*p"[0m
 [33m[stage-25] [handshake] [0m[92mReceived RDB file[0m
 [33m[stage-25] [0m[36mCreating replica: 3[0m
 [33m[stage-25] [handshake] [0m[94mreplica-3: $ redis-cli PING[0m
@@ -1272,11 +1272,11 @@ Debug = true
 [33m[stage-25] [handshake] [0m[92mReceived "OK"[0m
 [33m[stage-25] [handshake] [0m[94mreplica-3: > PSYNC ? -1[0m
 [33m[stage-25] [handshake] [0m[36mreplica-3: Sent bytes: "*3\r\n$5\r\nPSYNC\r\n$1\r\n?\r\n$2\r\n-1\r\n"[0m
-[33m[stage-25] [handshake] [0m[36mreplica-3: Received bytes: "+FULLRESYNC 698c9754445c802e2aebaf7bdba3d2eba37901d7 0\r\n"[0m
-[33m[stage-25] [handshake] [0m[36mreplica-3: Received RESP simple string: "FULLRESYNC 698c9754445c802e2aebaf7bdba3d2eba37901d7 0"[0m
-[33m[stage-25] [handshake] [0m[92mReceived "FULLRESYNC 698c9754445c802e2aebaf7bdba3d2eba37901d7 0"[0m
+[33m[stage-25] [handshake] [0m[36mreplica-3: Received bytes: "+FULLRESYNC fa956d2762b0a481fda47c076c364fa6b4a6467b 0\r\n"[0m
+[33m[stage-25] [handshake] [0m[36mreplica-3: Received RESP simple string: "FULLRESYNC fa956d2762b0a481fda47c076c364fa6b4a6467b 0"[0m
+[33m[stage-25] [handshake] [0m[92mReceived "FULLRESYNC fa956d2762b0a481fda47c076c364fa6b4a6467b 0"[0m
 [33m[stage-25] [handshake] [0m[36mReading RDB file...[0m
-[33m[stage-25] [handshake] [0m[36mreplica-3: Received bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2\x1c\xcfIh\xfa\bused-mem\u0090\xfc\v\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(698c9754445c802e2aebaf7bdba3d2eba37901d7\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff\xaa\x83)\xe5\xdc\f\xe8\xac"[0m
+[33m[stage-25] [handshake] [0m[36mreplica-3: Received bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2+\xd2Ih\xfa\bused-mem\u0090\xfc\v\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(fa956d2762b0a481fda47c076c364fa6b4a6467b\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xffa\xdb\x02\xf5|׃B"[0m
 [33m[stage-25] [handshake] [0m[92mReceived RDB file[0m
 [33m[stage-25] [test] [0m[94mclient: $ redis-cli SET foo 123[0m
 [33m[stage-25] [test] [0m[36mclient: Sent bytes: "*3\r\n$3\r\nSET\r\n$3\r\nfoo\r\n$3\r\n123\r\n"[0m
@@ -1361,11 +1361,11 @@ Debug = true
 [33m[stage-24] [handshake] [0m[92mReceived "OK"[0m
 [33m[stage-24] [handshake] [0m[94mreplica: > PSYNC ? -1[0m
 [33m[stage-24] [handshake] [0m[36mreplica: Sent bytes: "*3\r\n$5\r\nPSYNC\r\n$1\r\n?\r\n$2\r\n-1\r\n"[0m
-[33m[stage-24] [handshake] [0m[36mreplica: Received bytes: "+FULLRESYNC 68335e05fccc7fa822c642f26df224c33c94dc9f 0\r\n"[0m
-[33m[stage-24] [handshake] [0m[36mreplica: Received RESP simple string: "FULLRESYNC 68335e05fccc7fa822c642f26df224c33c94dc9f 0"[0m
-[33m[stage-24] [handshake] [0m[92mReceived "FULLRESYNC 68335e05fccc7fa822c642f26df224c33c94dc9f 0"[0m
+[33m[stage-24] [handshake] [0m[36mreplica: Received bytes: "+FULLRESYNC 45aa3fa34125ec13d9feca516228a81e35427928 0\r\n"[0m
+[33m[stage-24] [handshake] [0m[36mreplica: Received RESP simple string: "FULLRESYNC 45aa3fa34125ec13d9feca516228a81e35427928 0"[0m
+[33m[stage-24] [handshake] [0m[92mReceived "FULLRESYNC 45aa3fa34125ec13d9feca516228a81e35427928 0"[0m
 [33m[stage-24] [handshake] [0m[36mReading RDB file...[0m
-[33m[stage-24] [handshake] [0m[36mreplica: Received bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2\x1c\xcfIh\xfa\bused-mem\xc2@\x89\v\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(68335e05fccc7fa822c642f26df224c33c94dc9f\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xffҮcCv\xc0\xda7"[0m
+[33m[stage-24] [handshake] [0m[36mreplica: Received bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2+\xd2Ih\xfa\bused-mem\xc2@\x89\v\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(45aa3fa34125ec13d9feca516228a81e35427928\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff\xa9J\x18-\xa6\x99\xb3J"[0m
 [33m[stage-24] [handshake] [0m[92mReceived RDB file[0m
 [33m[stage-24] [test] [0m[94mclient: $ redis-cli SET foo 123[0m
 [33m[stage-24] [test] [0m[36mclient: Sent bytes: "*3\r\n$3\r\nSET\r\n$3\r\nfoo\r\n$3\r\n123\r\n"[0m
@@ -1420,11 +1420,11 @@ Debug = true
 [33m[stage-23] [0m[92mReceived "OK"[0m
 [33m[stage-23] [0m[94mclient: > PSYNC ? -1[0m
 [33m[stage-23] [0m[36mclient: Sent bytes: "*3\r\n$5\r\nPSYNC\r\n$1\r\n?\r\n$2\r\n-1\r\n"[0m
-[33m[stage-23] [0m[36mclient: Received bytes: "+FULLRESYNC 2256285a3fc703d36ad7683e92c82d131bacaabd 0\r\n"[0m
-[33m[stage-23] [0m[36mclient: Received RESP simple string: "FULLRESYNC 2256285a3fc703d36ad7683e92c82d131bacaabd 0"[0m
-[33m[stage-23] [0m[92mReceived "FULLRESYNC 2256285a3fc703d36ad7683e92c82d131bacaabd 0"[0m
+[33m[stage-23] [0m[36mclient: Received bytes: "+FULLRESYNC 53d2bfd5124bfb2a675bd85dd42ab243432450c5 0\r\n"[0m
+[33m[stage-23] [0m[36mclient: Received RESP simple string: "FULLRESYNC 53d2bfd5124bfb2a675bd85dd42ab243432450c5 0"[0m
+[33m[stage-23] [0m[92mReceived "FULLRESYNC 53d2bfd5124bfb2a675bd85dd42ab243432450c5 0"[0m
 [33m[stage-23] [0m[36mReading RDB file...[0m
-[33m[stage-23] [0m[36mclient: Received bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2\x1c\xcfIh\xfa\bused-mem\xc2\xf0C\v\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(2256285a3fc703d36ad7683e92c82d131bacaabd\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff\x02ݭ\xfeM\x1b\xb6\xd4"[0m
+[33m[stage-23] [0m[36mclient: Received bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2+\xd2Ih\xfa\bused-mem\xc2\xf0C\v\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(53d2bfd5124bfb2a675bd85dd42ab243432450c5\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff\xfa\x9e\xe2\x82\x16#\xc7\xeb"[0m
 [33m[stage-23] [0m[92mReceived RDB file[0m
 [33m[stage-23] [0m[92mTest passed.[0m
 [33m[stage-23] [0m[36mTerminating program[0m
@@ -1449,9 +1449,9 @@ Debug = true
 [33m[stage-22] [0m[92mReceived "OK"[0m
 [33m[stage-22] [0m[94mclient: > PSYNC ? -1[0m
 [33m[stage-22] [0m[36mclient: Sent bytes: "*3\r\n$5\r\nPSYNC\r\n$1\r\n?\r\n$2\r\n-1\r\n"[0m
-[33m[stage-22] [0m[36mclient: Received bytes: "+FULLRESYNC 2ebb6d9c8f0d5c248af1de24a62c892c02c363db 0\r\n"[0m
-[33m[stage-22] [0m[36mclient: Received RESP simple string: "FULLRESYNC 2ebb6d9c8f0d5c248af1de24a62c892c02c363db 0"[0m
-[33m[stage-22] [0m[92mReceived "FULLRESYNC 2ebb6d9c8f0d5c248af1de24a62c892c02c363db 0"[0m
+[33m[stage-22] [0m[36mclient: Received bytes: "+FULLRESYNC 84e744792a10bfcbbd8d24d3ce4b5368221d7ebe 0\r\n"[0m
+[33m[stage-22] [0m[36mclient: Received RESP simple string: "FULLRESYNC 84e744792a10bfcbbd8d24d3ce4b5368221d7ebe 0"[0m
+[33m[stage-22] [0m[92mReceived "FULLRESYNC 84e744792a10bfcbbd8d24d3ce4b5368221d7ebe 0"[0m
 [33m[stage-22] [0m[92mTest passed.[0m
 [33m[stage-22] [0m[36mTerminating program[0m
 [33m[stage-22] [0m[36mProgram terminated successfully[0m
@@ -1550,12 +1550,10 @@ Debug = true
 [33m[stage-17] [0m[94m$ ./spawn_redis_server.sh[0m
 [33m[stage-17] [0m[94mclient: $ redis-cli INFO replication[0m
 [33m[stage-17] [0m[36mclient: Sent bytes: "*2\r\n$4\r\nINFO\r\n$11\r\nreplication\r\n"[0m
-[33m[stage-17] [0m[36mclient: Received bytes: "$349\r\n# Replication\r\nrole:master\r\nconnected_slaves:0\r\nmaster_failover_state:no-failover\r\nmaster_replid:3ad3533b9a7c6b2b0665ba6edec8a77a4eca04ef\r\nmaster_replid2:0000000000000000000000000000000000000000\r\nmaster_repl_offset:0\r\nsecond_repl_offset:-1\r\nrepl_backlog_active:0\r\nrepl_backlog_size:1048576\r\nrepl_backlog_first_byte_offset:0\r\nrepl_backlog_histlen:0\r\n\r\n"[0m
-[33m[stage-17] [0m[36mclient: Received RESP bulk string: "# Replication\r\nrole:master\r\nconnected_slaves:0\r\nmaster_failover_state:no-failover\r\nmaster_replid:3ad3533b9a7c6b2b0665ba6edec8a77a4eca04ef\r\nmaster_replid2:0000000000000000000000000000000000000000\r\nmaster_repl_offset:0\r\nsecond_repl_offset:-1\r\nrepl_backlog_active:0\r\nrepl_backlog_size:1048576\r\nrepl_backlog_first_byte_offset:0\r\nrepl_backlog_histlen:0\r\n"[0m
-[33m[stage-17] [0m[92mReceived "# Replication\r\nrole:master\r\nconnected_slaves:0\r\nmaster_failover_state:no-failover\r\nmaster_replid:3ad3533b9a7c6b2b0665ba6edec8a77a4eca04ef\r\nmaster_replid2:0000000000000000000000000000000000000000\r\nmaster_repl_offset:0\r\nsecond_repl_offset:-1\r\nrepl_backlog_active:0\r\nrepl_backlog_size:1048576\r\nrepl_backlog_first_byte_offset:0\r\nrepl_backlog_histlen:0\r\n"[0m
+[33m[stage-17] [0m[36mclient: Received bytes: "$349\r\n# Replication\r\nrole:master\r\nconnected_slaves:0\r\nmaster_failover_state:no-failover\r\nmaster_replid:02599c451fa403800088b5b698426fd840895ec3\r\nmaster_replid2:0000000000000000000000000000000000000000\r\nmaster_repl_offset:0\r\nsecond_repl_offset:-1\r\nrepl_backlog_active:0\r\nrepl_backlog_size:1048576\r\nrepl_backlog_first_byte_offset:0\r\nrepl_backlog_histlen:0\r\n\r\n"[0m
+[33m[stage-17] [0m[36mclient: Received RESP bulk string: "# Replication\r\nrole:master\r\nconnected_slaves:0\r\nmaster_failover_state:no-failover\r\nmaster_replid:02599c451fa403800088b5b698426fd840895ec3\r\nmaster_replid2:0000000000000000000000000000000000000000\r\nmaster_repl_offset:0\r\nsecond_repl_offset:-1\r\nrepl_backlog_active:0\r\nrepl_backlog_size:1048576\r\nrepl_backlog_first_byte_offset:0\r\nrepl_backlog_histlen:0\r\n"[0m
+[33m[stage-17] [0m[92mReceived "# Replication\r\nrole:master\r\nconnected_slaves:0\r\nmaster_failover_state:no-failover\r\nmaster_replid:02599c451fa403800088b5b698426fd840895ec3\r\nmaster_replid2:0000000000000000000000000000000000000000\r\nmaster_repl_offset:0\r\nsecond_repl_offset:-1\r\nrepl_backlog_active:0\r\nrepl_backlog_size:1048576\r\nrepl_backlog_first_byte_offset:0\r\nrepl_backlog_histlen:0\r\n"[0m
 [33m[stage-17] [0m[92mFound master_replid:xxx in response.[0m
-[33m[stage-17] [0m[92mFound master_replid:xxx in response.[0m
-[33m[stage-17] [0m[92mFound master_reploffset:0 in response.[0m
 [33m[stage-17] [0m[92mFound master_reploffset:0 in response.[0m
 [33m[stage-17] [0m[92mTest passed.[0m
 [33m[stage-17] [0m[36mTerminating program[0m
@@ -1578,9 +1576,9 @@ Debug = true
 [33m[stage-15] [0m[94m$ ./spawn_redis_server.sh[0m
 [33m[stage-15] [0m[94mclient: $ redis-cli INFO replication[0m
 [33m[stage-15] [0m[36mclient: Sent bytes: "*2\r\n$4\r\nINFO\r\n$11\r\nreplication\r\n"[0m
-[33m[stage-15] [0m[36mclient: Received bytes: "$349\r\n# Replication\r\nrole:master\r\nconnected_slaves:0\r\nmaster_failover_state:no-failover\r\nmaster_replid:ee0e391f03a672eabd2926c7631ec125752f4cc2\r\nmaster_replid2:0000000000000000000000000000000000000000\r\nmaster_repl_offset:0\r\nsecond_repl_offset:-1\r\nrepl_backlog_active:0\r\nrepl_backlog_size:1048576\r\nrepl_backlog_first_byte_offset:0\r\nrepl_backlog_histlen:0\r\n\r\n"[0m
-[33m[stage-15] [0m[36mclient: Received RESP bulk string: "# Replication\r\nrole:master\r\nconnected_slaves:0\r\nmaster_failover_state:no-failover\r\nmaster_replid:ee0e391f03a672eabd2926c7631ec125752f4cc2\r\nmaster_replid2:0000000000000000000000000000000000000000\r\nmaster_repl_offset:0\r\nsecond_repl_offset:-1\r\nrepl_backlog_active:0\r\nrepl_backlog_size:1048576\r\nrepl_backlog_first_byte_offset:0\r\nrepl_backlog_histlen:0\r\n"[0m
-[33m[stage-15] [0m[92mReceived "# Replication\r\nrole:master\r\nconnected_slaves:0\r\nmaster_failover_state:no-failover\r\nmaster_replid:ee0e391f03a672eabd2926c7631ec125752f4cc2\r\nmaster_replid2:0000000000000000000000000000000000000000\r\nmaster_repl_offset:0\r\nsecond_repl_offset:-1\r\nrepl_backlog_active:0\r\nrepl_backlog_size:1048576\r\nrepl_backlog_first_byte_offset:0\r\nrepl_backlog_histlen:0\r\n"[0m
+[33m[stage-15] [0m[36mclient: Received bytes: "$349\r\n# Replication\r\nrole:master\r\nconnected_slaves:0\r\nmaster_failover_state:no-failover\r\nmaster_replid:6d7369d10c7e19bb6fdef92106280b6104818fa3\r\nmaster_replid2:0000000000000000000000000000000000000000\r\nmaster_repl_offset:0\r\nsecond_repl_offset:-1\r\nrepl_backlog_active:0\r\nrepl_backlog_size:1048576\r\nrepl_backlog_first_byte_offset:0\r\nrepl_backlog_histlen:0\r\n\r\n"[0m
+[33m[stage-15] [0m[36mclient: Received RESP bulk string: "# Replication\r\nrole:master\r\nconnected_slaves:0\r\nmaster_failover_state:no-failover\r\nmaster_replid:6d7369d10c7e19bb6fdef92106280b6104818fa3\r\nmaster_replid2:0000000000000000000000000000000000000000\r\nmaster_repl_offset:0\r\nsecond_repl_offset:-1\r\nrepl_backlog_active:0\r\nrepl_backlog_size:1048576\r\nrepl_backlog_first_byte_offset:0\r\nrepl_backlog_histlen:0\r\n"[0m
+[33m[stage-15] [0m[92mReceived "# Replication\r\nrole:master\r\nconnected_slaves:0\r\nmaster_failover_state:no-failover\r\nmaster_replid:6d7369d10c7e19bb6fdef92106280b6104818fa3\r\nmaster_replid2:0000000000000000000000000000000000000000\r\nmaster_repl_offset:0\r\nsecond_repl_offset:-1\r\nrepl_backlog_active:0\r\nrepl_backlog_size:1048576\r\nrepl_backlog_first_byte_offset:0\r\nrepl_backlog_histlen:0\r\n"[0m
 [33m[stage-15] [0m[92mFound role:master in response.[0m
 [33m[stage-15] [0m[92mTest passed.[0m
 [33m[stage-15] [0m[36mTerminating program[0m
@@ -1599,18 +1597,18 @@ Debug = true
 [33m[stage-13] [0m[36mHexdump of RDB file contents: [0m
 [33m[stage-13] [0m[36mIdx  | Hex                                             | ASCII[0m
 [33m[stage-13] [0m[36m-----+-------------------------------------------------+-----------------[0m
-[33m[stage-13] [0m[36m0000 | 52 45 44 49 53 30 30 31 31 fa 0a 72 65 64 69 73 | REDIS0011..redis[0m
-[33m[stage-13] [0m[36m0010 | 2d 62 69 74 73 c0 40 fa 09 72 65 64 69 73 2d 76 | -bits.@..redis-v[0m
-[33m[stage-13] [0m[36m0020 | 65 72 05 37 2e 32 2e 30 fe 00 fb 04 04 fc 00 0c | er.7.2.0........[0m
+[33m[stage-13] [0m[36m0000 | 52 45 44 49 53 30 30 31 31 fa 09 72 65 64 69 73 | REDIS0011..redis[0m
+[33m[stage-13] [0m[36m0010 | 2d 76 65 72 05 37 2e 32 2e 30 fa 0a 72 65 64 69 | -ver.7.2.0..redi[0m
+[33m[stage-13] [0m[36m0020 | 73 2d 62 69 74 73 c0 40 fe 00 fb 04 04 fc 00 0c | s-bits.@........[0m
 [33m[stage-13] [0m[36m0030 | 28 8a c7 01 00 00 00 05 61 70 70 6c 65 09 70 69 | (.......apple.pi[0m
 [33m[stage-13] [0m[36m0040 | 6e 65 61 70 70 6c 65 fc 00 9c ef 12 7e 01 00 00 | neapple.....~...[0m
 [33m[stage-13] [0m[36m0050 | 00 04 70 65 61 72 05 61 70 70 6c 65 fc 00 0c 28 | ..pear.apple...([0m
 [33m[stage-13] [0m[36m0060 | 8a c7 01 00 00 00 0a 73 74 72 61 77 62 65 72 72 | .......strawberr[0m
 [33m[stage-13] [0m[36m0070 | 79 05 6d 61 6e 67 6f fc 00 0c 28 8a c7 01 00 00 | y.mango...(.....[0m
 [33m[stage-13] [0m[36m0080 | 00 09 62 6c 75 65 62 65 72 72 79 06 6f 72 61 6e | ..blueberry.oran[0m
-[33m[stage-13] [0m[36m0090 | 67 65 ff 75 88 2d 53 6e 59 ab 7c 0a             | ge.u.-SnY.|.[0m
+[33m[stage-13] [0m[36m0090 | 67 65 ff 35 d1 a0 9e ee 98 4d 0c 0a             | ge.5.....M..[0m
 [33m[stage-13] [0m[36m[0m
-[33m[stage-13] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdbfiles2745706490 --dbfilename orange.rdb[0m
+[33m[stage-13] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdbfiles1801591972 --dbfilename orange.rdb[0m
 [33m[stage-13] [0m[94mclient: $ redis-cli GET apple[0m
 [33m[stage-13] [0m[36mclient: Sent bytes: "*2\r\n$3\r\nGET\r\n$5\r\napple\r\n"[0m
 [33m[stage-13] [0m[36mclient: Received bytes: "$9\r\npineapple\r\n"[0m
@@ -1650,7 +1648,7 @@ Debug = true
 [33m[stage-12] [0m[36m0070 | 65 72 72 79 09 70 69 6e 65 61 70 70 6c 65 ff 69 | erry.pineapple.i[0m
 [33m[stage-12] [0m[36m0080 | 69 c5 86 2b 78 5e 70 0a                         | i..+x^p.[0m
 [33m[stage-12] [0m[36m[0m
-[33m[stage-12] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdbfiles1491131059 --dbfilename pineapple.rdb[0m
+[33m[stage-12] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdbfiles66500949 --dbfilename pineapple.rdb[0m
 [33m[stage-12] [0m[94mclient: $ redis-cli GET strawberry[0m
 [33m[stage-12] [0m[36mclient: Sent bytes: "*2\r\n$3\r\nGET\r\n$10\r\nstrawberry\r\n"[0m
 [33m[stage-12] [0m[36mclient: Received bytes: "$5\r\ngrape\r\n"[0m
@@ -1693,12 +1691,12 @@ Debug = true
 [33m[stage-11] [0m[36m0050 | 05 6d 61 6e 67 6f 09 72 61 73 70 62 65 72 72 79 | .mango.raspberry[0m
 [33m[stage-11] [0m[36m0060 | ff 1e dd aa 7c b5 f2 cc 39 0a                   | ....|...9.[0m
 [33m[stage-11] [0m[36m[0m
-[33m[stage-11] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdbfiles3472488213 --dbfilename strawberry.rdb[0m
+[33m[stage-11] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdbfiles2423253280 --dbfilename strawberry.rdb[0m
 [33m[stage-11] [0m[94mclient: $ redis-cli KEYS *[0m
 [33m[stage-11] [0m[36mclient: Sent bytes: "*2\r\n$4\r\nKEYS\r\n$1\r\n*\r\n"[0m
-[33m[stage-11] [0m[36mclient: Received bytes: "*3\r\n$9\r\npineapple\r\n$5\r\nmango\r\n$9\r\nblueberry\r\n"[0m
-[33m[stage-11] [0m[36mclient: Received RESP array: ["pineapple", "mango", "blueberry"][0m
-[33m[stage-11] [0m[92mReceived ["pineapple", "mango", "blueberry"][0m
+[33m[stage-11] [0m[36mclient: Received bytes: "*3\r\n$5\r\nmango\r\n$9\r\nblueberry\r\n$9\r\npineapple\r\n"[0m
+[33m[stage-11] [0m[36mclient: Received RESP array: ["mango", "blueberry", "pineapple"][0m
+[33m[stage-11] [0m[92mReceived ["mango", "blueberry", "pineapple"][0m
 [33m[stage-11] [0m[92mTest passed.[0m
 [33m[stage-11] [0m[36mTerminating program[0m
 [33m[stage-11] [0m[36mProgram terminated successfully[0m
@@ -1714,7 +1712,7 @@ Debug = true
 [33m[stage-10] [0m[36m0030 | 72 61 6e 67 65 0a 73 74 72 61 77 62 65 72 72 79 | range.strawberry[0m
 [33m[stage-10] [0m[36m0040 | ff 9a 13 5a 02 8b 9b 2d 32 0a                   | ...Z...-2.[0m
 [33m[stage-10] [0m[36m[0m
-[33m[stage-10] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdbfiles339828687 --dbfilename banana.rdb[0m
+[33m[stage-10] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdbfiles3041020273 --dbfilename banana.rdb[0m
 [33m[stage-10] [0m[94mclient: $ redis-cli GET orange[0m
 [33m[stage-10] [0m[36mclient: Sent bytes: "*2\r\n$3\r\nGET\r\n$6\r\norange\r\n"[0m
 [33m[stage-10] [0m[36mclient: Received bytes: "$10\r\nstrawberry\r\n"[0m
@@ -1735,7 +1733,7 @@ Debug = true
 [33m[stage-9] [0m[36m0030 | 61 6e 61 6e 61 04 70 65 61 72 ff 40 3f 59 e4 93 | anana.pear.@?Y..[0m
 [33m[stage-9] [0m[36m0040 | 6b d8 e9 0a                                     | k...[0m
 [33m[stage-9] [0m[36m[0m
-[33m[stage-9] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdbfiles3278453243 --dbfilename strawberry.rdb[0m
+[33m[stage-9] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdbfiles316146118 --dbfilename strawberry.rdb[0m
 [33m[stage-9] [0m[94mclient: $ redis-cli KEYS *[0m
 [33m[stage-9] [0m[36mclient: Sent bytes: "*2\r\n$4\r\nKEYS\r\n$1\r\n*\r\n"[0m
 [33m[stage-9] [0m[36mclient: Received bytes: "*1\r\n$6\r\nbanana\r\n"[0m
@@ -1746,12 +1744,12 @@ Debug = true
 [33m[stage-9] [0m[36mProgram terminated successfully[0m
 
 [33m[stage-8] [0m[94mRunning tests for Stage #8: zg5[0m
-[33m[stage-8] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdbfiles3785533704 --dbfilename pear.rdb[0m
+[33m[stage-8] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdbfiles2466512044 --dbfilename pear.rdb[0m
 [33m[stage-8] [0m[94mclient: $ redis-cli CONFIG GET dir[0m
 [33m[stage-8] [0m[36mclient: Sent bytes: "*3\r\n$6\r\nCONFIG\r\n$3\r\nGET\r\n$3\r\ndir\r\n"[0m
-[33m[stage-8] [0m[36mclient: Received bytes: "*2\r\n$3\r\ndir\r\n$23\r\n/tmp/rdbfiles3785533704\r\n"[0m
-[33m[stage-8] [0m[36mclient: Received RESP array: ["dir", "/tmp/rdbfiles3785533704"][0m
-[33m[stage-8] [0m[92mReceived ["dir", "/tmp/rdbfiles3785533704"][0m
+[33m[stage-8] [0m[36mclient: Received bytes: "*2\r\n$3\r\ndir\r\n$23\r\n/tmp/rdbfiles2466512044\r\n"[0m
+[33m[stage-8] [0m[36mclient: Received RESP array: ["dir", "/tmp/rdbfiles2466512044"][0m
+[33m[stage-8] [0m[92mReceived ["dir", "/tmp/rdbfiles2466512044"][0m
 [33m[stage-8] [0m[92mTest passed.[0m
 [33m[stage-8] [0m[36mTerminating program[0m
 [33m[stage-8] [0m[36mProgram terminated successfully[0m
@@ -1763,15 +1761,15 @@ Debug = true
 [33m[stage-7] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[stage-7] [0m[36mReceived RESP simple string: "OK"[0m
 [33m[stage-7] [0m[92mReceived "OK"[0m
-[33m[stage-7] [0m[92mReceived OK at 18:46:55.342[0m
-[33m[stage-7] [0m[94mFetching key "pineapple" at 18:46:55.342 (should not be expired)[0m
+[33m[stage-7] [0m[92mReceived OK at 18:59:58.617[0m
+[33m[stage-7] [0m[94mFetching key "pineapple" at 18:59:58.617 (should not be expired)[0m
 [33m[stage-7] [0m[94m> GET pineapple[0m
 [33m[stage-7] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$9\r\npineapple\r\n"[0m
 [33m[stage-7] [0m[36mReceived bytes: "$10\r\nstrawberry\r\n"[0m
 [33m[stage-7] [0m[36mReceived RESP bulk string: "strawberry"[0m
 [33m[stage-7] [0m[92mReceived "strawberry"[0m
 [33m[stage-7] [0m[36mSleeping for 101ms[0m
-[33m[stage-7] [0m[94mFetching key "pineapple" at 18:46:55.445 (should be expired)[0m
+[33m[stage-7] [0m[94mFetching key "pineapple" at 18:59:58.720 (should be expired)[0m
 [33m[stage-7] [0m[94m> GET pineapple[0m
 [33m[stage-7] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$9\r\npineapple\r\n"[0m
 [33m[stage-7] [0m[36mReceived bytes: "$-1\r\n"[0m
