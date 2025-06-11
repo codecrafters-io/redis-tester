@@ -50,11 +50,13 @@ func testReplReplicationID(stageHarness *test_case_harness.TestCaseHarness) erro
 
 	if regexp.MustCompile("master_replid:([a-zA-Z0-9]+)").Match([]byte(responseValue.String())) {
 		logger.Successf("Found master_replid:xxx in response.")
+		logger.Successf("Found master_replid:xxx in response.")
 	} else {
 		patternMatchError = fmt.Errorf("Expected master_replid:xxx to be present in response. Got: %q", responseValue.String())
 	}
 
 	if regexp.MustCompile("master_repl_offset:0").Match([]byte(responseValue.String())) {
+		logger.Successf("Found master_reploffset:0 in response.")
 		logger.Successf("Found master_reploffset:0 in response.")
 	} else {
 		patternMatchError = fmt.Errorf("Expected master_repl_offset:0 to be present in response. Got: %q", responseValue.String())
