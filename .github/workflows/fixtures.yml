@@ -1,0 +1,18 @@
+name: Trigger Fixture Regeneration
+
+permissions:
+  contents: write
+  pull-requests: write
+
+on:
+  pull_request:
+    types:
+      - labeled
+
+jobs:
+  regenerate_fixtures:
+    if: github.event.label.name == 'regenerate-fixtures'
+    uses: codecrafters-io/tester-utils/.github/workflows/fixtures.yml@master
+    with:
+      tester_repo: redis-tester
+    secrets: inherit
