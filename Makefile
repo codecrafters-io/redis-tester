@@ -67,9 +67,22 @@ test_txn_with_redis: build
 	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\":\"si4\",\"tester_log_prefix\":\"stage-401\",\"title\":\"Stage #401: INCR-1\"},{\"slug\":\"lz8\",\"tester_log_prefix\":\"stage-402\",\"title\":\"Stage #402: INCR-2\"}, {\"slug\":\"mk1\",\"tester_log_prefix\":\"stage-403\",\"title\":\"Stage #403: INCR-3\"}, {\"slug\":\"pn0\",\"tester_log_prefix\":\"stage-404\",\"title\":\"Stage #404: MULTI\"}, {\"slug\":\"lo4\",\"tester_log_prefix\":\"stage-405\",\"title\":\"Stage #405: EXEC\"}, {\"slug\":\"we1\",\"tester_log_prefix\":\"stage-406\",\"title\":\"Stage #406: Empty Transaction\"}, {\"slug\":\"rs9\",\"tester_log_prefix\":\"stage-407\",\"title\":\"Stage #407: Queueing Commands\"}, {\"slug\":\"fy6\",\"tester_log_prefix\":\"stage-408\",\"title\":\"Stage #408: Executing a transaction\"}, {\"slug\":\"rl9\",\"tester_log_prefix\":\"stage-409\",\"title\":\"Stage #409: Discarding a transaction\"}, {\"slug\":\"sg9\",\"tester_log_prefix\":\"stage-410\",\"title\":\"Stage #410: Executing a failed transaction\"}, {\"slug\":\"jf8\",\"tester_log_prefix\":\"stage-411\",\"title\":\"Stage #411: Executing concurrent transactions\"}]" \
 	dist/main.out
 
-test_all_with_redis: 
+test_all_with_redis:
 	make test_base_with_redis || true
 	make test_repl_with_redis || true
 	make test_rdb_with_redis || true
 	make test_streams_with_redis || true
 	make test_txn_with_redis || true
+
+setup:
+	echo "Setting up redis-tester prerequisites for Linux"
+
+	curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg
+	sudo chmod 644 /usr/share/keyrings/redis-archive-keyring.gpg
+	@echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(shell lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/redis.list
+
+	sudo apt-get update && sudo apt-get install redis -y
+
+	sudo service redis-server stop
+
+	echo "Setup complete!"
