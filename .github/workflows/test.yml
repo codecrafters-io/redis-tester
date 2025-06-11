@@ -28,7 +28,8 @@ jobs:
         with:
           python-version: "3.x" # Version range or exact version of a Python version to use, using SemVer's version range syntax
 
-      - run: make test
+      - name: Run tests
+        run: make test
 
   lint:
     runs-on: ubuntu-latest
