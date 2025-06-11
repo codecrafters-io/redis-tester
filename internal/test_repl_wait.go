@@ -200,7 +200,7 @@ func RunWaitTest(client *resp_connection.RespConnection, replicas []*resp_connec
 	if waitTest.ShouldVerifyTimeout {
 		threshold := 500 // ms
 		elapsedTimeMilli := endTimeMilli - startTimeMilli
-		waitTest.Logger.Infof(fmt.Sprintf("WAIT command returned after %v ms", elapsedTimeMilli))
+		waitTest.Logger.Infof("%s", fmt.Sprintf("WAIT command returned after %v ms", elapsedTimeMilli))
 		if math.Abs(float64(elapsedTimeMilli-int64(waitTest.WaitTimeoutMilli))) > float64(threshold) {
 			return fmt.Errorf("Expected WAIT to return exactly after %v ms timeout elapsed.", 1000)
 		}
