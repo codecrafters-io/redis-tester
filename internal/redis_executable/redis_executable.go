@@ -29,7 +29,7 @@ func NewRedisExecutable(stageHarness *test_case_harness.TestCaseHarness) *RedisE
 
 func (b *RedisExecutable) Run(args ...string) error {
 	b.args = args
-	if b.args == nil || len(b.args) == 0 {
+	if len(b.args) == 0 {
 		b.logger.Infof("$ ./%s", path.Base(b.executable.Path))
 	} else {
 		var log string
@@ -41,7 +41,7 @@ func (b *RedisExecutable) Run(args ...string) error {
 				log += " " + arg
 			}
 		}
-		b.logger.Infof(log)
+		b.logger.Infof("%s", log)
 	}
 
 	if err := b.executable.Start(b.args...); err != nil {

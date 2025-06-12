@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 
 	"github.com/codecrafters-io/tester-utils/logger"
-	testerutils_random "github.com/codecrafters-io/tester-utils/random"
+	"github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 
 	"github.com/hdt3213/rdb/encoder"
@@ -39,7 +39,7 @@ func NewRDBFileCreator() (*RDBFileCreator, error) {
 
 	return &RDBFileCreator{
 		Dir:      realDir,
-		Filename: fmt.Sprintf("%s.rdb", testerutils_random.RandomWord()),
+		Filename: fmt.Sprintf("%s.rdb", random.RandomWord()),
 	}, nil
 }
 

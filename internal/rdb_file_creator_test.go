@@ -6,17 +6,19 @@ import (
 	"path/filepath"
 	"testing"
 
-	testerutils_random "github.com/codecrafters-io/tester-utils/random"
+	"github.com/codecrafters-io/tester-utils/random"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestRDBFileCreator(t *testing.T) {
+	random.Init()
+
 	RDBFileCreator, err := NewRDBFileCreator()
 	if err != nil {
 		t.Fatalf("CodeCrafters Tester Error: %s", err)
 	}
 
-	randomKeyAndValue := testerutils_random.RandomWords(2)
+	randomKeyAndValue := random.RandomWords(2)
 	randomKey, randomValue := randomKeyAndValue[0], randomKeyAndValue[1]
 
 	if err := RDBFileCreator.Write([]KeyValuePair{{key: randomKey, value: randomValue}}); err != nil {
