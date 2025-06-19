@@ -42,9 +42,9 @@ func (t *SendCommandTestCase) Run(client *resp_client.RespConnection, logger *lo
 		}
 
 		t.readMutex.Lock()
-		defer t.readMutex.Unlock()
-
 		value, err = client.ReadValue()
+		t.readMutex.Unlock()
+
 		if err != nil {
 			return err
 		}
