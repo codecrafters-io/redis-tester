@@ -57,9 +57,12 @@ type RespConnection struct {
 	// TotalSentBytes is the total number of bytes sent using this connection, and is not reset or changed when the connection is reset
 	// This should be used for deciding if connection is new / reused and commands be logged as such
 	TotalSentBytes int
+
+	// Identifier is the string that is used to identify on whose behalf (master/replica(port)/client) we are logging
+	Identifier string
 }
 
-func NewRespConnectionFromAddr(addr string, callbacks RespConnectionCallbacks) (*RespConnection, error) {
+func NewRespConnectionFromAddr(addr string, clientIdentifier string, callbacks RespConnectionCallbacks) (*RespConnection, error) {
 	conn, err := newConn(addr)
 
 	if err != nil {
@@ -70,6 +73,7 @@ func NewRespConnectionFromAddr(addr string, callbacks RespConnectionCallbacks) (
 		Conn:         conn,
 		UnreadBuffer: bytes.Buffer{},
 		Callbacks:    callbacks,
+		Identifier:   clientIdentifier,
 	}, nil
 }
 

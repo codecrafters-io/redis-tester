@@ -51,7 +51,7 @@ func NewFromAddr(logger *logger.Logger, addr string, clientIdentifier string) (*
 		logPrefix = clientIdentifier + ": "
 	}
 	return resp_connection.NewRespConnectionFromAddr(
-		addr, defaultCallbacks(logger, logPrefix),
+		addr, clientIdentifier, defaultCallbacks(logger, logPrefix),
 	)
 }
 
