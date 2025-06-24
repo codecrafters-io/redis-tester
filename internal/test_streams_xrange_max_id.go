@@ -1,16 +1,15 @@
 package internal
 
 import (
-	"encoding/json"
 	"fmt"
-	"reflect"
-	"strconv"
 
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
-	"github.com/go-redis/redis"
 )
 
 func testStreamsXrangeMaxID(stageHarness *test_case_harness.TestCaseHarness) error {
@@ -20,71 +19,32 @@ func testStreamsXrangeMaxID(stageHarness *test_case_harness.TestCaseHarness) err
 	}
 
 	logger := stageHarness.Logger
-	client := NewRedisClient("localhost:6379")
+	client, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client")
+	if err != nil {
+		return err
+	}
 
 	randomKey := testerutils_random.RandomWord()
+	entryCount := testerutils_random.RandomInt(3, 5)
 
-	max := 5
-	min := 3
-	randomNumber := testerutils_random.RandomInt(min, max)
-	expectedResp := []redis.XMessage{}
+	testCase := buildMaxIDRangeTestCase(randomKey, entryCount, 2)
+	return testCase.RunAll(client, logger)
+}
 
-	for i := 1; i <= randomNumber; i++ {
-		id := "0-" + strconv.Itoa(i)
+func buildMaxIDRangeTestCase(key string, entryCount int, xrangeStartID int) test_cases.MultiCommandTestCase {
+	testCase := test_cases.MultiCommandTestCase{}
+	addXADDCommands(&testCase, key, entryCount)
 
-		xaddTest := &XADDTest{
-			streamKey:        randomKey,
-			id:               id,
-			values:           map[string]interface{}{"foo": "bar"},
-			expectedResponse: id,
-		}
+	startID := fmt.Sprintf("0-%d", xrangeStartID)
 
-		err := xaddTest.Run(client, logger)
+	testCase.Commands = append(testCase.Commands, []string{
+		"XRANGE", key, startID, "+",
+	})
 
-		if err != nil {
-			return err
-		}
-	}
+	expectedEntries := createExpectedStreamEntries(2, entryCount)
+	testCase.Assertions = append(testCase.Assertions,
+		resp_assertions.NewXRangeResponseAssertion(expectedEntries),
+	)
 
-	for i := 2; i <= randomNumber; i++ {
-		id := "0-" + strconv.Itoa(i)
-
-		expectedResp = append(expectedResp, redis.XMessage{
-			ID: id,
-			Values: map[string]interface{}{
-				"foo": "bar",
-			},
-		})
-	}
-
-	logger.Infof("$ redis-cli xrange %v 0-2 +", randomKey)
-	resp, err := client.XRange(randomKey, "0-2", "+").Result()
-
-	if err != nil {
-		logFriendlyError(logger, err)
-		return err
-	}
-
-	expectedRespJSON, err := json.MarshalIndent(expectedResp, "", "  ")
-
-	if err != nil {
-		logFriendlyError(logger, err)
-		return err
-	}
-
-	respJSON, err := json.MarshalIndent(resp, "", "  ")
-
-	if err != nil {
-		logFriendlyError(logger, err)
-		return err
-	}
-
-	if !reflect.DeepEqual(resp, expectedResp) {
-		logger.Infof("Received response: \"%v\"", string(respJSON))
-		return fmt.Errorf("Expected %v, got %v", string(expectedRespJSON), string(respJSON))
-	} else {
-		logger.Successf("Received response: \"%v\"", string(respJSON))
-	}
-
-	return nil
+	return testCase
 }
