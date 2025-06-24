@@ -250,11 +250,11 @@ func (c *RespConnection) ResetByteCounters() {
 	c.SentBytes = 0
 }
 
-func (c *RespConnection) GetIdentifier() (string, error) {
+func (c *RespConnection) GetIdentifier() string {
 	if c.identifier == "" {
-		return "", errors.New("connection identifier is empty")
+		panic("Codecrafters Internal Error - connection identifier is empty")
 	}
-	return c.identifier, nil
+	return c.identifier
 }
 
 func newConn(address string) (net.Conn, error) {

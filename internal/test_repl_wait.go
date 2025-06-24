@@ -114,13 +114,9 @@ func consumeReplicationStreamAndSendAcks(replicas []*resp_connection.RespConnect
 	var err error
 	for j := 0; j < len(replicas); j++ {
 		replica := replicas[j]
-		logger.Infof("Testing Replica : %v", j+1)
+		logger.Infof("Testing Replica: %s", replica.GetIdentifier())
 
-		identifier, err := replica.GetIdentifier()
-		if err != nil {
-			return err
-		}
-		logger.Infof("%s: Expecting \"%s\" to be propagated", identifier, strings.Join(command, " "))
+		logger.Infof("%s: Expecting \"%s\" to be propagated", replica.GetIdentifier(), strings.Join(command, " "))
 
 		receiveCommandTestCase := &test_cases.ReceiveValueTestCase{
 			Assertion:                 resp_assertions.NewCommandAssertion(command[0], command[1:]...),
@@ -142,7 +138,7 @@ func consumeReplicationStreamAndSendAcks(replicas []*resp_connection.RespConnect
 			}
 		}
 
-		logger.Infof("%s: Expecting \"REPLCONF GETACK *\" from Master", identifier)
+		logger.Infof("%s: Expecting \"REPLCONF GETACK *\" from Master", replica.GetIdentifier())
 
 		receiveGetackCommandTestCase := &test_cases.ReceiveValueTestCase{
 			Assertion:                 resp_assertions.NewCommandAssertion("REPLCONF", "GETACK", "*"),
@@ -153,13 +149,13 @@ func consumeReplicationStreamAndSendAcks(replicas []*resp_connection.RespConnect
 		}
 
 		if j < acksSentByReplicaSubsetCount {
-			logger.Debugf("%s: Sending ACK to Master", identifier)
+			logger.Debugf("%s: Sending ACK to Master", replica.GetIdentifier())
 			// Remove GETACK command bytes from offset before sending ACK.
 			if err := replica.SendCommand("REPLCONF", []string{"ACK", strconv.Itoa(replica.ReceivedBytes - len(replica.LastValueBytes))}...); err != nil {
 				return err
 			}
 		} else {
-			logger.Debugf("%s: Not sending ACK to Master", identifier)
+			logger.Debugf("%s: Not sending ACK to Master", replica.GetIdentifier())
 		}
 	}
 	return err

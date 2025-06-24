@@ -37,14 +37,14 @@ func SpawnReplicas(replicaCount int, stageHarness *test_case_harness.TestCaseHar
 	listeningPort := 6380
 	// Log the replicas we are going to create
 	logger.UpdateSecondaryPrefix("setup")
-	logger.Infoln("Replicas to be created (number = listening port):")
-	for j := 0; j < replicaCount; j++ {
-		logger.Infof("replica-%d", listeningPort+j)
+	logger.Infof("Creating %d replicas:", replicaCount)
+	for j := range replicaCount {
+		logger.Infof("%d. replica@%d (Listening port = %d)", (j + 1), listeningPort+j, listeningPort+j)
 	}
 	logger.ResetSecondaryPrefix()
 	for j := 0; j < replicaCount; j++ {
-		logger.Debugf("Creating replica-%d", listeningPort)
-		replica, err := instrumented_resp_connection.NewFromAddr(logger, addr, fmt.Sprintf("replica-%d", listeningPort))
+		logger.Debugf("Creating replica@%d", listeningPort)
+		replica, err := instrumented_resp_connection.NewFromAddr(logger, addr, fmt.Sprintf("replica@%d", listeningPort))
 		if err != nil {
 			logFriendlyError(logger, err)
 			return nil, err
