@@ -2,7 +2,6 @@ package internal
 
 import (
 	"strconv"
-	"time"
 
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
@@ -63,8 +62,6 @@ func testStreamsXreadBlockNoTimeout(stageHarness *test_case_harness.TestCaseHarn
 		xreadResult <- err
 	}()
 
-	time.Sleep(1000 * time.Millisecond)
-
 	// send xadd from another client
 	client2, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client-2")
 	if err != nil {
@@ -84,7 +81,5 @@ func testStreamsXreadBlockNoTimeout(stageHarness *test_case_harness.TestCaseHarn
 	}
 
 	xReadTestCase.ResumeReadingResponse()
-	<-xreadResult
-
-	return nil
+	return <-xreadResult
 }

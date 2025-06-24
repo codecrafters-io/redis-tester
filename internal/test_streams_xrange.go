@@ -78,18 +78,18 @@ func addXADDCommands(testCase *test_cases.MultiCommandTestCase, key string, entr
 // created list of streamentry starting from
 // 0-startID
 // to 0-endID
-// expected values are picked in round-robin fashion starting with index: (startIDNUM - 1)
-func createExpectedStreamEntries(startIDNum, endIDNum int) []resp_assertions.StreamEntry {
-	if startIDNum < 1 {
-		startIDNum = 1
+// expected values are picked in round-robin fashion starting with index: (startID - 1)
+func createExpectedStreamEntries(startID, endID int) []resp_assertions.StreamEntry {
+	if startID < 1 || endID < startID {
+		panic(fmt.Sprintf("startID > endID. startID: %d, endID: %d", startID, endID))
 	}
-	entriesSize := (endIDNum - startIDNum) + 1
+	entriesSize := (endID - startID) + 1
 	entries := make([]resp_assertions.StreamEntry, entriesSize)
 
 	for i := range entriesSize {
-		pairIndex := (startIDNum + i - 1) % 3
+		pairIndex := (startID + i - 1) % 3
 		entries[i] = resp_assertions.StreamEntry{
-			Id:              fmt.Sprintf("0-%d", startIDNum+i),
+			Id:              fmt.Sprintf("0-%d", startID+i),
 			FieldValuePairs: [][]string{KEY_VALUE_PAIRS[pairIndex][:]},
 		}
 	}

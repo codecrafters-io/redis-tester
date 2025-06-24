@@ -42,7 +42,7 @@ func testStreamsXreadBlockMaxID(stageHarness *test_case_harness.TestCaseHarness)
 		return err
 	}
 
-	xReadDone := make(chan bool, 1)
+	xReadResult := make(chan error, 1)
 	randomInt = testerutils_random.RandomInt(1, 100)
 
 	xReadAssertion := resp_assertions.NewXReadResponseAssertion([]resp_assertions.StreamResponse{{
@@ -60,12 +60,9 @@ func testStreamsXreadBlockMaxID(stageHarness *test_case_harness.TestCaseHarness)
 	}
 	xReadTestCase.PauseReadingResponse()
 
-	go func() error {
-		if err := xReadTestCase.Run(client1, logger); err != nil {
-			return err
-		}
-		xReadDone <- true
-		return nil
+	go func() {
+		err := xReadTestCase.Run(client1, logger)
+		xReadResult <- err
 	}()
 
 	time.Sleep(1000 * time.Millisecond)
@@ -90,7 +87,10 @@ func testStreamsXreadBlockMaxID(stageHarness *test_case_harness.TestCaseHarness)
 
 	// Ensure the responses of XAdd and XRead are fixed in the fixture
 	xReadTestCase.ResumeReadingResponse()
-	<-xReadDone
+	err = <-xReadResult
+	if err != nil {
+		return err
+	}
 
 	xreadCommandTestCase := &test_cases.SendCommandTestCase{
 		Command:                   "XREAD",
