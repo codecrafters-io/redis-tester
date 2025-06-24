@@ -59,10 +59,10 @@ type RespConnection struct {
 	TotalSentBytes int
 
 	// Identifier is the string that is used to identify on whose behalf (master/replica(port)/client) we are logging
-	Identifier string
+	identifier string
 }
 
-func NewRespConnectionFromAddr(addr string, clientIdentifier string, callbacks RespConnectionCallbacks) (*RespConnection, error) {
+func NewRespConnectionFromAddr(addr string, connIdentifier string, callbacks RespConnectionCallbacks) (*RespConnection, error) {
 	conn, err := newConn(addr)
 
 	if err != nil {
@@ -73,7 +73,7 @@ func NewRespConnectionFromAddr(addr string, clientIdentifier string, callbacks R
 		Conn:         conn,
 		UnreadBuffer: bytes.Buffer{},
 		Callbacks:    callbacks,
-		Identifier:   clientIdentifier,
+		identifier:   connIdentifier,
 	}, nil
 }
 
@@ -248,6 +248,13 @@ func (c *RespConnection) readIntoBufferUntil(condition func([]byte) bool, timeou
 func (c *RespConnection) ResetByteCounters() {
 	c.ReceivedBytes = 0
 	c.SentBytes = 0
+}
+
+func (c *RespConnection) GetIdentifier() (string, error) {
+	if c.identifier == "" {
+		return "", errors.New("connection identifier is empty")
+	}
+	return c.identifier, nil
 }
 
 func newConn(address string) (net.Conn, error) {

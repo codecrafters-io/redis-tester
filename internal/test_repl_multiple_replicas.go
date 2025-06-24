@@ -64,8 +64,14 @@ func testReplMultipleReplicas(stageHarness *test_case_harness.TestCaseHarness) e
 	// We then assert that across all the replicas we receive the SET commands in order
 	for j, replica := range replicas {
 		logger.Infof("Testing Replica: %d/%d", j+1, replicaCount)
+
+		identifier, err := replica.GetIdentifier()
+		if err != nil {
+			return err
+		}
+
 		for i := 1; i <= len(kvMap); i++ {
-			logger.Infof("%s: Expecting \"SET %s %s\" to be propagated", replica.Identifier, kvMap[i][0], kvMap[i][1])
+			logger.Infof("%s: Expecting \"SET %s %s\" to be propagated", identifier, kvMap[i][0], kvMap[i][1])
 
 			receiveValueTestCase := &test_cases.ReceiveValueTestCase{
 				Assertion:                 resp_assertions.NewCommandAssertion("SET", kvMap[i][0], kvMap[i][1]),
