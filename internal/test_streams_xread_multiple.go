@@ -21,8 +21,10 @@ func testStreamsXreadMultiple(stageHarness *test_case_harness.TestCaseHarness) e
 	logger := stageHarness.Logger
 	client, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client")
 	if err != nil {
+		logFriendlyError(logger, err)
 		return err
 	}
+	defer client.Close()
 
 	randomKeys := testerutils_random.RandomWords(2)
 	entryIDs := []string{"0-1", "0-2"}
@@ -32,13 +34,10 @@ func testStreamsXreadMultiple(stageHarness *test_case_harness.TestCaseHarness) e
 		randomInts = append(randomInts, fmt.Sprintf("%d", i))
 	}
 
-	temperature := "temperature"
-	humidity := "humidity"
-
 	multiCommandTestCase := test_cases.MultiCommandTestCase{
 		Commands: [][]string{
-			{"XADD", randomKeys[0], entryIDs[0], temperature, randomInts[0]},
-			{"XADD", randomKeys[1], entryIDs[1], humidity, randomInts[1]},
+			{"XADD", randomKeys[0], entryIDs[0], "temperature", randomInts[0]},
+			{"XADD", randomKeys[1], entryIDs[1], "humidity", randomInts[1]},
 			{"XREAD", "streams", randomKeys[0], randomKeys[1], "0-0", "0-1"},
 		},
 		Assertions: []resp_assertions.RESPAssertion{
@@ -49,14 +48,14 @@ func testStreamsXreadMultiple(stageHarness *test_case_harness.TestCaseHarness) e
 					Key: randomKeys[0],
 					Entries: []resp_assertions.StreamEntry{{
 						Id:              entryIDs[0],
-						FieldValuePairs: [][]string{{temperature, randomInts[0]}},
+						FieldValuePairs: [][]string{{"temperature", randomInts[0]}},
 					}},
 				},
 				{
 					Key: randomKeys[1],
 					Entries: []resp_assertions.StreamEntry{{
 						Id:              entryIDs[1],
-						FieldValuePairs: [][]string{{humidity, randomInts[1]}},
+						FieldValuePairs: [][]string{{"humidity", randomInts[1]}},
 					}},
 				},
 			}),

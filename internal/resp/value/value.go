@@ -124,20 +124,20 @@ func (a *Value) FormattedArray(level int) string {
 }
 
 func (v *Value) FormatWithIndentLevel(level int) string {
-	tabs := strings.Repeat(_INDENT, level)
+	indent := strings.Repeat(_INDENT, level)
 	switch v.Type {
 	case SIMPLE_STRING:
-		return fmt.Sprintf("%s%q", tabs, v.String())
+		return fmt.Sprintf("%s%q", indent, v.String())
 	case INTEGER:
-		return fmt.Sprintf("%s%d", tabs, v.Integer())
+		return fmt.Sprintf("%s%d", indent, v.Integer())
 	case BULK_STRING:
-		return fmt.Sprintf("%s%q", tabs, v.String())
+		return fmt.Sprintf("%s%q", indent, v.String())
 	case ARRAY:
-		return fmt.Sprintf("%s%s", tabs, v.FormattedArray(level))
+		return fmt.Sprintf("%s%s", indent, v.FormattedArray(level))
 	case ERROR:
-		return fmt.Sprintf("%s%q", tabs, "ERR: "+v.String())
+		return fmt.Sprintf("%s%q", indent, "ERR: "+v.String())
 	case NIL:
-		return fmt.Sprintf("%s%s", tabs, "\"$-1\\r\\n\"")
+		return fmt.Sprintf("%s%s", indent, "\"$-1\\r\\n\"")
 	}
 	return ""
 }
