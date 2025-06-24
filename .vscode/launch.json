@@ -1,0 +1,19 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug test_base_with_redis",
+      "type": "go",
+      "request": "launch",
+      "mode": "exec",
+      "program": "${workspaceFolder}/dist/main.out",
+      "env": {
+        "CODECRAFTERS_REPOSITORY_DIR": "./internal/test_helpers/pass_all",
+        "CODECRAFTERS_TEST_CASES_JSON": "[{\"slug\": \"um0\", \"tester_log_prefix\": \"stage-309\", \"title\": \"stage #09: StreamsXread\"},{\"slug\": \"ru9\", \"tester_log_prefix\": \"stage-310\", \"title\": \"stage #10: StreamsXreadMultiple\"}]"
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "go build debug"
+    }
+  ]
+}

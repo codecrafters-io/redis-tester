@@ -1,6 +1,7 @@
 package resp_value
 
 import (
+	"bytes"
 	"fmt"
 	"strings"
 )
@@ -101,29 +102,48 @@ func (v *Value) Error() string {
 	return ""
 }
 
-func (v *Value) FormattedString() string {
+var _INDENT = "  "
+
+func (a *Value) FormattedArray(level int) string {
+	if a.Type != ARRAY {
+		return ""
+	}
+	if len(a.Array()) == 0 {
+		return "[]"
+	}
+	var result bytes.Buffer
+	indent := strings.Repeat(_INDENT, level)
+	result.WriteString("[\n")
+	formattedStrings := make([]string, len(a.Array()))
+	for i, value := range a.Array() {
+		formattedStrings[i] = value.FormatWithIndentLevel(level + 1)
+	}
+	result.WriteString(strings.Join(formattedStrings, ",\n"))
+	result.WriteString(fmt.Sprintf("\n%s]", indent))
+	return result.String()
+}
+
+func (v *Value) FormatWithIndentLevel(level int) string {
+	tabs := strings.Repeat(_INDENT, level)
 	switch v.Type {
 	case SIMPLE_STRING:
-		return fmt.Sprintf("%q", v.String())
+		return fmt.Sprintf("%s%q", tabs, v.String())
 	case INTEGER:
-		return fmt.Sprintf("%d", v.Integer())
+		return fmt.Sprintf("%s%d", tabs, v.Integer())
 	case BULK_STRING:
-		return fmt.Sprintf("%q", v.String())
+		return fmt.Sprintf("%s%q", tabs, v.String())
 	case ARRAY:
-		formattedStrings := make([]string, len(v.Array()))
-
-		for i, value := range v.Array() {
-			formattedStrings[i] = value.FormattedString()
-		}
-
-		return fmt.Sprintf("[%v]", strings.Join(formattedStrings, ", "))
+		return fmt.Sprintf("%s%s", tabs, v.FormattedArray(level))
 	case ERROR:
-		return fmt.Sprintf("%q", "ERR: "+v.String())
+		return fmt.Sprintf("%s%q", tabs, "ERR: "+v.String())
 	case NIL:
-		return "\"$-1\\r\\n\""
+		return fmt.Sprintf("%s%s", tabs, "\"$-1\\r\\n\"")
 	}
-
 	return ""
+}
+
+func (v *Value) FormattedString() string {
+	return v.FormatWithIndentLevel(0)
 }
 
 func (v Value) ToSerializable() interface{} {

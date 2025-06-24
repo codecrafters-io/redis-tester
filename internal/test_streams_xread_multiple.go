@@ -1,12 +1,15 @@
 package internal
 
 import (
+	"fmt"
+
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
-	"strconv"
+	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
-	"github.com/go-redis/redis"
 )
 
 func testStreamsXreadMultiple(stageHarness *test_case_harness.TestCaseHarness) error {
@@ -16,78 +19,49 @@ func testStreamsXreadMultiple(stageHarness *test_case_harness.TestCaseHarness) e
 	}
 
 	logger := stageHarness.Logger
-	client := NewRedisClient("localhost:6379")
-
-	randomKey := testerutils_random.RandomWord()
-	var otherRandomKey string
-
-	for {
-		otherRandomKey = testerutils_random.RandomWord()
-		if otherRandomKey != randomKey {
-			break
-		}
-	}
-
-	randomInt := testerutils_random.RandomInt(1, 100)
-	otherRandomInt := testerutils_random.RandomInt(1, 100)
-
-	xaddTest := &XADDTest{
-		streamKey:        randomKey,
-		id:               "0-1",
-		values:           map[string]interface{}{"temperature": randomInt},
-		expectedResponse: "0-1",
-	}
-
-	err := xaddTest.Run(client, logger)
-
+	client, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client")
 	if err != nil {
 		return err
 	}
 
-	xaddTest = &XADDTest{
-		streamKey:        otherRandomKey,
-		id:               "0-2",
-		values:           map[string]interface{}{"humidity": otherRandomInt},
-		expectedResponse: "0-2",
+	randomKeys := testerutils_random.RandomWords(2)
+	entryIDs := []string{"0-1", "0-2"}
+
+	var randomInts []string
+	for i := range testerutils_random.RandomInts(1, 100, 2) {
+		randomInts = append(randomInts, fmt.Sprintf("%d", i))
 	}
 
-	err = xaddTest.Run(client, logger)
+	temperature := "temperature"
+	humidity := "humidity"
 
-	if err != nil {
-		return err
-	}
-
-	expectedResp := []redis.XStream{
-		{
-			Stream: randomKey,
-			Messages: []redis.XMessage{
-				{
-					ID:     "0-1",
-					Values: map[string]interface{}{"temperature": strconv.Itoa(randomInt)},
-				},
-			},
+	multiCommandTestCase := test_cases.MultiCommandTestCase{
+		Commands: [][]string{
+			{"XADD", randomKeys[0], entryIDs[0], temperature, randomInts[0]},
+			{"XADD", randomKeys[1], entryIDs[1], humidity, randomInts[1]},
+			{"XREAD", "streams", randomKeys[0], randomKeys[1], "0-0", "0-1"},
 		},
-		{
-			Stream: otherRandomKey,
-			Messages: []redis.XMessage{
+		Assertions: []resp_assertions.RESPAssertion{
+			resp_assertions.NewStringAssertion(entryIDs[0]),
+			resp_assertions.NewStringAssertion(entryIDs[1]),
+			resp_assertions.NewXReadResponseAssertion([]resp_assertions.StreamResponse{
 				{
-					ID:     "0-2",
-					Values: map[string]interface{}{"humidity": strconv.Itoa(otherRandomInt)},
+					Key: randomKeys[0],
+					Entries: []resp_assertions.StreamEntry{{
+						Id:              entryIDs[0],
+						FieldValuePairs: [][]string{{temperature, randomInts[0]}},
+					}},
 				},
-			},
+				{
+					Key: randomKeys[1],
+					Entries: []resp_assertions.StreamEntry{{
+						Id:              entryIDs[1],
+						FieldValuePairs: [][]string{{humidity, randomInts[1]}},
+					}},
+				},
+			}),
 		},
 	}
 
-	xreadTest := &XREADTest{
-		streams:          []string{randomKey, otherRandomKey, "0-0", "0-1"},
-		expectedResponse: expectedResp,
-	}
-
-	err = xreadTest.Run(client, logger)
-
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return multiCommandTestCase.RunAll(client, logger)
 }
