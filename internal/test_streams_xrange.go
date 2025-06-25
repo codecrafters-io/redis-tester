@@ -33,6 +33,8 @@ func testStreamsXrange(stageHarness *test_case_harness.TestCaseHarness) error {
 	return testCase.RunAll(client, stageHarness.Logger)
 }
 
+// xadd from 0-1 to 0-entryCount
+// xrange 0-xrangeStartID 0-xrangeEndID
 func buildXrangeTestCase(key string, entryCount, xrangeStartID, xrangeEndID int) test_cases.MultiCommandTestCase {
 	testCase := test_cases.MultiCommandTestCase{}
 
@@ -58,7 +60,7 @@ var KEY_VALUE_PAIRS = [][2]string{
 	{"baz", "foo"},
 }
 
-// creates XADD <key> 0-1 to 0-(count-1) <key> <value>
+// creates XADD <stream_key> 0-1 <key> <value> to XADD <stream_key> 0-entryCount <key> <value>
 // key and value are taken from above in round robin fashion
 func addXADDCommands(testCase *test_cases.MultiCommandTestCase, key string, entryCount int) {
 	for i := 1; i <= entryCount; i++ {

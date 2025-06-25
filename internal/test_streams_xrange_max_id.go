@@ -33,6 +33,8 @@ func testStreamsXrangeMaxID(stageHarness *test_case_harness.TestCaseHarness) err
 	return testCase.RunAll(client, logger)
 }
 
+// adds from xadd 0-1 to 0-entryCount
+// adds xrange with args:  0-xrangeStartID and +
 func buildMaxIDRangeTestCase(key string, entryCount int, xrangeStartID int) test_cases.MultiCommandTestCase {
 	testCase := test_cases.MultiCommandTestCase{}
 	addXADDCommands(&testCase, key, entryCount)
@@ -43,7 +45,7 @@ func buildMaxIDRangeTestCase(key string, entryCount int, xrangeStartID int) test
 		"XRANGE", key, startID, "+",
 	})
 
-	expectedEntries := createExpectedStreamEntries(2, entryCount)
+	expectedEntries := createExpectedStreamEntries(xrangeStartID, entryCount)
 	testCase.Assertions = append(testCase.Assertions,
 		resp_assertions.NewXRangeResponseAssertion(expectedEntries),
 	)

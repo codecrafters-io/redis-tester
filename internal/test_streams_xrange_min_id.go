@@ -34,6 +34,8 @@ func testStreamsXrangeMinID(stageHarness *test_case_harness.TestCaseHarness) err
 	return testCase.RunAll(client, stageHarness.Logger)
 }
 
+// adds xadd commands from 0-1 to 0-entryCount
+// adds xrange command with args - and xrangeEndID
 func buildMinIDXRangeTestCase(key string, entryCount int, xrangeEndID int) test_cases.MultiCommandTestCase {
 	testCase := test_cases.MultiCommandTestCase{}
 	addXADDCommands(&testCase, key, entryCount)

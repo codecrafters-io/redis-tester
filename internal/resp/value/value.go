@@ -104,18 +104,18 @@ func (v *Value) Error() string {
 
 var _INDENT = "  "
 
-func (a *Value) FormattedArray(level int) string {
-	if a.Type != ARRAY {
+func (v *Value) FormattedArray(level int) string {
+	if v.Type != ARRAY {
 		return ""
 	}
-	if len(a.Array()) == 0 {
+	if len(v.Array()) == 0 {
 		return "[]"
 	}
 	var result bytes.Buffer
 	indent := strings.Repeat(_INDENT, level)
 	result.WriteString("[\n")
-	formattedStrings := make([]string, len(a.Array()))
-	for i, value := range a.Array() {
+	formattedStrings := make([]string, len(v.Array()))
+	for i, value := range v.Array() {
 		formattedStrings[i] = value.FormatWithIndentLevel(level + 1)
 	}
 	result.WriteString(strings.Join(formattedStrings, ",\n"))
