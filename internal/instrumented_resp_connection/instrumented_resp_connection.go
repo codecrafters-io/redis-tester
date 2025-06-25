@@ -45,13 +45,13 @@ func defaultCallbacks(logger *logger.Logger, logPrefix string) resp_connection.R
 	}
 }
 
-func NewFromAddr(logger *logger.Logger, addr string, clientIdentifier string) (*resp_connection.RespConnection, error) {
+func NewFromAddr(logger *logger.Logger, addr string, connIdentifier string) (*resp_connection.RespConnection, error) {
 	logPrefix := ""
-	if clientIdentifier != "" {
-		logPrefix = clientIdentifier + ": "
+	if connIdentifier != "" {
+		logPrefix = connIdentifier + ": "
 	}
 	return resp_connection.NewRespConnectionFromAddr(
-		addr, defaultCallbacks(logger, logPrefix),
+		addr, connIdentifier, defaultCallbacks(logger, logPrefix),
 	)
 }
 
