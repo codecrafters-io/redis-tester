@@ -26,29 +26,52 @@ func testStreamsXrangeMinID(stageHarness *test_case_harness.TestCaseHarness) err
 	}
 	defer client.Close()
 
-	randomKey := testerutils_random.RandomWord()
+	randomStreamKey := testerutils_random.RandomWord()
+
 	entryCount := testerutils_random.RandomInt(3, 5)
-	endIDNum := 2
+	var entryIDs []string
+	for i := range entryCount {
+		entryIDs = append(entryIDs, fmt.Sprintf("0-%d", i+1))
+	}
 
-	testCase := buildMinIDXRangeTestCase(randomKey, entryCount, endIDNum)
-	return testCase.RunAll(client, stageHarness.Logger)
-}
+	randomPairs := make([][]string, entryCount)
+	for i := range entryCount {
+		randomPairs[i] = testerutils_random.RandomWords(2)
+	}
 
-// adds xadd commands from 0-1 to 0-entryCount
-// adds xrange command with args - and xrangeEndID
-func buildMinIDXRangeTestCase(key string, entryCount int, xrangeEndID int) test_cases.MultiCommandTestCase {
-	testCase := test_cases.MultiCommandTestCase{}
-	addXADDCommands(&testCase, key, entryCount)
-	maxID := fmt.Sprintf("0-%d", xrangeEndID)
+	commands := [][]string{}
+	assertions := []resp_assertions.RESPAssertion{}
+	for i := range entryCount {
+		commands = append(commands, []string{"XADD", randomStreamKey, entryIDs[i], randomPairs[i][0], randomPairs[i][1]})
+		assertions = append(assertions, resp_assertions.NewStringAssertion(entryIDs[i]))
+	}
 
-	testCase.Commands = append(testCase.Commands, []string{
-		"XRANGE", key, "-", maxID,
-	})
+	xaddTestCase := test_cases.MultiCommandTestCase{
+		Commands:   commands,
+		Assertions: assertions,
+	}
 
-	expectedEntries := createExpectedStreamEntries(1, xrangeEndID)
-	testCase.Assertions = append(testCase.Assertions,
-		resp_assertions.NewXRangeResponseAssertion(expectedEntries),
-	)
+	if err := xaddTestCase.RunAll(client, logger); err != nil {
+		return err
+	}
 
-	return testCase
+	// end at either 0-2 or 0-3
+	endKey := testerutils_random.RandomInt(2, 4)
+
+	expectedStreamEntries := []resp_assertions.StreamEntry{}
+	for i := 1; i <= endKey; i++ {
+		expectedStreamEntries = append(expectedStreamEntries, resp_assertions.StreamEntry{
+			Id:              entryIDs[i-1],
+			FieldValuePairs: [][]string{randomPairs[i-1]},
+		})
+	}
+
+	xrangeTestCase := test_cases.SendCommandTestCase{
+		Command:                   "XRANGE",
+		Args:                      []string{randomStreamKey, "-", fmt.Sprintf("0-%d", endKey)},
+		Assertion:                 resp_assertions.NewXRangeResponseAssertion(expectedStreamEntries),
+		ShouldSkipUnreadDataCheck: false,
+	}
+
+	return xrangeTestCase.Run(client, logger)
 }

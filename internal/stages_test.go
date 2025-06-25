@@ -114,8 +114,7 @@ func normalizeTesterOutput(testerOutput []byte) []byte {
 		"xadd_id":                 {regexp.MustCompile(`\d{13}-\d+`)},
 		"rdb_bytes":               {regexp.MustCompile(`"\$[0-9]+\\r\\nREDIS.*"`)},
 		"info_replication_bytes":  {regexp.MustCompile(`"\$[0-9]+\\r\\n# Replication\\r\\n[^"]+"`)},
-		"rdb_keys":                {regexp.MustCompile(`\[tester::#JW4\] .*Received .*`)},
-		"array_element":           {regexp.MustCompile(`\[tester::#JW4\].*"(apple|orange|banana|pear|grape|pineapple|mango|strawberry|raspberry|blueberry)",?.*`)},
+		"rdb_keys":                {regexp.MustCompile(`\[tester::#JW4\] .*Received .*`), regexp.MustCompile(`\[tester::#JW4\].*"(apple|orange|banana|pear|grape|pineapple|mango|strawberry|raspberry|blueberry)",?.*`)},
 		"hexdump":                 {regexp.MustCompile(`[0-9a-fA-F]{4} \| [0-9a-fA-F ]{47} \| .{0,16}`)},
 	}
 

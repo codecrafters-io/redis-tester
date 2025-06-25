@@ -1,9 +1,10 @@
 package resp_value
 
 import (
-	"bytes"
+	"encoding/json"
 	"fmt"
-	"strings"
+
+	"github.com/codecrafters-io/redis-tester/internal/resp/formatter"
 )
 
 const (
@@ -102,54 +103,38 @@ func (v *Value) Error() string {
 	return ""
 }
 
-var _INDENT = "  "
-
-func (v *Value) FormattedArray(level int) string {
-	if v.Type != ARRAY {
-		return ""
-	}
-	if len(v.Array()) == 0 {
-		return "[]"
-	}
-	var result bytes.Buffer
-	indent := strings.Repeat(_INDENT, level)
-	result.WriteString("[\n")
-	formattedStrings := make([]string, len(v.Array()))
-	for i, value := range v.Array() {
-		formattedStrings[i] = value.FormatWithIndentLevel(level + 1)
-	}
-	result.WriteString(strings.Join(formattedStrings, ",\n"))
-	result.WriteString(fmt.Sprintf("\n%s]", indent))
-	return result.String()
-}
-
-func (v *Value) FormatWithIndentLevel(level int) string {
-	indent := strings.Repeat(_INDENT, level)
+func (v *Value) FormattedString() string {
 	switch v.Type {
 	case SIMPLE_STRING:
-		return fmt.Sprintf("%s%q", indent, v.String())
+		return fmt.Sprintf("%q", v.String())
 	case INTEGER:
-		return fmt.Sprintf("%s%d", indent, v.Integer())
+		return fmt.Sprintf("%d", v.Integer())
 	case BULK_STRING:
-		return fmt.Sprintf("%s%q", indent, v.String())
+		return fmt.Sprintf("%q", v.String())
 	case ARRAY:
-		return fmt.Sprintf("%s%s", indent, v.FormattedArray(level))
+		interfaceArray := make([]interface{}, len(v.array))
+		for i, val := range v.Array() {
+			interfaceArray[i] = val.ToSerializable()
+		}
+		respJson, err := json.MarshalIndent(interfaceArray, "", "  ")
+		if err != nil {
+			panic(fmt.Sprintf("Failed to encode to JSON: %#v", interfaceArray))
+		}
+		return formatter.Prettify(respJson)
 	case ERROR:
-		return fmt.Sprintf("%s%q", indent, "ERR: "+v.String())
+		return fmt.Sprintf("%q", "ERR: "+v.String())
 	case NIL:
-		return fmt.Sprintf("%s%s", indent, "\"$-1\\r\\n\"")
+		return "\"$-1\\r\\n\""
 	}
 	return ""
-}
-
-func (v *Value) FormattedString() string {
-	return v.FormatWithIndentLevel(0)
 }
 
 func (v Value) ToSerializable() interface{} {
 	switch v.Type {
 	case BULK_STRING:
 		return v.String()
+	case INTEGER:
+		return v.Integer()
 	case ARRAY:
 		arr := v.Array()
 		result := make([]interface{}, len(arr))

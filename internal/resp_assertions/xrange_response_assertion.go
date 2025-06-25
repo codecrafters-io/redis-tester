@@ -17,7 +17,6 @@ func NewXRangeResponseAssertion(expected []StreamEntry) RESPAssertion {
 }
 
 func (x XRangeResponseAssertion) Run(value resp_value.Value) error {
-	// implement core logic
 	if value.Type != resp_value.ARRAY {
 		return fmt.Errorf("Expected array, got %s", value.Type)
 	}
