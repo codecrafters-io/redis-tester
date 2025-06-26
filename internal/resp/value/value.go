@@ -112,13 +112,9 @@ func (v *Value) FormattedString() string {
 	case BULK_STRING:
 		return fmt.Sprintf("%q", v.String())
 	case ARRAY:
-		interfaceArray := make([]interface{}, len(v.array))
-		for i, val := range v.Array() {
-			interfaceArray[i] = val.ToSerializable()
-		}
-		respJson, err := json.MarshalIndent(interfaceArray, "", "  ")
+		respJson, err := json.MarshalIndent(v.ToSerializable(), "", "  ")
 		if err != nil {
-			panic(fmt.Sprintf("Failed to encode to JSON: %#v", interfaceArray))
+			panic(fmt.Sprintf("Codecrafters Internal Error - Failed to encode to JSON: %#v", v.ToSerializable()))
 		}
 		return formatter.Prettify(respJson)
 	case ERROR:
