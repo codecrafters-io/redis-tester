@@ -1,8 +1,10 @@
 package resp_value
 
 import (
+	"encoding/json"
 	"fmt"
-	"strings"
+
+	"github.com/codecrafters-io/redis-tester/internal/resp/formatter"
 )
 
 const (
@@ -110,19 +112,16 @@ func (v *Value) FormattedString() string {
 	case BULK_STRING:
 		return fmt.Sprintf("%q", v.String())
 	case ARRAY:
-		formattedStrings := make([]string, len(v.Array()))
-
-		for i, value := range v.Array() {
-			formattedStrings[i] = value.FormattedString()
+		respJson, err := json.MarshalIndent(v.ToSerializable(), "", "  ")
+		if err != nil {
+			panic(fmt.Sprintf("Codecrafters Internal Error - Failed to encode to JSON: %#v", v.ToSerializable()))
 		}
-
-		return fmt.Sprintf("[%v]", strings.Join(formattedStrings, ", "))
+		return formatter.Prettify(respJson)
 	case ERROR:
 		return fmt.Sprintf("%q", "ERR: "+v.String())
 	case NIL:
 		return "\"$-1\\r\\n\""
 	}
-
 	return ""
 }
 
@@ -130,6 +129,8 @@ func (v Value) ToSerializable() interface{} {
 	switch v.Type {
 	case BULK_STRING:
 		return v.String()
+	case INTEGER:
+		return v.Integer()
 	case ARRAY:
 		arr := v.Array()
 		result := make([]interface{}, len(arr))

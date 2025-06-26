@@ -1,7 +1,6 @@
 package resp_assertions
 
 import (
-	"encoding/json"
 	"fmt"
 
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
@@ -30,20 +29,13 @@ func (a XReadResponseAssertion) Run(value resp_value.Value) error {
 		return fmt.Errorf("Expected array, got %s", value.Type)
 	}
 
-	expected := a.buildExpected().ToSerializable()
-	actual := value.ToSerializable()
+	expectedValue := a.buildExpected()
+	expected := expectedValue.FormattedString()
 
-	expectedJSON, err := json.MarshalIndent(expected, "", "  ")
-	if err != nil {
-		return fmt.Errorf("failed to marshal expected value: %w", err)
-	}
-	actualJSON, err := json.MarshalIndent(actual, "", "  ")
-	if err != nil {
-		return fmt.Errorf("failed to marshal actual value: %w", err)
-	}
+	actual := value.FormattedString()
 
-	if string(expectedJSON) != string(actualJSON) {
-		return fmt.Errorf("XREAD response mismatch:\nExpected:\n%s\nGot:\n%s", expectedJSON, actualJSON)
+	if expected != actual {
+		return fmt.Errorf("XREAD response mismatch:\nExpected:\n%s\nGot:\n%s", expected, actual)
 	}
 
 	return nil
