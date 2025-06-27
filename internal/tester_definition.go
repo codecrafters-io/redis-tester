@@ -237,5 +237,49 @@ var testerDefinition = tester_definition.TesterDefinition{
 			Slug:     "jf8",
 			TestFunc: testTxMultiTx,
 		},
+		{
+			Slug:     "mh6",
+			TestFunc: testListRpush1,
+		},
+		{
+			Slug:     "tn7",
+			TestFunc: testListRpush2,
+		},
+		{
+			Slug:     "lx4",
+			TestFunc: testListRpush3,
+		},
+		{
+			Slug:     "sf6",
+			TestFunc: testListLrangePosIdx,
+		},
+		{
+			Slug:     "ri1",
+			TestFunc: testListLrangeNegIndex,
+		},
+		{
+			Slug:     "gu5",
+			TestFunc: testListLpush,
+		},
+		{
+			Slug:     "fv6",
+			TestFunc: testListLlen,
+		},
+		{
+			Slug:     "ef1",
+			TestFunc: testListLpop1,
+		},
+		{
+			Slug:     "jp1",
+			TestFunc: testListLpop2,
+		},
+		{
+			Slug:     "ec3",
+			TestFunc: testListBlpopNoTimeout,
+		},
+		{
+			Slug:     "xj7",
+			TestFunc: testListBlpopWithTimeout,
+		},
 	},
 }
