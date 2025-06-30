@@ -34,18 +34,19 @@ func testWithTimeout(stageHarness *test_case_harness.TestCaseHarness) error {
 	defer client.Close()
 
 	randomListKey := testerutils_random.RandomWord()
-	timeoutMS := 100
+	timeoutMS := testerutils_random.RandomInt(100, 500)
 	timeoutArg := fmt.Sprintf("%.1f", float32(timeoutMS)/1000.0)
 	timeoutDuration := time.Millisecond * time.Duration(timeoutMS)
 
 	blockingTestCase := test_cases.NewBlockingCommandTestCase(
-		"BLPOP",
-		[]string{randomListKey, timeoutArg},
-		resp_assertions.NewNilAssertion(),
+		&test_cases.SendCommandTestCase{
+			Command:   "BLPOP",
+			Args:      []string{randomListKey, timeoutArg},
+			Assertion: resp_assertions.NewNilAssertion(),
+		},
 		&timeoutDuration,
 	)
 	blockingTestCase.Run(client, logger)
-	blockingTestCase.Resume()
 	return blockingTestCase.WaitForResult()
 }
 
@@ -65,18 +66,19 @@ func testPushBeforeTimeout(stageHarness *test_case_harness.TestCaseHarness) erro
 
 	listKey := testerutils_random.RandomWord()
 	pushValue := testerutils_random.RandomWord()
-	timeoutMS := 500
+	timeoutMS := testerutils_random.RandomInt(100, 500)
+	timeoutArg := fmt.Sprintf("%.1f", float32(timeoutMS)/1000)
 
 	timeout := time.Millisecond * time.Duration(timeoutMS)
 	blockingTestCase := test_cases.NewBlockingCommandTestCase(
-		"BLPOP",
-		[]string{listKey, fmt.Sprintf("%.1f", float32(timeoutMS)/1000)},
-		resp_assertions.NewOrderedStringArrayAssertion([]string{listKey, pushValue}),
+		&test_cases.SendCommandTestCase{
+			Command:   "BLPOP",
+			Args:      []string{listKey, timeoutArg},
+			Assertion: resp_assertions.NewOrderedStringArrayAssertion([]string{listKey, pushValue}),
+		},
 		&timeout,
 	)
 	blockingTestCase.Run(client1, logger)
-
-	time.Sleep(100 * time.Millisecond)
 
 	client2, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client-2")
 	if err != nil {
@@ -94,6 +96,5 @@ func testPushBeforeTimeout(stageHarness *test_case_harness.TestCaseHarness) erro
 		return err
 	}
 
-	blockingTestCase.Resume()
-	return blockingTestCase.WaitForResult()
+	return blockingTestCase.ResumeAndWaitForResult()
 }

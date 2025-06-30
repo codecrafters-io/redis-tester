@@ -13,13 +13,6 @@ import (
 )
 
 func testListBlpopNoTimeout(stageHarness *test_case_harness.TestCaseHarness) error {
-	if err := testSingleBlocker(stageHarness); err != nil {
-		return err
-	}
-	return testMultipleBlockers(stageHarness)
-}
-
-func testSingleBlocker(stageHarness *test_case_harness.TestCaseHarness) error {
 	b := redis_executable.NewRedisExecutable(stageHarness)
 	if err := b.Run(); err != nil {
 		return err
@@ -32,53 +25,6 @@ func testSingleBlocker(stageHarness *test_case_harness.TestCaseHarness) error {
 		return err
 	}
 	defer client1.Close()
-
-	listKey := testerutils_random.RandomWord()
-	pushValue := testerutils_random.RandomWord()
-
-	blockingTestCase := test_cases.NewBlockingCommandTestCase(
-		"BLPOP",
-		[]string{listKey, "0"},
-		resp_assertions.NewOrderedStringArrayAssertion([]string{listKey, pushValue}),
-		nil,
-	)
-	blockingTestCase.Run(client1, logger)
-
-	client2, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client-2")
-	if err != nil {
-		logFriendlyError(logger, err)
-		return err
-	}
-	defer client2.Close()
-
-	rpushTestCase := test_cases.SendCommandTestCase{
-		Command:   "RPUSH",
-		Args:      []string{listKey, pushValue},
-		Assertion: resp_assertions.NewIntegerAssertion(1),
-	}
-	if err := rpushTestCase.Run(client2, logger); err != nil {
-		return err
-	}
-
-	blockingTestCase.Resume()
-	return blockingTestCase.WaitForResult()
-}
-
-func testMultipleBlockers(stageHarness *test_case_harness.TestCaseHarness) error {
-	b := redis_executable.NewRedisExecutable(stageHarness)
-	if err := b.Run(); err != nil {
-		return err
-	}
-
-	logger := stageHarness.Logger
-
-	client1, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client-1")
-	if err != nil {
-		logFriendlyError(logger, err)
-		return err
-	}
-	defer client1.Close()
-
 	client2, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client-2")
 	if err != nil {
 		logFriendlyError(logger, err)
@@ -89,16 +35,21 @@ func testMultipleBlockers(stageHarness *test_case_harness.TestCaseHarness) error
 	listKey := testerutils_random.RandomWord()
 	pushValue := testerutils_random.RandomWord()
 
+	assertion := resp_assertions.NewOrderedStringArrayAssertion([]string{listKey, pushValue})
 	blocker1 := test_cases.NewBlockingCommandTestCase(
-		"BLPOP",
-		[]string{listKey, "0"},
-		resp_assertions.NewOrderedStringArrayAssertion([]string{listKey, pushValue}),
+		&test_cases.SendCommandTestCase{
+			Command:   "BLPOP",
+			Args:      []string{listKey, "0"},
+			Assertion: assertion,
+		},
 		nil,
 	)
 	blocker2 := test_cases.NewBlockingCommandTestCase(
-		"BLPOP",
-		[]string{listKey, "0"},
-		resp_assertions.NewNilAssertion(),
+		&test_cases.SendCommandTestCase{
+			Command:   "BLPOP",
+			Args:      []string{listKey, "0"},
+			Assertion: assertion,
+		},
 		nil,
 	)
 
@@ -128,7 +79,7 @@ func testMultipleBlockers(stageHarness *test_case_harness.TestCaseHarness) error
 		return err
 	}
 
-	// wait to see if the client that wasn't supposed to respond responds
+	// check if the server responds to client-2 (it shouldn't)
 	blocked := make(chan error, 1)
 	go func() {
 		blocked <- blocker2.WaitForResult()
@@ -136,8 +87,7 @@ func testMultipleBlockers(stageHarness *test_case_harness.TestCaseHarness) error
 	select {
 	case <-blocked:
 		return fmt.Errorf("Server responded to %s for BLPOP", client2.GetIdentifier())
-	case <-time.After(1 * time.Second):
+	case <-time.After(10 * time.Millisecond):
 	}
-
 	return nil
 }
