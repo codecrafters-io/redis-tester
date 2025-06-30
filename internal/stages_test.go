@@ -96,6 +96,13 @@ func TestStages(t *testing.T) {
 			StdoutFixturePath:   "./test_helpers/fixtures/transactions/pass",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
+		"lists_pass": {
+			UntilStageSlug:      "xj7",
+			CodePath:            "./test_helpers/pass_all",
+			ExpectedExitCode:    0,
+			StdoutFixturePath:   "./test_helpers/fixtures/lists/pass",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
 	}
 
 	tester_utils_testing.TestTesterOutput(t, testerDefinition, testCases)
