@@ -575,7 +575,7 @@ stages:
 
       RDB files use special encodings to store different types of data. The ones relevant to this stage are "size encoding" and "string encoding." These are explained near the end of this page.
 
-      The following breakdown of the RDB file format is based on [Redis RDB File Format](https://rdb.fnordig.de/file_format.html) by Jan-Erik Rediger. We've only included the parts that are relevant to this stage.
+      The following breakdown of the RDB file format is based on [Redis RDB File Format](https://rdb.fnordig.de/file_format.html) by Jan-Erik Rediger. We’ve only included the parts that are relevant to this stage.
 
       #### Header section
 
@@ -611,7 +611,7 @@ stages:
       01                       /* The size of the hash table that stores the expires of the keys (size encoded).
                                   Here, the expire hash table size is 1. */
 
-      00                       /* The 1-byte flag that specifies the value's type and encoding.
+      00                       /* The 1-byte flag that specifies the value’s type and encoding.
                                   Here, the flag is 0, which means "string." */
       06 66 6F 6F 62 61 72     // The name of the key (string encoded). Here, it's "foobar".
       06 62 61 7A 71 75 78     // The value (string encoded). Here, it's "bazqux".

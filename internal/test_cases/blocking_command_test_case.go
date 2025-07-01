@@ -28,8 +28,7 @@ func (t *BlockingCommandTestCase) Run(logger *logger.Logger) error {
 	if err := t.sendBlockingCommands(); err != nil {
 		return err
 	}
-	err := t.UnblockingClientTestCase.Run(t.UnblockingClientTestCase.Client, logger)
-	if err != nil {
+	if err := t.UnblockingClientTestCase.Run(t.UnblockingClientTestCase.Client, logger); err != nil {
 		return err
 	}
 	if err := t.handleExpectingClients(logger); err != nil {
