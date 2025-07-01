@@ -9,7 +9,7 @@ import (
 	"github.com/codecrafters-io/tester-utils/logger"
 )
 
-type ClientUniqueTestCase struct {
+type ClientTestCase struct {
 	*SendCommandTestCase
 	Client       *resp_client.RespConnection
 	ExpectResult bool
@@ -20,15 +20,15 @@ and a single client that issues a command which should unblock one or multiple c
 */
 
 type BlockingCommandTestCase struct {
-	BlockingClientsTestCases []ClientUniqueTestCase
-	ReleasingClientTestCase  *ClientUniqueTestCase
+	BlockingClientsTestCases []ClientTestCase
+	UnblockingClientTestCase *ClientTestCase
 }
 
 func (t *BlockingCommandTestCase) Run(logger *logger.Logger) error {
 	if err := t.sendBlockingCommands(); err != nil {
 		return err
 	}
-	err := t.ReleasingClientTestCase.Run(t.ReleasingClientTestCase.Client, logger)
+	err := t.UnblockingClientTestCase.Run(t.UnblockingClientTestCase.Client, logger)
 	if err != nil {
 		return err
 	}
@@ -53,7 +53,7 @@ func (t *BlockingCommandTestCase) sendBlockingCommands() error {
 func (t *BlockingCommandTestCase) handleExpectingClients(logger *logger.Logger) error {
 	logger.Infof("Checking responses in the blocked clients")
 	// we do this synchronously to maintain fixtures order
-	expectingClientsTestCase := Filter(t.BlockingClientsTestCases, func(tc ClientUniqueTestCase) bool {
+	expectingClientsTestCase := Filter(t.BlockingClientsTestCases, func(tc ClientTestCase) bool {
 		return tc.ExpectResult
 	})
 
@@ -72,7 +72,7 @@ func (t *BlockingCommandTestCase) handleExpectingClients(logger *logger.Logger) 
 func (t *BlockingCommandTestCase) verifyIdleClients(logger *logger.Logger) error {
 	logger.Infof("Checking if unexpected clients receive a response from the server")
 	// If any one of the unexpected clients receive a value, we fail the test case
-	idleClientsTestCase := Filter(t.BlockingClientsTestCases, func(tc ClientUniqueTestCase) bool {
+	idleClientsTestCase := Filter(t.BlockingClientsTestCases, func(tc ClientTestCase) bool {
 		return !tc.ExpectResult
 	})
 
@@ -80,7 +80,7 @@ func (t *BlockingCommandTestCase) verifyIdleClients(logger *logger.Logger) error
 	doneChan := make(chan bool, len(idleClientsTestCase))
 
 	for _, tc := range idleClientsTestCase {
-		go func(tc *ClientUniqueTestCase) {
+		go func(tc *ClientTestCase) {
 			defer func() { doneChan <- true }()
 
 			// we don't need locking here because as soon as any client receive a response, we return an error

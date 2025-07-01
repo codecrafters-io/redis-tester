@@ -30,7 +30,7 @@ func testListBlpopNoTimeout(stageHarness *test_case_harness.TestCaseHarness) err
 	blPopAssertion := resp_assertions.NewOrderedStringArrayAssertion([]string{listKey, pushValue})
 
 	blockingTestCase := test_cases.BlockingCommandTestCase{
-		BlockingClientsTestCases: []test_cases.ClientUniqueTestCase{
+		BlockingClientsTestCases: []test_cases.ClientTestCase{
 			{
 				Client: clients[0],
 				SendCommandTestCase: &test_cases.SendCommandTestCase{
@@ -50,7 +50,7 @@ func testListBlpopNoTimeout(stageHarness *test_case_harness.TestCaseHarness) err
 				ExpectResult: false,
 			},
 		},
-		ReleasingClientTestCase: &test_cases.ClientUniqueTestCase{
+		UnblockingClientTestCase: &test_cases.ClientTestCase{
 			Client: clients[2],
 			SendCommandTestCase: &test_cases.SendCommandTestCase{
 				Command:   "RPUSH",

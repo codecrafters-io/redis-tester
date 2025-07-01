@@ -76,7 +76,7 @@ func testPushBeforeTimeout(stageHarness *test_case_harness.TestCaseHarness) erro
 	timeoutArg := fmt.Sprintf("%.1f", float32(timeoutMS)/1000)
 
 	blockingCommandTestCase := test_cases.BlockingCommandTestCase{
-		BlockingClientsTestCases: []test_cases.ClientUniqueTestCase{
+		BlockingClientsTestCases: []test_cases.ClientTestCase{
 			{
 				Client: clients[0],
 				SendCommandTestCase: &test_cases.SendCommandTestCase{
@@ -87,7 +87,7 @@ func testPushBeforeTimeout(stageHarness *test_case_harness.TestCaseHarness) erro
 				ExpectResult: true,
 			},
 		},
-		ReleasingClientTestCase: &test_cases.ClientUniqueTestCase{
+		UnblockingClientTestCase: &test_cases.ClientTestCase{
 			Client: clients[1],
 			SendCommandTestCase: &test_cases.SendCommandTestCase{
 				Command:   "RPUSH",
