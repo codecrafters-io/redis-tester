@@ -82,8 +82,9 @@ func (t *BlockingCommandTestCase) verifyIdleClients(logger *logger.Logger) error
 		go func(tc *ClientTestCase) {
 			defer func() { doneChan <- true }()
 
-			// we don't need locking here because as soon as any client receive a response, we return an error
+			tc.PauseReadingResponse()
 			value, err := tc.Client.ReadValue()
+			tc.ResumeReadingResponse()
 			if err == nil {
 				// This is helpful in cases where the users might fan-out the response to all clients.
 				// Printing the RESP value is more informative than printing the buffer
