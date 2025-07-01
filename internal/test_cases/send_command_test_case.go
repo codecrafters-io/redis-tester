@@ -65,9 +65,13 @@ func (t *SendCommandTestCase) Run(client *resp_client.RespConnection, logger *lo
 		}
 	}
 
+	return t.ProcessResponse(value, client, logger)
+}
+
+func (t *SendCommandTestCase) ProcessResponse(value resp_value.Value, client *resp_client.RespConnection, logger *logger.Logger) error {
 	t.ReceivedResponse = value
 
-	if err = t.Assertion.Run(value); err != nil {
+	if err := t.Assertion.Run(value); err != nil {
 		return err
 	}
 

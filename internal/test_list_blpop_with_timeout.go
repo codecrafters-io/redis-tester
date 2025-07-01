@@ -13,20 +13,19 @@ import (
 )
 
 func testListBlpopWithTimeout(stageHarness *test_case_harness.TestCaseHarness) error {
-	if err := testWithTimeout(stageHarness); err != nil {
+	b := redis_executable.NewRedisExecutable(stageHarness)
+	if err := b.Run(); err != nil {
+		return err
+	}
+	if err := testOnlyTimeout(stageHarness); err != nil {
 		return err
 	}
 	return testPushBeforeTimeout(stageHarness)
 }
 
-func testWithTimeout(stageHarness *test_case_harness.TestCaseHarness) error {
-	b := redis_executable.NewRedisExecutable(stageHarness)
-	if err := b.Run(); err != nil {
-		return err
-	}
-
+func testOnlyTimeout(stageHarness *test_case_harness.TestCaseHarness) error {
 	logger := stageHarness.Logger
-	client, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client-1")
+	client, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client")
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
@@ -34,67 +33,69 @@ func testWithTimeout(stageHarness *test_case_harness.TestCaseHarness) error {
 	defer client.Close()
 
 	randomListKey := testerutils_random.RandomWord()
-	timeoutMS := testerutils_random.RandomInt(100, 500)
-	timeoutArg := fmt.Sprintf("%.1f", float32(timeoutMS)/1000.0)
+	timeoutMS := testerutils_random.RandomInt(1, 5) * 100
+	timeoutArg := fmt.Sprintf("%.1f", float32(timeoutMS)/1000)
 	timeoutDuration := time.Millisecond * time.Duration(timeoutMS)
 
-	blockingTestCase := test_cases.NewBlockingCommandTestCase(
-		&test_cases.SendCommandTestCase{
-			Command:   "BLPOP",
-			Args:      []string{randomListKey, timeoutArg},
-			Assertion: resp_assertions.NewNilAssertion(),
-		},
-		&timeoutDuration,
-	)
-	blockingTestCase.Run(client, logger)
-	return blockingTestCase.WaitForResult()
+	sendCommandTestCase := test_cases.SendCommandTestCase{
+		Command:   "BLPOP",
+		Args:      []string{randomListKey, timeoutArg},
+		Assertion: resp_assertions.NewNilAssertion(),
+	}
+
+	resultChan := make(chan error, 1)
+	start := time.Now()
+	go func() {
+		resultChan <- sendCommandTestCase.Run(client, logger)
+	}()
+
+	err = <-resultChan
+	end := time.Now()
+	if err != nil {
+		return err
+	}
+	if end.Before(start.Add(timeoutDuration)) {
+		return fmt.Errorf("%s received a response before timeout of %s", client.GetIdentifier(), timeoutDuration.String())
+	}
+	return nil
 }
 
 func testPushBeforeTimeout(stageHarness *test_case_harness.TestCaseHarness) error {
-	b := redis_executable.NewRedisExecutable(stageHarness)
-	if err := b.Run(); err != nil {
-		return err
-	}
-
 	logger := stageHarness.Logger
-	client1, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client-1")
+	clients, err := SpawnClients(2, "localhost:6379", stageHarness, logger)
 	if err != nil {
-		logFriendlyError(logger, err)
 		return err
 	}
-	defer client1.Close()
+	for _, c := range clients {
+		defer c.Close()
+	}
 
 	listKey := testerutils_random.RandomWord()
 	pushValue := testerutils_random.RandomWord()
-	timeoutMS := testerutils_random.RandomInt(100, 500)
+	timeoutMS := testerutils_random.RandomInt(1, 5) * 100
 	timeoutArg := fmt.Sprintf("%.1f", float32(timeoutMS)/1000)
 
-	timeout := time.Millisecond * time.Duration(timeoutMS)
-	blockingTestCase := test_cases.NewBlockingCommandTestCase(
-		&test_cases.SendCommandTestCase{
-			Command:   "BLPOP",
-			Args:      []string{listKey, timeoutArg},
-			Assertion: resp_assertions.NewOrderedStringArrayAssertion([]string{listKey, pushValue}),
+	blockingCommandTestCase := test_cases.BlockingCommandTestCase{
+		BlockingClientsTestCases: []test_cases.ClientUniqueTestCase{
+			{
+				Client: clients[0],
+				SendCommandTestCase: &test_cases.SendCommandTestCase{
+					Command:   "BLPOP",
+					Args:      []string{listKey, timeoutArg},
+					Assertion: resp_assertions.NewOrderedStringArrayAssertion([]string{listKey, pushValue}),
+				},
+				ExpectResult: true,
+			},
 		},
-		&timeout,
-	)
-	blockingTestCase.Run(client1, logger)
-
-	client2, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client-2")
-	if err != nil {
-		logFriendlyError(logger, err)
-		return err
+		ReleasingClientTestCase: &test_cases.ClientUniqueTestCase{
+			Client: clients[1],
+			SendCommandTestCase: &test_cases.SendCommandTestCase{
+				Command:   "RPUSH",
+				Args:      []string{listKey, pushValue},
+				Assertion: resp_assertions.NewIntegerAssertion(1),
+			},
+			ExpectResult: true,
+		},
 	}
-	defer client2.Close()
-
-	rpushTestCase := test_cases.SendCommandTestCase{
-		Command:   "RPUSH",
-		Args:      []string{listKey, pushValue},
-		Assertion: resp_assertions.NewIntegerAssertion(1),
-	}
-	if err := rpushTestCase.Run(client2, logger); err != nil {
-		return err
-	}
-
-	return blockingTestCase.ResumeAndWaitForResult()
+	return blockingCommandTestCase.Run(logger)
 }

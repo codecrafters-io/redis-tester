@@ -1,77 +1,120 @@
 package test_cases
 
 import (
-	"time"
+	"fmt"
+	"strings"
 
 	resp_client "github.com/codecrafters-io/redis-tester/internal/resp/connection"
+	resp_decoder "github.com/codecrafters-io/redis-tester/internal/resp/decoder"
 	"github.com/codecrafters-io/tester-utils/logger"
 )
 
-type BlockingCommandTestCase struct {
+type ClientUniqueTestCase struct {
 	*SendCommandTestCase
-	timeoutDuration time.Duration
-	resumeChannel   chan struct{}
-	resultChan      chan error
+	Client       *resp_client.RespConnection
+	ExpectResult bool
 }
 
-/*
-BlockingCommandTestCase should be used whenever the client issues a command that is blocking (eg. BLPOP)
-
-Flow:
-Create using NewBlockingCommandTestCase()
-Run()
-
-If the command should respond after timeout, call WaitForResult()
-If it should respond after another command has been executed, call ResumeAndWaitForResult()
+/* This is useful when you have multiple clients which issue a blocking command (for eg. SUBSCRIBE, LPOP),
+and a single client that issues a command which should unblock one or multiple clients
 */
 
-func NewBlockingCommandTestCase(SendCommandTestCase *SendCommandTestCase, timeout *time.Duration) *BlockingCommandTestCase {
-	var t time.Duration
-	if timeout == nil {
-		t = time.Second * 10
-	} else {
-		t = *timeout
-	}
-	return &BlockingCommandTestCase{
-		SendCommandTestCase: SendCommandTestCase,
-		resumeChannel:       make(chan struct{}, 1),
-		resultChan:          make(chan error, 1),
-		timeoutDuration:     t,
-	}
+type BlockingCommandTestCase struct {
+	BlockingClientsTestCases []ClientUniqueTestCase
+	ReleasingClientTestCase  *ClientUniqueTestCase
 }
 
-func (t *BlockingCommandTestCase) Run(client *resp_client.RespConnection, logger *logger.Logger) {
-	go func() {
-		responseChannel := make(chan error)
-		timeoutChan := time.After(t.timeoutDuration)
-		go func() {
-			err := t.SendCommandTestCase.Run(client, logger)
-			responseChannel <- err
-		}()
+func (t *BlockingCommandTestCase) Run(logger *logger.Logger) error {
+	if err := t.sendBlockingCommands(); err != nil {
+		return err
+	}
+	err := t.ReleasingClientTestCase.Run(t.ReleasingClientTestCase.Client, logger)
+	if err != nil {
+		return err
+	}
+	if err := t.handleExpectingClients(logger); err != nil {
+		return err
+	}
+	return t.verifyIdleClients(logger)
+}
 
-		select {
-		case <-t.resumeChannel:
-			t.resultChan <- <-responseChannel
-		case <-timeoutChan:
-			t.resultChan <- <-responseChannel
+func (t *BlockingCommandTestCase) sendBlockingCommands() error {
+	// Send commands from blocking clients synchronously
+	// We do this to maintain order in fixtures
+	for _, tc := range t.BlockingClientsTestCases {
+		command := strings.ToUpper(tc.Command)
+		if err := tc.Client.SendCommand(command, tc.Args...); err != nil {
+			return err
 		}
-	}()
-}
-
-func (t *BlockingCommandTestCase) WaitForResult() error {
-	return <-t.resultChan
-}
-
-func (t *BlockingCommandTestCase) Resume() {
-	// maintains order for logs in fixtures
-	select {
-	case t.resumeChannel <- struct{}{}:
-	default:
-		panic("Codecrafters Internal Error - blocking test case already resumed")
 	}
+	return nil
 }
 
-func (t *BlockingCommandTestCase) ResumeAndWaitForResult() error {
-	t.Resume()
-	return t.WaitForResult()
+func (t *BlockingCommandTestCase) handleExpectingClients(logger *logger.Logger) error {
+	logger.Infof("Checking responses in the blocked clients")
+	// we do this synchronously to maintain fixtures order
+	expectingClientsTestCase := Filter(t.BlockingClientsTestCases, func(tc ClientUniqueTestCase) bool {
+		return tc.ExpectResult
+	})
+
+	for _, tc := range expectingClientsTestCase {
+		value, err := tc.Client.ReadValue()
+		if err != nil {
+			return err
+		}
+		if err = tc.ProcessResponse(value, tc.Client, logger); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (t *BlockingCommandTestCase) verifyIdleClients(logger *logger.Logger) error {
+	logger.Infof("Checking if unexpected clients receive a response from the server")
+	// If any one of the unexpected clients receive a value, we fail the test case
+	idleClientsTestCase := Filter(t.BlockingClientsTestCases, func(tc ClientUniqueTestCase) bool {
+		return !tc.ExpectResult
+	})
+
+	errorChan := make(chan error, len(idleClientsTestCase))
+	doneChan := make(chan bool, len(idleClientsTestCase))
+
+	for _, tc := range idleClientsTestCase {
+		go func(tc *ClientUniqueTestCase) {
+			defer func() { doneChan <- true }()
+
+			// we don't need locking here because as soon as any client receive a response, we return an error
+			value, err := tc.Client.ReadValue()
+			if err == nil {
+				// This is helpful in cases where the users might fan-out the response to all clients.
+				// Printing the RESP value is more informative than printing the buffer
+				errorChan <- fmt.Errorf("%s unexpectedly received value: %s",
+					tc.Client.GetIdentifier(), value.FormattedString())
+				return
+			}
+			if resp_decoder.IsEmptyContentReceivedError(err) {
+				return
+			}
+			if tc.Client.UnreadBuffer.Len() > 0 {
+				// decoding error
+				errorChan <- fmt.Errorf("%s unexpectedly received: %q",
+					tc.Client.GetIdentifier(), tc.Client.UnreadBuffer.String())
+			} else {
+				errorChan <- fmt.Errorf("received error while trying to receive a response for %s: %s",
+					tc.Client.GetIdentifier(), err)
+			}
+		}(&tc)
+	}
+
+	completed := 0
+	for completed < len(idleClientsTestCase) {
+		select {
+		case err := <-errorChan:
+			return err
+		case <-doneChan:
+			completed++
+		}
+	}
+
+	return nil
 }

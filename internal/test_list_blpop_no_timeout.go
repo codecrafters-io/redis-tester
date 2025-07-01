@@ -1,10 +1,6 @@
 package internal
 
 import (
-	"fmt"
-	"time"
-
-	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
@@ -19,75 +15,51 @@ func testListBlpopNoTimeout(stageHarness *test_case_harness.TestCaseHarness) err
 	}
 
 	logger := stageHarness.Logger
-	client1, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client-1")
+
+	clients, err := SpawnClients(3, "localhost:6379", stageHarness, logger)
 	if err != nil {
-		logFriendlyError(logger, err)
 		return err
 	}
-	defer client1.Close()
-	client2, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client-2")
-	if err != nil {
-		logFriendlyError(logger, err)
-		return err
+	for _, c := range clients {
+		defer c.Close()
 	}
-	defer client2.Close()
 
 	listKey := testerutils_random.RandomWord()
 	pushValue := testerutils_random.RandomWord()
 
-	assertion := resp_assertions.NewOrderedStringArrayAssertion([]string{listKey, pushValue})
-	blocker1 := test_cases.NewBlockingCommandTestCase(
-		&test_cases.SendCommandTestCase{
-			Command:   "BLPOP",
-			Args:      []string{listKey, "0"},
-			Assertion: assertion,
+	blPopAssertion := resp_assertions.NewOrderedStringArrayAssertion([]string{listKey, pushValue})
+
+	blockingTestCase := test_cases.BlockingCommandTestCase{
+		BlockingClientsTestCases: []test_cases.ClientUniqueTestCase{
+			{
+				Client: clients[0],
+				SendCommandTestCase: &test_cases.SendCommandTestCase{
+					Command:   "BLPOP",
+					Args:      []string{listKey, "0"},
+					Assertion: blPopAssertion,
+				},
+				ExpectResult: true,
+			},
+			{
+				Client: clients[1],
+				SendCommandTestCase: &test_cases.SendCommandTestCase{
+					Command:   "BLPOP",
+					Args:      []string{listKey, "0"},
+					Assertion: blPopAssertion,
+				},
+				ExpectResult: false,
+			},
 		},
-		nil,
-	)
-	blocker2 := test_cases.NewBlockingCommandTestCase(
-		&test_cases.SendCommandTestCase{
-			Command:   "BLPOP",
-			Args:      []string{listKey, "0"},
-			Assertion: assertion,
+		ReleasingClientTestCase: &test_cases.ClientUniqueTestCase{
+			Client: clients[2],
+			SendCommandTestCase: &test_cases.SendCommandTestCase{
+				Command:   "RPUSH",
+				Args:      []string{listKey, pushValue},
+				Assertion: resp_assertions.NewIntegerAssertion(1),
+			},
+			ExpectResult: true,
 		},
-		nil,
-	)
-
-	blocker1.Run(client1, logger)
-	blocker2.Run(client2, logger)
-
-	client3, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client-3")
-	if err != nil {
-		logFriendlyError(logger, err)
-		return err
-	}
-	defer client3.Close()
-
-	rpushTestCase := test_cases.SendCommandTestCase{
-		Command:   "RPUSH",
-		Args:      []string{listKey, pushValue},
-		Assertion: resp_assertions.NewIntegerAssertion(1),
-	}
-	if err := rpushTestCase.Run(client3, logger); err != nil {
-		return err
 	}
 
-	blocker1.Resume()
-	blocker2.Resume()
-
-	if err := blocker1.WaitForResult(); err != nil {
-		return err
-	}
-
-	// check if the server responds to client-2 (it shouldn't)
-	blocked := make(chan error, 1)
-	go func() {
-		blocked <- blocker2.WaitForResult()
-	}()
-	select {
-	case <-blocked:
-		return fmt.Errorf("Server responded to %s for BLPOP", client2.GetIdentifier())
-	case <-time.After(10 * time.Millisecond):
-	}
-	return nil
+	return blockingTestCase.Run(logger)
 }

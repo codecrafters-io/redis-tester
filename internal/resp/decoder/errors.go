@@ -70,3 +70,7 @@ func readBytesFromReader(reader *bytes.Reader) []byte {
 
 	return bytes
 }
+
+func IsEmptyContentReceivedError(err error) bool {
+	return strings.Contains(err.Error(), "(no content received)")
+}
