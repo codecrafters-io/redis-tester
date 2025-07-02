@@ -75,27 +75,22 @@ func testPushBeforeTimeout(stageHarness *test_case_harness.TestCaseHarness) erro
 	timeoutMS := testerutils_random.RandomInt(1, 5) * 100
 	timeoutArg := fmt.Sprintf("%.1f", float32(timeoutMS)/1000)
 
-	blockingCommandTestCase := test_cases.BlockingCommandTestCase{
-		BlockingClientsTestCases: []test_cases.ClientTestCase{
-			{
-				Client: clients[0],
-				SendCommandTestCase: &test_cases.SendCommandTestCase{
-					Command:   "BLPOP",
-					Args:      []string{listKey, timeoutArg},
-					Assertion: resp_assertions.NewOrderedStringArrayAssertion([]string{listKey, pushValue}),
-				},
-				ExpectResult: true,
-			},
-		},
-		UnblockingClientTestCase: &test_cases.ClientTestCase{
-			Client: clients[1],
-			SendCommandTestCase: &test_cases.SendCommandTestCase{
-				Command:   "RPUSH",
-				Args:      []string{listKey, pushValue},
-				Assertion: resp_assertions.NewIntegerAssertion(1),
-			},
-			ExpectResult: true,
-		},
+	blPopResponseAssertion := resp_assertions.NewOrderedStringArrayAssertion([]string{listKey, pushValue})
+	blockingClientGroupTestCase := test_cases.BlockingClientGroupTestCase{}
+	blockingClientGroupTestCase.AddClientWithExpectedResponse(clients[0], "BLPOP", []string{listKey, timeoutArg}, blPopResponseAssertion)
+
+	if err := blockingClientGroupTestCase.SendBlockingCommands(); err != nil {
+		return err
 	}
-	return blockingCommandTestCase.Run(logger)
+
+	rpushTestCase := test_cases.SendCommandTestCase{
+		Command:   "RPUSH",
+		Args:      []string{listKey, pushValue},
+		Assertion: resp_assertions.NewIntegerAssertion(1),
+	}
+	if err := rpushTestCase.Run(clients[1], logger); err != nil {
+		return err
+	}
+
+	return blockingClientGroupTestCase.AssertResponses(logger)
 }

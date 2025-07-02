@@ -2,7 +2,6 @@ package internal
 
 import (
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
-	resp_connection "github.com/codecrafters-io/redis-tester/internal/resp/connection"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
@@ -33,27 +32,24 @@ func testListBlpopNoTimeout(stageHarness *test_case_harness.TestCaseHarness) err
 	blPopResponseAssertion := resp_assertions.NewOrderedStringArrayAssertion([]string{listKey, pushValue})
 
 	blockingClientGroupTestCase := test_cases.BlockingClientGroupTestCase{}
-	blockingClientGroupTestCase.AddClientWithExpectedResponse(clients[1], "BLPOP", []string{listKey, "0"}, blPopResponseAssertion)
-	blockingClientGroupTestCase.AddClientWithNoExpectedResponse(clients[2], "BLPOP", []string{listKey, "0"})
+	blockingClientGroupTestCase.
+		AddClientWithExpectedResponse(clients[1], "BLPOP", []string{listKey, "0"}, blPopResponseAssertion).
+		AddClientWithNoExpectedResponse(clients[2], "BLPOP", []string{listKey, "0"})
 
 	// We only send commands here, not expecting responses yet
 	if err := blockingClientGroupTestCase.SendBlockingCommands(); err != nil {
 		return err
 	}
 
-	sendCommandTestCase := test_cases.SendCommandTestCase{
+	rpushTestCase := test_cases.SendCommandTestCase{
 		Command:   "RPUSH",
 		Args:      []string{listKey, pushValue},
 		Assertion: resp_assertions.NewIntegerAssertion(1),
 	}
 
-	if err := sendCommandTestCase.Run(sendingClient, logger); err != nil {
+	if err := rpushTestCase.Run(sendingClient, logger); err != nil {
 		return err
 	}
 
-	if err := blockingClientGroupTestCase.AssertResponses(logger); err != nil {
-		return err
-	}
-
-	return nil
+	return blockingClientGroupTestCase.AssertResponses(logger)
 }

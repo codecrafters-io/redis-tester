@@ -54,7 +54,7 @@ func (t *BlockingClientGroupTestCase) SendBlockingCommands() error {
 func (t *BlockingClientGroupTestCase) AssertResponses(logger *logger.Logger) error {
 	for _, clientWithExpectedResponse := range t.clientsWithExpectedResponses {
 		if clientWithExpectedResponse.Assertion == nil {
-			testCase := NoUnreadDataTestCase{}
+			testCase := NoResponseTestCase{}
 			if err := testCase.Run(clientWithExpectedResponse.Client, logger); err != nil {
 				return err
 			}
@@ -67,6 +67,5 @@ func (t *BlockingClientGroupTestCase) AssertResponses(logger *logger.Logger) err
 			}
 		}
 	}
-
 	return nil
 }
