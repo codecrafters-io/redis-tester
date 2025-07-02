@@ -26,10 +26,9 @@ func testListRpush1(stageHarness *test_case_harness.TestCaseHarness) error {
 	keyAndValue := testerutils_random.RandomWords(2)
 
 	testcase := test_cases.SendCommandTestCase{
-		Command:                   "RPUSH",
-		Args:                      keyAndValue,
-		Assertion:                 resp_assertions.NewIntegerAssertion(1),
-		ShouldSkipUnreadDataCheck: false,
+		Command:   "RPUSH",
+		Args:      keyAndValue,
+		Assertion: resp_assertions.NewIntegerAssertion(1),
 	}
 
 	return testcase.Run(client, logger)

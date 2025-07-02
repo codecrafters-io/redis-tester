@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
@@ -29,6 +30,7 @@ func testListLrangePosIdx(stageHarness *test_case_harness.TestCaseHarness) error
 	listSize := testerutils_random.RandomInt(4, 5)
 	randomList := testerutils_random.RandomWords(listSize)
 	middleIndex := testerutils_random.RandomInt(1, listSize-1)
+	missingKey := fmt.Sprintf("missing_key_%d", testerutils_random.RandomInt(1, 100))
 
 	multiCommandTestCase := test_cases.MultiCommandTestCase{
 		Commands: [][]string{
@@ -46,7 +48,7 @@ func testListLrangePosIdx(stageHarness *test_case_harness.TestCaseHarness) error
 			{"LRANGE", randomListKey, "0", strconv.Itoa(listSize * 2)},
 
 			// key doesn't exist
-			{"LRANGE", "non_existent_key", "0", "1"},
+			{"LRANGE", missingKey, "0", "1"},
 		},
 		Assertions: []resp_assertions.RESPAssertion{
 			resp_assertions.NewIntegerAssertion(listSize),

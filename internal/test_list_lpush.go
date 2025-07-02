@@ -37,7 +37,7 @@ func testListLpush(stageHarness *test_case_harness.TestCaseHarness) error {
 		Assertions: []resp_assertions.RESPAssertion{
 			resp_assertions.NewIntegerAssertion(1),
 			resp_assertions.NewIntegerAssertion(3),
-			resp_assertions.NewOrderedStringArrayAssertion([]string{randomValues[0], randomValues[1], randomValues[2]}),
+			resp_assertions.NewOrderedStringArrayAssertion(randomValues),
 		},
 	}
 

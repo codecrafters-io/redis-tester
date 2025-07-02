@@ -27,7 +27,7 @@ func testListLrangeNegIndex(stageHarness *test_case_harness.TestCaseHarness) err
 
 	randomListKey := testerutils_random.RandomWord()
 	listSize := testerutils_random.RandomInt(4, 5)
-	randomList := testerutils_random.RandomWords(listSize)
+	randomElements := testerutils_random.RandomWords(listSize)
 
 	startIndex := -listSize
 	endIndex := -1
@@ -37,7 +37,7 @@ func testListLrangeNegIndex(stageHarness *test_case_harness.TestCaseHarness) err
 
 	multiCommandTestCase := test_cases.MultiCommandTestCase{
 		Commands: [][]string{
-			append([]string{"RPUSH", randomListKey}, randomList...),
+			append([]string{"RPUSH", randomListKey}, randomElements...),
 
 			// usual test cases
 			{"LRANGE", randomListKey, "0", strconv.Itoa(middleIndex)},
@@ -52,11 +52,11 @@ func testListLrangeNegIndex(stageHarness *test_case_harness.TestCaseHarness) err
 		},
 		Assertions: []resp_assertions.RESPAssertion{
 			resp_assertions.NewIntegerAssertion(listSize),
-			resp_assertions.NewOrderedStringArrayAssertion(randomList[0 : middleIndexTranslated+1]),
-			resp_assertions.NewOrderedStringArrayAssertion(randomList[middleIndexTranslated:listSize]),
-			resp_assertions.NewOrderedStringArrayAssertion(randomList[0:listSize]),
+			resp_assertions.NewOrderedStringArrayAssertion(randomElements[0 : middleIndexTranslated+1]),
+			resp_assertions.NewOrderedStringArrayAssertion(randomElements[middleIndexTranslated:listSize]),
+			resp_assertions.NewOrderedStringArrayAssertion(randomElements[0:listSize]),
 			resp_assertions.NewOrderedStringArrayAssertion([]string{}),
-			resp_assertions.NewOrderedStringArrayAssertion(randomList[0:listSize]),
+			resp_assertions.NewOrderedStringArrayAssertion(randomElements[0:listSize]),
 		},
 	}
 

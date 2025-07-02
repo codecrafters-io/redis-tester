@@ -1,6 +1,8 @@
 package internal
 
 import (
+	"fmt"
+
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
@@ -26,12 +28,13 @@ func testListLlen(stageHarness *test_case_harness.TestCaseHarness) error {
 	randomKey := testerutils_random.RandomWord()
 	listSize := testerutils_random.RandomInt(4, 8)
 	randomList := testerutils_random.RandomWords(listSize)
+	missingKey := fmt.Sprintf("missing_key_%d", testerutils_random.RandomInt(1, 100))
 
 	multiCommandTestCase := test_cases.MultiCommandTestCase{
 		Commands: [][]string{
 			append([]string{"RPUSH", randomKey}, randomList...),
 			{"LLEN", randomKey},
-			{"LLEN", "non_existent_list_key"},
+			{"LLEN", missingKey},
 		},
 		Assertions: []resp_assertions.RESPAssertion{
 			resp_assertions.NewIntegerAssertion(listSize),
