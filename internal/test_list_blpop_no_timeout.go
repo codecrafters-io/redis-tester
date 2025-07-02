@@ -26,18 +26,19 @@ func testListBlpopNoTimeout(stageHarness *test_case_harness.TestCaseHarness) err
 	}
 
 	sendingClient := clients[0]
-	firstBlockingClient := clients[1]
-	secondBlockingClient := clients[2]
-	blockingClients := []*resp_connection.RespConnection{firstBlockingClient, secondBlockingClient}
 
 	listKey := testerutils_random.RandomWord()
 	pushValue := testerutils_random.RandomWord()
 
+	blPopResponseAssertion := resp_assertions.NewOrderedStringArrayAssertion([]string{listKey, pushValue})
+
+	blockingClientGroupTestCase := test_cases.BlockingClientGroupTestCase{}
+	blockingClientGroupTestCase.AddClientWithExpectedResponse(clients[1], "BLPOP", []string{listKey, "0"}, blPopResponseAssertion)
+	blockingClientGroupTestCase.AddClientWithNoExpectedResponse(clients[2], "BLPOP", []string{listKey, "0"})
+
 	// We only send commands here, not expecting responses yet
-	for _, client := range blockingClients {
-		if err := client.SendCommand("BLPOP", listKey, "0"); err != nil {
-			return err
-		}
+	if err := blockingClientGroupTestCase.SendBlockingCommands(); err != nil {
+		return err
 	}
 
 	sendCommandTestCase := test_cases.SendCommandTestCase{
@@ -50,17 +51,9 @@ func testListBlpopNoTimeout(stageHarness *test_case_harness.TestCaseHarness) err
 		return err
 	}
 
-	firstBlockingClientTestCase := test_cases.ReceiveValueTestCase{
-		Assertion: resp_assertions.NewOrderedStringArrayAssertion([]string{listKey, pushValue}),
-	}
-
-	if err := firstBlockingClientTestCase.Run(firstBlockingClient, logger); err != nil {
+	if err := blockingClientGroupTestCase.AssertResponses(logger); err != nil {
 		return err
 	}
 
-	secondBlockingClientTestCase := test_cases.NoUnreadDataTestCase{}
-
-	if err := secondBlockingClientTestCase.Run(secondBlockingClient, logger); err != nil {
-		return err
-	}
+	return nil
 }
