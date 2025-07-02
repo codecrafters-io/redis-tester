@@ -2,6 +2,7 @@ package internal
 
 import (
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	resp_connection "github.com/codecrafters-io/redis-tester/internal/resp/connection"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
@@ -24,42 +25,35 @@ func testListBlpopNoTimeout(stageHarness *test_case_harness.TestCaseHarness) err
 		defer c.Close()
 	}
 
+	sendingClient := clients[0]
+
 	listKey := testerutils_random.RandomWord()
 	pushValue := testerutils_random.RandomWord()
 
-	blPopAssertion := resp_assertions.NewOrderedStringArrayAssertion([]string{listKey, pushValue})
+	blPopResponseAssertion := resp_assertions.NewOrderedStringArrayAssertion([]string{listKey, pushValue})
 
-	blockingTestCase := test_cases.BlockingCommandTestCase{
-		BlockingClientsTestCases: []test_cases.ClientTestCase{
-			{
-				Client: clients[0],
-				SendCommandTestCase: &test_cases.SendCommandTestCase{
-					Command:   "BLPOP",
-					Args:      []string{listKey, "0"},
-					Assertion: blPopAssertion,
-				},
-				ExpectResult: true,
-			},
-			{
-				Client: clients[1],
-				SendCommandTestCase: &test_cases.SendCommandTestCase{
-					Command:   "BLPOP",
-					Args:      []string{listKey, "0"},
-					Assertion: blPopAssertion,
-				},
-				ExpectResult: false,
-			},
-		},
-		UnblockingClientTestCase: &test_cases.ClientTestCase{
-			Client: clients[2],
-			SendCommandTestCase: &test_cases.SendCommandTestCase{
-				Command:   "RPUSH",
-				Args:      []string{listKey, pushValue},
-				Assertion: resp_assertions.NewIntegerAssertion(1),
-			},
-			ExpectResult: true,
-		},
+	blockingClientGroupTestCase := test_cases.BlockingClientGroupTestCase{}
+	blockingClientGroupTestCase.AddClientWithExpectedResponse(clients[1], "BLPOP", []string{listKey, "0"}, blPopResponseAssertion)
+	blockingClientGroupTestCase.AddClientWithNoExpectedResponse(clients[2], "BLPOP", []string{listKey, "0"})
+
+	// We only send commands here, not expecting responses yet
+	if err := blockingClientGroupTestCase.SendBlockingCommands(); err != nil {
+		return err
 	}
 
-	return blockingTestCase.Run(logger)
+	sendCommandTestCase := test_cases.SendCommandTestCase{
+		Command:   "RPUSH",
+		Args:      []string{listKey, pushValue},
+		Assertion: resp_assertions.NewIntegerAssertion(1),
+	}
+
+	if err := sendCommandTestCase.Run(sendingClient, logger); err != nil {
+		return err
+	}
+
+	if err := blockingClientGroupTestCase.AssertResponses(logger); err != nil {
+		return err
+	}
+
+	return nil
 }
