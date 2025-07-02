@@ -1,0 +1,72 @@
+package test_cases
+
+import (
+	resp_connection "github.com/codecrafters-io/redis-tester/internal/resp/connection"
+	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+	"github.com/codecrafters-io/tester-utils/logger"
+)
+
+type clientWithExpectedResponse struct {
+	Client  *resp_connection.RespConnection
+	Command string
+	Args    []string
+
+	// If nil, we expect no response
+	Assertion *resp_assertions.RESPAssertion
+}
+
+type BlockingClientGroupTestCase struct {
+	clientsWithExpectedResponses []clientWithExpectedResponse
+}
+
+func (t *BlockingClientGroupTestCase) AddClientWithExpectedResponse(client *resp_connection.RespConnection, command string, args []string, assertion resp_assertions.RESPAssertion) *BlockingClientGroupTestCase {
+	t.clientsWithExpectedResponses = append(t.clientsWithExpectedResponses, clientWithExpectedResponse{
+		Client:    client,
+		Command:   command,
+		Args:      args,
+		Assertion: &assertion,
+	})
+
+	return t
+}
+
+func (t *BlockingClientGroupTestCase) AddClientWithNoExpectedResponse(client *resp_connection.RespConnection, command string, args []string) *BlockingClientGroupTestCase {
+	t.clientsWithExpectedResponses = append(t.clientsWithExpectedResponses, clientWithExpectedResponse{
+		Client:    client,
+		Command:   command,
+		Args:      args,
+		Assertion: nil,
+	})
+
+	return t
+}
+
+func (t *BlockingClientGroupTestCase) SendBlockingCommands() error {
+	for _, clientWithExpectedResponse := range t.clientsWithExpectedResponses {
+		if err := clientWithExpectedResponse.Client.SendCommand(clientWithExpectedResponse.Command, clientWithExpectedResponse.Args...); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (t *BlockingClientGroupTestCase) AssertResponses(logger *logger.Logger) error {
+	for _, clientWithExpectedResponse := range t.clientsWithExpectedResponses {
+		if clientWithExpectedResponse.Assertion == nil {
+			testCase := NoUnreadDataTestCase{}
+			if err := testCase.Run(clientWithExpectedResponse.Client, logger); err != nil {
+				return err
+			}
+		} else {
+			testCase := ReceiveValueTestCase{
+				Assertion: *clientWithExpectedResponse.Assertion,
+			}
+			if err := testCase.Run(clientWithExpectedResponse.Client, logger); err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
+}
