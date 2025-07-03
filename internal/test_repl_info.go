@@ -38,7 +38,7 @@ func testReplInfo(stageHarness *test_case_harness.TestCaseHarness) error {
 		return err
 	}
 
-	responseValue := commandTestCase.GetReceivedResponse()
+	responseValue := commandTestCase.ReceivedResponse
 
 	if responseValue.Type != resp_value.BULK_STRING && responseValue.Type != resp_value.SIMPLE_STRING {
 		return fmt.Errorf("Expected simple string or bulk string, got %s", responseValue.Type)

@@ -44,7 +44,7 @@ func testStreamsXaddFullAutoid(stageHarness *test_case_harness.TestCaseHarness) 
 		return err
 	}
 
-	responseValue := commandTestCase.GetReceivedResponse()
+	responseValue := commandTestCase.ReceivedResponse
 
 	if responseValue.Type != resp_value.BULK_STRING {
 		return fmt.Errorf("Expected bulk string, got %s", responseValue.Type)

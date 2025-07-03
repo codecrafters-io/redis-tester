@@ -20,7 +20,8 @@ type SendCommandTestCase struct {
 	Retries                   int
 	ShouldRetryFunc           func(resp_value.Value) bool
 
-	receiveCommandTestCase *ReceiveValueTestCase
+	// ReceivedResponse is set after the test case is run
+	ReceivedResponse resp_value.Value
 
 	readMutex sync.Mutex
 }
@@ -64,12 +65,13 @@ func (t *SendCommandTestCase) Run(client *resp_client.RespConnection, logger *lo
 		}
 	}
 
-	t.receiveCommandTestCase = &ReceiveValueTestCase{
+	t.ReceivedResponse = value
+	receiveCommandTestCase := ReceiveValueTestCase{
 		Assertion:                 t.Assertion,
 		ShouldSkipUnreadDataCheck: t.ShouldSkipUnreadDataCheck,
 		ActualValue:               value,
 	}
-	return t.receiveCommandTestCase.runAssertionAndCheck(client, logger)
+	return receiveCommandTestCase.runAssertionAndCheck(client, logger)
 }
 
 func (t *SendCommandTestCase) PauseReadingResponse() {
@@ -78,11 +80,4 @@ func (t *SendCommandTestCase) PauseReadingResponse() {
 
 func (t *SendCommandTestCase) ResumeReadingResponse() {
 	t.readMutex.Unlock()
-}
-
-func (t *SendCommandTestCase) GetReceivedResponse() resp_value.Value {
-	if t.receiveCommandTestCase != nil {
-		return t.receiveCommandTestCase.ActualValue
-	}
-	return resp_value.Value{}
 }
