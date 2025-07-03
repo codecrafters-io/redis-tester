@@ -53,17 +53,23 @@ func testTxDiscard(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 
 	multiCommandTestCase := test_cases.MultiCommandTestCase{
-		Commands: [][]string{
-			{"DISCARD"},
-			{"GET", key1},
-			{"GET", key2},
-			{"DISCARD"},
-		},
-		Assertions: []resp_assertions.RESPAssertion{
-			resp_assertions.NewStringAssertion("OK"),
-			resp_assertions.NewNilAssertion(),
-			resp_assertions.NewStringAssertion(fmt.Sprint(randomInt2)),
-			resp_assertions.NewErrorAssertion("ERR DISCARD without MULTI"),
+		CommandWithAssertions: []test_cases.CommandWithAssertion{
+			{
+				Command:   []string{"DISCARD"},
+				Assertion: resp_assertions.NewStringAssertion("OK"),
+			},
+			{
+				Command:   []string{"GET", key1},
+				Assertion: resp_assertions.NewNilAssertion(),
+			},
+			{
+				Command:   []string{"GET", key2},
+				Assertion: resp_assertions.NewStringAssertion(fmt.Sprint(randomInt2)),
+			},
+			{
+				Command:   []string{"DISCARD"},
+				Assertion: resp_assertions.NewErrorAssertion("ERR DISCARD without MULTI"),
+			},
 		},
 	}
 

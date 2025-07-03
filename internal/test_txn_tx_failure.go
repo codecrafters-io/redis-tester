@@ -33,13 +33,15 @@ func testTxErr(stageHarness *test_case_harness.TestCaseHarness) error {
 	randomIntegerValue := random.RandomInt(1, 100)
 
 	multiCommandTestCase := test_cases.MultiCommandTestCase{
-		Commands: [][]string{
-			{"SET", key1, randomStringValue},
-			{"SET", key2, fmt.Sprint(randomIntegerValue)},
-		},
-		Assertions: []resp_assertions.RESPAssertion{
-			resp_assertions.NewStringAssertion("OK"),
-			resp_assertions.NewStringAssertion("OK"),
+		CommandWithAssertions: []test_cases.CommandWithAssertion{
+			{
+				Command:   []string{"SET", key1, randomStringValue},
+				Assertion: resp_assertions.NewStringAssertion("OK"),
+			},
+			{
+				Command:   []string{"SET", key2, fmt.Sprint(randomIntegerValue)},
+				Assertion: resp_assertions.NewStringAssertion("OK"),
+			},
 		},
 	}
 
@@ -63,13 +65,15 @@ func testTxErr(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 
 	multiCommandTestCase = test_cases.MultiCommandTestCase{
-		Commands: [][]string{
-			{"GET", key2},
-			{"GET", key1},
-		},
-		Assertions: []resp_assertions.RESPAssertion{
-			resp_assertions.NewStringAssertion(fmt.Sprint(randomIntegerValue + 1)),
-			resp_assertions.NewStringAssertion(randomStringValue),
+		CommandWithAssertions: []test_cases.CommandWithAssertion{
+			{
+				Command:   []string{"GET", key2},
+				Assertion: resp_assertions.NewStringAssertion(fmt.Sprint(randomIntegerValue + 1)),
+			},
+			{
+				Command:   []string{"GET", key1},
+				Assertion: resp_assertions.NewStringAssertion(randomStringValue),
+			},
 		},
 	}
 

@@ -29,15 +29,19 @@ func testListLpush(stageHarness *test_case_harness.TestCaseHarness) error {
 	randomValues := testerutils_random.RandomWords(3)
 
 	multiCommandTestCase := test_cases.MultiCommandTestCase{
-		Commands: [][]string{
-			{"LPUSH", randomListKey, randomValues[2]},
-			{"LPUSH", randomListKey, randomValues[1], randomValues[0]},
-			{"LRANGE", randomListKey, strconv.Itoa(0), strconv.Itoa(-1)},
-		},
-		Assertions: []resp_assertions.RESPAssertion{
-			resp_assertions.NewIntegerAssertion(1),
-			resp_assertions.NewIntegerAssertion(3),
-			resp_assertions.NewOrderedStringArrayAssertion(randomValues),
+		CommandWithAssertions: []test_cases.CommandWithAssertion{
+			{
+				Command:   []string{"LPUSH", randomListKey, randomValues[2]},
+				Assertion: resp_assertions.NewIntegerAssertion(1),
+			},
+			{
+				Command:   []string{"LPUSH", randomListKey, randomValues[1], randomValues[0]},
+				Assertion: resp_assertions.NewIntegerAssertion(3),
+			},
+			{
+				Command:   []string{"LRANGE", randomListKey, strconv.Itoa(0), strconv.Itoa(-1)},
+				Assertion: resp_assertions.NewOrderedStringArrayAssertion(randomValues),
+			},
 		},
 	}
 

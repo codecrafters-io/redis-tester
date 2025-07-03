@@ -33,13 +33,15 @@ func testTxMultiTx(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	for i, client := range clients {
 		multiCommandTestCase := test_cases.MultiCommandTestCase{
-			Commands: [][]string{
-				{"SET", key2, fmt.Sprint(randomIntegerValue)},
-				{"INCR", key1},
-			},
-			Assertions: []resp_assertions.RESPAssertion{
-				resp_assertions.NewStringAssertion("OK"),
-				resp_assertions.NewIntegerAssertion(i + 1),
+			CommandWithAssertions: []test_cases.CommandWithAssertion{
+				{
+					Command:   []string{"SET", key2, fmt.Sprint(randomIntegerValue)},
+					Assertion: resp_assertions.NewStringAssertion("OK"),
+				},
+				{
+					Command:   []string{"INCR", key1},
+					Assertion: resp_assertions.NewIntegerAssertion(i + 1),
+				},
 			},
 		}
 

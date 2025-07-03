@@ -31,15 +31,19 @@ func testListLpop2(stageHarness *test_case_harness.TestCaseHarness) error {
 	toRemoveCount := testerutils_random.RandomInt(2, 5)
 
 	multiCommandTestCase := test_cases.MultiCommandTestCase{
-		Commands: [][]string{
-			append([]string{"RPUSH", randomListKey}, elements...),
-			{"LPOP", randomListKey, strconv.Itoa(toRemoveCount)},
-			{"LRANGE", randomListKey, strconv.Itoa(0), strconv.Itoa(-1)},
-		},
-		Assertions: []resp_assertions.RESPAssertion{
-			resp_assertions.NewIntegerAssertion(listSize),
-			resp_assertions.NewOrderedStringArrayAssertion(elements[0:toRemoveCount]),
-			resp_assertions.NewOrderedStringArrayAssertion(elements[toRemoveCount:]),
+		CommandWithAssertions: []test_cases.CommandWithAssertion{
+			{
+				Command:   append([]string{"RPUSH", randomListKey}, elements...),
+				Assertion: resp_assertions.NewIntegerAssertion(listSize),
+			},
+			{
+				Command:   []string{"LPOP", randomListKey, strconv.Itoa(toRemoveCount)},
+				Assertion: resp_assertions.NewOrderedStringArrayAssertion(elements[0:toRemoveCount]),
+			},
+			{
+				Command:   []string{"LRANGE", randomListKey, strconv.Itoa(0), strconv.Itoa(-1)},
+				Assertion: resp_assertions.NewOrderedStringArrayAssertion(elements[toRemoveCount:]),
+			},
 		},
 	}
 

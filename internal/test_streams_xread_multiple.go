@@ -35,30 +35,34 @@ func testStreamsXreadMultiple(stageHarness *test_case_harness.TestCaseHarness) e
 	}
 
 	multiCommandTestCase := test_cases.MultiCommandTestCase{
-		Commands: [][]string{
-			{"XADD", randomKeys[0], entryIDs[0], "temperature", randomInts[0]},
-			{"XADD", randomKeys[1], entryIDs[1], "humidity", randomInts[1]},
-			{"XREAD", "streams", randomKeys[0], randomKeys[1], "0-0", "0-1"},
-		},
-		Assertions: []resp_assertions.RESPAssertion{
-			resp_assertions.NewStringAssertion(entryIDs[0]),
-			resp_assertions.NewStringAssertion(entryIDs[1]),
-			resp_assertions.NewXReadResponseAssertion([]resp_assertions.StreamResponse{
-				{
-					Key: randomKeys[0],
-					Entries: []resp_assertions.StreamEntry{{
-						Id:              entryIDs[0],
-						FieldValuePairs: [][]string{{"temperature", randomInts[0]}},
-					}},
-				},
-				{
-					Key: randomKeys[1],
-					Entries: []resp_assertions.StreamEntry{{
-						Id:              entryIDs[1],
-						FieldValuePairs: [][]string{{"humidity", randomInts[1]}},
-					}},
-				},
-			}),
+		CommandWithAssertions: []test_cases.CommandWithAssertion{
+			{
+				Command:   []string{"XADD", randomKeys[0], entryIDs[0], "temperature", randomInts[0]},
+				Assertion: resp_assertions.NewStringAssertion(entryIDs[0]),
+			},
+			{
+				Command:   []string{"XADD", randomKeys[1], entryIDs[1], "humidity", randomInts[1]},
+				Assertion: resp_assertions.NewStringAssertion(entryIDs[1]),
+			},
+			{
+				Command: []string{"XREAD", "streams", randomKeys[0], randomKeys[1], "0-0", "0-1"},
+				Assertion: resp_assertions.NewXReadResponseAssertion([]resp_assertions.StreamResponse{
+					{
+						Key: randomKeys[0],
+						Entries: []resp_assertions.StreamEntry{{
+							Id:              entryIDs[0],
+							FieldValuePairs: [][]string{{"temperature", randomInts[0]}},
+						}},
+					},
+					{
+						Key: randomKeys[1],
+						Entries: []resp_assertions.StreamEntry{{
+							Id:              entryIDs[1],
+							FieldValuePairs: [][]string{{"humidity", randomInts[1]}},
+						}},
+					},
+				}),
+			},
 		},
 	}
 

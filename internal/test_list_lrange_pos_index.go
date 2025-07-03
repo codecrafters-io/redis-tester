@@ -27,37 +27,45 @@ func testListLrangePosIdx(stageHarness *test_case_harness.TestCaseHarness) error
 	defer client.Close()
 
 	randomListKey := testerutils_random.RandomWord()
-	listSize := testerutils_random.RandomInt(4, 5)
+	listSize := testerutils_random.RandomInt(4, 8)
 	randomList := testerutils_random.RandomWords(listSize)
 	middleIndex := testerutils_random.RandomInt(1, listSize-1)
 	missingKey := fmt.Sprintf("missing_key_%d", testerutils_random.RandomInt(1, 100))
 
 	multiCommandTestCase := test_cases.MultiCommandTestCase{
-		Commands: [][]string{
-			append([]string{"RPUSH", randomListKey}, randomList...),
-
+		CommandWithAssertions: []test_cases.CommandWithAssertion{
+			{
+				Command:   append([]string{"RPUSH", randomListKey}, randomList...),
+				Assertion: resp_assertions.NewIntegerAssertion(listSize),
+			},
 			// usual test cases
-			{"LRANGE", randomListKey, "0", strconv.Itoa(middleIndex)},
-			{"LRANGE", randomListKey, strconv.Itoa(middleIndex), strconv.Itoa(listSize - 1)},
-			{"LRANGE", randomListKey, "0", strconv.Itoa(listSize - 1)},
-
+			{
+				Command:   []string{"LRANGE", randomListKey, "0", strconv.Itoa(middleIndex)},
+				Assertion: resp_assertions.NewOrderedStringArrayAssertion(randomList[0 : middleIndex+1]),
+			},
+			{
+				Command:   []string{"LRANGE", randomListKey, strconv.Itoa(middleIndex), strconv.Itoa(listSize - 1)},
+				Assertion: resp_assertions.NewOrderedStringArrayAssertion(randomList[middleIndex:listSize]),
+			},
+			{
+				Command:   []string{"LRANGE", randomListKey, "0", strconv.Itoa(listSize - 1)},
+				Assertion: resp_assertions.NewOrderedStringArrayAssertion(randomList[0:listSize]),
+			},
 			// start index > end index
-			{"LRANGE", randomListKey, "1", "0"},
-
+			{
+				Command:   []string{"LRANGE", randomListKey, "1", "0"},
+				Assertion: resp_assertions.NewOrderedStringArrayAssertion([]string{}),
+			},
 			// end index out of bounds
-			{"LRANGE", randomListKey, "0", strconv.Itoa(listSize * 2)},
-
+			{
+				Command:   []string{"LRANGE", randomListKey, "0", strconv.Itoa(listSize * 2)},
+				Assertion: resp_assertions.NewOrderedStringArrayAssertion(randomList[0:listSize]),
+			},
 			// key doesn't exist
-			{"LRANGE", missingKey, "0", "1"},
-		},
-		Assertions: []resp_assertions.RESPAssertion{
-			resp_assertions.NewIntegerAssertion(listSize),
-			resp_assertions.NewOrderedStringArrayAssertion(randomList[0 : middleIndex+1]),
-			resp_assertions.NewOrderedStringArrayAssertion(randomList[middleIndex:listSize]),
-			resp_assertions.NewOrderedStringArrayAssertion(randomList[0:listSize]),
-			resp_assertions.NewOrderedStringArrayAssertion([]string{}),
-			resp_assertions.NewOrderedStringArrayAssertion(randomList[0:listSize]),
-			resp_assertions.NewOrderedStringArrayAssertion([]string{}),
+			{
+				Command:   []string{"LRANGE", missingKey, "0", "1"},
+				Assertion: resp_assertions.NewOrderedStringArrayAssertion([]string{}),
+			},
 		},
 	}
 

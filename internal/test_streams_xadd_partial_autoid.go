@@ -28,15 +28,19 @@ func testStreamsXaddPartialAutoid(stageHarness *test_case_harness.TestCaseHarnes
 	randomValues := random.RandomWords(3)
 
 	multiCommandTestCase := test_cases.MultiCommandTestCase{
-		Commands: [][]string{
-			{"XADD", randomKey, "0-*", randomValues[0], randomValues[1]},
-			{"XADD", randomKey, "1-*", randomValues[0], randomValues[1]},
-			{"XADD", randomKey, "1-*", randomValues[1], randomValues[2]},
-		},
-		Assertions: []resp_assertions.RESPAssertion{
-			resp_assertions.NewStringAssertion("0-1"),
-			resp_assertions.NewStringAssertion("1-0"),
-			resp_assertions.NewStringAssertion("1-1"),
+		CommandWithAssertions: []test_cases.CommandWithAssertion{
+			{
+				Command:   []string{"XADD", randomKey, "0-*", randomValues[0], randomValues[1]},
+				Assertion: resp_assertions.NewStringAssertion("0-1"),
+			},
+			{
+				Command:   []string{"XADD", randomKey, "1-*", randomValues[0], randomValues[1]},
+				Assertion: resp_assertions.NewStringAssertion("1-0"),
+			},
+			{
+				Command:   []string{"XADD", randomKey, "1-*", randomValues[1], randomValues[2]},
+				Assertion: resp_assertions.NewStringAssertion("1-1"),
+			},
 		},
 	}
 

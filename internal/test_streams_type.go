@@ -31,15 +31,19 @@ func testStreamsType(stageHarness *test_case_harness.TestCaseHarness) error {
 	randomValue := random.RandomWord()
 
 	multiCommandTestCase := test_cases.MultiCommandTestCase{
-		Commands: [][]string{
-			{"SET", randomKey, randomValue},
-			{"TYPE", randomKey},
-			{"TYPE", fmt.Sprintf("missing_key_%s", randomValue)},
-		},
-		Assertions: []resp_assertions.RESPAssertion{
-			resp_assertions.NewStringAssertion("OK"),
-			resp_assertions.NewStringAssertion("string"),
-			resp_assertions.NewStringAssertion("none"),
+		CommandWithAssertions: []test_cases.CommandWithAssertion{
+			{
+				Command:   []string{"SET", randomKey, randomValue},
+				Assertion: resp_assertions.NewStringAssertion("OK"),
+			},
+			{
+				Command:   []string{"TYPE", randomKey},
+				Assertion: resp_assertions.NewStringAssertion("string"),
+			},
+			{
+				Command:   []string{"TYPE", fmt.Sprintf("missing_key_%s", randomValue)},
+				Assertion: resp_assertions.NewStringAssertion("none"),
+			},
 		},
 	}
 
