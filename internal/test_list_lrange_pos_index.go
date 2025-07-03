@@ -27,7 +27,7 @@ func testListLrangePosIdx(stageHarness *test_case_harness.TestCaseHarness) error
 	defer client.Close()
 
 	randomListKey := testerutils_random.RandomWord()
-	listSize := testerutils_random.RandomInt(4, 6)
+	listSize := testerutils_random.RandomInt(4, 8)
 	randomList := testerutils_random.RandomWords(listSize)
 	middleIndex := testerutils_random.RandomInt(1, listSize-1)
 	missingKey := fmt.Sprintf("missing_key_%d", testerutils_random.RandomInt(1, 100))

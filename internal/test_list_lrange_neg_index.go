@@ -26,7 +26,7 @@ func testListLrangeNegIndex(stageHarness *test_case_harness.TestCaseHarness) err
 	defer client.Close()
 
 	randomListKey := testerutils_random.RandomWord()
-	listSize := testerutils_random.RandomInt(4, 6)
+	listSize := testerutils_random.RandomInt(4, 8)
 	randomElements := testerutils_random.RandomWords(listSize)
 
 	startIndex := -listSize
