@@ -82,5 +82,8 @@ func (t *SendCommandTestCase) ResumeReadingResponse() {
 }
 
 func (t *SendCommandTestCase) GetReceivedResponse() resp_value.Value {
-	return t.receiveCommandTestCase.ActualValue
+	if t.receiveCommandTestCase != nil {
+		return t.receiveCommandTestCase.ActualValue
+	}
+	return resp_value.Value{}
 }
