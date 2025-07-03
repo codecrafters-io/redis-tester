@@ -26,7 +26,7 @@ type RDBFileCreator struct {
 }
 
 func NewRDBFileCreator() (*RDBFileCreator, error) {
-	tmpDir, err := os.MkdirTemp("", "codecrafters-rdbfiles")
+	tmpDir, err := os.MkdirTemp("", "codecrafters-rdbfiles-")
 	if err != nil {
 		return &RDBFileCreator{}, err
 	}
