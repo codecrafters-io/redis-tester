@@ -26,8 +26,6 @@ type SendCommandTestCase struct {
 }
 
 func (t *SendCommandTestCase) Run(client *resp_client.RespConnection, logger *logger.Logger) error {
-	// We initialize early to prevent nil dereference errors in GetReceivedResponse()
-	t.receiveCommandTestCase = &ReceiveValueTestCase{}
 	var value resp_value.Value
 	var err error
 

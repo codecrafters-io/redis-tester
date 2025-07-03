@@ -15,7 +15,7 @@ import (
 )
 
 func testRdbConfig(stageHarness *test_case_harness.TestCaseHarness) error {
-	tmpDir, err := os.MkdirTemp("", "rdbfiles")
+	tmpDir, err := os.MkdirTemp("", "codecrafters-rdbfiles-")
 	if err != nil {
 		return err
 	}
