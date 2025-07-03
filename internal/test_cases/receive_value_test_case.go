@@ -22,13 +22,12 @@ func (t *ReceiveValueTestCase) Run(client *resp_client.RespConnection, logger *l
 	if err != nil {
 		return err
 	}
-	return t.runAssertionAndCheck(client, logger, value)
+	t.ActualValue = value
+	return t.runAssertionAndCheck(client, logger)
 }
 
-func (t *ReceiveValueTestCase) runAssertionAndCheck(client *resp_client.RespConnection, logger *logger.Logger, value resp_value.Value) error {
-	t.ActualValue = value
-
-	if err := t.Assertion.Run(value); err != nil {
+func (t *ReceiveValueTestCase) runAssertionAndCheck(client *resp_client.RespConnection, logger *logger.Logger) error {
+	if err := t.Assertion.Run(t.ActualValue); err != nil {
 		return err
 	}
 
@@ -40,6 +39,6 @@ func (t *ReceiveValueTestCase) runAssertionAndCheck(client *resp_client.RespConn
 		}
 	}
 
-	logger.Successf("Received %s", value.FormattedString())
+	logger.Successf("Received %s", t.ActualValue.FormattedString())
 	return nil
 }
