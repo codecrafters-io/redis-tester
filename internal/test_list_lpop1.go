@@ -30,15 +30,19 @@ func testListLpop1(stageHarness *test_case_harness.TestCaseHarness) error {
 	elements := testerutils_random.RandomWords(listSize)
 
 	multiCommandTestCase := test_cases.MultiCommandTestCase{
-		Commands: [][]string{
-			append([]string{"RPUSH", randomListKey}, elements...),
-			{"LPOP", randomListKey},
-			{"LRANGE", randomListKey, strconv.Itoa(0), strconv.Itoa(-1)},
-		},
-		Assertions: []resp_assertions.RESPAssertion{
-			resp_assertions.NewIntegerAssertion(listSize),
-			resp_assertions.NewStringAssertion(elements[0]),
-			resp_assertions.NewOrderedStringArrayAssertion(elements[1:]),
+		CommandWithAssertions: []test_cases.CommandWithAssertion{
+			{
+				Command:   append([]string{"RPUSH", randomListKey}, elements...),
+				Assertion: resp_assertions.NewIntegerAssertion(listSize),
+			},
+			{
+				Command:   []string{"LPOP", randomListKey},
+				Assertion: resp_assertions.NewStringAssertion(elements[0]),
+			},
+			{
+				Command:   []string{"LRANGE", randomListKey, strconv.Itoa(0), strconv.Itoa(-1)},
+				Assertion: resp_assertions.NewOrderedStringArrayAssertion(elements[1:]),
+			},
 		},
 	}
 

@@ -31,13 +31,15 @@ func testTxIncr1(stageHarness *test_case_harness.TestCaseHarness) error {
 	randomKey := random.RandomWord()
 
 	multiCommandTestCase := test_cases.MultiCommandTestCase{
-		Commands: [][]string{
-			{"SET", randomKey, fmt.Sprint(randomValue)},
-			{"INCR", randomKey},
-		},
-		Assertions: []resp_assertions.RESPAssertion{
-			resp_assertions.NewStringAssertion("OK"),
-			resp_assertions.NewIntegerAssertion(randomValue + 1),
+		CommandWithAssertions: []test_cases.CommandWithAssertion{
+			{
+				Command:   []string{"SET", randomKey, fmt.Sprint(randomValue)},
+				Assertion: resp_assertions.NewStringAssertion("OK"),
+			},
+			{
+				Command:   []string{"INCR", randomKey},
+				Assertion: resp_assertions.NewIntegerAssertion(randomValue + 1),
+			},
 		},
 	}
 

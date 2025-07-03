@@ -31,21 +31,23 @@ func testStreamsXread(stageHarness *test_case_harness.TestCaseHarness) error {
 	temperature := "temperature"
 
 	multiCommandTestCase := test_cases.MultiCommandTestCase{
-		Commands: [][]string{
-			{"XADD", randomKey, entryID, temperature, randomInt},
-			{"XREAD", "streams", randomKey, "0-0"},
-		},
-		Assertions: []resp_assertions.RESPAssertion{
-			resp_assertions.NewStringAssertion(entryID),
-			resp_assertions.NewXReadResponseAssertion([]resp_assertions.StreamResponse{
-				{
-					Key: randomKey,
-					Entries: []resp_assertions.StreamEntry{{
-						Id:              entryID,
-						FieldValuePairs: [][]string{{temperature, randomInt}},
-					}},
-				},
-			}),
+		CommandWithAssertions: []test_cases.CommandWithAssertion{
+			{
+				Command:   []string{"XADD", randomKey, entryID, temperature, randomInt},
+				Assertion: resp_assertions.NewStringAssertion(entryID),
+			},
+			{
+				Command: []string{"XREAD", "streams", randomKey, "0-0"},
+				Assertion: resp_assertions.NewXReadResponseAssertion([]resp_assertions.StreamResponse{
+					{
+						Key: randomKey,
+						Entries: []resp_assertions.StreamEntry{{
+							Id:              entryID,
+							FieldValuePairs: [][]string{{temperature, randomInt}},
+						}},
+					},
+				}),
+			},
 		},
 	}
 

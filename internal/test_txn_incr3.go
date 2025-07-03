@@ -29,13 +29,15 @@ func testTxIncr3(stageHarness *test_case_harness.TestCaseHarness) error {
 	randomKey, randomValue := uniqueKeys[0], uniqueKeys[1]
 
 	multiCommandTestCase := test_cases.MultiCommandTestCase{
-		Commands: [][]string{
-			{"SET", randomKey, randomValue},
-			{"INCR", randomKey},
-		},
-		Assertions: []resp_assertions.RESPAssertion{
-			resp_assertions.NewStringAssertion("OK"),
-			resp_assertions.NewErrorAssertion("ERR value is not an integer or out of range"),
+		CommandWithAssertions: []test_cases.CommandWithAssertion{
+			{
+				Command:   []string{"SET", randomKey, randomValue},
+				Assertion: resp_assertions.NewStringAssertion("OK"),
+			},
+			{
+				Command:   []string{"INCR", randomKey},
+				Assertion: resp_assertions.NewErrorAssertion("ERR value is not an integer or out of range"),
+			},
 		},
 	}
 

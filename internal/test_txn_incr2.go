@@ -28,15 +28,19 @@ func testTxIncr2(stageHarness *test_case_harness.TestCaseHarness) error {
 	randomKey := random.RandomWord()
 
 	multiCommandTestCase := test_cases.MultiCommandTestCase{
-		Commands: [][]string{
-			{"INCR", randomKey},
-			{"INCR", randomKey},
-			{"GET", randomKey},
-		},
-		Assertions: []resp_assertions.RESPAssertion{
-			resp_assertions.NewIntegerAssertion(1),
-			resp_assertions.NewIntegerAssertion(2),
-			resp_assertions.NewStringAssertion("2"),
+		CommandWithAssertions: []test_cases.CommandWithAssertion{
+			{
+				Command:   []string{"INCR", randomKey},
+				Assertion: resp_assertions.NewIntegerAssertion(1),
+			},
+			{
+				Command:   []string{"INCR", randomKey},
+				Assertion: resp_assertions.NewIntegerAssertion(2),
+			},
+			{
+				Command:   []string{"GET", randomKey},
+				Assertion: resp_assertions.NewStringAssertion("2"),
+			},
 		},
 	}
 

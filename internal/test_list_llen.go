@@ -31,15 +31,19 @@ func testListLlen(stageHarness *test_case_harness.TestCaseHarness) error {
 	missingKey := fmt.Sprintf("missing_key_%d", testerutils_random.RandomInt(1, 100))
 
 	multiCommandTestCase := test_cases.MultiCommandTestCase{
-		Commands: [][]string{
-			append([]string{"RPUSH", randomKey}, randomList...),
-			{"LLEN", randomKey},
-			{"LLEN", missingKey},
-		},
-		Assertions: []resp_assertions.RESPAssertion{
-			resp_assertions.NewIntegerAssertion(listSize),
-			resp_assertions.NewIntegerAssertion(listSize),
-			resp_assertions.NewIntegerAssertion(0),
+		CommandWithAssertions: []test_cases.CommandWithAssertion{
+			{
+				Command:   append([]string{"RPUSH", randomKey}, randomList...),
+				Assertion: resp_assertions.NewIntegerAssertion(listSize),
+			},
+			{
+				Command:   []string{"LLEN", randomKey},
+				Assertion: resp_assertions.NewIntegerAssertion(listSize),
+			},
+			{
+				Command:   []string{"LLEN", missingKey},
+				Assertion: resp_assertions.NewIntegerAssertion(0),
+			},
 		},
 	}
 

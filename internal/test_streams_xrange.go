@@ -38,16 +38,16 @@ func testStreamsXrange(stageHarness *test_case_harness.TestCaseHarness) error {
 		randomPairs[i] = testerutils_random.RandomWords(2)
 	}
 
-	commands := [][]string{}
-	assertions := []resp_assertions.RESPAssertion{}
+	commandWithAssertions := []test_cases.CommandWithAssertion{}
 	for i := range entryCount {
-		commands = append(commands, []string{"XADD", randomStreamKey, entryIDs[i], randomPairs[i][0], randomPairs[i][1]})
-		assertions = append(assertions, resp_assertions.NewStringAssertion(entryIDs[i]))
+		commandWithAssertions = append(commandWithAssertions, test_cases.CommandWithAssertion{
+			Command:   []string{"XADD", randomStreamKey, entryIDs[i], randomPairs[i][0], randomPairs[i][1]},
+			Assertion: resp_assertions.NewStringAssertion(entryIDs[i]),
+		})
 	}
 
 	xaddTestCase := test_cases.MultiCommandTestCase{
-		Commands:   commands,
-		Assertions: assertions,
+		CommandWithAssertions: commandWithAssertions,
 	}
 
 	if err := xaddTestCase.RunAll(client, logger); err != nil {

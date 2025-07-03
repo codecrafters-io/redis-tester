@@ -29,13 +29,15 @@ func testListRpush3(stageHarness *test_case_harness.TestCaseHarness) error {
 	elementsForSecondCmd := testerutils_random.RandomWords(3)
 
 	multiCommandTestCase := test_cases.MultiCommandTestCase{
-		Commands: [][]string{
-			append([]string{"RPUSH", randomListKey}, elementsForFirstCmd...),
-			append([]string{"RPUSH", randomListKey}, elementsForSecondCmd...),
-		},
-		Assertions: []resp_assertions.RESPAssertion{
-			resp_assertions.NewIntegerAssertion(2),
-			resp_assertions.NewIntegerAssertion(5),
+		CommandWithAssertions: []test_cases.CommandWithAssertion{
+			{
+				Command:   append([]string{"RPUSH", randomListKey}, elementsForFirstCmd...),
+				Assertion: resp_assertions.NewIntegerAssertion(2),
+			},
+			{
+				Command:   append([]string{"RPUSH", randomListKey}, elementsForSecondCmd...),
+				Assertion: resp_assertions.NewIntegerAssertion(5),
+			},
 		},
 	}
 

@@ -28,13 +28,15 @@ func testStreamsXadd(stageHarness *test_case_harness.TestCaseHarness) error {
 	randomKey := random.RandomWord()
 
 	multiCommandTestCase := test_cases.MultiCommandTestCase{
-		Commands: [][]string{
-			{"XADD", randomKey, "0-1", "foo", "bar"},
-			{"TYPE", randomKey},
-		},
-		Assertions: []resp_assertions.RESPAssertion{
-			resp_assertions.NewStringAssertion("0-1"),
-			resp_assertions.NewStringAssertion("stream"),
+		CommandWithAssertions: []test_cases.CommandWithAssertion{
+			{
+				Command:   []string{"XADD", randomKey, "0-1", "foo", "bar"},
+				Assertion: resp_assertions.NewStringAssertion("0-1"),
+			},
+			{
+				Command:   []string{"TYPE", randomKey},
+				Assertion: resp_assertions.NewStringAssertion("stream"),
+			},
 		},
 	}
 
