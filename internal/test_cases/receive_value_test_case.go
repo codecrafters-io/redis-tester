@@ -22,10 +22,13 @@ func (t *ReceiveValueTestCase) Run(client *resp_client.RespConnection, logger *l
 	if err != nil {
 		return err
 	}
+	return t.runAssertionAndCheck(client, logger, value)
+}
 
+func (t *ReceiveValueTestCase) runAssertionAndCheck(client *resp_client.RespConnection, logger *logger.Logger, value resp_value.Value) error {
 	t.ActualValue = value
 
-	if err = t.Assertion.Run(value); err != nil {
+	if err := t.Assertion.Run(value); err != nil {
 		return err
 	}
 

@@ -24,15 +24,15 @@ func testGetSet(stageHarness *test_case_harness.TestCaseHarness) error {
 		return err
 	}
 
-	randomWords := random.RandomWords(2)
+	keyAndValue := random.RandomWords(2)
 
-	randomKey := randomWords[0]
-	randomValue := randomWords[1]
+	key := keyAndValue[0]
+	randovalueValue := keyAndValue[1]
 
-	logger.Debugf("Setting key %s to %s", randomKey, randomValue)
+	logger.Debugf("Setting key %s to %s", key, randovalueValue)
 	setCommandTestCase := test_cases.SendCommandTestCase{
 		Command:   "set",
-		Args:      []string{randomKey, randomValue},
+		Args:      []string{key, randovalueValue},
 		Assertion: resp_assertions.NewStringAssertion("OK"),
 	}
 
@@ -41,12 +41,12 @@ func testGetSet(stageHarness *test_case_harness.TestCaseHarness) error {
 		return err
 	}
 
-	logger.Debugf("Getting key %s", randomKey)
+	logger.Debugf("Getting key %s", key)
 
 	getCommandTestCase := test_cases.SendCommandTestCase{
 		Command:   "get",
-		Args:      []string{randomKey},
-		Assertion: resp_assertions.NewStringAssertion(randomValue),
+		Args:      []string{key},
+		Assertion: resp_assertions.NewStringAssertion(randovalueValue),
 	}
 
 	if err := getCommandTestCase.Run(client, logger); err != nil {

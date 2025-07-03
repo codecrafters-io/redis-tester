@@ -28,11 +28,11 @@ func testTxQueue(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 
 	key := random.RandomWord()
-	randomIntegerValue := random.RandomInt(1, 100)
+	value := random.RandomInt(1, 100)
 
 	transactionTestCase := test_cases.TransactionTestCase{
 		CommandQueue: [][]string{
-			{"SET", key, fmt.Sprint(randomIntegerValue)},
+			{"SET", key, fmt.Sprint(value)},
 			{"INCR", key},
 		},
 	}

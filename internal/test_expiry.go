@@ -26,13 +26,13 @@ func testExpiry(stageHarness *test_case_harness.TestCaseHarness) error {
 		return err
 	}
 
-	randomWords := random.RandomWords(2)
-	randomKey := randomWords[0]
-	randomValue := randomWords[1]
+	keyAndValue := random.RandomWords(2)
+	key := keyAndValue[0]
+	value := keyAndValue[1]
 
 	setCommandTestCase := test_cases.SendCommandTestCase{
 		Command:   "set",
-		Args:      []string{randomKey, randomValue, "px", "100"},
+		Args:      []string{key, value, "px", "100"},
 		Assertion: resp_assertions.NewStringAssertion("OK"),
 	}
 
@@ -42,12 +42,12 @@ func testExpiry(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 
 	logger.Successf("Received OK at %s", time.Now().Format("15:04:05.000"))
-	logger.Infof("Fetching key %q at %s (should not be expired)", randomKey, time.Now().Format("15:04:05.000"))
+	logger.Infof("Fetching key %q at %s (should not be expired)", key, time.Now().Format("15:04:05.000"))
 
 	getCommandTestCase := test_cases.SendCommandTestCase{
 		Command:   "get",
-		Args:      []string{randomKey},
-		Assertion: resp_assertions.NewStringAssertion(randomValue),
+		Args:      []string{key},
+		Assertion: resp_assertions.NewStringAssertion(value),
 	}
 
 	if err := getCommandTestCase.Run(client, logger); err != nil {
@@ -58,11 +58,11 @@ func testExpiry(stageHarness *test_case_harness.TestCaseHarness) error {
 	logger.Debugf("Sleeping for 101ms")
 	time.Sleep(101 * time.Millisecond)
 
-	logger.Infof("Fetching key %q at %s (should be expired)", randomKey, time.Now().Format("15:04:05.000"))
+	logger.Infof("Fetching key %q at %s (should be expired)", key, time.Now().Format("15:04:05.000"))
 
 	getCommandTestCase = test_cases.SendCommandTestCase{
 		Command:   "get",
-		Args:      []string{randomKey},
+		Args:      []string{key},
 		Assertion: resp_assertions.NewNilAssertion(),
 	}
 

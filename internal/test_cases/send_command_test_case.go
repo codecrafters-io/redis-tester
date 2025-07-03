@@ -20,13 +20,14 @@ type SendCommandTestCase struct {
 	Retries                   int
 	ShouldRetryFunc           func(resp_value.Value) bool
 
-	// ReceivedResponse is set after the test case is run
-	ReceivedResponse resp_value.Value
+	receiveCommandTestCase *ReceiveValueTestCase
 
 	readMutex sync.Mutex
 }
 
 func (t *SendCommandTestCase) Run(client *resp_client.RespConnection, logger *logger.Logger) error {
+	// We initialize early to prevent nil dereference errors in GetReceivedResponse()
+	t.receiveCommandTestCase = &ReceiveValueTestCase{}
 	var value resp_value.Value
 	var err error
 
@@ -65,22 +66,11 @@ func (t *SendCommandTestCase) Run(client *resp_client.RespConnection, logger *lo
 		}
 	}
 
-	t.ReceivedResponse = value
-
-	if err = t.Assertion.Run(value); err != nil {
-		return err
+	t.receiveCommandTestCase = &ReceiveValueTestCase{
+		Assertion:                 t.Assertion,
+		ShouldSkipUnreadDataCheck: t.ShouldSkipUnreadDataCheck,
 	}
-
-	if !t.ShouldSkipUnreadDataCheck {
-		client.ReadIntoBuffer() // Let's make sure there's no extra data
-
-		if client.UnreadBuffer.Len() > 0 {
-			return fmt.Errorf("Found extra data: %q", client.UnreadBuffer.String())
-		}
-	}
-
-	logger.Successf("Received %s", value.FormattedString())
-	return nil
+	return t.receiveCommandTestCase.runAssertionAndCheck(client, logger, value)
 }
 
 func (t *SendCommandTestCase) PauseReadingResponse() {
@@ -89,4 +79,8 @@ func (t *SendCommandTestCase) PauseReadingResponse() {
 
 func (t *SendCommandTestCase) ResumeReadingResponse() {
 	t.readMutex.Unlock()
+}
+
+func (t *SendCommandTestCase) GetReceivedResponse() resp_value.Value {
+	return t.receiveCommandTestCase.ActualValue
 }

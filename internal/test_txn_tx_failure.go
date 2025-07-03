@@ -29,17 +29,17 @@ func testTxErr(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	uniqueKeys := random.RandomWords(3)
 	key1, key2 := uniqueKeys[0], uniqueKeys[1]
-	randomStringValue := uniqueKeys[2]
-	randomIntegerValue := random.RandomInt(1, 100)
+	value1 := uniqueKeys[2]
+	value2 := random.RandomInt(1, 100)
 
 	multiCommandTestCase := test_cases.MultiCommandTestCase{
 		CommandWithAssertions: []test_cases.CommandWithAssertion{
 			{
-				Command:   []string{"SET", key1, randomStringValue},
+				Command:   []string{"SET", key1, value1},
 				Assertion: resp_assertions.NewStringAssertion("OK"),
 			},
 			{
-				Command:   []string{"SET", key2, fmt.Sprint(randomIntegerValue)},
+				Command:   []string{"SET", key2, fmt.Sprint(value2)},
 				Assertion: resp_assertions.NewStringAssertion("OK"),
 			},
 		},
@@ -56,7 +56,7 @@ func testTxErr(stageHarness *test_case_harness.TestCaseHarness) error {
 		},
 		ExpectedResponseArray: []resp_assertions.RESPAssertion{
 			resp_assertions.NewErrorAssertion("ERR value is not an integer or out of range"),
-			resp_assertions.NewIntegerAssertion(randomIntegerValue + 1),
+			resp_assertions.NewIntegerAssertion(value2 + 1),
 		},
 	}
 
@@ -68,11 +68,11 @@ func testTxErr(stageHarness *test_case_harness.TestCaseHarness) error {
 		CommandWithAssertions: []test_cases.CommandWithAssertion{
 			{
 				Command:   []string{"GET", key2},
-				Assertion: resp_assertions.NewStringAssertion(fmt.Sprint(randomIntegerValue + 1)),
+				Assertion: resp_assertions.NewStringAssertion(fmt.Sprint(value2 + 1)),
 			},
 			{
 				Command:   []string{"GET", key1},
-				Assertion: resp_assertions.NewStringAssertion(randomStringValue),
+				Assertion: resp_assertions.NewStringAssertion(value1),
 			},
 		},
 	}
