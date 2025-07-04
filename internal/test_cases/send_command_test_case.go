@@ -71,7 +71,7 @@ func (t *SendCommandTestCase) Run(client *resp_client.RespConnection, logger *lo
 		ShouldSkipUnreadDataCheck: t.ShouldSkipUnreadDataCheck,
 		ActualValue:               value,
 	}
-	return receiveCommandTestCase.AssertAndCheck(client, logger)
+	return receiveCommandTestCase.AssertAndCheckUnread(client, logger)
 }
 
 func (t *SendCommandTestCase) PauseReadingResponse() {

@@ -23,10 +23,10 @@ func (t *ReceiveValueTestCase) Run(client *resp_client.RespConnection, logger *l
 		return err
 	}
 	t.ActualValue = value
-	return t.AssertAndCheck(client, logger)
+	return t.AssertAndCheckUnread(client, logger)
 }
 
-func (t *ReceiveValueTestCase) AssertAndCheck(client *resp_client.RespConnection, logger *logger.Logger) error {
+func (t *ReceiveValueTestCase) AssertAndCheckUnread(client *resp_client.RespConnection, logger *logger.Logger) error {
 	if err := t.Assertion.Run(t.ActualValue); err != nil {
 		return err
 	}
