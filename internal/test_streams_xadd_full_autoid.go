@@ -31,11 +31,11 @@ func testStreamsXaddFullAutoid(stageHarness *test_case_harness.TestCaseHarness) 
 	}
 	defer client.Close()
 
-	randomKey := random.RandomWord()
+	streamKey := random.RandomWord()
 
 	commandTestCase := &test_cases.SendCommandTestCase{
 		Command:                   "XADD",
-		Args:                      []string{randomKey, "*", "foo", "bar"},
+		Args:                      []string{streamKey, "*", "foo", "bar"},
 		Assertion:                 resp_assertions.NewNoopAssertion(),
 		ShouldSkipUnreadDataCheck: true,
 	}

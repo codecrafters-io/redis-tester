@@ -25,25 +25,25 @@ func testStreamsXread(stageHarness *test_case_harness.TestCaseHarness) error {
 		return err
 	}
 
-	randomKey := testerutils_random.RandomWord()
+	streamKey := testerutils_random.RandomWord()
 	entryID := "0-1"
-	randomInt := strconv.Itoa(testerutils_random.RandomInt(1, 100))
+	entryValue := strconv.Itoa(testerutils_random.RandomInt(1, 100))
 	temperature := "temperature"
 
 	multiCommandTestCase := test_cases.MultiCommandTestCase{
 		CommandWithAssertions: []test_cases.CommandWithAssertion{
 			{
-				Command:   []string{"XADD", randomKey, entryID, temperature, randomInt},
+				Command:   []string{"XADD", streamKey, entryID, temperature, entryValue},
 				Assertion: resp_assertions.NewStringAssertion(entryID),
 			},
 			{
-				Command: []string{"XREAD", "streams", randomKey, "0-0"},
+				Command: []string{"XREAD", "streams", streamKey, "0-0"},
 				Assertion: resp_assertions.NewXReadResponseAssertion([]resp_assertions.StreamResponse{
 					{
-						Key: randomKey,
+						Key: streamKey,
 						Entries: []resp_assertions.StreamEntry{{
 							Id:              entryID,
-							FieldValuePairs: [][]string{{temperature, randomInt}},
+							FieldValuePairs: [][]string{{temperature, entryValue}},
 						}},
 					},
 				}),

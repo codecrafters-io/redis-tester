@@ -25,16 +25,16 @@ func testStreamsXadd(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 	defer client.Close()
 
-	randomKey := random.RandomWord()
+	streamKey := random.RandomWord()
 
 	multiCommandTestCase := test_cases.MultiCommandTestCase{
 		CommandWithAssertions: []test_cases.CommandWithAssertion{
 			{
-				Command:   []string{"XADD", randomKey, "0-1", "foo", "bar"},
+				Command:   []string{"XADD", streamKey, "0-1", "foo", "bar"},
 				Assertion: resp_assertions.NewStringAssertion("0-1"),
 			},
 			{
-				Command:   []string{"TYPE", randomKey},
+				Command:   []string{"TYPE", streamKey},
 				Assertion: resp_assertions.NewStringAssertion("stream"),
 			},
 		},

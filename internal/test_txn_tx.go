@@ -29,16 +29,16 @@ func testTxSuccess(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	uniqueKeys := random.RandomWords(2)
 	key1, key2 := uniqueKeys[0], uniqueKeys[1]
-	randomIntegerValue := random.RandomInt(1, 100)
+	value := random.RandomInt(1, 100)
 
 	transactionTestCase := test_cases.TransactionTestCase{
 		CommandQueue: [][]string{
-			{"SET", key1, fmt.Sprint(randomIntegerValue)},
+			{"SET", key1, fmt.Sprint(value)},
 			{"INCR", key1},
 			{"INCR", key2},
 			{"GET", key2},
 		},
-		ExpectedResponseArray: []resp_assertions.RESPAssertion{resp_assertions.NewStringAssertion("OK"), resp_assertions.NewIntegerAssertion(randomIntegerValue + 1), resp_assertions.NewIntegerAssertion(1), resp_assertions.NewStringAssertion("1")},
+		ExpectedResponseArray: []resp_assertions.RESPAssertion{resp_assertions.NewStringAssertion("OK"), resp_assertions.NewIntegerAssertion(value + 1), resp_assertions.NewIntegerAssertion(1), resp_assertions.NewStringAssertion("1")},
 	}
 
 	if err := transactionTestCase.RunAll(clients[0], logger); err != nil {
@@ -48,7 +48,7 @@ func testTxSuccess(stageHarness *test_case_harness.TestCaseHarness) error {
 	commandTestCase := test_cases.SendCommandTestCase{
 		Command:   "GET",
 		Args:      []string{key1},
-		Assertion: resp_assertions.NewStringAssertion(fmt.Sprint(randomIntegerValue + 1)),
+		Assertion: resp_assertions.NewStringAssertion(fmt.Sprint(value + 1)),
 	}
 
 	return commandTestCase.Run(clients[1], logger)

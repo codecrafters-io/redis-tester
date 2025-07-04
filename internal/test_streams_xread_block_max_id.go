@@ -28,12 +28,12 @@ func testStreamsXreadBlockMaxID(stageHarness *test_case_harness.TestCaseHarness)
 	}
 	defer client1.Close()
 
-	randomKey := testerutils_random.RandomWord()
-	randomInt := testerutils_random.RandomInt(1, 100)
+	streamKey := testerutils_random.RandomWord()
+	entryValue := testerutils_random.RandomInt(1, 100)
 
 	xaddCommandTestCase := &test_cases.SendCommandTestCase{
 		Command:                   "XADD",
-		Args:                      []string{randomKey, "0-1", "temperature", strconv.Itoa(randomInt)},
+		Args:                      []string{streamKey, "0-1", "temperature", strconv.Itoa(entryValue)},
 		Assertion:                 resp_assertions.NewStringAssertion("0-1"),
 		ShouldSkipUnreadDataCheck: true,
 	}
@@ -43,18 +43,18 @@ func testStreamsXreadBlockMaxID(stageHarness *test_case_harness.TestCaseHarness)
 	}
 
 	xReadResult := make(chan error, 1)
-	randomInt = testerutils_random.RandomInt(1, 100)
+	entryValue = testerutils_random.RandomInt(1, 100)
 
 	xReadAssertion := resp_assertions.NewXReadResponseAssertion([]resp_assertions.StreamResponse{{
-		Key: randomKey,
+		Key: streamKey,
 		Entries: []resp_assertions.StreamEntry{{
 			Id:              "0-2",
-			FieldValuePairs: [][]string{{"temperature", strconv.Itoa(randomInt)}},
+			FieldValuePairs: [][]string{{"temperature", strconv.Itoa(entryValue)}},
 		}},
 	}})
 	xReadTestCase := &test_cases.SendCommandTestCase{
 		Command:                   "XREAD",
-		Args:                      []string{"block", "0", "streams", randomKey, "$"},
+		Args:                      []string{"block", "0", "streams", streamKey, "$"},
 		Assertion:                 xReadAssertion,
 		ShouldSkipUnreadDataCheck: true,
 	}
@@ -76,7 +76,7 @@ func testStreamsXreadBlockMaxID(stageHarness *test_case_harness.TestCaseHarness)
 
 	xaddCommandTestCase = &test_cases.SendCommandTestCase{
 		Command:                   "XADD",
-		Args:                      []string{randomKey, "0-2", "temperature", strconv.Itoa(randomInt)},
+		Args:                      []string{streamKey, "0-2", "temperature", strconv.Itoa(entryValue)},
 		Assertion:                 resp_assertions.NewStringAssertion("0-2"),
 		ShouldSkipUnreadDataCheck: true,
 	}
@@ -94,7 +94,7 @@ func testStreamsXreadBlockMaxID(stageHarness *test_case_harness.TestCaseHarness)
 
 	xreadCommandTestCase := &test_cases.SendCommandTestCase{
 		Command:                   "XREAD",
-		Args:                      []string{"block", "1000", "streams", randomKey, "$"},
+		Args:                      []string{"block", "1000", "streams", streamKey, "$"},
 		Assertion:                 resp_assertions.NewNilAssertion(),
 		ShouldSkipUnreadDataCheck: false,
 	}

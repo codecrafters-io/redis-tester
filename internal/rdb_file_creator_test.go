@@ -18,10 +18,10 @@ func TestRDBFileCreator(t *testing.T) {
 		t.Fatalf("CodeCrafters Tester Error: %s", err)
 	}
 
-	randomKeyAndValue := random.RandomWords(2)
-	randomKey, randomValue := randomKeyAndValue[0], randomKeyAndValue[1]
+	keyAndValue := random.RandomWords(2)
+	key, value := keyAndValue[0], keyAndValue[1]
 
-	if err := RDBFileCreator.Write([]KeyValuePair{{key: randomKey, value: randomValue}}); err != nil {
+	if err := RDBFileCreator.Write([]KeyValuePair{{key: key, value: value}}); err != nil {
 		t.Fatalf("CodeCrafters Tester Error: %s", err)
 	}
 

@@ -66,21 +66,12 @@ func (t *SendCommandTestCase) Run(client *resp_client.RespConnection, logger *lo
 	}
 
 	t.ReceivedResponse = value
-
-	if err = t.Assertion.Run(value); err != nil {
-		return err
+	receiveCommandTestCase := ReceiveValueTestCase{
+		Assertion:                 t.Assertion,
+		ShouldSkipUnreadDataCheck: t.ShouldSkipUnreadDataCheck,
+		ActualValue:               value,
 	}
-
-	if !t.ShouldSkipUnreadDataCheck {
-		client.ReadIntoBuffer() // Let's make sure there's no extra data
-
-		if client.UnreadBuffer.Len() > 0 {
-			return fmt.Errorf("Found extra data: %q", client.UnreadBuffer.String())
-		}
-	}
-
-	logger.Successf("Received %s", value.FormattedString())
-	return nil
+	return receiveCommandTestCase.AssertAndCheckUnread(client, logger)
 }
 
 func (t *SendCommandTestCase) PauseReadingResponse() {

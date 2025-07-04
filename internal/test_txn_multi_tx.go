@@ -29,13 +29,13 @@ func testTxMultiTx(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	uniqueKeys := random.RandomWords(2)
 	key1, key2 := uniqueKeys[0], uniqueKeys[1]
-	randomIntegerValue := random.RandomInt(1, 100)
+	value := random.RandomInt(1, 100)
 
 	for i, client := range clients {
 		multiCommandTestCase := test_cases.MultiCommandTestCase{
 			CommandWithAssertions: []test_cases.CommandWithAssertion{
 				{
-					Command:   []string{"SET", key2, fmt.Sprint(randomIntegerValue)},
+					Command:   []string{"SET", key2, fmt.Sprint(value)},
 					Assertion: resp_assertions.NewStringAssertion("OK"),
 				},
 				{
@@ -69,7 +69,7 @@ func testTxMultiTx(stageHarness *test_case_harness.TestCaseHarness) error {
 			// Inside each transaction, we run 1x INCR key1, key2
 			// So it increases by 1 for each transaction
 			// `i` here is 0-indexed, so we add 1 to the expected value
-			ExpectedResponseArray: []resp_assertions.RESPAssertion{resp_assertions.NewIntegerAssertion(3 + (1 + i)), resp_assertions.NewIntegerAssertion(randomIntegerValue + (1 + i))},
+			ExpectedResponseArray: []resp_assertions.RESPAssertion{resp_assertions.NewIntegerAssertion(3 + (1 + i)), resp_assertions.NewIntegerAssertion(value + (1 + i))},
 		}
 		if err := transactionTestCase.RunExec(client, logger); err != nil {
 			return err

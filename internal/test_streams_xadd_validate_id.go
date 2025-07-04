@@ -24,29 +24,29 @@ func testStreamsXaddValidateID(stageHarness *test_case_harness.TestCaseHarness) 
 	}
 	defer client.Close()
 
-	randomKey := random.RandomWord()
-	randomValues := random.RandomWords(10)
+	streamKey := random.RandomWord()
+	entryKeyAndValues := random.RandomWords(10)
 
 	multiCommandTestCase := test_cases.MultiCommandTestCase{
 		CommandWithAssertions: []test_cases.CommandWithAssertion{
 			{
-				Command:   []string{"XADD", randomKey, "1-1", randomValues[0], randomValues[1]},
+				Command:   []string{"XADD", streamKey, "1-1", entryKeyAndValues[0], entryKeyAndValues[1]},
 				Assertion: resp_assertions.NewStringAssertion("1-1"),
 			},
 			{
-				Command:   []string{"XADD", randomKey, "1-2", randomValues[2], randomValues[3]},
+				Command:   []string{"XADD", streamKey, "1-2", entryKeyAndValues[2], entryKeyAndValues[3]},
 				Assertion: resp_assertions.NewStringAssertion("1-2"),
 			},
 			{
-				Command:   []string{"XADD", randomKey, "1-2", randomValues[4], randomValues[5]},
+				Command:   []string{"XADD", streamKey, "1-2", entryKeyAndValues[4], entryKeyAndValues[5]},
 				Assertion: resp_assertions.NewErrorAssertion("ERR The ID specified in XADD is equal or smaller than the target stream top item"),
 			},
 			{
-				Command:   []string{"XADD", randomKey, "0-3", randomValues[6], randomValues[7]},
+				Command:   []string{"XADD", streamKey, "0-3", entryKeyAndValues[6], entryKeyAndValues[7]},
 				Assertion: resp_assertions.NewErrorAssertion("ERR The ID specified in XADD is equal or smaller than the target stream top item"),
 			},
 			{
-				Command:   []string{"XADD", randomKey, "0-0", randomValues[8], randomValues[9]},
+				Command:   []string{"XADD", streamKey, "0-0", entryKeyAndValues[8], entryKeyAndValues[9]},
 				Assertion: resp_assertions.NewErrorAssertion("ERR The ID specified in XADD must be greater than 0-0"),
 			},
 		},

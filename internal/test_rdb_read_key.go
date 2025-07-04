@@ -18,15 +18,15 @@ func testRdbReadKey(stageHarness *test_case_harness.TestCaseHarness) error {
 		return fmt.Errorf("CodeCrafters Tester Error: %s", err)
 	}
 
-	randomKeyAndValue := testerutils_random.RandomWords(2)
-	randomKey, randomValue := randomKeyAndValue[0], randomKeyAndValue[1]
+	keyAndValue := testerutils_random.RandomWords(2)
+	key, value := keyAndValue[0], keyAndValue[1]
 
-	if err := RDBFileCreator.Write([]KeyValuePair{{key: randomKey, value: randomValue}}); err != nil {
+	if err := RDBFileCreator.Write([]KeyValuePair{{key: key, value: value}}); err != nil {
 		return fmt.Errorf("CodeCrafters Tester Error: %s", err)
 	}
 
 	logger := stageHarness.Logger
-	logger.Infof("Created RDB file with a single key: [%q]", randomKey)
+	logger.Infof("Created RDB file with a single key: [%q]", key)
 	if err := RDBFileCreator.PrintContentHexdump(logger); err != nil {
 		return fmt.Errorf("CodeCrafters Tester Error: %s", err)
 	}
@@ -47,7 +47,7 @@ func testRdbReadKey(stageHarness *test_case_harness.TestCaseHarness) error {
 	commandTestCase := test_cases.SendCommandTestCase{
 		Command:                   "KEYS",
 		Args:                      []string{"*"},
-		Assertion:                 resp_assertions.NewCommandAssertion(randomKey),
+		Assertion:                 resp_assertions.NewCommandAssertion(key),
 		ShouldSkipUnreadDataCheck: false,
 	}
 

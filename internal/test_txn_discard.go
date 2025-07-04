@@ -29,11 +29,11 @@ func testTxDiscard(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	uniqueKeys := random.RandomWords(2)
 	key1, key2 := uniqueKeys[0], uniqueKeys[1]
-	randomInt1, randomInt2 := random.RandomInt(1, 100), random.RandomInt(1, 100)
+	value1, value2 := random.RandomInt(1, 100), random.RandomInt(1, 100)
 
 	commandTestCase := test_cases.SendCommandTestCase{
 		Command:   "SET",
-		Args:      []string{key2, fmt.Sprint(randomInt2)},
+		Args:      []string{key2, fmt.Sprint(value2)},
 		Assertion: resp_assertions.NewStringAssertion("OK"),
 	}
 
@@ -43,7 +43,7 @@ func testTxDiscard(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	transactionTestCase := test_cases.TransactionTestCase{
 		CommandQueue: [][]string{
-			{"SET", key1, fmt.Sprint(randomInt1)},
+			{"SET", key1, fmt.Sprint(value1)},
 			{"INCR", key1},
 		},
 	}
@@ -64,7 +64,7 @@ func testTxDiscard(stageHarness *test_case_harness.TestCaseHarness) error {
 			},
 			{
 				Command:   []string{"GET", key2},
-				Assertion: resp_assertions.NewStringAssertion(fmt.Sprint(randomInt2)),
+				Assertion: resp_assertions.NewStringAssertion(fmt.Sprint(value2)),
 			},
 			{
 				Command:   []string{"DISCARD"},
