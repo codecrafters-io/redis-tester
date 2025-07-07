@@ -112,7 +112,7 @@ func normalizeTesterOutput(testerOutput []byte) []byte {
 	replacements := map[string][]*regexp.Regexp{
 		"tcp_port":                {regexp.MustCompile(`read tcp 127.0.0.1:\d+->127.0.0.1:6379: read: connection reset by peer`)},
 		" tmp_dir ":               {regexp.MustCompile(` /private/tmp/[^ ]+ `), regexp.MustCompile(` /tmp/[^ ]+ `)},
-		"$length\\r\\ntmp_dir\\r": {regexp.MustCompile(`\$\d+\\r\\n/private/var/folders/[^ ]+\\r\\n`), regexp.MustCompile(`\$\d+\\r\\n/tmp/[^ ]+\\r\\n`)},
+		"$length\\r\\ntmp_dir\\r": {regexp.MustCompile(`\$\d+\\r\\n/private/tmp/[^ ]+\\r\\n`), regexp.MustCompile(`\$\d+\\r\\n/tmp/[^ ]+\\r\\n`)},
 		"\"tmp_dir\"":             {regexp.MustCompile(`"/private/tmp/[^"]+"`), regexp.MustCompile(`"/tmp/[^"]+"`)},
 		"timestamp":               {regexp.MustCompile(`\d{2}:\d{2}:\d{2}\.\d{3}`)},
 		"info_replication":        {regexp.MustCompile(`"# Replication\\r\\n[^"]+"`)},
