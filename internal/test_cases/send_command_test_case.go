@@ -29,6 +29,10 @@ type SendCommandTestCase struct {
 func (t *SendCommandTestCase) Run(client *resp_client.RespConnection, logger *logger.Logger) error {
 	var value resp_value.Value
 	var err error
+	receiveValueTestCase := ReceiveValueTestCase{
+		Assertion:                 t.Assertion,
+		ShouldSkipUnreadDataCheck: t.ShouldSkipUnreadDataCheck,
+	}
 
 	for attempt := 0; attempt <= t.Retries; attempt++ {
 		if attempt > 0 {
@@ -42,7 +46,7 @@ func (t *SendCommandTestCase) Run(client *resp_client.RespConnection, logger *lo
 		}
 
 		t.readMutex.Lock()
-		value, err = client.ReadValue()
+		err = receiveValueTestCase.RunWithoutAssert(client)
 		t.readMutex.Unlock()
 
 		if err != nil {
@@ -64,14 +68,8 @@ func (t *SendCommandTestCase) Run(client *resp_client.RespConnection, logger *lo
 			}
 		}
 	}
-
-	t.ReceivedResponse = value
-	receiveCommandTestCase := ReceiveValueTestCase{
-		Assertion:                 t.Assertion,
-		ShouldSkipUnreadDataCheck: t.ShouldSkipUnreadDataCheck,
-		ActualValue:               value,
-	}
-	return receiveCommandTestCase.AssertAndCheckUnread(client, logger)
+	t.ReceivedResponse = receiveValueTestCase.ActualValue
+	return receiveValueTestCase.Assert(client, logger)
 }
 
 func (t *SendCommandTestCase) PauseReadingResponse() {
