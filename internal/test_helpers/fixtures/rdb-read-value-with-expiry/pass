@@ -16,7 +16,7 @@ Debug = true
 [33m[tester::#SM4] [0m[36m0080 | 04 70 65 61 72 06 6f 72 61 6e 67 65 ff 9c 12 84 | .pear.orange....[0m
 [33m[tester::#SM4] [0m[36m0090 | bd e8 ad 48 6f                                  | ...Ho[0m
 [33m[tester::#SM4] [0m[36m[0m
-[33m[tester::#SM4] [0m[94m$ ./spawn_redis_server.sh --dir /private/tmp/rdbfiles-762728739072168494 --dbfilename orange.rdb[0m
+[33m[tester::#SM4] [0m[94m$ ./spawn_redis_server.sh --dir /private/tmp/rdb-6623 --dbfilename orange.rdb[0m
 [33m[tester::#SM4] [0m[94mclient: $ redis-cli GET blueberry[0m
 [33m[tester::#SM4] [0m[36mclient: Sent bytes: "*2\r\n$3\r\nGET\r\n$9\r\nblueberry\r\n"[0m
 [33m[tester::#SM4] [0m[36mclient: Received bytes: "$4\r\npear\r\n"[0m
@@ -54,7 +54,7 @@ Debug = true
 [33m[tester::#DQ3] [0m[36m0050 | 70 6c 65 04 70 65 61 72 ff ec 0e 82 6d 87 2b 51 | ple.pear....m.+Q[0m
 [33m[tester::#DQ3] [0m[36m0060 | 91                                              | .[0m
 [33m[tester::#DQ3] [0m[36m[0m
-[33m[tester::#DQ3] [0m[94m$ ./spawn_redis_server.sh --dir /private/tmp/rdbfiles-9041902677571988971 --dbfilename apple.rdb[0m
+[33m[tester::#DQ3] [0m[94m$ ./spawn_redis_server.sh --dir /private/tmp/rdb-2020 --dbfilename apple.rdb[0m
 [33m[tester::#DQ3] [0m[94mclient: $ redis-cli GET apple[0m
 [33m[tester::#DQ3] [0m[36mclient: Sent bytes: "*2\r\n$3\r\nGET\r\n$5\r\napple\r\n"[0m
 [33m[tester::#DQ3] [0m[36mclient: Received bytes: "$5\r\nmango\r\n"[0m
@@ -87,13 +87,13 @@ Debug = true
 [33m[tester::#JW4] [0m[36m0050 | 00 05 6d 61 6e 67 6f 09 62 6c 75 65 62 65 72 72 | ..mango.blueberr[0m
 [33m[tester::#JW4] [0m[36m0060 | 79 ff 68 0f 5f 46 25 26 d0 08                   | y.h._F%&..[0m
 [33m[tester::#JW4] [0m[36m[0m
-[33m[tester::#JW4] [0m[94m$ ./spawn_redis_server.sh --dir /private/tmp/rdbfiles-6547838570342237478 --dbfilename banana.rdb[0m
+[33m[tester::#JW4] [0m[94m$ ./spawn_redis_server.sh --dir /private/tmp/rdb-7468 --dbfilename banana.rdb[0m
 [33m[tester::#JW4] [0m[94mclient: $ redis-cli KEYS *[0m
 [33m[tester::#JW4] [0m[36mclient: Sent bytes: "*2\r\n$4\r\nKEYS\r\n$1\r\n*\r\n"[0m
-[33m[tester::#JW4] [0m[36mclient: Received bytes: "*3\r\n$5\r\napple\r\n$5\r\nmango\r\n$9\r\nblueberry\r\n"[0m
-[33m[tester::#JW4] [0m[36mclient: Received RESP array: ["apple", "mango", "blueberry"][0m
+[33m[tester::#JW4] [0m[36mclient: Received bytes: "*3\r\n$9\r\nblueberry\r\n$5\r\nmango\r\n$5\r\napple\r\n"[0m
+[33m[tester::#JW4] [0m[36mclient: Received RESP array: ["blueberry", "mango", "apple"][0m
 [33m[tester::#JW4] [0m[36m[0m
-[33m[tester::#JW4] [0m[92mReceived ["apple", "mango", "blueberry"][0m
+[33m[tester::#JW4] [0m[92mReceived ["blueberry", "mango", "apple"][0m
 [33m[tester::#JW4] [0m[92m[0m
 [33m[tester::#JW4] [0m[92mTest passed.[0m
 [33m[tester::#JW4] [0m[36mTerminating program[0m
@@ -110,7 +110,7 @@ Debug = true
 [33m[tester::#GC6] [0m[36m0030 | 61 73 70 62 65 72 72 79 09 70 69 6e 65 61 70 70 | aspberry.pineapp[0m
 [33m[tester::#GC6] [0m[36m0040 | 6c 65 ff 6c 09 59 cc 38 db e8 71                | le.l.Y.8..q[0m
 [33m[tester::#GC6] [0m[36m[0m
-[33m[tester::#GC6] [0m[94m$ ./spawn_redis_server.sh --dir /private/tmp/rdbfiles-6438375023870740051 --dbfilename banana.rdb[0m
+[33m[tester::#GC6] [0m[94m$ ./spawn_redis_server.sh --dir /private/tmp/rdb-1000 --dbfilename banana.rdb[0m
 [33m[tester::#GC6] [0m[94mclient: $ redis-cli GET raspberry[0m
 [33m[tester::#GC6] [0m[36mclient: Sent bytes: "*2\r\n$3\r\nGET\r\n$9\r\nraspberry\r\n"[0m
 [33m[tester::#GC6] [0m[36mclient: Received bytes: "$9\r\npineapple\r\n"[0m
@@ -131,7 +131,7 @@ Debug = true
 [33m[tester::#JZ6] [0m[36m0030 | 61 6e 61 6e 61 09 72 61 73 70 62 65 72 72 79 ff | anana.raspberry.[0m
 [33m[tester::#JZ6] [0m[36m0040 | c5 21 ea c1 d2 83 0b 3f                         | .!.....?[0m
 [33m[tester::#JZ6] [0m[36m[0m
-[33m[tester::#JZ6] [0m[94m$ ./spawn_redis_server.sh --dir /private/tmp/rdbfiles-821201253856612956 --dbfilename banana.rdb[0m
+[33m[tester::#JZ6] [0m[94m$ ./spawn_redis_server.sh --dir /private/tmp/rdb-816 --dbfilename banana.rdb[0m
 [33m[tester::#JZ6] [0m[94mclient: $ redis-cli KEYS *[0m
 [33m[tester::#JZ6] [0m[36mclient: Sent bytes: "*2\r\n$4\r\nKEYS\r\n$1\r\n*\r\n"[0m
 [33m[tester::#JZ6] [0m[36mclient: Received bytes: "*1\r\n$6\r\nbanana\r\n"[0m
@@ -144,19 +144,13 @@ Debug = true
 [33m[tester::#JZ6] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#ZG5] [0m[94mRunning tests for Stage #ZG5 (zg5)[0m
-[33m[tester::#ZG5] [0m[94m$ ./spawn_redis_server.sh --dir /private/tmp/rdbfiles-8113002452566187660 --dbfilename blueberry.rdb[0m
+[33m[tester::#ZG5] [0m[94m$ ./spawn_redis_server.sh --dir /private/tmp/rdb-5582 --dbfilename blueberry.rdb[0m
 [33m[tester::#ZG5] [0m[94mclient: $ redis-cli CONFIG GET dir[0m
 [33m[tester::#ZG5] [0m[36mclient: Sent bytes: "*3\r\n$6\r\nCONFIG\r\n$3\r\nGET\r\n$3\r\ndir\r\n"[0m
-[33m[tester::#ZG5] [0m[36mclient: Received bytes: "*2\r\n$3\r\ndir\r\n$41\r\n/private/tmp/rdbfiles-8113002452566187660\r\n"[0m
-[33m[tester::#ZG5] [0m[36mclient: Received RESP array: [[0m
-[33m[tester::#ZG5] [0m[36m  "dir",[0m
-[33m[tester::#ZG5] [0m[36m  "/private/tmp/rdbfiles-8113002452566187660"[0m
-[33m[tester::#ZG5] [0m[36m][0m
+[33m[tester::#ZG5] [0m[36mclient: Received bytes: "*2\r\n$3\r\ndir\r\n$21\r\n/private/tmp/rdb-5582\r\n"[0m
+[33m[tester::#ZG5] [0m[36mclient: Received RESP array: ["dir", "/private/tmp/rdb-5582"][0m
 [33m[tester::#ZG5] [0m[36m[0m
-[33m[tester::#ZG5] [0m[92mReceived [[0m
-[33m[tester::#ZG5] [0m[92m  "dir",[0m
-[33m[tester::#ZG5] [0m[92m  "/private/tmp/rdbfiles-8113002452566187660"[0m
-[33m[tester::#ZG5] [0m[92m][0m
+[33m[tester::#ZG5] [0m[92mReceived ["dir", "/private/tmp/rdb-5582"][0m
 [33m[tester::#ZG5] [0m[92m[0m
 [33m[tester::#ZG5] [0m[92mTest passed.[0m
 [33m[tester::#ZG5] [0m[36mTerminating program[0m
@@ -169,15 +163,15 @@ Debug = true
 [33m[tester::#YZ1] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#YZ1] [0m[36mReceived RESP simple string: "OK"[0m
 [33m[tester::#YZ1] [0m[92mReceived "OK"[0m
-[33m[tester::#YZ1] [0m[92mReceived OK at 14:06:25.347[0m
-[33m[tester::#YZ1] [0m[94mFetching key "orange" at 14:06:25.347 (should not be expired)[0m
+[33m[tester::#YZ1] [0m[92mReceived OK at 09:36:09.464[0m
+[33m[tester::#YZ1] [0m[94mFetching key "orange" at 09:36:09.464 (should not be expired)[0m
 [33m[tester::#YZ1] [0m[94m> GET orange[0m
 [33m[tester::#YZ1] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$6\r\norange\r\n"[0m
 [33m[tester::#YZ1] [0m[36mReceived bytes: "$5\r\napple\r\n"[0m
 [33m[tester::#YZ1] [0m[36mReceived RESP bulk string: "apple"[0m
 [33m[tester::#YZ1] [0m[92mReceived "apple"[0m
 [33m[tester::#YZ1] [0m[36mSleeping for 101ms[0m
-[33m[tester::#YZ1] [0m[94mFetching key "orange" at 14:06:25.450 (should be expired)[0m
+[33m[tester::#YZ1] [0m[94mFetching key "orange" at 09:36:09.568 (should be expired)[0m
 [33m[tester::#YZ1] [0m[94m> GET orange[0m
 [33m[tester::#YZ1] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$6\r\norange\r\n"[0m
 [33m[tester::#YZ1] [0m[36mReceived bytes: "$-1\r\n"[0m

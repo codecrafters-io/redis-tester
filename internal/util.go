@@ -2,7 +2,6 @@ package internal
 
 import (
 	"fmt"
-	"math"
 	"os"
 	"path/filepath"
 	"strings"
@@ -161,8 +160,8 @@ func FormatKeyValuePairs(keys []string, values []string) string {
 
 // MkdirTemp keeps fixtures consistent across macOS and Linux
 func MkdirTemp(prefix string) (string, error) {
-	// ensure the length of tmpDir is long enough to be printed on multiple lines
-	randomInt := testerutils_random.RandomInt(1000000, math.MaxInt)
+	// ensure the length of tmpDir is short enough to be printed on a single line
+	randomInt := testerutils_random.RandomInt(0, 10000)
 	tmpDir := filepath.Join("/tmp", fmt.Sprintf("%s-%d", prefix, randomInt))
 
 	if err := os.MkdirAll(tmpDir, 0755); err != nil {
