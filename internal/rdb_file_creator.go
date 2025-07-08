@@ -26,19 +26,13 @@ type RDBFileCreator struct {
 }
 
 func NewRDBFileCreator() (*RDBFileCreator, error) {
-	tmpDir, err := os.MkdirTemp("", "rdbfiles")
+	tmpDir, err := MkdirTemp("rdb")
 	if err != nil {
 		return &RDBFileCreator{}, err
 	}
 
-	// On MacOS, the tmpDir is a symlink to a directory in /var/folders/...
-	realDir, err := filepath.EvalSymlinks(tmpDir)
-	if err != nil {
-		return &RDBFileCreator{}, fmt.Errorf("could not resolve symlink: %v", err)
-	}
-
 	return &RDBFileCreator{
-		Dir:      realDir,
+		Dir:      tmpDir,
 		Filename: fmt.Sprintf("%s.rdb", random.RandomWord()),
 	}, nil
 }

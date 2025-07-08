@@ -3,12 +3,14 @@ package internal
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	resp_connection "github.com/codecrafters-io/redis-tester/internal/resp/connection"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	"github.com/codecrafters-io/tester-utils/logger"
+	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
@@ -154,4 +156,24 @@ func FormatKeyValuePairs(keys []string, values []string) string {
 	}
 
 	return fmt.Sprintf("{%s}", strings.Join(pairs, ", "))
+}
+
+// MkdirTemp keeps fixtures consistent across macOS and Linux
+func MkdirTemp(prefix string) (string, error) {
+	// ensure the length of tmpDir is short enough to be printed on a single line
+	randomInt := testerutils_random.RandomInt(0, 10000)
+	tmpDir := filepath.Join("/tmp", fmt.Sprintf("%s-%d", prefix, randomInt))
+
+	if err := os.MkdirAll(tmpDir, 0755); err != nil {
+		return "", err
+	}
+
+	// /tmp is a symlink in MacOS
+	realPath, err := filepath.EvalSymlinks(tmpDir)
+	if err != nil {
+		return "", fmt.Errorf("CodeCrafters tester error: could not resolve symlink: %v", err)
+	}
+	tmpDir = realPath
+
+	return tmpDir, nil
 }

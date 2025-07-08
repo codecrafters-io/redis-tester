@@ -3,7 +3,6 @@ package internal
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
@@ -15,18 +14,12 @@ import (
 )
 
 func testRdbConfig(stageHarness *test_case_harness.TestCaseHarness) error {
-	tmpDir, err := os.MkdirTemp("", "rdbfiles")
+	tmpDir, err := MkdirTemp("rdb")
 	if err != nil {
 		return err
 	}
 
 	// On MacOS, the tmpDir is a symlink to a directory in /var/folders/...
-	realPath, err := filepath.EvalSymlinks(tmpDir)
-	if err != nil {
-		return fmt.Errorf("CodeCrafters tester error: could not resolve symlink: %v", err)
-	}
-	tmpDir = realPath
-
 	b := redis_executable.NewRedisExecutable(stageHarness)
 	stageHarness.RegisterTeardownFunc(func() { os.RemoveAll(tmpDir) })
 	if err := b.Run("--dir", tmpDir,

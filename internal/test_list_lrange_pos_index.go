@@ -26,40 +26,40 @@ func testListLrangePosIdx(stageHarness *test_case_harness.TestCaseHarness) error
 	}
 	defer client.Close()
 
-	randomListKey := testerutils_random.RandomWord()
+	listKey := testerutils_random.RandomWord()
 	listSize := testerutils_random.RandomInt(4, 8)
-	randomList := testerutils_random.RandomWords(listSize)
+	elements := testerutils_random.RandomWords(listSize)
 	middleIndex := testerutils_random.RandomInt(1, listSize-1)
 	missingKey := fmt.Sprintf("missing_key_%d", testerutils_random.RandomInt(1, 100))
 
 	multiCommandTestCase := test_cases.MultiCommandTestCase{
 		CommandWithAssertions: []test_cases.CommandWithAssertion{
 			{
-				Command:   append([]string{"RPUSH", randomListKey}, randomList...),
+				Command:   append([]string{"RPUSH", listKey}, elements...),
 				Assertion: resp_assertions.NewIntegerAssertion(listSize),
 			},
 			// usual test cases
 			{
-				Command:   []string{"LRANGE", randomListKey, "0", strconv.Itoa(middleIndex)},
-				Assertion: resp_assertions.NewOrderedStringArrayAssertion(randomList[0 : middleIndex+1]),
+				Command:   []string{"LRANGE", listKey, "0", strconv.Itoa(middleIndex)},
+				Assertion: resp_assertions.NewOrderedStringArrayAssertion(elements[0 : middleIndex+1]),
 			},
 			{
-				Command:   []string{"LRANGE", randomListKey, strconv.Itoa(middleIndex), strconv.Itoa(listSize - 1)},
-				Assertion: resp_assertions.NewOrderedStringArrayAssertion(randomList[middleIndex:listSize]),
+				Command:   []string{"LRANGE", listKey, strconv.Itoa(middleIndex), strconv.Itoa(listSize - 1)},
+				Assertion: resp_assertions.NewOrderedStringArrayAssertion(elements[middleIndex:listSize]),
 			},
 			{
-				Command:   []string{"LRANGE", randomListKey, "0", strconv.Itoa(listSize - 1)},
-				Assertion: resp_assertions.NewOrderedStringArrayAssertion(randomList[0:listSize]),
+				Command:   []string{"LRANGE", listKey, "0", strconv.Itoa(listSize - 1)},
+				Assertion: resp_assertions.NewOrderedStringArrayAssertion(elements[0:listSize]),
 			},
 			// start index > end index
 			{
-				Command:   []string{"LRANGE", randomListKey, "1", "0"},
+				Command:   []string{"LRANGE", listKey, "1", "0"},
 				Assertion: resp_assertions.NewOrderedStringArrayAssertion([]string{}),
 			},
 			// end index out of bounds
 			{
-				Command:   []string{"LRANGE", randomListKey, "0", strconv.Itoa(listSize * 2)},
-				Assertion: resp_assertions.NewOrderedStringArrayAssertion(randomList[0:listSize]),
+				Command:   []string{"LRANGE", listKey, "0", strconv.Itoa(listSize * 2)},
+				Assertion: resp_assertions.NewOrderedStringArrayAssertion(elements[0:listSize]),
 			},
 			// key doesn't exist
 			{

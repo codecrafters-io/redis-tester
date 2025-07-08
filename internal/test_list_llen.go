@@ -25,19 +25,19 @@ func testListLlen(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 	defer client.Close()
 
-	randomKey := testerutils_random.RandomWord()
+	listKey := testerutils_random.RandomWord()
 	listSize := testerutils_random.RandomInt(4, 8)
-	randomList := testerutils_random.RandomWords(listSize)
+	elements := testerutils_random.RandomWords(listSize)
 	missingKey := fmt.Sprintf("missing_key_%d", testerutils_random.RandomInt(1, 100))
 
 	multiCommandTestCase := test_cases.MultiCommandTestCase{
 		CommandWithAssertions: []test_cases.CommandWithAssertion{
 			{
-				Command:   append([]string{"RPUSH", randomKey}, randomList...),
+				Command:   append([]string{"RPUSH", listKey}, elements...),
 				Assertion: resp_assertions.NewIntegerAssertion(listSize),
 			},
 			{
-				Command:   []string{"LLEN", randomKey},
+				Command:   []string{"LLEN", listKey},
 				Assertion: resp_assertions.NewIntegerAssertion(listSize),
 			},
 			{

@@ -23,21 +23,21 @@ func testListRpush2(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 	defer client.Close()
 
-	randomListKey := testerutils_random.RandomWord()
-	randomElements := testerutils_random.RandomWords(3)
+	listKey := testerutils_random.RandomWord()
+	elements := testerutils_random.RandomWords(3)
 
 	multiCommandTestCase := test_cases.MultiCommandTestCase{
 		CommandWithAssertions: []test_cases.CommandWithAssertion{
 			{
-				Command:   []string{"RPUSH", randomListKey, randomElements[0]},
+				Command:   []string{"RPUSH", listKey, elements[0]},
 				Assertion: resp_assertions.NewIntegerAssertion(1),
 			},
 			{
-				Command:   []string{"RPUSH", randomListKey, randomElements[1]},
+				Command:   []string{"RPUSH", listKey, elements[1]},
 				Assertion: resp_assertions.NewIntegerAssertion(2),
 			},
 			{
-				Command:   []string{"RPUSH", randomListKey, randomElements[2]},
+				Command:   []string{"RPUSH", listKey, elements[2]},
 				Assertion: resp_assertions.NewIntegerAssertion(3),
 			},
 		},

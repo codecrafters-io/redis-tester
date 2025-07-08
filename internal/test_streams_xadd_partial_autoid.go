@@ -24,21 +24,21 @@ func testStreamsXaddPartialAutoid(stageHarness *test_case_harness.TestCaseHarnes
 	}
 	defer client.Close()
 
-	randomKey := random.RandomWord()
-	randomValues := random.RandomWords(3)
+	streamKey := random.RandomWord()
+	entryKeyAndValues := random.RandomWords(3)
 
 	multiCommandTestCase := test_cases.MultiCommandTestCase{
 		CommandWithAssertions: []test_cases.CommandWithAssertion{
 			{
-				Command:   []string{"XADD", randomKey, "0-*", randomValues[0], randomValues[1]},
+				Command:   []string{"XADD", streamKey, "0-*", entryKeyAndValues[0], entryKeyAndValues[1]},
 				Assertion: resp_assertions.NewStringAssertion("0-1"),
 			},
 			{
-				Command:   []string{"XADD", randomKey, "1-*", randomValues[0], randomValues[1]},
+				Command:   []string{"XADD", streamKey, "1-*", entryKeyAndValues[0], entryKeyAndValues[1]},
 				Assertion: resp_assertions.NewStringAssertion("1-0"),
 			},
 			{
-				Command:   []string{"XADD", randomKey, "1-*", randomValues[1], randomValues[2]},
+				Command:   []string{"XADD", streamKey, "1-*", entryKeyAndValues[1], entryKeyAndValues[2]},
 				Assertion: resp_assertions.NewStringAssertion("1-1"),
 			},
 		},

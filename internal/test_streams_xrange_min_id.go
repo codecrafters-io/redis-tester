@@ -26,7 +26,7 @@ func testStreamsXrangeMinID(stageHarness *test_case_harness.TestCaseHarness) err
 	}
 	defer client.Close()
 
-	randomStreamKey := testerutils_random.RandomWord()
+	streamKey := testerutils_random.RandomWord()
 
 	entryCount := testerutils_random.RandomInt(3, 5)
 	var entryIDs []string
@@ -34,15 +34,15 @@ func testStreamsXrangeMinID(stageHarness *test_case_harness.TestCaseHarness) err
 		entryIDs = append(entryIDs, fmt.Sprintf("0-%d", i+1))
 	}
 
-	randomPairs := make([][]string, entryCount)
+	entryKeysAndValues := make([][]string, entryCount)
 	for i := range entryCount {
-		randomPairs[i] = testerutils_random.RandomWords(2)
+		entryKeysAndValues[i] = testerutils_random.RandomWords(2)
 	}
 
 	commandWithAssertions := []test_cases.CommandWithAssertion{}
 	for i := range entryCount {
 		commandWithAssertions = append(commandWithAssertions, test_cases.CommandWithAssertion{
-			Command:   []string{"XADD", randomStreamKey, entryIDs[i], randomPairs[i][0], randomPairs[i][1]},
+			Command:   []string{"XADD", streamKey, entryIDs[i], entryKeysAndValues[i][0], entryKeysAndValues[i][1]},
 			Assertion: resp_assertions.NewStringAssertion(entryIDs[i]),
 		})
 	}
@@ -61,13 +61,13 @@ func testStreamsXrangeMinID(stageHarness *test_case_harness.TestCaseHarness) err
 	for i := 1; i <= endKey; i++ {
 		expectedStreamEntries = append(expectedStreamEntries, resp_assertions.StreamEntry{
 			Id:              entryIDs[i-1],
-			FieldValuePairs: [][]string{randomPairs[i-1]},
+			FieldValuePairs: [][]string{entryKeysAndValues[i-1]},
 		})
 	}
 
 	xrangeTestCase := test_cases.SendCommandTestCase{
 		Command:                   "XRANGE",
-		Args:                      []string{randomStreamKey, "-", fmt.Sprintf("0-%d", endKey)},
+		Args:                      []string{streamKey, "-", fmt.Sprintf("0-%d", endKey)},
 		Assertion:                 resp_assertions.NewXRangeResponseAssertion(expectedStreamEntries),
 		ShouldSkipUnreadDataCheck: false,
 	}

@@ -18,14 +18,24 @@ type ReceiveValueTestCase struct {
 }
 
 func (t *ReceiveValueTestCase) Run(client *resp_client.RespConnection, logger *logger.Logger) error {
+	err := t.RunWithoutAssert(client)
+	if err != nil {
+		return err
+	}
+	return t.Assert(client, logger)
+}
+
+func (t *ReceiveValueTestCase) RunWithoutAssert(client *resp_client.RespConnection) error {
 	value, err := client.ReadValue()
 	if err != nil {
 		return err
 	}
-
 	t.ActualValue = value
+	return nil
+}
 
-	if err = t.Assertion.Run(value); err != nil {
+func (t *ReceiveValueTestCase) Assert(client *resp_client.RespConnection, logger *logger.Logger) error {
+	if err := t.Assertion.Run(t.ActualValue); err != nil {
 		return err
 	}
 
@@ -37,6 +47,6 @@ func (t *ReceiveValueTestCase) Run(client *resp_client.RespConnection, logger *l
 		}
 	}
 
-	logger.Successf("Received %s", value.FormattedString())
+	logger.Successf("Received %s", t.ActualValue.FormattedString())
 	return nil
 }

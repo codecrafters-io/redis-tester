@@ -27,21 +27,21 @@ func testStreamsType(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 	defer client.Close()
 
-	randomKey := random.RandomWord()
-	randomValue := random.RandomWord()
+	key := random.RandomWord()
+	value := random.RandomWord()
 
 	multiCommandTestCase := test_cases.MultiCommandTestCase{
 		CommandWithAssertions: []test_cases.CommandWithAssertion{
 			{
-				Command:   []string{"SET", randomKey, randomValue},
+				Command:   []string{"SET", key, value},
 				Assertion: resp_assertions.NewStringAssertion("OK"),
 			},
 			{
-				Command:   []string{"TYPE", randomKey},
+				Command:   []string{"TYPE", key},
 				Assertion: resp_assertions.NewStringAssertion("string"),
 			},
 			{
-				Command:   []string{"TYPE", fmt.Sprintf("missing_key_%s", randomValue)},
+				Command:   []string{"TYPE", fmt.Sprintf("missing_key_%s", value)},
 				Assertion: resp_assertions.NewStringAssertion("none"),
 			},
 		},

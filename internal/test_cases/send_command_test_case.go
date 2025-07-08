@@ -29,6 +29,10 @@ type SendCommandTestCase struct {
 func (t *SendCommandTestCase) Run(client *resp_client.RespConnection, logger *logger.Logger) error {
 	var value resp_value.Value
 	var err error
+	receiveValueTestCase := ReceiveValueTestCase{
+		Assertion:                 t.Assertion,
+		ShouldSkipUnreadDataCheck: t.ShouldSkipUnreadDataCheck,
+	}
 
 	for attempt := 0; attempt <= t.Retries; attempt++ {
 		if attempt > 0 {
@@ -42,7 +46,7 @@ func (t *SendCommandTestCase) Run(client *resp_client.RespConnection, logger *lo
 		}
 
 		t.readMutex.Lock()
-		value, err = client.ReadValue()
+		err = receiveValueTestCase.RunWithoutAssert(client)
 		t.readMutex.Unlock()
 
 		if err != nil {
@@ -64,23 +68,8 @@ func (t *SendCommandTestCase) Run(client *resp_client.RespConnection, logger *lo
 			}
 		}
 	}
-
-	t.ReceivedResponse = value
-
-	if err = t.Assertion.Run(value); err != nil {
-		return err
-	}
-
-	if !t.ShouldSkipUnreadDataCheck {
-		client.ReadIntoBuffer() // Let's make sure there's no extra data
-
-		if client.UnreadBuffer.Len() > 0 {
-			return fmt.Errorf("Found extra data: %q", client.UnreadBuffer.String())
-		}
-	}
-
-	logger.Successf("Received %s", value.FormattedString())
-	return nil
+	t.ReceivedResponse = receiveValueTestCase.ActualValue
+	return receiveValueTestCase.Assert(client, logger)
 }
 
 func (t *SendCommandTestCase) PauseReadingResponse() {
