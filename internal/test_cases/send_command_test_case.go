@@ -19,6 +19,7 @@ type SendCommandTestCase struct {
 	ShouldSkipUnreadDataCheck bool
 	Retries                   int
 	ShouldRetryFunc           func(resp_value.Value) bool
+	BetterErrorMessageFunc    func(error) error
 
 	// ReceivedResponse is set after the test case is run
 	ReceivedResponse resp_value.Value
@@ -46,6 +47,9 @@ func (t *SendCommandTestCase) Run(client *resp_client.RespConnection, logger *lo
 		t.readMutex.Unlock()
 
 		if err != nil {
+			if t.BetterErrorMessageFunc != nil {
+				return t.BetterErrorMessageFunc(err)
+			}
 			return err
 		}
 
