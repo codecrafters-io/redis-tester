@@ -64,7 +64,7 @@ func (t TransactionTestCase) RunMulti(client *resp_client.RespConnection, logger
 
 func (t TransactionTestCase) RunQueueAll(client *resp_client.RespConnection, logger *logger.Logger) error {
 	for i, v := range t.CommandQueue {
-		logger.Debugf("Sending command: #%d/#%d", i+1, len(t.CommandQueue))
+		logger.Debugf("Sending command: %d/%d", i+1, len(t.CommandQueue))
 		commandTest := SendCommandTestCase{
 			Command:   v[0],
 			Args:      v[1:],

@@ -13,14 +13,14 @@ func testReplMultipleReplicas(stageHarness *test_case_harness.TestCaseHarness) e
 	deleteRDBfile()
 
 	logger := stageHarness.Logger
-	defer logger.ResetSecondaryPrefix()
+	defer logger.ResetSecondaryPrefixes()
 
 	master := redis_executable.NewRedisExecutable(stageHarness)
 	if err := master.Run("--port", "6379"); err != nil {
 		return err
 	}
 
-	logger.UpdateSecondaryPrefix("handshake")
+	logger.UpdateLastSecondaryPrefix("handshake")
 
 	// We use one client to send commands to the master
 	client, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client")
@@ -40,7 +40,7 @@ func testReplMultipleReplicas(stageHarness *test_case_harness.TestCaseHarness) e
 		defer replica.Close()
 	}
 
-	logger.UpdateSecondaryPrefix("test")
+	logger.UpdateLastSecondaryPrefix("test")
 
 	kvMap := map[int][]string{
 		1: {"foo", "123"},
@@ -66,7 +66,9 @@ func testReplMultipleReplicas(stageHarness *test_case_harness.TestCaseHarness) e
 		logger.Infof("Testing Replica %d/%d: %s", i+1, replicaCount, replica.GetIdentifier())
 
 		for i := 1; i <= len(kvMap); i++ {
-			logger.Infof("%s: Expecting \"SET %s %s\" to be propagated", replica.GetIdentifier(), kvMap[i][0], kvMap[i][1])
+			logger.WithAdditionalSecondaryPrefix(replica.GetIdentifier(), func() {
+				logger.Infof("Expecting \"SET %s %s\" to be propagated", kvMap[i][0], kvMap[i][1])
+			})
 
 			receiveValueTestCase := &test_cases.ReceiveValueTestCase{
 				Assertion:                 resp_assertions.NewCommandAssertion("SET", kvMap[i][0], kvMap[i][1]),

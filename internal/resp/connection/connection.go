@@ -77,11 +77,12 @@ func NewRespConnectionFromAddr(addr string, connIdentifier string, callbacks Res
 	}, nil
 }
 
-func NewRespConnectionFromConn(conn net.Conn, callbacks RespConnectionCallbacks) (*RespConnection, error) {
+func NewRespConnectionFromConn(conn net.Conn, callbacks RespConnectionCallbacks, connID string) (*RespConnection, error) {
 	return &RespConnection{
 		Conn:         conn,
 		UnreadBuffer: bytes.Buffer{},
 		Callbacks:    callbacks,
+		identifier:   connID,
 	}, nil
 }
 

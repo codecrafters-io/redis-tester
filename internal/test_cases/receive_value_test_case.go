@@ -47,6 +47,8 @@ func (t *ReceiveValueTestCase) Assert(client *resp_client.RespConnection, logger
 		}
 	}
 
-	logger.Successf("Received %s", t.ActualValue.FormattedString())
+	logger.WithAdditionalSecondaryPrefix(client.GetIdentifier(), func() {
+		logger.Successf("Received %s", t.ActualValue.FormattedString())
+	})
 	return nil
 }

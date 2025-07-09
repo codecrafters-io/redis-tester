@@ -18,7 +18,7 @@ func testPingPongOnce(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	logger := stageHarness.Logger
 
-	client, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "")
+	client, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client")
 	if err != nil {
 		return err
 	}
@@ -57,8 +57,9 @@ func testPingPongMultiple(stageHarness *test_case_harness.TestCaseHarness) error
 		}
 	}
 
-	logger.Debugf("Success, closing connection...")
-	client.Close()
+	logger.WithAdditionalSecondaryPrefix(client.GetIdentifier(), func() {
+		logger.Debugf("Success, closing connection...")
+	})
 
 	return nil
 }
@@ -98,7 +99,10 @@ func testPingPongConcurrent(stageHarness *test_case_harness.TestCaseHarness) err
 		return err
 	}
 
-	logger.Debugf("client-%d: Success, closing connection...", 1)
+	logger.WithAdditionalSecondaryPrefix(client1.GetIdentifier(), func() {
+		logger.Debugf("Success, closing connection...")
+	})
+
 	client1.Close()
 
 	client3, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client-3")
@@ -110,9 +114,14 @@ func testPingPongConcurrent(stageHarness *test_case_harness.TestCaseHarness) err
 		return err
 	}
 
-	logger.Debugf("client-%d: Success, closing connection...", 2)
+	logger.WithAdditionalSecondaryPrefix(client2.GetIdentifier(), func() {
+		logger.Debugf("Success, closing connection...")
+	})
 	client2.Close()
-	logger.Debugf("client-%d: Success, closing connection...", 3)
+
+	logger.WithAdditionalSecondaryPrefix(client3.GetIdentifier(), func() {
+		logger.Debugf("Success, closing connection...")
+	})
 	client3.Close()
 
 	return nil

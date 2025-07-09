@@ -58,7 +58,7 @@ func testWait(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 
 	logger := stageHarness.Logger
-	defer logger.ResetSecondaryPrefix()
+	defer logger.ResetSecondaryPrefixes()
 
 	// Step 2: Spawn multiple replicas and have each perform a handshake
 	replicaCount := testerutils_random.RandomInt(3, 5)
@@ -80,7 +80,7 @@ func testWait(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 	defer client.Close()
 
-	logger.UpdateSecondaryPrefix("test")
+	logger.UpdateLastSecondaryPrefix("test")
 
 	if err = RunWaitTest(client, replicas, WaitTest{
 		WriteCommand:        []string{"SET", "foo", "123"},
@@ -116,7 +116,9 @@ func consumeReplicationStreamAndSendAcks(replicas []*resp_connection.RespConnect
 		replica := replicas[j]
 		logger.Infof("Testing Replica: %s", replica.GetIdentifier())
 
-		logger.Infof("%s: Expecting \"%s\" to be propagated", replica.GetIdentifier(), strings.Join(command, " "))
+		logger.WithAdditionalSecondaryPrefix(replica.GetIdentifier(), func() {
+			logger.Infof("Expecting \"%s\" to be propagated", strings.Join(command, " "))
+		})
 
 		receiveCommandTestCase := &test_cases.ReceiveValueTestCase{
 			Assertion:                 resp_assertions.NewCommandAssertion(command[0], command[1:]...),
@@ -138,7 +140,9 @@ func consumeReplicationStreamAndSendAcks(replicas []*resp_connection.RespConnect
 			}
 		}
 
-		logger.Infof("%s: Expecting \"REPLCONF GETACK *\" from Master", replica.GetIdentifier())
+		logger.WithAdditionalSecondaryPrefix(replica.GetIdentifier(), func() {
+			logger.Infof("Expecting \"REPLCONF GETACK *\" from Master")
+		})
 
 		receiveGetackCommandTestCase := &test_cases.ReceiveValueTestCase{
 			Assertion:                 resp_assertions.NewCommandAssertion("REPLCONF", "GETACK", "*"),
@@ -149,13 +153,17 @@ func consumeReplicationStreamAndSendAcks(replicas []*resp_connection.RespConnect
 		}
 
 		if j < acksSentByReplicaSubsetCount {
-			logger.Debugf("%s: Sending ACK to Master", replica.GetIdentifier())
+			logger.WithAdditionalSecondaryPrefix(replica.GetIdentifier(), func() {
+				logger.Debugf("Sending ACK to Master")
+			})
 			// Remove GETACK command bytes from offset before sending ACK.
 			if err := replica.SendCommand("REPLCONF", []string{"ACK", strconv.Itoa(replica.ReceivedBytes - len(replica.LastValueBytes))}...); err != nil {
 				return err
 			}
 		} else {
-			logger.Debugf("%s: Not sending ACK to Master", replica.GetIdentifier())
+			logger.WithAdditionalSecondaryPrefix(replica.GetIdentifier(), func() {
+				logger.Debugf("Not sending ACK to Master")
+			})
 		}
 	}
 	return err

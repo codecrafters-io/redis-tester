@@ -44,7 +44,9 @@ func (t ReceiveReplicationHandshakeTestCase) RunAll(client *resp_connection.Resp
 }
 
 func (t ReceiveReplicationHandshakeTestCase) RunPingStep(client *resp_connection.RespConnection, logger *logger.Logger) error {
-	logger.Infof("master: Waiting for replica to initiate handshake with %q command", "PING")
+	logger.WithAdditionalSecondaryPrefix(client.GetIdentifier(), func() {
+		logger.Infof("Waiting for replica to initiate handshake with %q command", "PING")
+	})
 
 	commandTest := ReceiveCommandTestCase{
 		Assertion: resp_assertions.NewCommandAssertion("PING"),
@@ -55,7 +57,9 @@ func (t ReceiveReplicationHandshakeTestCase) RunPingStep(client *resp_connection
 }
 
 func (t ReceiveReplicationHandshakeTestCase) RunReplconfStep1(client *resp_connection.RespConnection, logger *logger.Logger) error {
-	logger.Infof("master: Waiting for replica to send %q command", "REPLCONF listening-port 6380")
+	logger.WithAdditionalSecondaryPrefix(client.GetIdentifier(), func() {
+		logger.Infof("Waiting for replica to send %q command", "REPLCONF listening-port 6380")
+	})
 
 	commandTest := ReceiveCommandTestCase{
 		Assertion:                 resp_assertions.NewCommandAssertion("REPLCONF", "listening-port", "6380"),
@@ -67,7 +71,9 @@ func (t ReceiveReplicationHandshakeTestCase) RunReplconfStep1(client *resp_conne
 }
 
 func (t ReceiveReplicationHandshakeTestCase) RunReplconfStep2(client *resp_connection.RespConnection, logger *logger.Logger) error {
-	logger.Infof("master: Waiting for replica to send %q command", "REPLCONF capa")
+	logger.WithAdditionalSecondaryPrefix(client.GetIdentifier(), func() {
+		logger.Infof("Waiting for replica to send %q command", "REPLCONF capa")
+	})
 
 	commandTest := ReceiveCommandTestCase{
 		Assertion: resp_assertions.NewOnlyCommandAssertion("REPLCONF"),
@@ -113,7 +119,9 @@ func (t ReceiveReplicationHandshakeTestCase) RunReplconfStep2(client *resp_conne
 }
 
 func (t ReceiveReplicationHandshakeTestCase) RunPsyncStep(client *resp_connection.RespConnection, logger *logger.Logger) error {
-	logger.Infof("master: Waiting for replica to send %q command", "PSYNC")
+	logger.WithAdditionalSecondaryPrefix(client.GetIdentifier(), func() {
+		logger.Infof("Waiting for replica to send %q command", "PSYNC")
+	})
 
 	id := "75cd7bc10c49047e0d163660f3b90625b1af31dc"
 	commandTest := ReceiveCommandTestCase{
@@ -125,7 +133,9 @@ func (t ReceiveReplicationHandshakeTestCase) RunPsyncStep(client *resp_connectio
 }
 
 func (t ReceiveReplicationHandshakeTestCase) RunSendRDBStep(client *resp_connection.RespConnection, logger *logger.Logger) error {
-	logger.Debugln("Sending RDB file...")
+	logger.WithAdditionalSecondaryPrefix(client.GetIdentifier(), func() {
+		logger.Debugln("Sending RDB file...")
+	})
 
 	hexStr := "524544495330303131fa0972656469732d76657205372e322e30fa0a72656469732d62697473c040fa056374696d65c26d08bc65fa08757365642d6d656dc2b0c41000fa08616f662d62617365c000fff06e3bfec0ff5aa2"
 	bytes, err := hex.DecodeString(hexStr)
@@ -136,6 +146,8 @@ func (t ReceiveReplicationHandshakeTestCase) RunSendRDBStep(client *resp_connect
 	encodedValue := resp_encoder.EncodeFullResyncRDBFile(bytes)
 	client.SendBytes(encodedValue)
 
-	logger.Successf("Sent RDB file.")
+	logger.WithAdditionalSecondaryPrefix(client.GetIdentifier(), func() {
+		logger.Successf("Sent RDB file.")
+	})
 	return nil
 }

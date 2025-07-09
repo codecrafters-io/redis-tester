@@ -13,7 +13,7 @@ func Decode(data []byte) (value resp_value.Value, readBytesCount int, err error)
 
 	value, err = doDecodeValue(reader)
 	if err != nil {
-		return resp_value.Value{}, 0, err
+		return resp_value.Value{}, len(data), err
 	}
 
 	return value, len(data) - reader.Len(), nil
