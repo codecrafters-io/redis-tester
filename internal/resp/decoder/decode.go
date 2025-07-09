@@ -13,7 +13,10 @@ func Decode(data []byte) (value resp_value.Value, readBytesCount int, err error)
 
 	value, err = doDecodeValue(reader)
 	if err != nil {
-		return resp_value.Value{}, len(data), err
+		if _, ok := err.(InvalidRESPError); ok {
+			return resp_value.Value{}, len(data), err
+		}
+		return resp_value.Value{}, 0, err
 	}
 
 	return value, len(data) - reader.Len(), nil
@@ -42,7 +45,7 @@ func doDecodeValue(reader *bytes.Reader) (resp_value.Value, error) {
 	default:
 		reader.UnreadByte() // Ensure the error points to the correct byte
 
-		return resp_value.Value{}, InvalidInputError{
+		return resp_value.Value{}, InvalidRESPError{
 			Reader:  reader,
 			Message: fmt.Sprintf("%q is not a valid start of a RESP2 value (expected +, -, :, $ or *)", string(firstByte)),
 		}

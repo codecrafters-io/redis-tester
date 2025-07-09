@@ -18,11 +18,20 @@ type InvalidInputError struct {
 	Message string
 }
 
+type InvalidRESPError struct {
+	Reader  *bytes.Reader
+	Message string
+}
+
 func (e IncompleteInputError) Error() string {
 	return formatDetailedError(e.Reader, e.Message)
 }
 
 func (e InvalidInputError) Error() string {
+	return formatDetailedError(e.Reader, e.Message)
+}
+
+func (e InvalidRESPError) Error() string {
 	return formatDetailedError(e.Reader, e.Message)
 }
 
