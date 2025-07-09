@@ -12,9 +12,6 @@ func DecodeFullResyncRDBFile(data []byte) (rdbFileContents []byte, readBytesCoun
 
 	rdbFileContents, err = doDecodeFullResyncRDBFile(reader)
 	if err != nil {
-		if _, ok := err.(InvalidRESPError); ok {
-			return nil, len(data), err
-		}
 		return nil, 0, err
 	}
 

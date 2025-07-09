@@ -152,8 +152,12 @@ func (c *RespConnection) ReadFullResyncRDBFile() ([]byte, error) {
 
 	value, readBytesCount, err := resp_decoder.DecodeFullResyncRDBFile(c.UnreadBuffer.Bytes())
 
-	if c.Callbacks.AfterBytesReceived != nil && readBytesCount > 0 {
-		c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes()[:readBytesCount])
+	if c.Callbacks.AfterBytesReceived != nil {
+		if _, ok := err.(resp_decoder.InvalidRESPError); ok {
+			c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes())
+		} else if readBytesCount > 0 {
+			c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes()[:readBytesCount])
+		}
 	}
 
 	if err != nil {
@@ -206,8 +210,12 @@ func (c *RespConnection) ReadValueWithTimeout(timeout time.Duration) (resp_value
 
 	value, readBytesCount, err := resp_decoder.Decode(c.UnreadBuffer.Bytes())
 
-	if c.Callbacks.AfterBytesReceived != nil && readBytesCount > 0 {
-		c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes()[:readBytesCount])
+	if c.Callbacks.AfterBytesReceived != nil {
+		if _, ok := err.(resp_decoder.InvalidRESPError); ok {
+			c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes())
+		} else if readBytesCount > 0 {
+			c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes()[:readBytesCount])
+		}
 	}
 
 	if err != nil {

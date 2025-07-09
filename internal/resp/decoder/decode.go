@@ -13,9 +13,6 @@ func Decode(data []byte) (value resp_value.Value, readBytesCount int, err error)
 
 	value, err = doDecodeValue(reader)
 	if err != nil {
-		if _, ok := err.(InvalidRESPError); ok {
-			return resp_value.Value{}, len(data), err
-		}
 		return resp_value.Value{}, 0, err
 	}
 
