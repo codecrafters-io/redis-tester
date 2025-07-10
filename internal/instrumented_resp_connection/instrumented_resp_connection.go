@@ -12,6 +12,7 @@ import (
 type InstrumentedRespConnection struct {
 	*resp_connection.RespConnection
 
+	// 	// Identifier is the string that is used to identify on whose behalf (master/replica(port)/client) we are logging
 	identifier string
 }
 
@@ -87,4 +88,11 @@ func (c *InstrumentedRespConnection) GetIdentifier() string {
 		panic("Codecrafters Internal Error - InstrumentedRespConnection must have an identifier")
 	}
 	return c.identifier
+}
+
+// GetLogger returns a new logger with added secondary prefix: connection's identifier
+func (c *InstrumentedRespConnection) GetLogger(l *logger.Logger) *logger.Logger {
+	newLogger := l.Clone()
+	newLogger.PushSecondaryPrefix(c.identifier)
+	return newLogger
 }

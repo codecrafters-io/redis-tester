@@ -79,7 +79,8 @@ func (t SendReplicationHandshakeTestCase) RunPsyncStep(client *instrumented_resp
 }
 
 func (t SendReplicationHandshakeTestCase) RunReceiveRDBStep(client *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
-	logger.Debugln("Reading RDB file...")
+	clientLogger := client.GetLogger(logger)
+	clientLogger.Debugln("Reading RDB file...")
 
 	rdbFileBytes, err := client.ReadFullResyncRDBFile()
 	if err != nil {
@@ -102,6 +103,6 @@ func (t SendReplicationHandshakeTestCase) RunReceiveRDBStep(client *instrumented
 		return fmt.Errorf("Found extra data: %q", client.UnreadBuffer.String())
 	}
 
-	logger.Successf("Received RDB file")
+	clientLogger.Successf("Received RDB file")
 	return nil
 }

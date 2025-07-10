@@ -152,14 +152,14 @@ func (c *RespConnection) ReadFullResyncRDBFile() ([]byte, error) {
 	*/
 	logUptoPosition := readBytesCount
 	if err != nil {
-		if e, ok := err.(*resp_decoder.InvalidInputError); ok {
+		if e, ok := err.(resp_decoder.InvalidInputError); ok {
 			if e.InvalidRespBeginner {
 				logUptoPosition = c.UnreadBuffer.Len()
 			}
 		}
 	}
 
-	if c.Callbacks.AfterBytesReceived != nil && readBytesCount > 0 {
+	if c.Callbacks.AfterBytesReceived != nil && logUptoPosition > 0 {
 		c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes()[:logUptoPosition])
 	}
 
@@ -218,14 +218,14 @@ func (c *RespConnection) ReadValueWithTimeout(timeout time.Duration) (resp_value
 	*/
 	logUptoPosition := readBytesCount
 	if err != nil {
-		if e, ok := err.(*resp_decoder.InvalidInputError); ok {
+		if e, ok := err.(resp_decoder.InvalidInputError); ok {
 			if e.InvalidRespBeginner {
 				logUptoPosition = c.UnreadBuffer.Len()
 			}
 		}
 	}
 
-	if c.Callbacks.AfterBytesReceived != nil && readBytesCount > 0 {
+	if c.Callbacks.AfterBytesReceived != nil && logUptoPosition > 0 {
 		c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes()[:logUptoPosition])
 	}
 

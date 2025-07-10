@@ -56,7 +56,7 @@ func testPingPongMultiple(stageHarness *test_case_harness.TestCaseHarness) error
 		}
 	}
 
-	logger.Debugf("Success, closing connection...")
+	client.GetLogger(logger).Debugf("Success, closing connection...")
 	client.Close()
 
 	return nil
@@ -97,7 +97,7 @@ func testPingPongConcurrent(stageHarness *test_case_harness.TestCaseHarness) err
 		return err
 	}
 
-	logger.Debugf("client-%d: Success, closing connection...", 1)
+	client1.GetLogger(logger).Debugf("Success, closing connection...")
 	client1.Close()
 
 	client3, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client-3")
@@ -109,9 +109,10 @@ func testPingPongConcurrent(stageHarness *test_case_harness.TestCaseHarness) err
 		return err
 	}
 
-	logger.Debugf("client-%d: Success, closing connection...", 2)
+	client2.GetLogger(logger).Debugf("Success, closing connection...")
 	client2.Close()
-	logger.Debugf("client-%d: Success, closing connection...", 3)
+
+	client3.GetLogger(logger).Debugf("Success, closing connection...")
 	client3.Close()
 
 	return nil

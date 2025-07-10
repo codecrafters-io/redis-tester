@@ -6,7 +6,7 @@ Debug = true
 [33m[tester::#XU1] [client-1] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$4\r\npear\r\n$3\r\n0-1\r\n$11\r\ntemperature\r\n$2\r\n70\r\n"[0m
 [33m[tester::#XU1] [client-1] [0m[36mReceived bytes: "$3\r\n0-1\r\n"[0m
 [33m[tester::#XU1] [client-1] [0m[36mReceived RESP bulk string: "0-1"[0m
-[33m[tester::#XU1] [0m[92mReceived "0-1"[0m
+[33m[tester::#XU1] [client-1] [0m[92mReceived "0-1"[0m
 [33m[tester::#XU1] [client-1] [0m[94m> XREAD block 0 streams pear $[0m
 [33m[tester::#XU1] [client-1] [0m[36mSent bytes: "*6\r\n$5\r\nXREAD\r\n$5\r\nblock\r\n$1\r\n0\r\n$7\r\nstreams\r\n$4\r\npear\r\n$1\r\n$\r\n"[0m
 [33m[tester::#XU1] [client-1] [0m[94mSleeping for 1000 ms[0m
@@ -14,7 +14,7 @@ Debug = true
 [33m[tester::#XU1] [client-2] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$4\r\npear\r\n$3\r\n0-2\r\n$11\r\ntemperature\r\n$2\r\n74\r\n"[0m
 [33m[tester::#XU1] [client-2] [0m[36mReceived bytes: "$3\r\n0-2\r\n"[0m
 [33m[tester::#XU1] [client-2] [0m[36mReceived RESP bulk string: "0-2"[0m
-[33m[tester::#XU1] [0m[92mReceived "0-2"[0m
+[33m[tester::#XU1] [client-2] [0m[92mReceived "0-2"[0m
 [33m[tester::#XU1] [client-1] [0m[36mReceived bytes: "*1\r\n*2\r\n$4\r\npear\r\n*1\r\n*2\r\n$3\r\n0-2\r\n*2\r\n$11\r\ntemperature\r\n$2\r\n74\r\n"[0m
 [33m[tester::#XU1] [client-1] [0m[36mReceived RESP array: [[0m
 [33m[tester::#XU1] [client-1] [0m[36m  [[0m
@@ -27,25 +27,25 @@ Debug = true
 [33m[tester::#XU1] [client-1] [0m[36m    ][0m
 [33m[tester::#XU1] [client-1] [0m[36m  ][0m
 [33m[tester::#XU1] [client-1] [0m[36m][0m
-[33m[tester::#XU1] [0m[92mReceived [[0m
-[33m[tester::#XU1] [0m[92m  [[0m
-[33m[tester::#XU1] [0m[92m    "pear",[0m
-[33m[tester::#XU1] [0m[92m    [[0m
-[33m[tester::#XU1] [0m[92m      [[0m
-[33m[tester::#XU1] [0m[92m        "0-2",[0m
-[33m[tester::#XU1] [0m[92m        ["temperature", "74"][0m
-[33m[tester::#XU1] [0m[92m      ][0m
-[33m[tester::#XU1] [0m[92m    ][0m
-[33m[tester::#XU1] [0m[92m  ][0m
-[33m[tester::#XU1] [0m[92m][0m
+[33m[tester::#XU1] [client-1] [0m[92mReceived [[0m
+[33m[tester::#XU1] [client-1] [0m[92m  [[0m
+[33m[tester::#XU1] [client-1] [0m[92m    "pear",[0m
+[33m[tester::#XU1] [client-1] [0m[92m    [[0m
+[33m[tester::#XU1] [client-1] [0m[92m      [[0m
+[33m[tester::#XU1] [client-1] [0m[92m        "0-2",[0m
+[33m[tester::#XU1] [client-1] [0m[92m        ["temperature", "74"][0m
+[33m[tester::#XU1] [client-1] [0m[92m      ][0m
+[33m[tester::#XU1] [client-1] [0m[92m    ][0m
+[33m[tester::#XU1] [client-1] [0m[92m  ][0m
+[33m[tester::#XU1] [client-1] [0m[92m][0m
 [33m[tester::#XU1] [client-1] [0m[94m> XREAD block 1000 streams pear $[0m
 [33m[tester::#XU1] [client-1] [0m[36mSent bytes: "*6\r\n$5\r\nXREAD\r\n$5\r\nblock\r\n$4\r\n1000\r\n$7\r\nstreams\r\n$4\r\npear\r\n$1\r\n$\r\n"[0m
 [33m[tester::#XU1] [client-1] [0m[36mReceived bytes: "*-1\r\n"[0m
 [33m[tester::#XU1] [client-1] [0m[36mReceived RESP null bulk string: "$-1\r\n"[0m
-[33m[tester::#XU1] [0m[92mReceived "$-1\r\n"[0m
-[33m[tester::#XU1] [0m[92mTest passed.[0m
-[33m[tester::#XU1] [0m[36mTerminating program[0m
-[33m[tester::#XU1] [0m[36mProgram terminated successfully[0m
+[33m[tester::#XU1] [client-1] [0m[92mReceived "$-1\r\n"[0m
+[33m[tester::#XU1] [client-1] [0m[92mTest passed.[0m
+[33m[tester::#XU1] [client-1] [0m[36mTerminating program[0m
+[33m[tester::#XU1] [client-1] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#HW1] [0m[94mRunning tests for Stage #HW1 (hw1)[0m
 [33m[tester::#HW1] [0m[94m$ ./spawn_redis_server.sh[0m
@@ -53,14 +53,14 @@ Debug = true
 [33m[tester::#HW1] [client-1] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$5\r\nmango\r\n$3\r\n0-1\r\n$11\r\ntemperature\r\n$2\r\n20\r\n"[0m
 [33m[tester::#HW1] [client-1] [0m[36mReceived bytes: "$3\r\n0-1\r\n"[0m
 [33m[tester::#HW1] [client-1] [0m[36mReceived RESP bulk string: "0-1"[0m
-[33m[tester::#HW1] [0m[92mReceived "0-1"[0m
+[33m[tester::#HW1] [client-1] [0m[92mReceived "0-1"[0m
 [33m[tester::#HW1] [client-1] [0m[94m> XREAD block 0 streams mango 0-1[0m
 [33m[tester::#HW1] [client-1] [0m[36mSent bytes: "*6\r\n$5\r\nXREAD\r\n$5\r\nblock\r\n$1\r\n0\r\n$7\r\nstreams\r\n$5\r\nmango\r\n$3\r\n0-1\r\n"[0m
 [33m[tester::#HW1] [client-2] [0m[94m$ redis-cli XADD mango 0-2 temperature 30[0m
 [33m[tester::#HW1] [client-2] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$5\r\nmango\r\n$3\r\n0-2\r\n$11\r\ntemperature\r\n$2\r\n30\r\n"[0m
 [33m[tester::#HW1] [client-2] [0m[36mReceived bytes: "$3\r\n0-2\r\n"[0m
 [33m[tester::#HW1] [client-2] [0m[36mReceived RESP bulk string: "0-2"[0m
-[33m[tester::#HW1] [0m[92mReceived "0-2"[0m
+[33m[tester::#HW1] [client-2] [0m[92mReceived "0-2"[0m
 [33m[tester::#HW1] [client-1] [0m[36mReceived bytes: "*1\r\n*2\r\n$5\r\nmango\r\n*1\r\n*2\r\n$3\r\n0-2\r\n*2\r\n$11\r\ntemperature\r\n$2\r\n30\r\n"[0m
 [33m[tester::#HW1] [client-1] [0m[36mReceived RESP array: [[0m
 [33m[tester::#HW1] [client-1] [0m[36m  [[0m
@@ -73,20 +73,20 @@ Debug = true
 [33m[tester::#HW1] [client-1] [0m[36m    ][0m
 [33m[tester::#HW1] [client-1] [0m[36m  ][0m
 [33m[tester::#HW1] [client-1] [0m[36m][0m
-[33m[tester::#HW1] [0m[92mReceived [[0m
-[33m[tester::#HW1] [0m[92m  [[0m
-[33m[tester::#HW1] [0m[92m    "mango",[0m
-[33m[tester::#HW1] [0m[92m    [[0m
-[33m[tester::#HW1] [0m[92m      [[0m
-[33m[tester::#HW1] [0m[92m        "0-2",[0m
-[33m[tester::#HW1] [0m[92m        ["temperature", "30"][0m
-[33m[tester::#HW1] [0m[92m      ][0m
-[33m[tester::#HW1] [0m[92m    ][0m
-[33m[tester::#HW1] [0m[92m  ][0m
-[33m[tester::#HW1] [0m[92m][0m
-[33m[tester::#HW1] [0m[92mTest passed.[0m
-[33m[tester::#HW1] [0m[36mTerminating program[0m
-[33m[tester::#HW1] [0m[36mProgram terminated successfully[0m
+[33m[tester::#HW1] [client-1] [0m[92mReceived [[0m
+[33m[tester::#HW1] [client-1] [0m[92m  [[0m
+[33m[tester::#HW1] [client-1] [0m[92m    "mango",[0m
+[33m[tester::#HW1] [client-1] [0m[92m    [[0m
+[33m[tester::#HW1] [client-1] [0m[92m      [[0m
+[33m[tester::#HW1] [client-1] [0m[92m        "0-2",[0m
+[33m[tester::#HW1] [client-1] [0m[92m        ["temperature", "30"][0m
+[33m[tester::#HW1] [client-1] [0m[92m      ][0m
+[33m[tester::#HW1] [client-1] [0m[92m    ][0m
+[33m[tester::#HW1] [client-1] [0m[92m  ][0m
+[33m[tester::#HW1] [client-1] [0m[92m][0m
+[33m[tester::#HW1] [client-1] [0m[92mTest passed.[0m
+[33m[tester::#HW1] [client-1] [0m[36mTerminating program[0m
+[33m[tester::#HW1] [client-1] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#BS1] [0m[94mRunning tests for Stage #BS1 (bs1)[0m
 [33m[tester::#BS1] [0m[94m$ ./spawn_redis_server.sh[0m
@@ -94,7 +94,7 @@ Debug = true
 [33m[tester::#BS1] [client-1] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$9\r\nblueberry\r\n$3\r\n0-1\r\n$11\r\ntemperature\r\n$2\r\n12\r\n"[0m
 [33m[tester::#BS1] [client-1] [0m[36mReceived bytes: "$3\r\n0-1\r\n"[0m
 [33m[tester::#BS1] [client-1] [0m[36mReceived RESP bulk string: "0-1"[0m
-[33m[tester::#BS1] [0m[92mReceived "0-1"[0m
+[33m[tester::#BS1] [client-1] [0m[92mReceived "0-1"[0m
 [33m[tester::#BS1] [client-1] [0m[94m> XREAD block 1000 streams blueberry 0-1[0m
 [33m[tester::#BS1] [client-1] [0m[36mSent bytes: "*6\r\n$5\r\nXREAD\r\n$5\r\nblock\r\n$4\r\n1000\r\n$7\r\nstreams\r\n$9\r\nblueberry\r\n$3\r\n0-1\r\n"[0m
 [33m[tester::#BS1] [client-1] [0m[94mWaiting for 500 ms[0m
@@ -102,7 +102,7 @@ Debug = true
 [33m[tester::#BS1] [client-2] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$9\r\nblueberry\r\n$3\r\n0-2\r\n$11\r\ntemperature\r\n$2\r\n24\r\n"[0m
 [33m[tester::#BS1] [client-2] [0m[36mReceived bytes: "$3\r\n0-2\r\n"[0m
 [33m[tester::#BS1] [client-2] [0m[36mReceived RESP bulk string: "0-2"[0m
-[33m[tester::#BS1] [0m[92mReceived "0-2"[0m
+[33m[tester::#BS1] [client-2] [0m[92mReceived "0-2"[0m
 [33m[tester::#BS1] [client-1] [0m[36mReceived bytes: "*1\r\n*2\r\n$9\r\nblueberry\r\n*1\r\n*2\r\n$3\r\n0-2\r\n*2\r\n$11\r\ntemperature\r\n$2\r\n24\r\n"[0m
 [33m[tester::#BS1] [client-1] [0m[36mReceived RESP array: [[0m
 [33m[tester::#BS1] [client-1] [0m[36m  [[0m
@@ -115,25 +115,25 @@ Debug = true
 [33m[tester::#BS1] [client-1] [0m[36m    ][0m
 [33m[tester::#BS1] [client-1] [0m[36m  ][0m
 [33m[tester::#BS1] [client-1] [0m[36m][0m
-[33m[tester::#BS1] [0m[92mReceived [[0m
-[33m[tester::#BS1] [0m[92m  [[0m
-[33m[tester::#BS1] [0m[92m    "blueberry",[0m
-[33m[tester::#BS1] [0m[92m    [[0m
-[33m[tester::#BS1] [0m[92m      [[0m
-[33m[tester::#BS1] [0m[92m        "0-2",[0m
-[33m[tester::#BS1] [0m[92m        ["temperature", "24"][0m
-[33m[tester::#BS1] [0m[92m      ][0m
-[33m[tester::#BS1] [0m[92m    ][0m
-[33m[tester::#BS1] [0m[92m  ][0m
-[33m[tester::#BS1] [0m[92m][0m
+[33m[tester::#BS1] [client-1] [0m[92mReceived [[0m
+[33m[tester::#BS1] [client-1] [0m[92m  [[0m
+[33m[tester::#BS1] [client-1] [0m[92m    "blueberry",[0m
+[33m[tester::#BS1] [client-1] [0m[92m    [[0m
+[33m[tester::#BS1] [client-1] [0m[92m      [[0m
+[33m[tester::#BS1] [client-1] [0m[92m        "0-2",[0m
+[33m[tester::#BS1] [client-1] [0m[92m        ["temperature", "24"][0m
+[33m[tester::#BS1] [client-1] [0m[92m      ][0m
+[33m[tester::#BS1] [client-1] [0m[92m    ][0m
+[33m[tester::#BS1] [client-1] [0m[92m  ][0m
+[33m[tester::#BS1] [client-1] [0m[92m][0m
 [33m[tester::#BS1] [client-1] [0m[94m> XREAD block 1000 streams blueberry 0-2[0m
 [33m[tester::#BS1] [client-1] [0m[36mSent bytes: "*6\r\n$5\r\nXREAD\r\n$5\r\nblock\r\n$4\r\n1000\r\n$7\r\nstreams\r\n$9\r\nblueberry\r\n$3\r\n0-2\r\n"[0m
 [33m[tester::#BS1] [client-1] [0m[36mReceived bytes: "*-1\r\n"[0m
 [33m[tester::#BS1] [client-1] [0m[36mReceived RESP null bulk string: "$-1\r\n"[0m
-[33m[tester::#BS1] [0m[92mReceived "$-1\r\n"[0m
-[33m[tester::#BS1] [0m[92mTest passed.[0m
-[33m[tester::#BS1] [0m[36mTerminating program[0m
-[33m[tester::#BS1] [0m[36mProgram terminated successfully[0m
+[33m[tester::#BS1] [client-1] [0m[92mReceived "$-1\r\n"[0m
+[33m[tester::#BS1] [client-1] [0m[92mTest passed.[0m
+[33m[tester::#BS1] [client-1] [0m[36mTerminating program[0m
+[33m[tester::#BS1] [client-1] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#RU9] [0m[94mRunning tests for Stage #RU9 (ru9)[0m
 [33m[tester::#RU9] [0m[94m$ ./spawn_redis_server.sh[0m
@@ -141,12 +141,12 @@ Debug = true
 [33m[tester::#RU9] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$10\r\nstrawberry\r\n$3\r\n0-1\r\n$11\r\ntemperature\r\n$1\r\n0\r\n"[0m
 [33m[tester::#RU9] [client] [0m[36mReceived bytes: "$3\r\n0-1\r\n"[0m
 [33m[tester::#RU9] [client] [0m[36mReceived RESP bulk string: "0-1"[0m
-[33m[tester::#RU9] [0m[92mReceived "0-1"[0m
+[33m[tester::#RU9] [client] [0m[92mReceived "0-1"[0m
 [33m[tester::#RU9] [client] [0m[94m> XADD apple 0-2 humidity 1[0m
 [33m[tester::#RU9] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$5\r\napple\r\n$3\r\n0-2\r\n$8\r\nhumidity\r\n$1\r\n1\r\n"[0m
 [33m[tester::#RU9] [client] [0m[36mReceived bytes: "$3\r\n0-2\r\n"[0m
 [33m[tester::#RU9] [client] [0m[36mReceived RESP bulk string: "0-2"[0m
-[33m[tester::#RU9] [0m[92mReceived "0-2"[0m
+[33m[tester::#RU9] [client] [0m[92mReceived "0-2"[0m
 [33m[tester::#RU9] [client] [0m[94m> XREAD streams strawberry apple 0-0 0-1[0m
 [33m[tester::#RU9] [client] [0m[36mSent bytes: "*6\r\n$5\r\nXREAD\r\n$7\r\nstreams\r\n$10\r\nstrawberry\r\n$5\r\napple\r\n$3\r\n0-0\r\n$3\r\n0-1\r\n"[0m
 [33m[tester::#RU9] [client] [0m[36mReceived bytes: "*2\r\n*2\r\n$10\r\nstrawberry\r\n*1\r\n*2\r\n$3\r\n0-1\r\n*2\r\n$11\r\ntemperature\r\n$1\r\n0\r\n*2\r\n$5\r\napple\r\n*1\r\n*2\r\n$3\r\n0-2\r\n*2\r\n$8\r\nhumidity\r\n$1\r\n1\r\n"[0m
@@ -165,24 +165,24 @@ Debug = true
 [33m[tester::#RU9] [client] [0m[36m    [["0-2", ["humidity", "1"]]][0m
 [33m[tester::#RU9] [client] [0m[36m  ][0m
 [33m[tester::#RU9] [client] [0m[36m][0m
-[33m[tester::#RU9] [0m[92mReceived [[0m
-[33m[tester::#RU9] [0m[92m  [[0m
-[33m[tester::#RU9] [0m[92m    "strawberry",[0m
-[33m[tester::#RU9] [0m[92m    [[0m
-[33m[tester::#RU9] [0m[92m      [[0m
-[33m[tester::#RU9] [0m[92m        "0-1",[0m
-[33m[tester::#RU9] [0m[92m        ["temperature", "0"][0m
-[33m[tester::#RU9] [0m[92m      ][0m
-[33m[tester::#RU9] [0m[92m    ][0m
-[33m[tester::#RU9] [0m[92m  ],[0m
-[33m[tester::#RU9] [0m[92m  [[0m
-[33m[tester::#RU9] [0m[92m    "apple",[0m
-[33m[tester::#RU9] [0m[92m    [["0-2", ["humidity", "1"]]][0m
-[33m[tester::#RU9] [0m[92m  ][0m
-[33m[tester::#RU9] [0m[92m][0m
-[33m[tester::#RU9] [0m[92mTest passed.[0m
-[33m[tester::#RU9] [0m[36mTerminating program[0m
-[33m[tester::#RU9] [0m[36mProgram terminated successfully[0m
+[33m[tester::#RU9] [client] [0m[92mReceived [[0m
+[33m[tester::#RU9] [client] [0m[92m  [[0m
+[33m[tester::#RU9] [client] [0m[92m    "strawberry",[0m
+[33m[tester::#RU9] [client] [0m[92m    [[0m
+[33m[tester::#RU9] [client] [0m[92m      [[0m
+[33m[tester::#RU9] [client] [0m[92m        "0-1",[0m
+[33m[tester::#RU9] [client] [0m[92m        ["temperature", "0"][0m
+[33m[tester::#RU9] [client] [0m[92m      ][0m
+[33m[tester::#RU9] [client] [0m[92m    ][0m
+[33m[tester::#RU9] [client] [0m[92m  ],[0m
+[33m[tester::#RU9] [client] [0m[92m  [[0m
+[33m[tester::#RU9] [client] [0m[92m    "apple",[0m
+[33m[tester::#RU9] [client] [0m[92m    [["0-2", ["humidity", "1"]]][0m
+[33m[tester::#RU9] [client] [0m[92m  ][0m
+[33m[tester::#RU9] [client] [0m[92m][0m
+[33m[tester::#RU9] [client] [0m[92mTest passed.[0m
+[33m[tester::#RU9] [client] [0m[36mTerminating program[0m
+[33m[tester::#RU9] [client] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#UM0] [0m[94mRunning tests for Stage #UM0 (um0)[0m
 [33m[tester::#UM0] [0m[94m$ ./spawn_redis_server.sh[0m
@@ -190,7 +190,7 @@ Debug = true
 [33m[tester::#UM0] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$6\r\nbanana\r\n$3\r\n0-1\r\n$11\r\ntemperature\r\n$2\r\n39\r\n"[0m
 [33m[tester::#UM0] [client] [0m[36mReceived bytes: "$3\r\n0-1\r\n"[0m
 [33m[tester::#UM0] [client] [0m[36mReceived RESP bulk string: "0-1"[0m
-[33m[tester::#UM0] [0m[92mReceived "0-1"[0m
+[33m[tester::#UM0] [client] [0m[92mReceived "0-1"[0m
 [33m[tester::#UM0] [client] [0m[94m> XREAD streams banana 0-0[0m
 [33m[tester::#UM0] [client] [0m[36mSent bytes: "*4\r\n$5\r\nXREAD\r\n$7\r\nstreams\r\n$6\r\nbanana\r\n$3\r\n0-0\r\n"[0m
 [33m[tester::#UM0] [client] [0m[36mReceived bytes: "*1\r\n*2\r\n$6\r\nbanana\r\n*1\r\n*2\r\n$3\r\n0-1\r\n*2\r\n$11\r\ntemperature\r\n$2\r\n39\r\n"[0m
@@ -205,20 +205,20 @@ Debug = true
 [33m[tester::#UM0] [client] [0m[36m    ][0m
 [33m[tester::#UM0] [client] [0m[36m  ][0m
 [33m[tester::#UM0] [client] [0m[36m][0m
-[33m[tester::#UM0] [0m[92mReceived [[0m
-[33m[tester::#UM0] [0m[92m  [[0m
-[33m[tester::#UM0] [0m[92m    "banana",[0m
-[33m[tester::#UM0] [0m[92m    [[0m
-[33m[tester::#UM0] [0m[92m      [[0m
-[33m[tester::#UM0] [0m[92m        "0-1",[0m
-[33m[tester::#UM0] [0m[92m        ["temperature", "39"][0m
-[33m[tester::#UM0] [0m[92m      ][0m
-[33m[tester::#UM0] [0m[92m    ][0m
-[33m[tester::#UM0] [0m[92m  ][0m
-[33m[tester::#UM0] [0m[92m][0m
-[33m[tester::#UM0] [0m[92mTest passed.[0m
-[33m[tester::#UM0] [0m[36mTerminating program[0m
-[33m[tester::#UM0] [0m[36mProgram terminated successfully[0m
+[33m[tester::#UM0] [client] [0m[92mReceived [[0m
+[33m[tester::#UM0] [client] [0m[92m  [[0m
+[33m[tester::#UM0] [client] [0m[92m    "banana",[0m
+[33m[tester::#UM0] [client] [0m[92m    [[0m
+[33m[tester::#UM0] [client] [0m[92m      [[0m
+[33m[tester::#UM0] [client] [0m[92m        "0-1",[0m
+[33m[tester::#UM0] [client] [0m[92m        ["temperature", "39"][0m
+[33m[tester::#UM0] [client] [0m[92m      ][0m
+[33m[tester::#UM0] [client] [0m[92m    ][0m
+[33m[tester::#UM0] [client] [0m[92m  ][0m
+[33m[tester::#UM0] [client] [0m[92m][0m
+[33m[tester::#UM0] [client] [0m[92mTest passed.[0m
+[33m[tester::#UM0] [client] [0m[36mTerminating program[0m
+[33m[tester::#UM0] [client] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#FS1] [0m[94mRunning tests for Stage #FS1 (fs1)[0m
 [33m[tester::#FS1] [0m[94m$ ./spawn_redis_server.sh[0m
@@ -226,17 +226,17 @@ Debug = true
 [33m[tester::#FS1] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$9\r\nraspberry\r\n$3\r\n0-1\r\n$5\r\ngrape\r\n$5\r\napple\r\n"[0m
 [33m[tester::#FS1] [client] [0m[36mReceived bytes: "$3\r\n0-1\r\n"[0m
 [33m[tester::#FS1] [client] [0m[36mReceived RESP bulk string: "0-1"[0m
-[33m[tester::#FS1] [0m[92mReceived "0-1"[0m
+[33m[tester::#FS1] [client] [0m[92mReceived "0-1"[0m
 [33m[tester::#FS1] [client] [0m[94m> XADD raspberry 0-2 pineapple raspberry[0m
 [33m[tester::#FS1] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$9\r\nraspberry\r\n$3\r\n0-2\r\n$9\r\npineapple\r\n$9\r\nraspberry\r\n"[0m
 [33m[tester::#FS1] [client] [0m[36mReceived bytes: "$3\r\n0-2\r\n"[0m
 [33m[tester::#FS1] [client] [0m[36mReceived RESP bulk string: "0-2"[0m
-[33m[tester::#FS1] [0m[92mReceived "0-2"[0m
+[33m[tester::#FS1] [client] [0m[92mReceived "0-2"[0m
 [33m[tester::#FS1] [client] [0m[94m> XADD raspberry 0-3 pear apple[0m
 [33m[tester::#FS1] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$9\r\nraspberry\r\n$3\r\n0-3\r\n$4\r\npear\r\n$5\r\napple\r\n"[0m
 [33m[tester::#FS1] [client] [0m[36mReceived bytes: "$3\r\n0-3\r\n"[0m
 [33m[tester::#FS1] [client] [0m[36mReceived RESP bulk string: "0-3"[0m
-[33m[tester::#FS1] [0m[92mReceived "0-3"[0m
+[33m[tester::#FS1] [client] [0m[92mReceived "0-3"[0m
 [33m[tester::#FS1] [client] [0m[94m> XRANGE raspberry 0-2 +[0m
 [33m[tester::#FS1] [client] [0m[36mSent bytes: "*4\r\n$6\r\nXRANGE\r\n$9\r\nraspberry\r\n$3\r\n0-2\r\n$1\r\n+\r\n"[0m
 [33m[tester::#FS1] [client] [0m[36mReceived bytes: "*2\r\n*2\r\n$3\r\n0-2\r\n*2\r\n$9\r\npineapple\r\n$9\r\nraspberry\r\n*2\r\n$3\r\n0-3\r\n*2\r\n$4\r\npear\r\n$5\r\napple\r\n"[0m
@@ -247,16 +247,16 @@ Debug = true
 [33m[tester::#FS1] [client] [0m[36m  ],[0m
 [33m[tester::#FS1] [client] [0m[36m  ["0-3", ["pear", "apple"]][0m
 [33m[tester::#FS1] [client] [0m[36m][0m
-[33m[tester::#FS1] [0m[92mReceived [[0m
-[33m[tester::#FS1] [0m[92m  [[0m
-[33m[tester::#FS1] [0m[92m    "0-2",[0m
-[33m[tester::#FS1] [0m[92m    ["pineapple", "raspberry"][0m
-[33m[tester::#FS1] [0m[92m  ],[0m
-[33m[tester::#FS1] [0m[92m  ["0-3", ["pear", "apple"]][0m
-[33m[tester::#FS1] [0m[92m][0m
-[33m[tester::#FS1] [0m[92mTest passed.[0m
-[33m[tester::#FS1] [0m[36mTerminating program[0m
-[33m[tester::#FS1] [0m[36mProgram terminated successfully[0m
+[33m[tester::#FS1] [client] [0m[92mReceived [[0m
+[33m[tester::#FS1] [client] [0m[92m  [[0m
+[33m[tester::#FS1] [client] [0m[92m    "0-2",[0m
+[33m[tester::#FS1] [client] [0m[92m    ["pineapple", "raspberry"][0m
+[33m[tester::#FS1] [client] [0m[92m  ],[0m
+[33m[tester::#FS1] [client] [0m[92m  ["0-3", ["pear", "apple"]][0m
+[33m[tester::#FS1] [client] [0m[92m][0m
+[33m[tester::#FS1] [client] [0m[92mTest passed.[0m
+[33m[tester::#FS1] [client] [0m[36mTerminating program[0m
+[33m[tester::#FS1] [client] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#YP1] [0m[94mRunning tests for Stage #YP1 (yp1)[0m
 [33m[tester::#YP1] [0m[94m$ ./spawn_redis_server.sh[0m
@@ -264,22 +264,22 @@ Debug = true
 [33m[tester::#YP1] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$6\r\nbanana\r\n$3\r\n0-1\r\n$6\r\norange\r\n$9\r\nblueberry\r\n"[0m
 [33m[tester::#YP1] [client] [0m[36mReceived bytes: "$3\r\n0-1\r\n"[0m
 [33m[tester::#YP1] [client] [0m[36mReceived RESP bulk string: "0-1"[0m
-[33m[tester::#YP1] [0m[92mReceived "0-1"[0m
+[33m[tester::#YP1] [client] [0m[92mReceived "0-1"[0m
 [33m[tester::#YP1] [client] [0m[94m> XADD banana 0-2 grape pineapple[0m
 [33m[tester::#YP1] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$6\r\nbanana\r\n$3\r\n0-2\r\n$5\r\ngrape\r\n$9\r\npineapple\r\n"[0m
 [33m[tester::#YP1] [client] [0m[36mReceived bytes: "$3\r\n0-2\r\n"[0m
 [33m[tester::#YP1] [client] [0m[36mReceived RESP bulk string: "0-2"[0m
-[33m[tester::#YP1] [0m[92mReceived "0-2"[0m
+[33m[tester::#YP1] [client] [0m[92mReceived "0-2"[0m
 [33m[tester::#YP1] [client] [0m[94m> XADD banana 0-3 raspberry mango[0m
 [33m[tester::#YP1] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$6\r\nbanana\r\n$3\r\n0-3\r\n$9\r\nraspberry\r\n$5\r\nmango\r\n"[0m
 [33m[tester::#YP1] [client] [0m[36mReceived bytes: "$3\r\n0-3\r\n"[0m
 [33m[tester::#YP1] [client] [0m[36mReceived RESP bulk string: "0-3"[0m
-[33m[tester::#YP1] [0m[92mReceived "0-3"[0m
+[33m[tester::#YP1] [client] [0m[92mReceived "0-3"[0m
 [33m[tester::#YP1] [client] [0m[94m> XADD banana 0-4 grape orange[0m
 [33m[tester::#YP1] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$6\r\nbanana\r\n$3\r\n0-4\r\n$5\r\ngrape\r\n$6\r\norange\r\n"[0m
 [33m[tester::#YP1] [client] [0m[36mReceived bytes: "$3\r\n0-4\r\n"[0m
 [33m[tester::#YP1] [client] [0m[36mReceived RESP bulk string: "0-4"[0m
-[33m[tester::#YP1] [0m[92mReceived "0-4"[0m
+[33m[tester::#YP1] [client] [0m[92mReceived "0-4"[0m
 [33m[tester::#YP1] [client] [0m[94m> XRANGE banana - 0-3[0m
 [33m[tester::#YP1] [client] [0m[36mSent bytes: "*4\r\n$6\r\nXRANGE\r\n$6\r\nbanana\r\n$1\r\n-\r\n$3\r\n0-3\r\n"[0m
 [33m[tester::#YP1] [client] [0m[36mReceived bytes: "*3\r\n*2\r\n$3\r\n0-1\r\n*2\r\n$6\r\norange\r\n$9\r\nblueberry\r\n*2\r\n$3\r\n0-2\r\n*2\r\n$5\r\ngrape\r\n$9\r\npineapple\r\n*2\r\n$3\r\n0-3\r\n*2\r\n$9\r\nraspberry\r\n$5\r\nmango\r\n"[0m
@@ -297,23 +297,23 @@ Debug = true
 [33m[tester::#YP1] [client] [0m[36m    ["raspberry", "mango"][0m
 [33m[tester::#YP1] [client] [0m[36m  ][0m
 [33m[tester::#YP1] [client] [0m[36m][0m
-[33m[tester::#YP1] [0m[92mReceived [[0m
-[33m[tester::#YP1] [0m[92m  [[0m
-[33m[tester::#YP1] [0m[92m    "0-1",[0m
-[33m[tester::#YP1] [0m[92m    ["orange", "blueberry"][0m
-[33m[tester::#YP1] [0m[92m  ],[0m
-[33m[tester::#YP1] [0m[92m  [[0m
-[33m[tester::#YP1] [0m[92m    "0-2",[0m
-[33m[tester::#YP1] [0m[92m    ["grape", "pineapple"][0m
-[33m[tester::#YP1] [0m[92m  ],[0m
-[33m[tester::#YP1] [0m[92m  [[0m
-[33m[tester::#YP1] [0m[92m    "0-3",[0m
-[33m[tester::#YP1] [0m[92m    ["raspberry", "mango"][0m
-[33m[tester::#YP1] [0m[92m  ][0m
-[33m[tester::#YP1] [0m[92m][0m
-[33m[tester::#YP1] [0m[92mTest passed.[0m
-[33m[tester::#YP1] [0m[36mTerminating program[0m
-[33m[tester::#YP1] [0m[36mProgram terminated successfully[0m
+[33m[tester::#YP1] [client] [0m[92mReceived [[0m
+[33m[tester::#YP1] [client] [0m[92m  [[0m
+[33m[tester::#YP1] [client] [0m[92m    "0-1",[0m
+[33m[tester::#YP1] [client] [0m[92m    ["orange", "blueberry"][0m
+[33m[tester::#YP1] [client] [0m[92m  ],[0m
+[33m[tester::#YP1] [client] [0m[92m  [[0m
+[33m[tester::#YP1] [client] [0m[92m    "0-2",[0m
+[33m[tester::#YP1] [client] [0m[92m    ["grape", "pineapple"][0m
+[33m[tester::#YP1] [client] [0m[92m  ],[0m
+[33m[tester::#YP1] [client] [0m[92m  [[0m
+[33m[tester::#YP1] [client] [0m[92m    "0-3",[0m
+[33m[tester::#YP1] [client] [0m[92m    ["raspberry", "mango"][0m
+[33m[tester::#YP1] [client] [0m[92m  ][0m
+[33m[tester::#YP1] [client] [0m[92m][0m
+[33m[tester::#YP1] [client] [0m[92mTest passed.[0m
+[33m[tester::#YP1] [client] [0m[36mTerminating program[0m
+[33m[tester::#YP1] [client] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#ZX1] [0m[94mRunning tests for Stage #ZX1 (zx1)[0m
 [33m[tester::#ZX1] [0m[94m$ ./spawn_redis_server.sh[0m
@@ -321,17 +321,17 @@ Debug = true
 [33m[tester::#ZX1] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$9\r\nblueberry\r\n$3\r\n0-1\r\n$6\r\nbanana\r\n$5\r\nmango\r\n"[0m
 [33m[tester::#ZX1] [client] [0m[36mReceived bytes: "$3\r\n0-1\r\n"[0m
 [33m[tester::#ZX1] [client] [0m[36mReceived RESP bulk string: "0-1"[0m
-[33m[tester::#ZX1] [0m[92mReceived "0-1"[0m
+[33m[tester::#ZX1] [client] [0m[92mReceived "0-1"[0m
 [33m[tester::#ZX1] [client] [0m[94m> XADD blueberry 0-2 orange raspberry[0m
 [33m[tester::#ZX1] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$9\r\nblueberry\r\n$3\r\n0-2\r\n$6\r\norange\r\n$9\r\nraspberry\r\n"[0m
 [33m[tester::#ZX1] [client] [0m[36mReceived bytes: "$3\r\n0-2\r\n"[0m
 [33m[tester::#ZX1] [client] [0m[36mReceived RESP bulk string: "0-2"[0m
-[33m[tester::#ZX1] [0m[92mReceived "0-2"[0m
+[33m[tester::#ZX1] [client] [0m[92mReceived "0-2"[0m
 [33m[tester::#ZX1] [client] [0m[94m> XADD blueberry 0-3 strawberry grape[0m
 [33m[tester::#ZX1] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$9\r\nblueberry\r\n$3\r\n0-3\r\n$10\r\nstrawberry\r\n$5\r\ngrape\r\n"[0m
 [33m[tester::#ZX1] [client] [0m[36mReceived bytes: "$3\r\n0-3\r\n"[0m
 [33m[tester::#ZX1] [client] [0m[36mReceived RESP bulk string: "0-3"[0m
-[33m[tester::#ZX1] [0m[92mReceived "0-3"[0m
+[33m[tester::#ZX1] [client] [0m[92mReceived "0-3"[0m
 [33m[tester::#ZX1] [client] [0m[94m> XRANGE blueberry 0-2 0-3[0m
 [33m[tester::#ZX1] [client] [0m[36mSent bytes: "*4\r\n$6\r\nXRANGE\r\n$9\r\nblueberry\r\n$3\r\n0-2\r\n$3\r\n0-3\r\n"[0m
 [33m[tester::#ZX1] [client] [0m[36mReceived bytes: "*2\r\n*2\r\n$3\r\n0-2\r\n*2\r\n$6\r\norange\r\n$9\r\nraspberry\r\n*2\r\n$3\r\n0-3\r\n*2\r\n$10\r\nstrawberry\r\n$5\r\ngrape\r\n"[0m
@@ -345,32 +345,32 @@ Debug = true
 [33m[tester::#ZX1] [client] [0m[36m    ["strawberry", "grape"][0m
 [33m[tester::#ZX1] [client] [0m[36m  ][0m
 [33m[tester::#ZX1] [client] [0m[36m][0m
-[33m[tester::#ZX1] [0m[92mReceived [[0m
-[33m[tester::#ZX1] [0m[92m  [[0m
-[33m[tester::#ZX1] [0m[92m    "0-2",[0m
-[33m[tester::#ZX1] [0m[92m    ["orange", "raspberry"][0m
-[33m[tester::#ZX1] [0m[92m  ],[0m
-[33m[tester::#ZX1] [0m[92m  [[0m
-[33m[tester::#ZX1] [0m[92m    "0-3",[0m
-[33m[tester::#ZX1] [0m[92m    ["strawberry", "grape"][0m
-[33m[tester::#ZX1] [0m[92m  ][0m
-[33m[tester::#ZX1] [0m[92m][0m
-[33m[tester::#ZX1] [0m[92mTest passed.[0m
-[33m[tester::#ZX1] [0m[36mTerminating program[0m
-[33m[tester::#ZX1] [0m[36mProgram terminated successfully[0m
+[33m[tester::#ZX1] [client] [0m[92mReceived [[0m
+[33m[tester::#ZX1] [client] [0m[92m  [[0m
+[33m[tester::#ZX1] [client] [0m[92m    "0-2",[0m
+[33m[tester::#ZX1] [client] [0m[92m    ["orange", "raspberry"][0m
+[33m[tester::#ZX1] [client] [0m[92m  ],[0m
+[33m[tester::#ZX1] [client] [0m[92m  [[0m
+[33m[tester::#ZX1] [client] [0m[92m    "0-3",[0m
+[33m[tester::#ZX1] [client] [0m[92m    ["strawberry", "grape"][0m
+[33m[tester::#ZX1] [client] [0m[92m  ][0m
+[33m[tester::#ZX1] [client] [0m[92m][0m
+[33m[tester::#ZX1] [client] [0m[92mTest passed.[0m
+[33m[tester::#ZX1] [client] [0m[36mTerminating program[0m
+[33m[tester::#ZX1] [client] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#XU6] [0m[94mRunning tests for Stage #XU6 (xu6)[0m
 [33m[tester::#XU6] [0m[94m$ ./spawn_redis_server.sh[0m
 [33m[tester::#XU6] [client] [0m[94m$ redis-cli XADD raspberry * foo bar[0m
 [33m[tester::#XU6] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$9\r\nraspberry\r\n$1\r\n*\r\n$3\r\nfoo\r\n$3\r\nbar\r\n"[0m
-[33m[tester::#XU6] [client] [0m[36mReceived bytes: "$15\r\n1752129689198-0\r\n"[0m
-[33m[tester::#XU6] [client] [0m[36mReceived RESP bulk string: "1752129689198-0"[0m
-[33m[tester::#XU6] [0m[92mReceived "1752129689198-0"[0m
-[33m[tester::#XU6] [0m[92mThe first part of the ID is a valid unix milliseconds timestamp[0m
-[33m[tester::#XU6] [0m[92mThe second part of the ID is a valid sequence number[0m
-[33m[tester::#XU6] [0m[92mTest passed.[0m
-[33m[tester::#XU6] [0m[36mTerminating program[0m
-[33m[tester::#XU6] [0m[36mProgram terminated successfully[0m
+[33m[tester::#XU6] [client] [0m[36mReceived bytes: "$15\r\n1752134132628-0\r\n"[0m
+[33m[tester::#XU6] [client] [0m[36mReceived RESP bulk string: "1752134132628-0"[0m
+[33m[tester::#XU6] [client] [0m[92mReceived "1752134132628-0"[0m
+[33m[tester::#XU6] [client] [0m[92mThe first part of the ID is a valid unix milliseconds timestamp[0m
+[33m[tester::#XU6] [client] [0m[92mThe second part of the ID is a valid sequence number[0m
+[33m[tester::#XU6] [client] [0m[92mTest passed.[0m
+[33m[tester::#XU6] [client] [0m[36mTerminating program[0m
+[33m[tester::#XU6] [client] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#YH3] [0m[94mRunning tests for Stage #YH3 (yh3)[0m
 [33m[tester::#YH3] [0m[94m$ ./spawn_redis_server.sh[0m
@@ -378,20 +378,20 @@ Debug = true
 [33m[tester::#YH3] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$9\r\nraspberry\r\n$3\r\n0-*\r\n$9\r\npineapple\r\n$6\r\nbanana\r\n"[0m
 [33m[tester::#YH3] [client] [0m[36mReceived bytes: "$3\r\n0-1\r\n"[0m
 [33m[tester::#YH3] [client] [0m[36mReceived RESP bulk string: "0-1"[0m
-[33m[tester::#YH3] [0m[92mReceived "0-1"[0m
+[33m[tester::#YH3] [client] [0m[92mReceived "0-1"[0m
 [33m[tester::#YH3] [client] [0m[94m> XADD raspberry 1-* pineapple banana[0m
 [33m[tester::#YH3] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$9\r\nraspberry\r\n$3\r\n1-*\r\n$9\r\npineapple\r\n$6\r\nbanana\r\n"[0m
 [33m[tester::#YH3] [client] [0m[36mReceived bytes: "$3\r\n1-0\r\n"[0m
 [33m[tester::#YH3] [client] [0m[36mReceived RESP bulk string: "1-0"[0m
-[33m[tester::#YH3] [0m[92mReceived "1-0"[0m
+[33m[tester::#YH3] [client] [0m[92mReceived "1-0"[0m
 [33m[tester::#YH3] [client] [0m[94m> XADD raspberry 1-* banana blueberry[0m
 [33m[tester::#YH3] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$9\r\nraspberry\r\n$3\r\n1-*\r\n$6\r\nbanana\r\n$9\r\nblueberry\r\n"[0m
 [33m[tester::#YH3] [client] [0m[36mReceived bytes: "$3\r\n1-1\r\n"[0m
 [33m[tester::#YH3] [client] [0m[36mReceived RESP bulk string: "1-1"[0m
-[33m[tester::#YH3] [0m[92mReceived "1-1"[0m
-[33m[tester::#YH3] [0m[92mTest passed.[0m
-[33m[tester::#YH3] [0m[36mTerminating program[0m
-[33m[tester::#YH3] [0m[36mProgram terminated successfully[0m
+[33m[tester::#YH3] [client] [0m[92mReceived "1-1"[0m
+[33m[tester::#YH3] [client] [0m[92mTest passed.[0m
+[33m[tester::#YH3] [client] [0m[36mTerminating program[0m
+[33m[tester::#YH3] [client] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#HQ8] [0m[94mRunning tests for Stage #HQ8 (hq8)[0m
 [33m[tester::#HQ8] [0m[94m$ ./spawn_redis_server.sh[0m
@@ -399,30 +399,30 @@ Debug = true
 [33m[tester::#HQ8] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$4\r\npear\r\n$3\r\n1-1\r\n$4\r\npear\r\n$5\r\napple\r\n"[0m
 [33m[tester::#HQ8] [client] [0m[36mReceived bytes: "$3\r\n1-1\r\n"[0m
 [33m[tester::#HQ8] [client] [0m[36mReceived RESP bulk string: "1-1"[0m
-[33m[tester::#HQ8] [0m[92mReceived "1-1"[0m
+[33m[tester::#HQ8] [client] [0m[92mReceived "1-1"[0m
 [33m[tester::#HQ8] [client] [0m[94m> XADD pear 1-2 blueberry raspberry[0m
 [33m[tester::#HQ8] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$4\r\npear\r\n$3\r\n1-2\r\n$9\r\nblueberry\r\n$9\r\nraspberry\r\n"[0m
 [33m[tester::#HQ8] [client] [0m[36mReceived bytes: "$3\r\n1-2\r\n"[0m
 [33m[tester::#HQ8] [client] [0m[36mReceived RESP bulk string: "1-2"[0m
-[33m[tester::#HQ8] [0m[92mReceived "1-2"[0m
+[33m[tester::#HQ8] [client] [0m[92mReceived "1-2"[0m
 [33m[tester::#HQ8] [client] [0m[94m> XADD pear 1-2 banana strawberry[0m
 [33m[tester::#HQ8] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$4\r\npear\r\n$3\r\n1-2\r\n$6\r\nbanana\r\n$10\r\nstrawberry\r\n"[0m
 [33m[tester::#HQ8] [client] [0m[36mReceived bytes: "-ERR The ID specified in XADD is equal or smaller than the target stream top item\r\n"[0m
 [33m[tester::#HQ8] [client] [0m[36mReceived RESP error: "ERR: ERR The ID specified in XADD is equal or smaller than the target stream top item"[0m
-[33m[tester::#HQ8] [0m[92mReceived "ERR: ERR The ID specified in XADD is equal or smaller than the target stream top item"[0m
+[33m[tester::#HQ8] [client] [0m[92mReceived "ERR: ERR The ID specified in XADD is equal or smaller than the target stream top item"[0m
 [33m[tester::#HQ8] [client] [0m[94m> XADD pear 0-3 orange pineapple[0m
 [33m[tester::#HQ8] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$4\r\npear\r\n$3\r\n0-3\r\n$6\r\norange\r\n$9\r\npineapple\r\n"[0m
 [33m[tester::#HQ8] [client] [0m[36mReceived bytes: "-ERR The ID specified in XADD is equal or smaller than the target stream top item\r\n"[0m
 [33m[tester::#HQ8] [client] [0m[36mReceived RESP error: "ERR: ERR The ID specified in XADD is equal or smaller than the target stream top item"[0m
-[33m[tester::#HQ8] [0m[92mReceived "ERR: ERR The ID specified in XADD is equal or smaller than the target stream top item"[0m
+[33m[tester::#HQ8] [client] [0m[92mReceived "ERR: ERR The ID specified in XADD is equal or smaller than the target stream top item"[0m
 [33m[tester::#HQ8] [client] [0m[94m> XADD pear 0-0 grape mango[0m
 [33m[tester::#HQ8] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$4\r\npear\r\n$3\r\n0-0\r\n$5\r\ngrape\r\n$5\r\nmango\r\n"[0m
 [33m[tester::#HQ8] [client] [0m[36mReceived bytes: "-ERR The ID specified in XADD must be greater than 0-0\r\n"[0m
 [33m[tester::#HQ8] [client] [0m[36mReceived RESP error: "ERR: ERR The ID specified in XADD must be greater than 0-0"[0m
-[33m[tester::#HQ8] [0m[92mReceived "ERR: ERR The ID specified in XADD must be greater than 0-0"[0m
-[33m[tester::#HQ8] [0m[92mTest passed.[0m
-[33m[tester::#HQ8] [0m[36mTerminating program[0m
-[33m[tester::#HQ8] [0m[36mProgram terminated successfully[0m
+[33m[tester::#HQ8] [client] [0m[92mReceived "ERR: ERR The ID specified in XADD must be greater than 0-0"[0m
+[33m[tester::#HQ8] [client] [0m[92mTest passed.[0m
+[33m[tester::#HQ8] [client] [0m[36mTerminating program[0m
+[33m[tester::#HQ8] [client] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#CF6] [0m[94mRunning tests for Stage #CF6 (cf6)[0m
 [33m[tester::#CF6] [0m[94m$ ./spawn_redis_server.sh[0m
@@ -430,15 +430,15 @@ Debug = true
 [33m[tester::#CF6] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$5\r\ngrape\r\n$3\r\n0-1\r\n$3\r\nfoo\r\n$3\r\nbar\r\n"[0m
 [33m[tester::#CF6] [client] [0m[36mReceived bytes: "$3\r\n0-1\r\n"[0m
 [33m[tester::#CF6] [client] [0m[36mReceived RESP bulk string: "0-1"[0m
-[33m[tester::#CF6] [0m[92mReceived "0-1"[0m
+[33m[tester::#CF6] [client] [0m[92mReceived "0-1"[0m
 [33m[tester::#CF6] [client] [0m[94m> TYPE grape[0m
 [33m[tester::#CF6] [client] [0m[36mSent bytes: "*2\r\n$4\r\nTYPE\r\n$5\r\ngrape\r\n"[0m
 [33m[tester::#CF6] [client] [0m[36mReceived bytes: "+stream\r\n"[0m
 [33m[tester::#CF6] [client] [0m[36mReceived RESP simple string: "stream"[0m
-[33m[tester::#CF6] [0m[92mReceived "stream"[0m
-[33m[tester::#CF6] [0m[92mTest passed.[0m
-[33m[tester::#CF6] [0m[36mTerminating program[0m
-[33m[tester::#CF6] [0m[36mProgram terminated successfully[0m
+[33m[tester::#CF6] [client] [0m[92mReceived "stream"[0m
+[33m[tester::#CF6] [client] [0m[92mTest passed.[0m
+[33m[tester::#CF6] [client] [0m[36mTerminating program[0m
+[33m[tester::#CF6] [client] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#CC3] [0m[94mRunning tests for Stage #CC3 (cc3)[0m
 [33m[tester::#CC3] [0m[94m$ ./spawn_redis_server.sh[0m
@@ -446,20 +446,20 @@ Debug = true
 [33m[tester::#CC3] [client] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$10\r\nstrawberry\r\n$5\r\nmango\r\n"[0m
 [33m[tester::#CC3] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#CC3] [client] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#CC3] [0m[92mReceived "OK"[0m
+[33m[tester::#CC3] [client] [0m[92mReceived "OK"[0m
 [33m[tester::#CC3] [client] [0m[94m> TYPE strawberry[0m
 [33m[tester::#CC3] [client] [0m[36mSent bytes: "*2\r\n$4\r\nTYPE\r\n$10\r\nstrawberry\r\n"[0m
 [33m[tester::#CC3] [client] [0m[36mReceived bytes: "+string\r\n"[0m
 [33m[tester::#CC3] [client] [0m[36mReceived RESP simple string: "string"[0m
-[33m[tester::#CC3] [0m[92mReceived "string"[0m
+[33m[tester::#CC3] [client] [0m[92mReceived "string"[0m
 [33m[tester::#CC3] [client] [0m[94m> TYPE missing_key_mango[0m
 [33m[tester::#CC3] [client] [0m[36mSent bytes: "*2\r\n$4\r\nTYPE\r\n$17\r\nmissing_key_mango\r\n"[0m
 [33m[tester::#CC3] [client] [0m[36mReceived bytes: "+none\r\n"[0m
 [33m[tester::#CC3] [client] [0m[36mReceived RESP simple string: "none"[0m
-[33m[tester::#CC3] [0m[92mReceived "none"[0m
-[33m[tester::#CC3] [0m[92mTest passed.[0m
-[33m[tester::#CC3] [0m[36mTerminating program[0m
-[33m[tester::#CC3] [0m[36mProgram terminated successfully[0m
+[33m[tester::#CC3] [client] [0m[92mReceived "none"[0m
+[33m[tester::#CC3] [client] [0m[92mTest passed.[0m
+[33m[tester::#CC3] [client] [0m[36mTerminating program[0m
+[33m[tester::#CC3] [client] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#NA2] [0m[94mRunning tests for Stage #NA2 (na2)[0m
 [33m[tester::#NA2] [0m[94m$ ./spawn_redis_server.sh --port 6379[0m
@@ -474,154 +474,154 @@ Debug = true
 [33m[tester::#NA2] [handshake] [replica@6380] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
 [33m[tester::#NA2] [handshake] [replica@6380] [0m[36mReceived bytes: "+PONG\r\n"[0m
 [33m[tester::#NA2] [handshake] [replica@6380] [0m[36mReceived RESP simple string: "PONG"[0m
-[33m[tester::#NA2] [handshake] [0m[92mReceived "PONG"[0m
+[33m[tester::#NA2] [handshake] [replica@6380] [0m[92mReceived "PONG"[0m
 [33m[tester::#NA2] [handshake] [replica@6380] [0m[94m> REPLCONF listening-port 6380[0m
 [33m[tester::#NA2] [handshake] [replica@6380] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$14\r\nlistening-port\r\n$4\r\n6380\r\n"[0m
 [33m[tester::#NA2] [handshake] [replica@6380] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#NA2] [handshake] [replica@6380] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#NA2] [handshake] [0m[92mReceived "OK"[0m
+[33m[tester::#NA2] [handshake] [replica@6380] [0m[92mReceived "OK"[0m
 [33m[tester::#NA2] [handshake] [replica@6380] [0m[94m> REPLCONF capa psync2[0m
 [33m[tester::#NA2] [handshake] [replica@6380] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$4\r\ncapa\r\n$6\r\npsync2\r\n"[0m
 [33m[tester::#NA2] [handshake] [replica@6380] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#NA2] [handshake] [replica@6380] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#NA2] [handshake] [0m[92mReceived "OK"[0m
+[33m[tester::#NA2] [handshake] [replica@6380] [0m[92mReceived "OK"[0m
 [33m[tester::#NA2] [handshake] [replica@6380] [0m[94m> PSYNC ? -1[0m
 [33m[tester::#NA2] [handshake] [replica@6380] [0m[36mSent bytes: "*3\r\n$5\r\nPSYNC\r\n$1\r\n?\r\n$2\r\n-1\r\n"[0m
-[33m[tester::#NA2] [handshake] [replica@6380] [0m[36mReceived bytes: "+FULLRESYNC 7ce109315e7eaf605255a6b86864aa5a61bbb8a3 0\r\n"[0m
-[33m[tester::#NA2] [handshake] [replica@6380] [0m[36mReceived RESP simple string: "FULLRESYNC 7ce109315e7eaf605255a6b86864aa5a61bbb8a3 0"[0m
-[33m[tester::#NA2] [handshake] [0m[92mReceived "FULLRESYNC 7ce109315e7eaf605255a6b86864aa5a61bbb8a3 0"[0m
-[33m[tester::#NA2] [handshake] [0m[36mReading RDB file...[0m
-[33m[tester::#NA2] [handshake] [replica@6380] [0m[36mReceived bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\u0099`oh\xfa\bused-mem\xc2P~\r\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(7ce109315e7eaf605255a6b86864aa5a61bbb8a3\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff\xc7S\xf53\xa7\x91\xe8E"[0m
+[33m[tester::#NA2] [handshake] [replica@6380] [0m[36mReceived bytes: "+FULLRESYNC 64962d39b7b5ddd5ceecbc108b3dd95923a2e696 0\r\n"[0m
+[33m[tester::#NA2] [handshake] [replica@6380] [0m[36mReceived RESP simple string: "FULLRESYNC 64962d39b7b5ddd5ceecbc108b3dd95923a2e696 0"[0m
+[33m[tester::#NA2] [handshake] [replica@6380] [0m[92mReceived "FULLRESYNC 64962d39b7b5ddd5ceecbc108b3dd95923a2e696 0"[0m
+[33m[tester::#NA2] [handshake] [replica@6380] [0m[36mReading RDB file...[0m
+[33m[tester::#NA2] [handshake] [replica@6380] [0m[36mReceived bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2\xf5qoh\xfa\bused-mem\xc2P~\r\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(64962d39b7b5ddd5ceecbc108b3dd95923a2e696\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff`\xfdΈ\xff\xe7\xe2\xd3"[0m
 [33m[tester::#NA2] [handshake] [0m[92mReceived RDB file[0m
 [33m[tester::#NA2] [0m[36mCreating replica@6381[0m
 [33m[tester::#NA2] [handshake] [replica@6381] [0m[94m$ redis-cli PING[0m
 [33m[tester::#NA2] [handshake] [replica@6381] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
 [33m[tester::#NA2] [handshake] [replica@6381] [0m[36mReceived bytes: "+PONG\r\n"[0m
 [33m[tester::#NA2] [handshake] [replica@6381] [0m[36mReceived RESP simple string: "PONG"[0m
-[33m[tester::#NA2] [handshake] [0m[92mReceived "PONG"[0m
+[33m[tester::#NA2] [handshake] [replica@6381] [0m[92mReceived "PONG"[0m
 [33m[tester::#NA2] [handshake] [replica@6381] [0m[94m> REPLCONF listening-port 6381[0m
 [33m[tester::#NA2] [handshake] [replica@6381] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$14\r\nlistening-port\r\n$4\r\n6381\r\n"[0m
 [33m[tester::#NA2] [handshake] [replica@6381] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#NA2] [handshake] [replica@6381] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#NA2] [handshake] [0m[92mReceived "OK"[0m
+[33m[tester::#NA2] [handshake] [replica@6381] [0m[92mReceived "OK"[0m
 [33m[tester::#NA2] [handshake] [replica@6381] [0m[94m> REPLCONF capa psync2[0m
 [33m[tester::#NA2] [handshake] [replica@6381] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$4\r\ncapa\r\n$6\r\npsync2\r\n"[0m
 [33m[tester::#NA2] [handshake] [replica@6381] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#NA2] [handshake] [replica@6381] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#NA2] [handshake] [0m[92mReceived "OK"[0m
+[33m[tester::#NA2] [handshake] [replica@6381] [0m[92mReceived "OK"[0m
 [33m[tester::#NA2] [handshake] [replica@6381] [0m[94m> PSYNC ? -1[0m
 [33m[tester::#NA2] [handshake] [replica@6381] [0m[36mSent bytes: "*3\r\n$5\r\nPSYNC\r\n$1\r\n?\r\n$2\r\n-1\r\n"[0m
-[33m[tester::#NA2] [handshake] [replica@6381] [0m[36mReceived bytes: "+FULLRESYNC 7ce109315e7eaf605255a6b86864aa5a61bbb8a3 0\r\n"[0m
-[33m[tester::#NA2] [handshake] [replica@6381] [0m[36mReceived RESP simple string: "FULLRESYNC 7ce109315e7eaf605255a6b86864aa5a61bbb8a3 0"[0m
-[33m[tester::#NA2] [handshake] [0m[92mReceived "FULLRESYNC 7ce109315e7eaf605255a6b86864aa5a61bbb8a3 0"[0m
-[33m[tester::#NA2] [handshake] [0m[36mReading RDB file...[0m
-[33m[tester::#NA2] [handshake] [replica@6381] [0m[36mReceived bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\u0099`oh\xfa\bused-mem\xc2 $\x0e\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(7ce109315e7eaf605255a6b86864aa5a61bbb8a3\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xffx\x93\xa2\x1d\xbaM\xb2Y"[0m
+[33m[tester::#NA2] [handshake] [replica@6381] [0m[36mReceived bytes: "+FULLRESYNC 64962d39b7b5ddd5ceecbc108b3dd95923a2e696 0\r\n"[0m
+[33m[tester::#NA2] [handshake] [replica@6381] [0m[36mReceived RESP simple string: "FULLRESYNC 64962d39b7b5ddd5ceecbc108b3dd95923a2e696 0"[0m
+[33m[tester::#NA2] [handshake] [replica@6381] [0m[92mReceived "FULLRESYNC 64962d39b7b5ddd5ceecbc108b3dd95923a2e696 0"[0m
+[33m[tester::#NA2] [handshake] [replica@6381] [0m[36mReading RDB file...[0m
+[33m[tester::#NA2] [handshake] [replica@6381] [0m[36mReceived bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2\xf5qoh\xfa\bused-mem\xc2 $\x0e\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(64962d39b7b5ddd5ceecbc108b3dd95923a2e696\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff\xdf=\x99\xa6\xe2;\xb8\xcf"[0m
 [33m[tester::#NA2] [handshake] [0m[92mReceived RDB file[0m
 [33m[tester::#NA2] [0m[36mCreating replica@6382[0m
 [33m[tester::#NA2] [handshake] [replica@6382] [0m[94m$ redis-cli PING[0m
 [33m[tester::#NA2] [handshake] [replica@6382] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
 [33m[tester::#NA2] [handshake] [replica@6382] [0m[36mReceived bytes: "+PONG\r\n"[0m
 [33m[tester::#NA2] [handshake] [replica@6382] [0m[36mReceived RESP simple string: "PONG"[0m
-[33m[tester::#NA2] [handshake] [0m[92mReceived "PONG"[0m
+[33m[tester::#NA2] [handshake] [replica@6382] [0m[92mReceived "PONG"[0m
 [33m[tester::#NA2] [handshake] [replica@6382] [0m[94m> REPLCONF listening-port 6382[0m
 [33m[tester::#NA2] [handshake] [replica@6382] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$14\r\nlistening-port\r\n$4\r\n6382\r\n"[0m
 [33m[tester::#NA2] [handshake] [replica@6382] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#NA2] [handshake] [replica@6382] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#NA2] [handshake] [0m[92mReceived "OK"[0m
+[33m[tester::#NA2] [handshake] [replica@6382] [0m[92mReceived "OK"[0m
 [33m[tester::#NA2] [handshake] [replica@6382] [0m[94m> REPLCONF capa psync2[0m
 [33m[tester::#NA2] [handshake] [replica@6382] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$4\r\ncapa\r\n$6\r\npsync2\r\n"[0m
 [33m[tester::#NA2] [handshake] [replica@6382] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#NA2] [handshake] [replica@6382] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#NA2] [handshake] [0m[92mReceived "OK"[0m
+[33m[tester::#NA2] [handshake] [replica@6382] [0m[92mReceived "OK"[0m
 [33m[tester::#NA2] [handshake] [replica@6382] [0m[94m> PSYNC ? -1[0m
 [33m[tester::#NA2] [handshake] [replica@6382] [0m[36mSent bytes: "*3\r\n$5\r\nPSYNC\r\n$1\r\n?\r\n$2\r\n-1\r\n"[0m
-[33m[tester::#NA2] [handshake] [replica@6382] [0m[36mReceived bytes: "+FULLRESYNC 7ce109315e7eaf605255a6b86864aa5a61bbb8a3 0\r\n"[0m
-[33m[tester::#NA2] [handshake] [replica@6382] [0m[36mReceived RESP simple string: "FULLRESYNC 7ce109315e7eaf605255a6b86864aa5a61bbb8a3 0"[0m
-[33m[tester::#NA2] [handshake] [0m[92mReceived "FULLRESYNC 7ce109315e7eaf605255a6b86864aa5a61bbb8a3 0"[0m
-[33m[tester::#NA2] [handshake] [0m[36mReading RDB file...[0m
-[33m[tester::#NA2] [handshake] [replica@6382] [0m[36mReceived bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\u009a`oh\xfa\bused-mem\xc2`-\x0e\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(7ce109315e7eaf605255a6b86864aa5a61bbb8a3\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff\t\xcc?sx\x8d~\xb0"[0m
+[33m[tester::#NA2] [handshake] [replica@6382] [0m[36mReceived bytes: "+FULLRESYNC 64962d39b7b5ddd5ceecbc108b3dd95923a2e696 0\r\n"[0m
+[33m[tester::#NA2] [handshake] [replica@6382] [0m[36mReceived RESP simple string: "FULLRESYNC 64962d39b7b5ddd5ceecbc108b3dd95923a2e696 0"[0m
+[33m[tester::#NA2] [handshake] [replica@6382] [0m[92mReceived "FULLRESYNC 64962d39b7b5ddd5ceecbc108b3dd95923a2e696 0"[0m
+[33m[tester::#NA2] [handshake] [replica@6382] [0m[36mReading RDB file...[0m
+[33m[tester::#NA2] [handshake] [replica@6382] [0m[36mReceived bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2\xf5qoh\xfa\bused-mem\xc2`-\x0e\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(64962d39b7b5ddd5ceecbc108b3dd95923a2e696\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff\xda\xefz<~\x0f\xd6o"[0m
 [33m[tester::#NA2] [handshake] [0m[92mReceived RDB file[0m
 [33m[tester::#NA2] [0m[36mCreating replica@6383[0m
 [33m[tester::#NA2] [handshake] [replica@6383] [0m[94m$ redis-cli PING[0m
 [33m[tester::#NA2] [handshake] [replica@6383] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
 [33m[tester::#NA2] [handshake] [replica@6383] [0m[36mReceived bytes: "+PONG\r\n"[0m
 [33m[tester::#NA2] [handshake] [replica@6383] [0m[36mReceived RESP simple string: "PONG"[0m
-[33m[tester::#NA2] [handshake] [0m[92mReceived "PONG"[0m
+[33m[tester::#NA2] [handshake] [replica@6383] [0m[92mReceived "PONG"[0m
 [33m[tester::#NA2] [handshake] [replica@6383] [0m[94m> REPLCONF listening-port 6383[0m
 [33m[tester::#NA2] [handshake] [replica@6383] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$14\r\nlistening-port\r\n$4\r\n6383\r\n"[0m
 [33m[tester::#NA2] [handshake] [replica@6383] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#NA2] [handshake] [replica@6383] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#NA2] [handshake] [0m[92mReceived "OK"[0m
+[33m[tester::#NA2] [handshake] [replica@6383] [0m[92mReceived "OK"[0m
 [33m[tester::#NA2] [handshake] [replica@6383] [0m[94m> REPLCONF capa psync2[0m
 [33m[tester::#NA2] [handshake] [replica@6383] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$4\r\ncapa\r\n$6\r\npsync2\r\n"[0m
 [33m[tester::#NA2] [handshake] [replica@6383] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#NA2] [handshake] [replica@6383] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#NA2] [handshake] [0m[92mReceived "OK"[0m
+[33m[tester::#NA2] [handshake] [replica@6383] [0m[92mReceived "OK"[0m
 [33m[tester::#NA2] [handshake] [replica@6383] [0m[94m> PSYNC ? -1[0m
 [33m[tester::#NA2] [handshake] [replica@6383] [0m[36mSent bytes: "*3\r\n$5\r\nPSYNC\r\n$1\r\n?\r\n$2\r\n-1\r\n"[0m
-[33m[tester::#NA2] [handshake] [replica@6383] [0m[36mReceived bytes: "+FULLRESYNC 7ce109315e7eaf605255a6b86864aa5a61bbb8a3 0\r\n"[0m
-[33m[tester::#NA2] [handshake] [replica@6383] [0m[36mReceived RESP simple string: "FULLRESYNC 7ce109315e7eaf605255a6b86864aa5a61bbb8a3 0"[0m
-[33m[tester::#NA2] [handshake] [0m[92mReceived "FULLRESYNC 7ce109315e7eaf605255a6b86864aa5a61bbb8a3 0"[0m
-[33m[tester::#NA2] [handshake] [0m[36mReading RDB file...[0m
-[33m[tester::#NA2] [handshake] [replica@6383] [0m[36mReceived bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\u009a`oh\xfa\bused-mem°6\x0e\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(7ce109315e7eaf605255a6b86864aa5a61bbb8a3\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff`\xd9\v\xbd\xc0\xd7\x17\xd5"[0m
+[33m[tester::#NA2] [handshake] [replica@6383] [0m[36mReceived bytes: "+FULLRESYNC 64962d39b7b5ddd5ceecbc108b3dd95923a2e696 0\r\n"[0m
+[33m[tester::#NA2] [handshake] [replica@6383] [0m[36mReceived RESP simple string: "FULLRESYNC 64962d39b7b5ddd5ceecbc108b3dd95923a2e696 0"[0m
+[33m[tester::#NA2] [handshake] [replica@6383] [0m[92mReceived "FULLRESYNC 64962d39b7b5ddd5ceecbc108b3dd95923a2e696 0"[0m
+[33m[tester::#NA2] [handshake] [replica@6383] [0m[36mReading RDB file...[0m
+[33m[tester::#NA2] [handshake] [replica@6383] [0m[36mReceived bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2\xf5qoh\xfa\bused-mem°6\x0e\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(64962d39b7b5ddd5ceecbc108b3dd95923a2e696\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff\xb3\xfaN\xf2\xc6U\xbf\n"[0m
 [33m[tester::#NA2] [handshake] [0m[92mReceived RDB file[0m
 [33m[tester::#NA2] [test] [client] [0m[94m$ redis-cli SET foo 123[0m
 [33m[tester::#NA2] [test] [client] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$3\r\nfoo\r\n$3\r\n123\r\n"[0m
 [33m[tester::#NA2] [test] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#NA2] [test] [client] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#NA2] [test] [0m[92mReceived "OK"[0m
+[33m[tester::#NA2] [test] [client] [0m[92mReceived "OK"[0m
 [33m[tester::#NA2] [test] [client] [0m[94m> WAIT 1 500[0m
 [33m[tester::#NA2] [test] [client] [0m[36mSent bytes: "*3\r\n$4\r\nWAIT\r\n$1\r\n1\r\n$3\r\n500\r\n"[0m
 [33m[tester::#NA2] [test] [0m[94mTesting Replica: replica@6380[0m
-[33m[tester::#NA2] [test] [0m[94mreplica@6380: Expecting "SET foo 123" to be propagated[0m
+[33m[tester::#NA2] [test] [replica@6380] [0m[94mExpecting "SET foo 123" to be propagated[0m
 [33m[tester::#NA2] [test] [replica@6380] [0m[36mReceived bytes: "*2\r\n$6\r\nSELECT\r\n$1\r\n0\r\n"[0m
 [33m[tester::#NA2] [test] [replica@6380] [0m[36mReceived RESP array: ["SELECT", "0"][0m
 [33m[tester::#NA2] [test] [replica@6380] [0m[36mReceived bytes: "*3\r\n$3\r\nSET\r\n$3\r\nfoo\r\n$3\r\n123\r\n"[0m
 [33m[tester::#NA2] [test] [replica@6380] [0m[36mReceived RESP array: ["SET", "foo", "123"][0m
-[33m[tester::#NA2] [test] [0m[92mReceived ["SET", "foo", "123"][0m
-[33m[tester::#NA2] [test] [0m[94mreplica@6380: Expecting "REPLCONF GETACK *" from Master[0m
+[33m[tester::#NA2] [test] [replica@6380] [0m[92mReceived ["SET", "foo", "123"][0m
+[33m[tester::#NA2] [test] [replica@6380] [0m[94mExpecting "REPLCONF GETACK *" from Master[0m
 [33m[tester::#NA2] [test] [replica@6380] [0m[36mReceived bytes: "*3\r\n$8\r\nREPLCONF\r\n$6\r\nGETACK\r\n$1\r\n*\r\n"[0m
 [33m[tester::#NA2] [test] [replica@6380] [0m[36mReceived RESP array: ["REPLCONF", "GETACK", "*"][0m
-[33m[tester::#NA2] [test] [0m[92mReceived ["REPLCONF", "GETACK", "*"][0m
-[33m[tester::#NA2] [test] [0m[36mreplica@6380: Sending ACK to Master[0m
+[33m[tester::#NA2] [test] [replica@6380] [0m[92mReceived ["REPLCONF", "GETACK", "*"][0m
+[33m[tester::#NA2] [test] [replica@6380] [0m[36mSending ACK to Master[0m
 [33m[tester::#NA2] [test] [replica@6380] [0m[94m> REPLCONF ACK 54[0m
 [33m[tester::#NA2] [test] [replica@6380] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$3\r\nACK\r\n$2\r\n54\r\n"[0m
 [33m[tester::#NA2] [test] [0m[94mTesting Replica: replica@6381[0m
-[33m[tester::#NA2] [test] [0m[94mreplica@6381: Expecting "SET foo 123" to be propagated[0m
+[33m[tester::#NA2] [test] [replica@6381] [0m[94mExpecting "SET foo 123" to be propagated[0m
 [33m[tester::#NA2] [test] [replica@6381] [0m[36mReceived bytes: "*2\r\n$6\r\nSELECT\r\n$1\r\n0\r\n"[0m
 [33m[tester::#NA2] [test] [replica@6381] [0m[36mReceived RESP array: ["SELECT", "0"][0m
 [33m[tester::#NA2] [test] [replica@6381] [0m[36mReceived bytes: "*3\r\n$3\r\nSET\r\n$3\r\nfoo\r\n$3\r\n123\r\n"[0m
 [33m[tester::#NA2] [test] [replica@6381] [0m[36mReceived RESP array: ["SET", "foo", "123"][0m
-[33m[tester::#NA2] [test] [0m[92mReceived ["SET", "foo", "123"][0m
-[33m[tester::#NA2] [test] [0m[94mreplica@6381: Expecting "REPLCONF GETACK *" from Master[0m
+[33m[tester::#NA2] [test] [replica@6381] [0m[92mReceived ["SET", "foo", "123"][0m
+[33m[tester::#NA2] [test] [replica@6381] [0m[94mExpecting "REPLCONF GETACK *" from Master[0m
 [33m[tester::#NA2] [test] [replica@6381] [0m[36mReceived bytes: "*3\r\n$8\r\nREPLCONF\r\n$6\r\nGETACK\r\n$1\r\n*\r\n"[0m
 [33m[tester::#NA2] [test] [replica@6381] [0m[36mReceived RESP array: ["REPLCONF", "GETACK", "*"][0m
-[33m[tester::#NA2] [test] [0m[92mReceived ["REPLCONF", "GETACK", "*"][0m
-[33m[tester::#NA2] [test] [0m[36mreplica@6381: Not sending ACK to Master[0m
-[33m[tester::#NA2] [test] [0m[94mTesting Replica: replica@6382[0m
-[33m[tester::#NA2] [test] [0m[94mreplica@6382: Expecting "SET foo 123" to be propagated[0m
+[33m[tester::#NA2] [test] [replica@6381] [0m[92mReceived ["REPLCONF", "GETACK", "*"][0m
+[33m[tester::#NA2] [test] [replica@6381] [0m[36mNot sending ACK to Master[0m
+[33m[tester::#NA2] [test] [replica@6381] [0m[94mTesting Replica: replica@6382[0m
+[33m[tester::#NA2] [test] [replica@6382] [0m[94mExpecting "SET foo 123" to be propagated[0m
 [33m[tester::#NA2] [test] [replica@6382] [0m[36mReceived bytes: "*2\r\n$6\r\nSELECT\r\n$1\r\n0\r\n"[0m
 [33m[tester::#NA2] [test] [replica@6382] [0m[36mReceived RESP array: ["SELECT", "0"][0m
 [33m[tester::#NA2] [test] [replica@6382] [0m[36mReceived bytes: "*3\r\n$3\r\nSET\r\n$3\r\nfoo\r\n$3\r\n123\r\n"[0m
 [33m[tester::#NA2] [test] [replica@6382] [0m[36mReceived RESP array: ["SET", "foo", "123"][0m
-[33m[tester::#NA2] [test] [0m[92mReceived ["SET", "foo", "123"][0m
-[33m[tester::#NA2] [test] [0m[94mreplica@6382: Expecting "REPLCONF GETACK *" from Master[0m
+[33m[tester::#NA2] [test] [replica@6382] [0m[92mReceived ["SET", "foo", "123"][0m
+[33m[tester::#NA2] [test] [replica@6382] [0m[94mExpecting "REPLCONF GETACK *" from Master[0m
 [33m[tester::#NA2] [test] [replica@6382] [0m[36mReceived bytes: "*3\r\n$8\r\nREPLCONF\r\n$6\r\nGETACK\r\n$1\r\n*\r\n"[0m
 [33m[tester::#NA2] [test] [replica@6382] [0m[36mReceived RESP array: ["REPLCONF", "GETACK", "*"][0m
-[33m[tester::#NA2] [test] [0m[92mReceived ["REPLCONF", "GETACK", "*"][0m
-[33m[tester::#NA2] [test] [0m[36mreplica@6382: Not sending ACK to Master[0m
-[33m[tester::#NA2] [test] [0m[94mTesting Replica: replica@6383[0m
-[33m[tester::#NA2] [test] [0m[94mreplica@6383: Expecting "SET foo 123" to be propagated[0m
+[33m[tester::#NA2] [test] [replica@6382] [0m[92mReceived ["REPLCONF", "GETACK", "*"][0m
+[33m[tester::#NA2] [test] [replica@6382] [0m[36mNot sending ACK to Master[0m
+[33m[tester::#NA2] [test] [replica@6382] [0m[94mTesting Replica: replica@6383[0m
+[33m[tester::#NA2] [test] [replica@6383] [0m[94mExpecting "SET foo 123" to be propagated[0m
 [33m[tester::#NA2] [test] [replica@6383] [0m[36mReceived bytes: "*2\r\n$6\r\nSELECT\r\n$1\r\n0\r\n"[0m
 [33m[tester::#NA2] [test] [replica@6383] [0m[36mReceived RESP array: ["SELECT", "0"][0m
 [33m[tester::#NA2] [test] [replica@6383] [0m[36mReceived bytes: "*3\r\n$3\r\nSET\r\n$3\r\nfoo\r\n$3\r\n123\r\n"[0m
 [33m[tester::#NA2] [test] [replica@6383] [0m[36mReceived RESP array: ["SET", "foo", "123"][0m
-[33m[tester::#NA2] [test] [0m[92mReceived ["SET", "foo", "123"][0m
-[33m[tester::#NA2] [test] [0m[94mreplica@6383: Expecting "REPLCONF GETACK *" from Master[0m
+[33m[tester::#NA2] [test] [replica@6383] [0m[92mReceived ["SET", "foo", "123"][0m
+[33m[tester::#NA2] [test] [replica@6383] [0m[94mExpecting "REPLCONF GETACK *" from Master[0m
 [33m[tester::#NA2] [test] [replica@6383] [0m[36mReceived bytes: "*3\r\n$8\r\nREPLCONF\r\n$6\r\nGETACK\r\n$1\r\n*\r\n"[0m
 [33m[tester::#NA2] [test] [replica@6383] [0m[36mReceived RESP array: ["REPLCONF", "GETACK", "*"][0m
-[33m[tester::#NA2] [test] [0m[92mReceived ["REPLCONF", "GETACK", "*"][0m
-[33m[tester::#NA2] [test] [0m[36mreplica@6383: Not sending ACK to Master[0m
+[33m[tester::#NA2] [test] [replica@6383] [0m[92mReceived ["REPLCONF", "GETACK", "*"][0m
+[33m[tester::#NA2] [test] [replica@6383] [0m[36mNot sending ACK to Master[0m
 [33m[tester::#NA2] [test] [client] [0m[36mReceived bytes: ":1\r\n"[0m
 [33m[tester::#NA2] [test] [client] [0m[36mReceived RESP integer: 1[0m
 [33m[tester::#NA2] [test] [0m[92mPassed first WAIT test.[0m
@@ -629,58 +629,58 @@ Debug = true
 [33m[tester::#NA2] [test] [client] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$3\r\nbaz\r\n$3\r\n789\r\n"[0m
 [33m[tester::#NA2] [test] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#NA2] [test] [client] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#NA2] [test] [0m[92mReceived "OK"[0m
+[33m[tester::#NA2] [test] [client] [0m[92mReceived "OK"[0m
 [33m[tester::#NA2] [test] [client] [0m[94m> WAIT 4 2000[0m
 [33m[tester::#NA2] [test] [client] [0m[36mSent bytes: "*3\r\n$4\r\nWAIT\r\n$1\r\n4\r\n$4\r\n2000\r\n"[0m
 [33m[tester::#NA2] [test] [0m[94mTesting Replica: replica@6380[0m
-[33m[tester::#NA2] [test] [0m[94mreplica@6380: Expecting "SET baz 789" to be propagated[0m
+[33m[tester::#NA2] [test] [replica@6380] [0m[94mExpecting "SET baz 789" to be propagated[0m
 [33m[tester::#NA2] [test] [replica@6380] [0m[36mReceived bytes: "*3\r\n$3\r\nSET\r\n$3\r\nbaz\r\n$3\r\n789\r\n"[0m
 [33m[tester::#NA2] [test] [replica@6380] [0m[36mReceived RESP array: ["SET", "baz", "789"][0m
-[33m[tester::#NA2] [test] [0m[92mReceived ["SET", "baz", "789"][0m
-[33m[tester::#NA2] [test] [0m[94mreplica@6380: Expecting "REPLCONF GETACK *" from Master[0m
+[33m[tester::#NA2] [test] [replica@6380] [0m[92mReceived ["SET", "baz", "789"][0m
+[33m[tester::#NA2] [test] [replica@6380] [0m[94mExpecting "REPLCONF GETACK *" from Master[0m
 [33m[tester::#NA2] [test] [replica@6380] [0m[36mReceived bytes: "*3\r\n$8\r\nREPLCONF\r\n$6\r\nGETACK\r\n$1\r\n*\r\n"[0m
 [33m[tester::#NA2] [test] [replica@6380] [0m[36mReceived RESP array: ["REPLCONF", "GETACK", "*"][0m
-[33m[tester::#NA2] [test] [0m[92mReceived ["REPLCONF", "GETACK", "*"][0m
-[33m[tester::#NA2] [test] [0m[36mreplica@6380: Sending ACK to Master[0m
+[33m[tester::#NA2] [test] [replica@6380] [0m[92mReceived ["REPLCONF", "GETACK", "*"][0m
+[33m[tester::#NA2] [test] [replica@6380] [0m[36mSending ACK to Master[0m
 [33m[tester::#NA2] [test] [replica@6380] [0m[94m> REPLCONF ACK 122[0m
 [33m[tester::#NA2] [test] [replica@6380] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$3\r\nACK\r\n$3\r\n122\r\n"[0m
 [33m[tester::#NA2] [test] [0m[94mTesting Replica: replica@6381[0m
-[33m[tester::#NA2] [test] [0m[94mreplica@6381: Expecting "SET baz 789" to be propagated[0m
+[33m[tester::#NA2] [test] [replica@6381] [0m[94mExpecting "SET baz 789" to be propagated[0m
 [33m[tester::#NA2] [test] [replica@6381] [0m[36mReceived bytes: "*3\r\n$3\r\nSET\r\n$3\r\nbaz\r\n$3\r\n789\r\n"[0m
 [33m[tester::#NA2] [test] [replica@6381] [0m[36mReceived RESP array: ["SET", "baz", "789"][0m
-[33m[tester::#NA2] [test] [0m[92mReceived ["SET", "baz", "789"][0m
-[33m[tester::#NA2] [test] [0m[94mreplica@6381: Expecting "REPLCONF GETACK *" from Master[0m
+[33m[tester::#NA2] [test] [replica@6381] [0m[92mReceived ["SET", "baz", "789"][0m
+[33m[tester::#NA2] [test] [replica@6381] [0m[94mExpecting "REPLCONF GETACK *" from Master[0m
 [33m[tester::#NA2] [test] [replica@6381] [0m[36mReceived bytes: "*3\r\n$8\r\nREPLCONF\r\n$6\r\nGETACK\r\n$1\r\n*\r\n"[0m
 [33m[tester::#NA2] [test] [replica@6381] [0m[36mReceived RESP array: ["REPLCONF", "GETACK", "*"][0m
-[33m[tester::#NA2] [test] [0m[92mReceived ["REPLCONF", "GETACK", "*"][0m
-[33m[tester::#NA2] [test] [0m[36mreplica@6381: Sending ACK to Master[0m
+[33m[tester::#NA2] [test] [replica@6381] [0m[92mReceived ["REPLCONF", "GETACK", "*"][0m
+[33m[tester::#NA2] [test] [replica@6381] [0m[36mSending ACK to Master[0m
 [33m[tester::#NA2] [test] [replica@6381] [0m[94m> REPLCONF ACK 122[0m
 [33m[tester::#NA2] [test] [replica@6381] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$3\r\nACK\r\n$3\r\n122\r\n"[0m
 [33m[tester::#NA2] [test] [0m[94mTesting Replica: replica@6382[0m
-[33m[tester::#NA2] [test] [0m[94mreplica@6382: Expecting "SET baz 789" to be propagated[0m
+[33m[tester::#NA2] [test] [replica@6382] [0m[94mExpecting "SET baz 789" to be propagated[0m
 [33m[tester::#NA2] [test] [replica@6382] [0m[36mReceived bytes: "*3\r\n$3\r\nSET\r\n$3\r\nbaz\r\n$3\r\n789\r\n"[0m
 [33m[tester::#NA2] [test] [replica@6382] [0m[36mReceived RESP array: ["SET", "baz", "789"][0m
-[33m[tester::#NA2] [test] [0m[92mReceived ["SET", "baz", "789"][0m
-[33m[tester::#NA2] [test] [0m[94mreplica@6382: Expecting "REPLCONF GETACK *" from Master[0m
+[33m[tester::#NA2] [test] [replica@6382] [0m[92mReceived ["SET", "baz", "789"][0m
+[33m[tester::#NA2] [test] [replica@6382] [0m[94mExpecting "REPLCONF GETACK *" from Master[0m
 [33m[tester::#NA2] [test] [replica@6382] [0m[36mReceived bytes: "*3\r\n$8\r\nREPLCONF\r\n$6\r\nGETACK\r\n$1\r\n*\r\n"[0m
 [33m[tester::#NA2] [test] [replica@6382] [0m[36mReceived RESP array: ["REPLCONF", "GETACK", "*"][0m
-[33m[tester::#NA2] [test] [0m[92mReceived ["REPLCONF", "GETACK", "*"][0m
-[33m[tester::#NA2] [test] [0m[36mreplica@6382: Sending ACK to Master[0m
+[33m[tester::#NA2] [test] [replica@6382] [0m[92mReceived ["REPLCONF", "GETACK", "*"][0m
+[33m[tester::#NA2] [test] [replica@6382] [0m[36mSending ACK to Master[0m
 [33m[tester::#NA2] [test] [replica@6382] [0m[94m> REPLCONF ACK 122[0m
 [33m[tester::#NA2] [test] [replica@6382] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$3\r\nACK\r\n$3\r\n122\r\n"[0m
 [33m[tester::#NA2] [test] [0m[94mTesting Replica: replica@6383[0m
-[33m[tester::#NA2] [test] [0m[94mreplica@6383: Expecting "SET baz 789" to be propagated[0m
+[33m[tester::#NA2] [test] [replica@6383] [0m[94mExpecting "SET baz 789" to be propagated[0m
 [33m[tester::#NA2] [test] [replica@6383] [0m[36mReceived bytes: "*3\r\n$3\r\nSET\r\n$3\r\nbaz\r\n$3\r\n789\r\n"[0m
 [33m[tester::#NA2] [test] [replica@6383] [0m[36mReceived RESP array: ["SET", "baz", "789"][0m
-[33m[tester::#NA2] [test] [0m[92mReceived ["SET", "baz", "789"][0m
-[33m[tester::#NA2] [test] [0m[94mreplica@6383: Expecting "REPLCONF GETACK *" from Master[0m
+[33m[tester::#NA2] [test] [replica@6383] [0m[92mReceived ["SET", "baz", "789"][0m
+[33m[tester::#NA2] [test] [replica@6383] [0m[94mExpecting "REPLCONF GETACK *" from Master[0m
 [33m[tester::#NA2] [test] [replica@6383] [0m[36mReceived bytes: "*3\r\n$8\r\nREPLCONF\r\n$6\r\nGETACK\r\n$1\r\n*\r\n"[0m
 [33m[tester::#NA2] [test] [replica@6383] [0m[36mReceived RESP array: ["REPLCONF", "GETACK", "*"][0m
-[33m[tester::#NA2] [test] [0m[92mReceived ["REPLCONF", "GETACK", "*"][0m
-[33m[tester::#NA2] [test] [0m[36mreplica@6383: Not sending ACK to Master[0m
+[33m[tester::#NA2] [test] [replica@6383] [0m[92mReceived ["REPLCONF", "GETACK", "*"][0m
+[33m[tester::#NA2] [test] [replica@6383] [0m[36mNot sending ACK to Master[0m
 [33m[tester::#NA2] [test] [client] [0m[36mReceived bytes: ":3\r\n"[0m
 [33m[tester::#NA2] [test] [client] [0m[36mReceived RESP integer: 3[0m
-[33m[tester::#NA2] [test] [0m[94mWAIT command returned after 2103 ms[0m
+[33m[tester::#NA2] [test] [0m[94mWAIT command returned after 2098 ms[0m
 [33m[tester::#NA2] [0m[92mTest passed.[0m
 [33m[tester::#NA2] [0m[36mTerminating program[0m
 [33m[tester::#NA2] [0m[36mProgram terminated successfully[0m
@@ -697,88 +697,88 @@ Debug = true
 [33m[tester::#TU8] [handshake] [replica@6380] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
 [33m[tester::#TU8] [handshake] [replica@6380] [0m[36mReceived bytes: "+PONG\r\n"[0m
 [33m[tester::#TU8] [handshake] [replica@6380] [0m[36mReceived RESP simple string: "PONG"[0m
-[33m[tester::#TU8] [handshake] [0m[92mReceived "PONG"[0m
+[33m[tester::#TU8] [handshake] [replica@6380] [0m[92mReceived "PONG"[0m
 [33m[tester::#TU8] [handshake] [replica@6380] [0m[94m> REPLCONF listening-port 6380[0m
 [33m[tester::#TU8] [handshake] [replica@6380] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$14\r\nlistening-port\r\n$4\r\n6380\r\n"[0m
 [33m[tester::#TU8] [handshake] [replica@6380] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#TU8] [handshake] [replica@6380] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#TU8] [handshake] [0m[92mReceived "OK"[0m
+[33m[tester::#TU8] [handshake] [replica@6380] [0m[92mReceived "OK"[0m
 [33m[tester::#TU8] [handshake] [replica@6380] [0m[94m> REPLCONF capa psync2[0m
 [33m[tester::#TU8] [handshake] [replica@6380] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$4\r\ncapa\r\n$6\r\npsync2\r\n"[0m
 [33m[tester::#TU8] [handshake] [replica@6380] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#TU8] [handshake] [replica@6380] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#TU8] [handshake] [0m[92mReceived "OK"[0m
+[33m[tester::#TU8] [handshake] [replica@6380] [0m[92mReceived "OK"[0m
 [33m[tester::#TU8] [handshake] [replica@6380] [0m[94m> PSYNC ? -1[0m
 [33m[tester::#TU8] [handshake] [replica@6380] [0m[36mSent bytes: "*3\r\n$5\r\nPSYNC\r\n$1\r\n?\r\n$2\r\n-1\r\n"[0m
-[33m[tester::#TU8] [handshake] [replica@6380] [0m[36mReceived bytes: "+FULLRESYNC c1069874474b6d98cebfff54a03658ca01ce3111 0\r\n"[0m
-[33m[tester::#TU8] [handshake] [replica@6380] [0m[36mReceived RESP simple string: "FULLRESYNC c1069874474b6d98cebfff54a03658ca01ce3111 0"[0m
-[33m[tester::#TU8] [handshake] [0m[92mReceived "FULLRESYNC c1069874474b6d98cebfff54a03658ca01ce3111 0"[0m
-[33m[tester::#TU8] [handshake] [0m[36mReading RDB file...[0m
-[33m[tester::#TU8] [handshake] [replica@6380] [0m[36mReceived bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\u009c`oh\xfa\bused-mem\xc2P~\r\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(c1069874474b6d98cebfff54a03658ca01ce3111\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff.e\xfd\xaf\x98\x12\x17="[0m
+[33m[tester::#TU8] [handshake] [replica@6380] [0m[36mReceived bytes: "+FULLRESYNC 669881df7c64b5cca3c2f2caf35474f896dba622 0\r\n"[0m
+[33m[tester::#TU8] [handshake] [replica@6380] [0m[36mReceived RESP simple string: "FULLRESYNC 669881df7c64b5cca3c2f2caf35474f896dba622 0"[0m
+[33m[tester::#TU8] [handshake] [replica@6380] [0m[92mReceived "FULLRESYNC 669881df7c64b5cca3c2f2caf35474f896dba622 0"[0m
+[33m[tester::#TU8] [handshake] [replica@6380] [0m[36mReading RDB file...[0m
+[33m[tester::#TU8] [handshake] [replica@6380] [0m[36mReceived bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2\xf7qoh\xfa\bused-mem\xc2P~\r\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(669881df7c64b5cca3c2f2caf35474f896dba622\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff\xcbKO\xe53\x10\xd2\xec"[0m
 [33m[tester::#TU8] [handshake] [0m[92mReceived RDB file[0m
 [33m[tester::#TU8] [0m[36mCreating replica@6381[0m
 [33m[tester::#TU8] [handshake] [replica@6381] [0m[94m$ redis-cli PING[0m
 [33m[tester::#TU8] [handshake] [replica@6381] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
 [33m[tester::#TU8] [handshake] [replica@6381] [0m[36mReceived bytes: "+PONG\r\n"[0m
 [33m[tester::#TU8] [handshake] [replica@6381] [0m[36mReceived RESP simple string: "PONG"[0m
-[33m[tester::#TU8] [handshake] [0m[92mReceived "PONG"[0m
+[33m[tester::#TU8] [handshake] [replica@6381] [0m[92mReceived "PONG"[0m
 [33m[tester::#TU8] [handshake] [replica@6381] [0m[94m> REPLCONF listening-port 6381[0m
 [33m[tester::#TU8] [handshake] [replica@6381] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$14\r\nlistening-port\r\n$4\r\n6381\r\n"[0m
 [33m[tester::#TU8] [handshake] [replica@6381] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#TU8] [handshake] [replica@6381] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#TU8] [handshake] [0m[92mReceived "OK"[0m
+[33m[tester::#TU8] [handshake] [replica@6381] [0m[92mReceived "OK"[0m
 [33m[tester::#TU8] [handshake] [replica@6381] [0m[94m> REPLCONF capa psync2[0m
 [33m[tester::#TU8] [handshake] [replica@6381] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$4\r\ncapa\r\n$6\r\npsync2\r\n"[0m
 [33m[tester::#TU8] [handshake] [replica@6381] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#TU8] [handshake] [replica@6381] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#TU8] [handshake] [0m[92mReceived "OK"[0m
+[33m[tester::#TU8] [handshake] [replica@6381] [0m[92mReceived "OK"[0m
 [33m[tester::#TU8] [handshake] [replica@6381] [0m[94m> PSYNC ? -1[0m
 [33m[tester::#TU8] [handshake] [replica@6381] [0m[36mSent bytes: "*3\r\n$5\r\nPSYNC\r\n$1\r\n?\r\n$2\r\n-1\r\n"[0m
-[33m[tester::#TU8] [handshake] [replica@6381] [0m[36mReceived bytes: "+FULLRESYNC c1069874474b6d98cebfff54a03658ca01ce3111 0\r\n"[0m
-[33m[tester::#TU8] [handshake] [replica@6381] [0m[36mReceived RESP simple string: "FULLRESYNC c1069874474b6d98cebfff54a03658ca01ce3111 0"[0m
-[33m[tester::#TU8] [handshake] [0m[92mReceived "FULLRESYNC c1069874474b6d98cebfff54a03658ca01ce3111 0"[0m
-[33m[tester::#TU8] [handshake] [0m[36mReading RDB file...[0m
-[33m[tester::#TU8] [handshake] [replica@6381] [0m[36mReceived bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\u009c`oh\xfa\bused-mem\xc2 $\x0e\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(c1069874474b6d98cebfff54a03658ca01ce3111\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff\x91\xa5\xaa\x81\x85\xceM!"[0m
+[33m[tester::#TU8] [handshake] [replica@6381] [0m[36mReceived bytes: "+FULLRESYNC 669881df7c64b5cca3c2f2caf35474f896dba622 0\r\n"[0m
+[33m[tester::#TU8] [handshake] [replica@6381] [0m[36mReceived RESP simple string: "FULLRESYNC 669881df7c64b5cca3c2f2caf35474f896dba622 0"[0m
+[33m[tester::#TU8] [handshake] [replica@6381] [0m[92mReceived "FULLRESYNC 669881df7c64b5cca3c2f2caf35474f896dba622 0"[0m
+[33m[tester::#TU8] [handshake] [replica@6381] [0m[36mReading RDB file...[0m
+[33m[tester::#TU8] [handshake] [replica@6381] [0m[36mReceived bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2\xf8qoh\xfa\bused-mem\xc2 $\x0e\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(669881df7c64b5cca3c2f2caf35474f896dba622\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff\xbb\xa0\v\xb6X\xcf\xf8\xb4"[0m
 [33m[tester::#TU8] [handshake] [0m[92mReceived RDB file[0m
 [33m[tester::#TU8] [0m[36mCreating replica@6382[0m
 [33m[tester::#TU8] [handshake] [replica@6382] [0m[94m$ redis-cli PING[0m
 [33m[tester::#TU8] [handshake] [replica@6382] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
 [33m[tester::#TU8] [handshake] [replica@6382] [0m[36mReceived bytes: "+PONG\r\n"[0m
 [33m[tester::#TU8] [handshake] [replica@6382] [0m[36mReceived RESP simple string: "PONG"[0m
-[33m[tester::#TU8] [handshake] [0m[92mReceived "PONG"[0m
+[33m[tester::#TU8] [handshake] [replica@6382] [0m[92mReceived "PONG"[0m
 [33m[tester::#TU8] [handshake] [replica@6382] [0m[94m> REPLCONF listening-port 6382[0m
 [33m[tester::#TU8] [handshake] [replica@6382] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$14\r\nlistening-port\r\n$4\r\n6382\r\n"[0m
 [33m[tester::#TU8] [handshake] [replica@6382] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#TU8] [handshake] [replica@6382] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#TU8] [handshake] [0m[92mReceived "OK"[0m
+[33m[tester::#TU8] [handshake] [replica@6382] [0m[92mReceived "OK"[0m
 [33m[tester::#TU8] [handshake] [replica@6382] [0m[94m> REPLCONF capa psync2[0m
 [33m[tester::#TU8] [handshake] [replica@6382] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$4\r\ncapa\r\n$6\r\npsync2\r\n"[0m
 [33m[tester::#TU8] [handshake] [replica@6382] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#TU8] [handshake] [replica@6382] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#TU8] [handshake] [0m[92mReceived "OK"[0m
+[33m[tester::#TU8] [handshake] [replica@6382] [0m[92mReceived "OK"[0m
 [33m[tester::#TU8] [handshake] [replica@6382] [0m[94m> PSYNC ? -1[0m
 [33m[tester::#TU8] [handshake] [replica@6382] [0m[36mSent bytes: "*3\r\n$5\r\nPSYNC\r\n$1\r\n?\r\n$2\r\n-1\r\n"[0m
-[33m[tester::#TU8] [handshake] [replica@6382] [0m[36mReceived bytes: "+FULLRESYNC c1069874474b6d98cebfff54a03658ca01ce3111 0\r\n"[0m
-[33m[tester::#TU8] [handshake] [replica@6382] [0m[36mReceived RESP simple string: "FULLRESYNC c1069874474b6d98cebfff54a03658ca01ce3111 0"[0m
-[33m[tester::#TU8] [handshake] [0m[92mReceived "FULLRESYNC c1069874474b6d98cebfff54a03658ca01ce3111 0"[0m
-[33m[tester::#TU8] [handshake] [0m[36mReading RDB file...[0m
-[33m[tester::#TU8] [handshake] [replica@6382] [0m[36mReceived bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\u009c`oh\xfa\bused-mem\xc2`-\x0e\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(c1069874474b6d98cebfff54a03658ca01ce3111\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff\x94wI\x1b\x19\xfa#\x81"[0m
+[33m[tester::#TU8] [handshake] [replica@6382] [0m[36mReceived bytes: "+FULLRESYNC 669881df7c64b5cca3c2f2caf35474f896dba622 0\r\n"[0m
+[33m[tester::#TU8] [handshake] [replica@6382] [0m[36mReceived RESP simple string: "FULLRESYNC 669881df7c64b5cca3c2f2caf35474f896dba622 0"[0m
+[33m[tester::#TU8] [handshake] [replica@6382] [0m[92mReceived "FULLRESYNC 669881df7c64b5cca3c2f2caf35474f896dba622 0"[0m
+[33m[tester::#TU8] [handshake] [replica@6382] [0m[36mReading RDB file...[0m
+[33m[tester::#TU8] [handshake] [replica@6382] [0m[36mReceived bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2\xf8qoh\xfa\bused-mem\xc2`-\x0e\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(669881df7c64b5cca3c2f2caf35474f896dba622\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff\xber\xe8,\xc4\xfb\x96\x14"[0m
 [33m[tester::#TU8] [handshake] [0m[92mReceived RDB file[0m
 [33m[tester::#TU8] [test] [client] [0m[94m$ redis-cli WAIT 3 500[0m
 [33m[tester::#TU8] [test] [client] [0m[36mSent bytes: "*3\r\n$4\r\nWAIT\r\n$1\r\n3\r\n$3\r\n500\r\n"[0m
 [33m[tester::#TU8] [test] [client] [0m[36mReceived bytes: ":3\r\n"[0m
 [33m[tester::#TU8] [test] [client] [0m[36mReceived RESP integer: 3[0m
-[33m[tester::#TU8] [test] [0m[92mReceived 3[0m
+[33m[tester::#TU8] [test] [client] [0m[92mReceived 3[0m
 [33m[tester::#TU8] [test] [client] [0m[94m> WAIT 4 500[0m
 [33m[tester::#TU8] [test] [client] [0m[36mSent bytes: "*3\r\n$4\r\nWAIT\r\n$1\r\n4\r\n$3\r\n500\r\n"[0m
 [33m[tester::#TU8] [test] [client] [0m[36mReceived bytes: ":3\r\n"[0m
 [33m[tester::#TU8] [test] [client] [0m[36mReceived RESP integer: 3[0m
-[33m[tester::#TU8] [test] [0m[92mReceived 3[0m
+[33m[tester::#TU8] [test] [client] [0m[92mReceived 3[0m
 [33m[tester::#TU8] [test] [client] [0m[94m> WAIT 5 500[0m
 [33m[tester::#TU8] [test] [client] [0m[36mSent bytes: "*3\r\n$4\r\nWAIT\r\n$1\r\n5\r\n$3\r\n500\r\n"[0m
 [33m[tester::#TU8] [test] [client] [0m[36mReceived bytes: ":3\r\n"[0m
 [33m[tester::#TU8] [test] [client] [0m[36mReceived RESP integer: 3[0m
-[33m[tester::#TU8] [test] [0m[92mReceived 3[0m
+[33m[tester::#TU8] [test] [client] [0m[92mReceived 3[0m
 [33m[tester::#TU8] [0m[92mTest passed.[0m
 [33m[tester::#TU8] [0m[36mTerminating program[0m
 [33m[tester::#TU8] [0m[36mProgram terminated successfully[0m
@@ -789,35 +789,35 @@ Debug = true
 [33m[tester::#MY8] [client] [0m[36mSent bytes: "*3\r\n$4\r\nWAIT\r\n$1\r\n0\r\n$5\r\n60000\r\n"[0m
 [33m[tester::#MY8] [client] [0m[36mReceived bytes: ":0\r\n"[0m
 [33m[tester::#MY8] [client] [0m[36mReceived RESP integer: 0[0m
-[33m[tester::#MY8] [0m[92mReceived 0[0m
-[33m[tester::#MY8] [0m[92mTest passed.[0m
-[33m[tester::#MY8] [0m[36mTerminating program[0m
-[33m[tester::#MY8] [0m[36mProgram terminated successfully[0m
+[33m[tester::#MY8] [client] [0m[92mReceived 0[0m
+[33m[tester::#MY8] [client] [0m[92mTest passed.[0m
+[33m[tester::#MY8] [client] [0m[36mTerminating program[0m
+[33m[tester::#MY8] [client] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#YD3] [0m[94mRunning tests for Stage #YD3 (yd3)[0m
 [33m[tester::#YD3] [0m[94mMaster is running on port 6379[0m
 [33m[tester::#YD3] [0m[94m$ ./spawn_redis_server.sh --port 6380 --replicaof "localhost 6379"[0m
-[33m[tester::#YD3] [handshake] [0m[94mmaster: Waiting for replica to initiate handshake with "PING" command[0m
+[33m[tester::#YD3] [handshake] [master] [0m[94mWaiting for replica to initiate handshake with "PING" command[0m
 [33m[tester::#YD3] [handshake] [master] [0m[36mReceived bytes: "*1\r\n$4\r\nPING\r\n"[0m
 [33m[tester::#YD3] [handshake] [master] [0m[36mReceived RESP array: ["PING"][0m
-[33m[tester::#YD3] [handshake] [0m[92mReceived ["PING"][0m
+[33m[tester::#YD3] [handshake] [master] [0m[92mReceived ["PING"][0m
 [33m[tester::#YD3] [handshake] [master] [0m[94mSent "PONG"[0m
 [33m[tester::#YD3] [handshake] [master] [0m[36mSent bytes: "+PONG\r\n"[0m
-[33m[tester::#YD3] [handshake] [0m[94mmaster: Waiting for replica to send "REPLCONF listening-port 6380" command[0m
+[33m[tester::#YD3] [handshake] [master] [0m[94mWaiting for replica to send "REPLCONF listening-port 6380" command[0m
 [33m[tester::#YD3] [handshake] [master] [0m[36mReceived bytes: "*3\r\n$8\r\nREPLCONF\r\n$14\r\nlistening-port\r\n$4\r\n6380\r\n"[0m
 [33m[tester::#YD3] [handshake] [master] [0m[36mReceived RESP array: [[0m
 [33m[tester::#YD3] [handshake] [master] [0m[36m  "REPLCONF",[0m
 [33m[tester::#YD3] [handshake] [master] [0m[36m  "listening-port",[0m
 [33m[tester::#YD3] [handshake] [master] [0m[36m  "6380"[0m
 [33m[tester::#YD3] [handshake] [master] [0m[36m][0m
-[33m[tester::#YD3] [handshake] [0m[92mReceived [[0m
-[33m[tester::#YD3] [handshake] [0m[92m  "REPLCONF",[0m
-[33m[tester::#YD3] [handshake] [0m[92m  "listening-port",[0m
-[33m[tester::#YD3] [handshake] [0m[92m  "6380"[0m
-[33m[tester::#YD3] [handshake] [0m[92m][0m
+[33m[tester::#YD3] [handshake] [master] [0m[92mReceived [[0m
+[33m[tester::#YD3] [handshake] [master] [0m[92m  "REPLCONF",[0m
+[33m[tester::#YD3] [handshake] [master] [0m[92m  "listening-port",[0m
+[33m[tester::#YD3] [handshake] [master] [0m[92m  "6380"[0m
+[33m[tester::#YD3] [handshake] [master] [0m[92m][0m
 [33m[tester::#YD3] [handshake] [master] [0m[94mSent "OK"[0m
 [33m[tester::#YD3] [handshake] [master] [0m[36mSent bytes: "+OK\r\n"[0m
-[33m[tester::#YD3] [handshake] [0m[94mmaster: Waiting for replica to send "REPLCONF capa" command[0m
+[33m[tester::#YD3] [handshake] [master] [0m[94mWaiting for replica to send "REPLCONF capa" command[0m
 [33m[tester::#YD3] [handshake] [master] [0m[36mReceived bytes: "*7\r\n$8\r\nREPLCONF\r\n$4\r\ncapa\r\n$3\r\neof\r\n$4\r\ncapa\r\n$6\r\npsync2\r\n$4\r\ncapa\r\n$16\r\nrdb-channel-repl\r\n"[0m
 [33m[tester::#YD3] [handshake] [master] [0m[36mReceived RESP array: [[0m
 [33m[tester::#YD3] [handshake] [master] [0m[36m  "REPLCONF",[0m
@@ -828,38 +828,38 @@ Debug = true
 [33m[tester::#YD3] [handshake] [master] [0m[36m  "capa",[0m
 [33m[tester::#YD3] [handshake] [master] [0m[36m  "rdb-channel-repl"[0m
 [33m[tester::#YD3] [handshake] [master] [0m[36m][0m
-[33m[tester::#YD3] [handshake] [0m[92mReceived [[0m
-[33m[tester::#YD3] [handshake] [0m[92m  "REPLCONF",[0m
-[33m[tester::#YD3] [handshake] [0m[92m  "capa",[0m
-[33m[tester::#YD3] [handshake] [0m[92m  "eof",[0m
-[33m[tester::#YD3] [handshake] [0m[92m  "capa",[0m
-[33m[tester::#YD3] [handshake] [0m[92m  "psync2",[0m
-[33m[tester::#YD3] [handshake] [0m[92m  "capa",[0m
-[33m[tester::#YD3] [handshake] [0m[92m  "rdb-channel-repl"[0m
-[33m[tester::#YD3] [handshake] [0m[92m][0m
+[33m[tester::#YD3] [handshake] [master] [0m[92mReceived [[0m
+[33m[tester::#YD3] [handshake] [master] [0m[92m  "REPLCONF",[0m
+[33m[tester::#YD3] [handshake] [master] [0m[92m  "capa",[0m
+[33m[tester::#YD3] [handshake] [master] [0m[92m  "eof",[0m
+[33m[tester::#YD3] [handshake] [master] [0m[92m  "capa",[0m
+[33m[tester::#YD3] [handshake] [master] [0m[92m  "psync2",[0m
+[33m[tester::#YD3] [handshake] [master] [0m[92m  "capa",[0m
+[33m[tester::#YD3] [handshake] [master] [0m[92m  "rdb-channel-repl"[0m
+[33m[tester::#YD3] [handshake] [master] [0m[92m][0m
 [33m[tester::#YD3] [handshake] [master] [0m[94mSent "OK"[0m
 [33m[tester::#YD3] [handshake] [master] [0m[36mSent bytes: "+OK\r\n"[0m
-[33m[tester::#YD3] [handshake] [0m[94mmaster: Waiting for replica to send "PSYNC" command[0m
+[33m[tester::#YD3] [handshake] [master] [0m[94mWaiting for replica to send "PSYNC" command[0m
 [33m[tester::#YD3] [handshake] [master] [0m[36mReceived bytes: "*3\r\n$5\r\nPSYNC\r\n$1\r\n?\r\n$2\r\n-1\r\n"[0m
 [33m[tester::#YD3] [handshake] [master] [0m[36mReceived RESP array: ["PSYNC", "?", "-1"][0m
-[33m[tester::#YD3] [handshake] [0m[92mReceived ["PSYNC", "?", "-1"][0m
+[33m[tester::#YD3] [handshake] [master] [0m[92mReceived ["PSYNC", "?", "-1"][0m
 [33m[tester::#YD3] [handshake] [master] [0m[94mSent "FULLRESYNC 75cd7bc10c49047e0d163660f3b90625b1af31dc 0"[0m
 [33m[tester::#YD3] [handshake] [master] [0m[36mSent bytes: "+FULLRESYNC 75cd7bc10c49047e0d163660f3b90625b1af31dc 0\r\n"[0m
-[33m[tester::#YD3] [handshake] [0m[36mSending RDB file...[0m
+[33m[tester::#YD3] [handshake] [master] [0m[36mSending RDB file...[0m
 [33m[tester::#YD3] [handshake] [master] [0m[36mSent bytes: "$88\r\nREDIS0011\xfa\tredis-ver\x057.2.0\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2m\b\xbce\xfa\bused-mem°\xc4\x10\x00\xfa\baof-base\xc0\x00\xff\xf0n;\xfe\xc0\xffZ\xa2"[0m
 [33m[tester::#YD3] [handshake] [0m[92mSent RDB file.[0m
 [33m[tester::#YD3] [test] [master] [0m[94m> REPLCONF GETACK *[0m
 [33m[tester::#YD3] [test] [master] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$6\r\nGETACK\r\n$1\r\n*\r\n"[0m
 [33m[tester::#YD3] [test] [master] [0m[36mReceived bytes: "*3\r\n$8\r\nREPLCONF\r\n$3\r\nACK\r\n$1\r\n0\r\n"[0m
 [33m[tester::#YD3] [test] [master] [0m[36mReceived RESP array: ["REPLCONF", "ACK", "0"][0m
-[33m[tester::#YD3] [test] [0m[92mReceived ["REPLCONF", "ACK", "0"][0m
+[33m[tester::#YD3] [test] [master] [0m[92mReceived ["REPLCONF", "ACK", "0"][0m
 [33m[tester::#YD3] [propagation] [master] [0m[94m> PING[0m
 [33m[tester::#YD3] [propagation] [master] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
 [33m[tester::#YD3] [test] [master] [0m[94m> REPLCONF GETACK *[0m
 [33m[tester::#YD3] [test] [master] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$6\r\nGETACK\r\n$1\r\n*\r\n"[0m
 [33m[tester::#YD3] [test] [master] [0m[36mReceived bytes: "*3\r\n$8\r\nREPLCONF\r\n$3\r\nACK\r\n$2\r\n51\r\n"[0m
 [33m[tester::#YD3] [test] [master] [0m[36mReceived RESP array: ["REPLCONF", "ACK", "51"][0m
-[33m[tester::#YD3] [test] [0m[92mReceived ["REPLCONF", "ACK", "51"][0m
+[33m[tester::#YD3] [test] [master] [0m[92mReceived ["REPLCONF", "ACK", "51"][0m
 [33m[tester::#YD3] [propagation] [master] [0m[94m> SET blueberry apple[0m
 [33m[tester::#YD3] [propagation] [master] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nblueberry\r\n$5\r\napple\r\n"[0m
 [33m[tester::#YD3] [propagation] [master] [0m[94m> SET raspberry mango[0m
@@ -868,7 +868,7 @@ Debug = true
 [33m[tester::#YD3] [test] [master] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$6\r\nGETACK\r\n$1\r\n*\r\n"[0m
 [33m[tester::#YD3] [test] [master] [0m[36mReceived bytes: "*3\r\n$8\r\nREPLCONF\r\n$3\r\nACK\r\n$3\r\n166\r\n"[0m
 [33m[tester::#YD3] [test] [master] [0m[36mReceived RESP array: ["REPLCONF", "ACK", "166"][0m
-[33m[tester::#YD3] [test] [0m[92mReceived ["REPLCONF", "ACK", "166"][0m
+[33m[tester::#YD3] [test] [master] [0m[92mReceived ["REPLCONF", "ACK", "166"][0m
 [33m[tester::#YD3] [0m[92mTest passed.[0m
 [33m[tester::#YD3] [0m[36mTerminating program[0m
 [33m[tester::#YD3] [0m[36mProgram terminated successfully[0m
@@ -876,27 +876,27 @@ Debug = true
 [33m[tester::#XV6] [0m[94mRunning tests for Stage #XV6 (xv6)[0m
 [33m[tester::#XV6] [0m[94mMaster is running on port 6379[0m
 [33m[tester::#XV6] [0m[94m$ ./spawn_redis_server.sh --port 6380 --replicaof "localhost 6379"[0m
-[33m[tester::#XV6] [handshake] [0m[94mmaster: Waiting for replica to initiate handshake with "PING" command[0m
+[33m[tester::#XV6] [handshake] [master] [0m[94mWaiting for replica to initiate handshake with "PING" command[0m
 [33m[tester::#XV6] [handshake] [master] [0m[36mReceived bytes: "*1\r\n$4\r\nPING\r\n"[0m
 [33m[tester::#XV6] [handshake] [master] [0m[36mReceived RESP array: ["PING"][0m
-[33m[tester::#XV6] [handshake] [0m[92mReceived ["PING"][0m
+[33m[tester::#XV6] [handshake] [master] [0m[92mReceived ["PING"][0m
 [33m[tester::#XV6] [handshake] [master] [0m[94mSent "PONG"[0m
 [33m[tester::#XV6] [handshake] [master] [0m[36mSent bytes: "+PONG\r\n"[0m
-[33m[tester::#XV6] [handshake] [0m[94mmaster: Waiting for replica to send "REPLCONF listening-port 6380" command[0m
+[33m[tester::#XV6] [handshake] [master] [0m[94mWaiting for replica to send "REPLCONF listening-port 6380" command[0m
 [33m[tester::#XV6] [handshake] [master] [0m[36mReceived bytes: "*3\r\n$8\r\nREPLCONF\r\n$14\r\nlistening-port\r\n$4\r\n6380\r\n"[0m
 [33m[tester::#XV6] [handshake] [master] [0m[36mReceived RESP array: [[0m
 [33m[tester::#XV6] [handshake] [master] [0m[36m  "REPLCONF",[0m
 [33m[tester::#XV6] [handshake] [master] [0m[36m  "listening-port",[0m
 [33m[tester::#XV6] [handshake] [master] [0m[36m  "6380"[0m
 [33m[tester::#XV6] [handshake] [master] [0m[36m][0m
-[33m[tester::#XV6] [handshake] [0m[92mReceived [[0m
-[33m[tester::#XV6] [handshake] [0m[92m  "REPLCONF",[0m
-[33m[tester::#XV6] [handshake] [0m[92m  "listening-port",[0m
-[33m[tester::#XV6] [handshake] [0m[92m  "6380"[0m
-[33m[tester::#XV6] [handshake] [0m[92m][0m
+[33m[tester::#XV6] [handshake] [master] [0m[92mReceived [[0m
+[33m[tester::#XV6] [handshake] [master] [0m[92m  "REPLCONF",[0m
+[33m[tester::#XV6] [handshake] [master] [0m[92m  "listening-port",[0m
+[33m[tester::#XV6] [handshake] [master] [0m[92m  "6380"[0m
+[33m[tester::#XV6] [handshake] [master] [0m[92m][0m
 [33m[tester::#XV6] [handshake] [master] [0m[94mSent "OK"[0m
 [33m[tester::#XV6] [handshake] [master] [0m[36mSent bytes: "+OK\r\n"[0m
-[33m[tester::#XV6] [handshake] [0m[94mmaster: Waiting for replica to send "REPLCONF capa" command[0m
+[33m[tester::#XV6] [handshake] [master] [0m[94mWaiting for replica to send "REPLCONF capa" command[0m
 [33m[tester::#XV6] [handshake] [master] [0m[36mReceived bytes: "*7\r\n$8\r\nREPLCONF\r\n$4\r\ncapa\r\n$3\r\neof\r\n$4\r\ncapa\r\n$6\r\npsync2\r\n$4\r\ncapa\r\n$16\r\nrdb-channel-repl\r\n"[0m
 [33m[tester::#XV6] [handshake] [master] [0m[36mReceived RESP array: [[0m
 [33m[tester::#XV6] [handshake] [master] [0m[36m  "REPLCONF",[0m
@@ -907,31 +907,31 @@ Debug = true
 [33m[tester::#XV6] [handshake] [master] [0m[36m  "capa",[0m
 [33m[tester::#XV6] [handshake] [master] [0m[36m  "rdb-channel-repl"[0m
 [33m[tester::#XV6] [handshake] [master] [0m[36m][0m
-[33m[tester::#XV6] [handshake] [0m[92mReceived [[0m
-[33m[tester::#XV6] [handshake] [0m[92m  "REPLCONF",[0m
-[33m[tester::#XV6] [handshake] [0m[92m  "capa",[0m
-[33m[tester::#XV6] [handshake] [0m[92m  "eof",[0m
-[33m[tester::#XV6] [handshake] [0m[92m  "capa",[0m
-[33m[tester::#XV6] [handshake] [0m[92m  "psync2",[0m
-[33m[tester::#XV6] [handshake] [0m[92m  "capa",[0m
-[33m[tester::#XV6] [handshake] [0m[92m  "rdb-channel-repl"[0m
-[33m[tester::#XV6] [handshake] [0m[92m][0m
+[33m[tester::#XV6] [handshake] [master] [0m[92mReceived [[0m
+[33m[tester::#XV6] [handshake] [master] [0m[92m  "REPLCONF",[0m
+[33m[tester::#XV6] [handshake] [master] [0m[92m  "capa",[0m
+[33m[tester::#XV6] [handshake] [master] [0m[92m  "eof",[0m
+[33m[tester::#XV6] [handshake] [master] [0m[92m  "capa",[0m
+[33m[tester::#XV6] [handshake] [master] [0m[92m  "psync2",[0m
+[33m[tester::#XV6] [handshake] [master] [0m[92m  "capa",[0m
+[33m[tester::#XV6] [handshake] [master] [0m[92m  "rdb-channel-repl"[0m
+[33m[tester::#XV6] [handshake] [master] [0m[92m][0m
 [33m[tester::#XV6] [handshake] [master] [0m[94mSent "OK"[0m
 [33m[tester::#XV6] [handshake] [master] [0m[36mSent bytes: "+OK\r\n"[0m
-[33m[tester::#XV6] [handshake] [0m[94mmaster: Waiting for replica to send "PSYNC" command[0m
+[33m[tester::#XV6] [handshake] [master] [0m[94mWaiting for replica to send "PSYNC" command[0m
 [33m[tester::#XV6] [handshake] [master] [0m[36mReceived bytes: "*3\r\n$5\r\nPSYNC\r\n$1\r\n?\r\n$2\r\n-1\r\n"[0m
 [33m[tester::#XV6] [handshake] [master] [0m[36mReceived RESP array: ["PSYNC", "?", "-1"][0m
-[33m[tester::#XV6] [handshake] [0m[92mReceived ["PSYNC", "?", "-1"][0m
+[33m[tester::#XV6] [handshake] [master] [0m[92mReceived ["PSYNC", "?", "-1"][0m
 [33m[tester::#XV6] [handshake] [master] [0m[94mSent "FULLRESYNC 75cd7bc10c49047e0d163660f3b90625b1af31dc 0"[0m
 [33m[tester::#XV6] [handshake] [master] [0m[36mSent bytes: "+FULLRESYNC 75cd7bc10c49047e0d163660f3b90625b1af31dc 0\r\n"[0m
-[33m[tester::#XV6] [handshake] [0m[36mSending RDB file...[0m
+[33m[tester::#XV6] [handshake] [master] [0m[36mSending RDB file...[0m
 [33m[tester::#XV6] [handshake] [master] [0m[36mSent bytes: "$88\r\nREDIS0011\xfa\tredis-ver\x057.2.0\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2m\b\xbce\xfa\bused-mem°\xc4\x10\x00\xfa\baof-base\xc0\x00\xff\xf0n;\xfe\xc0\xffZ\xa2"[0m
 [33m[tester::#XV6] [handshake] [0m[92mSent RDB file.[0m
 [33m[tester::#XV6] [test] [master] [0m[94m> REPLCONF GETACK *[0m
 [33m[tester::#XV6] [test] [master] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$6\r\nGETACK\r\n$1\r\n*\r\n"[0m
 [33m[tester::#XV6] [test] [master] [0m[36mReceived bytes: "*3\r\n$8\r\nREPLCONF\r\n$3\r\nACK\r\n$1\r\n0\r\n"[0m
 [33m[tester::#XV6] [test] [master] [0m[36mReceived RESP array: ["REPLCONF", "ACK", "0"][0m
-[33m[tester::#XV6] [test] [0m[92mReceived ["REPLCONF", "ACK", "0"][0m
+[33m[tester::#XV6] [test] [master] [0m[92mReceived ["REPLCONF", "ACK", "0"][0m
 [33m[tester::#XV6] [0m[92mTest passed.[0m
 [33m[tester::#XV6] [0m[36mTerminating program[0m
 [33m[tester::#XV6] [0m[36mProgram terminated successfully[0m
@@ -939,27 +939,27 @@ Debug = true
 [33m[tester::#YG4] [0m[94mRunning tests for Stage #YG4 (yg4)[0m
 [33m[tester::#YG4] [0m[94mMaster is running on port 6379[0m
 [33m[tester::#YG4] [0m[94m$ ./spawn_redis_server.sh --port 6380 --replicaof "localhost 6379"[0m
-[33m[tester::#YG4] [handshake] [0m[94mmaster: Waiting for replica to initiate handshake with "PING" command[0m
+[33m[tester::#YG4] [handshake] [master] [0m[94mWaiting for replica to initiate handshake with "PING" command[0m
 [33m[tester::#YG4] [handshake] [master] [0m[36mReceived bytes: "*1\r\n$4\r\nPING\r\n"[0m
 [33m[tester::#YG4] [handshake] [master] [0m[36mReceived RESP array: ["PING"][0m
-[33m[tester::#YG4] [handshake] [0m[92mReceived ["PING"][0m
+[33m[tester::#YG4] [handshake] [master] [0m[92mReceived ["PING"][0m
 [33m[tester::#YG4] [handshake] [master] [0m[94mSent "PONG"[0m
 [33m[tester::#YG4] [handshake] [master] [0m[36mSent bytes: "+PONG\r\n"[0m
-[33m[tester::#YG4] [handshake] [0m[94mmaster: Waiting for replica to send "REPLCONF listening-port 6380" command[0m
+[33m[tester::#YG4] [handshake] [master] [0m[94mWaiting for replica to send "REPLCONF listening-port 6380" command[0m
 [33m[tester::#YG4] [handshake] [master] [0m[36mReceived bytes: "*3\r\n$8\r\nREPLCONF\r\n$14\r\nlistening-port\r\n$4\r\n6380\r\n"[0m
 [33m[tester::#YG4] [handshake] [master] [0m[36mReceived RESP array: [[0m
 [33m[tester::#YG4] [handshake] [master] [0m[36m  "REPLCONF",[0m
 [33m[tester::#YG4] [handshake] [master] [0m[36m  "listening-port",[0m
 [33m[tester::#YG4] [handshake] [master] [0m[36m  "6380"[0m
 [33m[tester::#YG4] [handshake] [master] [0m[36m][0m
-[33m[tester::#YG4] [handshake] [0m[92mReceived [[0m
-[33m[tester::#YG4] [handshake] [0m[92m  "REPLCONF",[0m
-[33m[tester::#YG4] [handshake] [0m[92m  "listening-port",[0m
-[33m[tester::#YG4] [handshake] [0m[92m  "6380"[0m
-[33m[tester::#YG4] [handshake] [0m[92m][0m
+[33m[tester::#YG4] [handshake] [master] [0m[92mReceived [[0m
+[33m[tester::#YG4] [handshake] [master] [0m[92m  "REPLCONF",[0m
+[33m[tester::#YG4] [handshake] [master] [0m[92m  "listening-port",[0m
+[33m[tester::#YG4] [handshake] [master] [0m[92m  "6380"[0m
+[33m[tester::#YG4] [handshake] [master] [0m[92m][0m
 [33m[tester::#YG4] [handshake] [master] [0m[94mSent "OK"[0m
 [33m[tester::#YG4] [handshake] [master] [0m[36mSent bytes: "+OK\r\n"[0m
-[33m[tester::#YG4] [handshake] [0m[94mmaster: Waiting for replica to send "REPLCONF capa" command[0m
+[33m[tester::#YG4] [handshake] [master] [0m[94mWaiting for replica to send "REPLCONF capa" command[0m
 [33m[tester::#YG4] [handshake] [master] [0m[36mReceived bytes: "*7\r\n$8\r\nREPLCONF\r\n$4\r\ncapa\r\n$3\r\neof\r\n$4\r\ncapa\r\n$6\r\npsync2\r\n$4\r\ncapa\r\n$16\r\nrdb-channel-repl\r\n"[0m
 [33m[tester::#YG4] [handshake] [master] [0m[36mReceived RESP array: [[0m
 [33m[tester::#YG4] [handshake] [master] [0m[36m  "REPLCONF",[0m
@@ -970,24 +970,24 @@ Debug = true
 [33m[tester::#YG4] [handshake] [master] [0m[36m  "capa",[0m
 [33m[tester::#YG4] [handshake] [master] [0m[36m  "rdb-channel-repl"[0m
 [33m[tester::#YG4] [handshake] [master] [0m[36m][0m
-[33m[tester::#YG4] [handshake] [0m[92mReceived [[0m
-[33m[tester::#YG4] [handshake] [0m[92m  "REPLCONF",[0m
-[33m[tester::#YG4] [handshake] [0m[92m  "capa",[0m
-[33m[tester::#YG4] [handshake] [0m[92m  "eof",[0m
-[33m[tester::#YG4] [handshake] [0m[92m  "capa",[0m
-[33m[tester::#YG4] [handshake] [0m[92m  "psync2",[0m
-[33m[tester::#YG4] [handshake] [0m[92m  "capa",[0m
-[33m[tester::#YG4] [handshake] [0m[92m  "rdb-channel-repl"[0m
-[33m[tester::#YG4] [handshake] [0m[92m][0m
+[33m[tester::#YG4] [handshake] [master] [0m[92mReceived [[0m
+[33m[tester::#YG4] [handshake] [master] [0m[92m  "REPLCONF",[0m
+[33m[tester::#YG4] [handshake] [master] [0m[92m  "capa",[0m
+[33m[tester::#YG4] [handshake] [master] [0m[92m  "eof",[0m
+[33m[tester::#YG4] [handshake] [master] [0m[92m  "capa",[0m
+[33m[tester::#YG4] [handshake] [master] [0m[92m  "psync2",[0m
+[33m[tester::#YG4] [handshake] [master] [0m[92m  "capa",[0m
+[33m[tester::#YG4] [handshake] [master] [0m[92m  "rdb-channel-repl"[0m
+[33m[tester::#YG4] [handshake] [master] [0m[92m][0m
 [33m[tester::#YG4] [handshake] [master] [0m[94mSent "OK"[0m
 [33m[tester::#YG4] [handshake] [master] [0m[36mSent bytes: "+OK\r\n"[0m
-[33m[tester::#YG4] [handshake] [0m[94mmaster: Waiting for replica to send "PSYNC" command[0m
+[33m[tester::#YG4] [handshake] [master] [0m[94mWaiting for replica to send "PSYNC" command[0m
 [33m[tester::#YG4] [handshake] [master] [0m[36mReceived bytes: "*3\r\n$5\r\nPSYNC\r\n$1\r\n?\r\n$2\r\n-1\r\n"[0m
 [33m[tester::#YG4] [handshake] [master] [0m[36mReceived RESP array: ["PSYNC", "?", "-1"][0m
-[33m[tester::#YG4] [handshake] [0m[92mReceived ["PSYNC", "?", "-1"][0m
+[33m[tester::#YG4] [handshake] [master] [0m[92mReceived ["PSYNC", "?", "-1"][0m
 [33m[tester::#YG4] [handshake] [master] [0m[94mSent "FULLRESYNC 75cd7bc10c49047e0d163660f3b90625b1af31dc 0"[0m
 [33m[tester::#YG4] [handshake] [master] [0m[36mSent bytes: "+FULLRESYNC 75cd7bc10c49047e0d163660f3b90625b1af31dc 0\r\n"[0m
-[33m[tester::#YG4] [handshake] [0m[36mSending RDB file...[0m
+[33m[tester::#YG4] [handshake] [master] [0m[36mSending RDB file...[0m
 [33m[tester::#YG4] [handshake] [master] [0m[36mSent bytes: "$88\r\nREDIS0011\xfa\tredis-ver\x057.2.0\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2m\b\xbce\xfa\bused-mem°\xc4\x10\x00\xfa\baof-base\xc0\x00\xff\xf0n;\xfe\xc0\xffZ\xa2"[0m
 [33m[tester::#YG4] [handshake] [0m[92mSent RDB file.[0m
 [33m[tester::#YG4] [propagation] [master] [0m[94m> SET foo 123[0m
@@ -1001,19 +1001,19 @@ Debug = true
 [33m[tester::#YG4] [test] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$3\r\nfoo\r\n"[0m
 [33m[tester::#YG4] [test] [client] [0m[36mReceived bytes: "$3\r\n123\r\n"[0m
 [33m[tester::#YG4] [test] [client] [0m[36mReceived RESP bulk string: "123"[0m
-[33m[tester::#YG4] [test] [0m[92mReceived "123"[0m
-[33m[tester::#YG4] [test] [0m[94mGetting key bar[0m
+[33m[tester::#YG4] [test] [client] [0m[92mReceived "123"[0m
+[33m[tester::#YG4] [test] [client] [0m[94mGetting key bar[0m
 [33m[tester::#YG4] [test] [client] [0m[94m> GET bar[0m
 [33m[tester::#YG4] [test] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$3\r\nbar\r\n"[0m
 [33m[tester::#YG4] [test] [client] [0m[36mReceived bytes: "$3\r\n456\r\n"[0m
 [33m[tester::#YG4] [test] [client] [0m[36mReceived RESP bulk string: "456"[0m
-[33m[tester::#YG4] [test] [0m[92mReceived "456"[0m
-[33m[tester::#YG4] [test] [0m[94mGetting key baz[0m
+[33m[tester::#YG4] [test] [client] [0m[92mReceived "456"[0m
+[33m[tester::#YG4] [test] [client] [0m[94mGetting key baz[0m
 [33m[tester::#YG4] [test] [client] [0m[94m> GET baz[0m
 [33m[tester::#YG4] [test] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$3\r\nbaz\r\n"[0m
 [33m[tester::#YG4] [test] [client] [0m[36mReceived bytes: "$3\r\n789\r\n"[0m
 [33m[tester::#YG4] [test] [client] [0m[36mReceived RESP bulk string: "789"[0m
-[33m[tester::#YG4] [test] [0m[92mReceived "789"[0m
+[33m[tester::#YG4] [test] [client] [0m[92mReceived "789"[0m
 [33m[tester::#YG4] [0m[92mTest passed.[0m
 [33m[tester::#YG4] [0m[36mTerminating program[0m
 [33m[tester::#YG4] [0m[36mProgram terminated successfully[0m
@@ -1029,133 +1029,133 @@ Debug = true
 [33m[tester::#HD5] [handshake] [replica@6380] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
 [33m[tester::#HD5] [handshake] [replica@6380] [0m[36mReceived bytes: "+PONG\r\n"[0m
 [33m[tester::#HD5] [handshake] [replica@6380] [0m[36mReceived RESP simple string: "PONG"[0m
-[33m[tester::#HD5] [handshake] [0m[92mReceived "PONG"[0m
+[33m[tester::#HD5] [handshake] [replica@6380] [0m[92mReceived "PONG"[0m
 [33m[tester::#HD5] [handshake] [replica@6380] [0m[94m> REPLCONF listening-port 6380[0m
 [33m[tester::#HD5] [handshake] [replica@6380] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$14\r\nlistening-port\r\n$4\r\n6380\r\n"[0m
 [33m[tester::#HD5] [handshake] [replica@6380] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#HD5] [handshake] [replica@6380] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#HD5] [handshake] [0m[92mReceived "OK"[0m
+[33m[tester::#HD5] [handshake] [replica@6380] [0m[92mReceived "OK"[0m
 [33m[tester::#HD5] [handshake] [replica@6380] [0m[94m> REPLCONF capa psync2[0m
 [33m[tester::#HD5] [handshake] [replica@6380] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$4\r\ncapa\r\n$6\r\npsync2\r\n"[0m
 [33m[tester::#HD5] [handshake] [replica@6380] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#HD5] [handshake] [replica@6380] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#HD5] [handshake] [0m[92mReceived "OK"[0m
+[33m[tester::#HD5] [handshake] [replica@6380] [0m[92mReceived "OK"[0m
 [33m[tester::#HD5] [handshake] [replica@6380] [0m[94m> PSYNC ? -1[0m
 [33m[tester::#HD5] [handshake] [replica@6380] [0m[36mSent bytes: "*3\r\n$5\r\nPSYNC\r\n$1\r\n?\r\n$2\r\n-1\r\n"[0m
-[33m[tester::#HD5] [handshake] [replica@6380] [0m[36mReceived bytes: "+FULLRESYNC ca494c47d3d4b7b845f06a40793fe398e52ebc02 0\r\n"[0m
-[33m[tester::#HD5] [handshake] [replica@6380] [0m[36mReceived RESP simple string: "FULLRESYNC ca494c47d3d4b7b845f06a40793fe398e52ebc02 0"[0m
-[33m[tester::#HD5] [handshake] [0m[92mReceived "FULLRESYNC ca494c47d3d4b7b845f06a40793fe398e52ebc02 0"[0m
-[33m[tester::#HD5] [handshake] [0m[36mReading RDB file...[0m
-[33m[tester::#HD5] [handshake] [replica@6380] [0m[36mReceived bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\u009e`oh\xfa\bused-mem\xc2p\xc3\r\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(ca494c47d3d4b7b845f06a40793fe398e52ebc02\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff\x03H;LJ\x8e\xf5\xd4"[0m
+[33m[tester::#HD5] [handshake] [replica@6380] [0m[36mReceived bytes: "+FULLRESYNC b504504d820f452029dceb5fdb8da2754107c6ef 0\r\n"[0m
+[33m[tester::#HD5] [handshake] [replica@6380] [0m[36mReceived RESP simple string: "FULLRESYNC b504504d820f452029dceb5fdb8da2754107c6ef 0"[0m
+[33m[tester::#HD5] [handshake] [replica@6380] [0m[92mReceived "FULLRESYNC b504504d820f452029dceb5fdb8da2754107c6ef 0"[0m
+[33m[tester::#HD5] [handshake] [replica@6380] [0m[36mReading RDB file...[0m
+[33m[tester::#HD5] [handshake] [replica@6380] [0m[36mReceived bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2\xfaqoh\xfa\bused-mem\xc2p\xc3\r\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(b504504d820f452029dceb5fdb8da2754107c6ef\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff$X\xf3\n%\x06K\xfd"[0m
 [33m[tester::#HD5] [handshake] [0m[92mReceived RDB file[0m
 [33m[tester::#HD5] [0m[36mCreating replica@6381[0m
 [33m[tester::#HD5] [handshake] [replica@6381] [0m[94m$ redis-cli PING[0m
 [33m[tester::#HD5] [handshake] [replica@6381] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
 [33m[tester::#HD5] [handshake] [replica@6381] [0m[36mReceived bytes: "+PONG\r\n"[0m
 [33m[tester::#HD5] [handshake] [replica@6381] [0m[36mReceived RESP simple string: "PONG"[0m
-[33m[tester::#HD5] [handshake] [0m[92mReceived "PONG"[0m
+[33m[tester::#HD5] [handshake] [replica@6381] [0m[92mReceived "PONG"[0m
 [33m[tester::#HD5] [handshake] [replica@6381] [0m[94m> REPLCONF listening-port 6381[0m
 [33m[tester::#HD5] [handshake] [replica@6381] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$14\r\nlistening-port\r\n$4\r\n6381\r\n"[0m
 [33m[tester::#HD5] [handshake] [replica@6381] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#HD5] [handshake] [replica@6381] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#HD5] [handshake] [0m[92mReceived "OK"[0m
+[33m[tester::#HD5] [handshake] [replica@6381] [0m[92mReceived "OK"[0m
 [33m[tester::#HD5] [handshake] [replica@6381] [0m[94m> REPLCONF capa psync2[0m
 [33m[tester::#HD5] [handshake] [replica@6381] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$4\r\ncapa\r\n$6\r\npsync2\r\n"[0m
 [33m[tester::#HD5] [handshake] [replica@6381] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#HD5] [handshake] [replica@6381] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#HD5] [handshake] [0m[92mReceived "OK"[0m
+[33m[tester::#HD5] [handshake] [replica@6381] [0m[92mReceived "OK"[0m
 [33m[tester::#HD5] [handshake] [replica@6381] [0m[94m> PSYNC ? -1[0m
 [33m[tester::#HD5] [handshake] [replica@6381] [0m[36mSent bytes: "*3\r\n$5\r\nPSYNC\r\n$1\r\n?\r\n$2\r\n-1\r\n"[0m
-[33m[tester::#HD5] [handshake] [replica@6381] [0m[36mReceived bytes: "+FULLRESYNC ca494c47d3d4b7b845f06a40793fe398e52ebc02 0\r\n"[0m
-[33m[tester::#HD5] [handshake] [replica@6381] [0m[36mReceived RESP simple string: "FULLRESYNC ca494c47d3d4b7b845f06a40793fe398e52ebc02 0"[0m
-[33m[tester::#HD5] [handshake] [0m[92mReceived "FULLRESYNC ca494c47d3d4b7b845f06a40793fe398e52ebc02 0"[0m
-[33m[tester::#HD5] [handshake] [0m[36mReading RDB file...[0m
-[33m[tester::#HD5] [handshake] [replica@6381] [0m[36mReceived bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\u009e`oh\xfa\bused-mem\xc2 i\x0e\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(ca494c47d3d4b7b845f06a40793fe398e52ebc02\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff\xb3.\b\x02X\xe0\xf84"[0m
+[33m[tester::#HD5] [handshake] [replica@6381] [0m[36mReceived bytes: "+FULLRESYNC b504504d820f452029dceb5fdb8da2754107c6ef 0\r\n"[0m
+[33m[tester::#HD5] [handshake] [replica@6381] [0m[36mReceived RESP simple string: "FULLRESYNC b504504d820f452029dceb5fdb8da2754107c6ef 0"[0m
+[33m[tester::#HD5] [handshake] [replica@6381] [0m[92mReceived "FULLRESYNC b504504d820f452029dceb5fdb8da2754107c6ef 0"[0m
+[33m[tester::#HD5] [handshake] [replica@6381] [0m[36mReading RDB file...[0m
+[33m[tester::#HD5] [handshake] [replica@6381] [0m[36mReceived bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2\xfaqoh\xfa\bused-mem\xc2 i\x0e\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(b504504d820f452029dceb5fdb8da2754107c6ef\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff\x94>\xc0D7hF\x1d"[0m
 [33m[tester::#HD5] [handshake] [0m[92mReceived RDB file[0m
 [33m[tester::#HD5] [0m[36mCreating replica@6382[0m
 [33m[tester::#HD5] [handshake] [replica@6382] [0m[94m$ redis-cli PING[0m
 [33m[tester::#HD5] [handshake] [replica@6382] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
 [33m[tester::#HD5] [handshake] [replica@6382] [0m[36mReceived bytes: "+PONG\r\n"[0m
 [33m[tester::#HD5] [handshake] [replica@6382] [0m[36mReceived RESP simple string: "PONG"[0m
-[33m[tester::#HD5] [handshake] [0m[92mReceived "PONG"[0m
+[33m[tester::#HD5] [handshake] [replica@6382] [0m[92mReceived "PONG"[0m
 [33m[tester::#HD5] [handshake] [replica@6382] [0m[94m> REPLCONF listening-port 6382[0m
 [33m[tester::#HD5] [handshake] [replica@6382] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$14\r\nlistening-port\r\n$4\r\n6382\r\n"[0m
 [33m[tester::#HD5] [handshake] [replica@6382] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#HD5] [handshake] [replica@6382] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#HD5] [handshake] [0m[92mReceived "OK"[0m
+[33m[tester::#HD5] [handshake] [replica@6382] [0m[92mReceived "OK"[0m
 [33m[tester::#HD5] [handshake] [replica@6382] [0m[94m> REPLCONF capa psync2[0m
 [33m[tester::#HD5] [handshake] [replica@6382] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$4\r\ncapa\r\n$6\r\npsync2\r\n"[0m
 [33m[tester::#HD5] [handshake] [replica@6382] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#HD5] [handshake] [replica@6382] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#HD5] [handshake] [0m[92mReceived "OK"[0m
+[33m[tester::#HD5] [handshake] [replica@6382] [0m[92mReceived "OK"[0m
 [33m[tester::#HD5] [handshake] [replica@6382] [0m[94m> PSYNC ? -1[0m
 [33m[tester::#HD5] [handshake] [replica@6382] [0m[36mSent bytes: "*3\r\n$5\r\nPSYNC\r\n$1\r\n?\r\n$2\r\n-1\r\n"[0m
-[33m[tester::#HD5] [handshake] [replica@6382] [0m[36mReceived bytes: "+FULLRESYNC ca494c47d3d4b7b845f06a40793fe398e52ebc02 0\r\n"[0m
-[33m[tester::#HD5] [handshake] [replica@6382] [0m[36mReceived RESP simple string: "FULLRESYNC ca494c47d3d4b7b845f06a40793fe398e52ebc02 0"[0m
-[33m[tester::#HD5] [handshake] [0m[92mReceived "FULLRESYNC ca494c47d3d4b7b845f06a40793fe398e52ebc02 0"[0m
-[33m[tester::#HD5] [handshake] [0m[36mReading RDB file...[0m
-[33m[tester::#HD5] [handshake] [replica@6382] [0m[36mReceived bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\u009e`oh\xfa\bused-mem\xc2p6\x0e\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(ca494c47d3d4b7b845f06a40793fe398e52ebc02\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff \xf3\x80\xa1vB\x96Q"[0m
+[33m[tester::#HD5] [handshake] [replica@6382] [0m[36mReceived bytes: "+FULLRESYNC b504504d820f452029dceb5fdb8da2754107c6ef 0\r\n"[0m
+[33m[tester::#HD5] [handshake] [replica@6382] [0m[36mReceived RESP simple string: "FULLRESYNC b504504d820f452029dceb5fdb8da2754107c6ef 0"[0m
+[33m[tester::#HD5] [handshake] [replica@6382] [0m[92mReceived "FULLRESYNC b504504d820f452029dceb5fdb8da2754107c6ef 0"[0m
+[33m[tester::#HD5] [handshake] [replica@6382] [0m[36mReading RDB file...[0m
+[33m[tester::#HD5] [handshake] [replica@6382] [0m[36mReceived bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2\xfaqoh\xfa\bused-mem\xc2p6\x0e\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(b504504d820f452029dceb5fdb8da2754107c6ef\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff\a\xe3H\xe7\x19\xca(x"[0m
 [33m[tester::#HD5] [handshake] [0m[92mReceived RDB file[0m
 [33m[tester::#HD5] [test] [client] [0m[94m$ redis-cli SET foo 123[0m
 [33m[tester::#HD5] [test] [client] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$3\r\nfoo\r\n$3\r\n123\r\n"[0m
 [33m[tester::#HD5] [test] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#HD5] [test] [client] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#HD5] [test] [0m[92mReceived "OK"[0m
+[33m[tester::#HD5] [test] [client] [0m[92mReceived "OK"[0m
 [33m[tester::#HD5] [test] [client] [0m[94m> SET bar 456[0m
 [33m[tester::#HD5] [test] [client] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$3\r\nbar\r\n$3\r\n456\r\n"[0m
 [33m[tester::#HD5] [test] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#HD5] [test] [client] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#HD5] [test] [0m[92mReceived "OK"[0m
+[33m[tester::#HD5] [test] [client] [0m[92mReceived "OK"[0m
 [33m[tester::#HD5] [test] [client] [0m[94m> SET baz 789[0m
 [33m[tester::#HD5] [test] [client] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$3\r\nbaz\r\n$3\r\n789\r\n"[0m
 [33m[tester::#HD5] [test] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#HD5] [test] [client] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#HD5] [test] [0m[92mReceived "OK"[0m
-[33m[tester::#HD5] [test] [0m[94mTesting Replica 1/3: replica@6380[0m
-[33m[tester::#HD5] [test] [0m[94mreplica@6380: Expecting "SET foo 123" to be propagated[0m
+[33m[tester::#HD5] [test] [client] [0m[92mReceived "OK"[0m
+[33m[tester::#HD5] [test] [client] [0m[94mTesting Replica 1/3: replica@6380[0m
+[33m[tester::#HD5] [test] [replica@6380] [0m[94mExpecting "SET foo 123" to be propagated[0m
 [33m[tester::#HD5] [test] [replica@6380] [0m[36mReceived bytes: "*2\r\n$6\r\nSELECT\r\n$1\r\n0\r\n"[0m
 [33m[tester::#HD5] [test] [replica@6380] [0m[36mReceived RESP array: ["SELECT", "0"][0m
 [33m[tester::#HD5] [test] [replica@6380] [0m[36mReceived bytes: "*3\r\n$3\r\nSET\r\n$3\r\nfoo\r\n$3\r\n123\r\n"[0m
 [33m[tester::#HD5] [test] [replica@6380] [0m[36mReceived RESP array: ["SET", "foo", "123"][0m
-[33m[tester::#HD5] [test] [0m[92mReceived ["SET", "foo", "123"][0m
-[33m[tester::#HD5] [test] [0m[94mreplica@6380: Expecting "SET bar 456" to be propagated[0m
+[33m[tester::#HD5] [test] [replica@6380] [0m[92mReceived ["SET", "foo", "123"][0m
+[33m[tester::#HD5] [test] [replica@6380] [0m[94mExpecting "SET bar 456" to be propagated[0m
 [33m[tester::#HD5] [test] [replica@6380] [0m[36mReceived bytes: "*3\r\n$3\r\nSET\r\n$3\r\nbar\r\n$3\r\n456\r\n"[0m
 [33m[tester::#HD5] [test] [replica@6380] [0m[36mReceived RESP array: ["SET", "bar", "456"][0m
-[33m[tester::#HD5] [test] [0m[92mReceived ["SET", "bar", "456"][0m
-[33m[tester::#HD5] [test] [0m[94mreplica@6380: Expecting "SET baz 789" to be propagated[0m
+[33m[tester::#HD5] [test] [replica@6380] [0m[92mReceived ["SET", "bar", "456"][0m
+[33m[tester::#HD5] [test] [replica@6380] [0m[94mExpecting "SET baz 789" to be propagated[0m
 [33m[tester::#HD5] [test] [replica@6380] [0m[36mReceived bytes: "*3\r\n$3\r\nSET\r\n$3\r\nbaz\r\n$3\r\n789\r\n"[0m
 [33m[tester::#HD5] [test] [replica@6380] [0m[36mReceived RESP array: ["SET", "baz", "789"][0m
-[33m[tester::#HD5] [test] [0m[92mReceived ["SET", "baz", "789"][0m
-[33m[tester::#HD5] [test] [0m[94mTesting Replica 2/3: replica@6381[0m
-[33m[tester::#HD5] [test] [0m[94mreplica@6381: Expecting "SET foo 123" to be propagated[0m
+[33m[tester::#HD5] [test] [replica@6380] [0m[92mReceived ["SET", "baz", "789"][0m
+[33m[tester::#HD5] [test] [replica@6380] [0m[94mTesting Replica 2/3: replica@6381[0m
+[33m[tester::#HD5] [test] [replica@6381] [0m[94mExpecting "SET foo 123" to be propagated[0m
 [33m[tester::#HD5] [test] [replica@6381] [0m[36mReceived bytes: "*2\r\n$6\r\nSELECT\r\n$1\r\n0\r\n"[0m
 [33m[tester::#HD5] [test] [replica@6381] [0m[36mReceived RESP array: ["SELECT", "0"][0m
 [33m[tester::#HD5] [test] [replica@6381] [0m[36mReceived bytes: "*3\r\n$3\r\nSET\r\n$3\r\nfoo\r\n$3\r\n123\r\n"[0m
 [33m[tester::#HD5] [test] [replica@6381] [0m[36mReceived RESP array: ["SET", "foo", "123"][0m
-[33m[tester::#HD5] [test] [0m[92mReceived ["SET", "foo", "123"][0m
-[33m[tester::#HD5] [test] [0m[94mreplica@6381: Expecting "SET bar 456" to be propagated[0m
+[33m[tester::#HD5] [test] [replica@6381] [0m[92mReceived ["SET", "foo", "123"][0m
+[33m[tester::#HD5] [test] [replica@6381] [0m[94mExpecting "SET bar 456" to be propagated[0m
 [33m[tester::#HD5] [test] [replica@6381] [0m[36mReceived bytes: "*3\r\n$3\r\nSET\r\n$3\r\nbar\r\n$3\r\n456\r\n"[0m
 [33m[tester::#HD5] [test] [replica@6381] [0m[36mReceived RESP array: ["SET", "bar", "456"][0m
-[33m[tester::#HD5] [test] [0m[92mReceived ["SET", "bar", "456"][0m
-[33m[tester::#HD5] [test] [0m[94mreplica@6381: Expecting "SET baz 789" to be propagated[0m
+[33m[tester::#HD5] [test] [replica@6381] [0m[92mReceived ["SET", "bar", "456"][0m
+[33m[tester::#HD5] [test] [replica@6381] [0m[94mExpecting "SET baz 789" to be propagated[0m
 [33m[tester::#HD5] [test] [replica@6381] [0m[36mReceived bytes: "*3\r\n$3\r\nSET\r\n$3\r\nbaz\r\n$3\r\n789\r\n"[0m
 [33m[tester::#HD5] [test] [replica@6381] [0m[36mReceived RESP array: ["SET", "baz", "789"][0m
-[33m[tester::#HD5] [test] [0m[92mReceived ["SET", "baz", "789"][0m
-[33m[tester::#HD5] [test] [0m[94mTesting Replica 3/3: replica@6382[0m
-[33m[tester::#HD5] [test] [0m[94mreplica@6382: Expecting "SET foo 123" to be propagated[0m
+[33m[tester::#HD5] [test] [replica@6381] [0m[92mReceived ["SET", "baz", "789"][0m
+[33m[tester::#HD5] [test] [replica@6381] [0m[94mTesting Replica 3/3: replica@6382[0m
+[33m[tester::#HD5] [test] [replica@6382] [0m[94mExpecting "SET foo 123" to be propagated[0m
 [33m[tester::#HD5] [test] [replica@6382] [0m[36mReceived bytes: "*2\r\n$6\r\nSELECT\r\n$1\r\n0\r\n"[0m
 [33m[tester::#HD5] [test] [replica@6382] [0m[36mReceived RESP array: ["SELECT", "0"][0m
 [33m[tester::#HD5] [test] [replica@6382] [0m[36mReceived bytes: "*3\r\n$3\r\nSET\r\n$3\r\nfoo\r\n$3\r\n123\r\n"[0m
 [33m[tester::#HD5] [test] [replica@6382] [0m[36mReceived RESP array: ["SET", "foo", "123"][0m
-[33m[tester::#HD5] [test] [0m[92mReceived ["SET", "foo", "123"][0m
-[33m[tester::#HD5] [test] [0m[94mreplica@6382: Expecting "SET bar 456" to be propagated[0m
+[33m[tester::#HD5] [test] [replica@6382] [0m[92mReceived ["SET", "foo", "123"][0m
+[33m[tester::#HD5] [test] [replica@6382] [0m[94mExpecting "SET bar 456" to be propagated[0m
 [33m[tester::#HD5] [test] [replica@6382] [0m[36mReceived bytes: "*3\r\n$3\r\nSET\r\n$3\r\nbar\r\n$3\r\n456\r\n"[0m
 [33m[tester::#HD5] [test] [replica@6382] [0m[36mReceived RESP array: ["SET", "bar", "456"][0m
-[33m[tester::#HD5] [test] [0m[92mReceived ["SET", "bar", "456"][0m
-[33m[tester::#HD5] [test] [0m[94mreplica@6382: Expecting "SET baz 789" to be propagated[0m
+[33m[tester::#HD5] [test] [replica@6382] [0m[92mReceived ["SET", "bar", "456"][0m
+[33m[tester::#HD5] [test] [replica@6382] [0m[94mExpecting "SET baz 789" to be propagated[0m
 [33m[tester::#HD5] [test] [replica@6382] [0m[36mReceived bytes: "*3\r\n$3\r\nSET\r\n$3\r\nbaz\r\n$3\r\n789\r\n"[0m
 [33m[tester::#HD5] [test] [replica@6382] [0m[36mReceived RESP array: ["SET", "baz", "789"][0m
-[33m[tester::#HD5] [test] [0m[92mReceived ["SET", "baz", "789"][0m
+[33m[tester::#HD5] [test] [replica@6382] [0m[92mReceived ["SET", "baz", "789"][0m
 [33m[tester::#HD5] [0m[92mTest passed.[0m
 [33m[tester::#HD5] [0m[36mTerminating program[0m
 [33m[tester::#HD5] [0m[36mProgram terminated successfully[0m
@@ -1166,55 +1166,55 @@ Debug = true
 [33m[tester::#ZN8] [handshake] [replica] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
 [33m[tester::#ZN8] [handshake] [replica] [0m[36mReceived bytes: "+PONG\r\n"[0m
 [33m[tester::#ZN8] [handshake] [replica] [0m[36mReceived RESP simple string: "PONG"[0m
-[33m[tester::#ZN8] [handshake] [0m[92mReceived "PONG"[0m
+[33m[tester::#ZN8] [handshake] [replica] [0m[92mReceived "PONG"[0m
 [33m[tester::#ZN8] [handshake] [replica] [0m[94m> REPLCONF listening-port 6380[0m
 [33m[tester::#ZN8] [handshake] [replica] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$14\r\nlistening-port\r\n$4\r\n6380\r\n"[0m
 [33m[tester::#ZN8] [handshake] [replica] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#ZN8] [handshake] [replica] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#ZN8] [handshake] [0m[92mReceived "OK"[0m
+[33m[tester::#ZN8] [handshake] [replica] [0m[92mReceived "OK"[0m
 [33m[tester::#ZN8] [handshake] [replica] [0m[94m> REPLCONF capa psync2[0m
 [33m[tester::#ZN8] [handshake] [replica] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$4\r\ncapa\r\n$6\r\npsync2\r\n"[0m
 [33m[tester::#ZN8] [handshake] [replica] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#ZN8] [handshake] [replica] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#ZN8] [handshake] [0m[92mReceived "OK"[0m
+[33m[tester::#ZN8] [handshake] [replica] [0m[92mReceived "OK"[0m
 [33m[tester::#ZN8] [handshake] [replica] [0m[94m> PSYNC ? -1[0m
 [33m[tester::#ZN8] [handshake] [replica] [0m[36mSent bytes: "*3\r\n$5\r\nPSYNC\r\n$1\r\n?\r\n$2\r\n-1\r\n"[0m
-[33m[tester::#ZN8] [handshake] [replica] [0m[36mReceived bytes: "+FULLRESYNC 848781f36740d12d622c4bdbce6cae210f4baf3d 0\r\n"[0m
-[33m[tester::#ZN8] [handshake] [replica] [0m[36mReceived RESP simple string: "FULLRESYNC 848781f36740d12d622c4bdbce6cae210f4baf3d 0"[0m
-[33m[tester::#ZN8] [handshake] [0m[92mReceived "FULLRESYNC 848781f36740d12d622c4bdbce6cae210f4baf3d 0"[0m
-[33m[tester::#ZN8] [handshake] [0m[36mReading RDB file...[0m
-[33m[tester::#ZN8] [handshake] [replica] [0m[36mReceived bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\u009f`oh\xfa\bused-mem\xc2p\xc3\r\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(848781f36740d12d622c4bdbce6cae210f4baf3d\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xffn<\xf8\xb7\xb9\xcbpy"[0m
+[33m[tester::#ZN8] [handshake] [replica] [0m[36mReceived bytes: "+FULLRESYNC d26b6f0de36ad8c55916193a46c05e5061bc387b 0\r\n"[0m
+[33m[tester::#ZN8] [handshake] [replica] [0m[36mReceived RESP simple string: "FULLRESYNC d26b6f0de36ad8c55916193a46c05e5061bc387b 0"[0m
+[33m[tester::#ZN8] [handshake] [replica] [0m[92mReceived "FULLRESYNC d26b6f0de36ad8c55916193a46c05e5061bc387b 0"[0m
+[33m[tester::#ZN8] [handshake] [replica] [0m[36mReading RDB file...[0m
+[33m[tester::#ZN8] [handshake] [replica] [0m[36mReceived bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2\xfaqoh\xfa\bused-mem\xc2p\xc3\r\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(d26b6f0de36ad8c55916193a46c05e5061bc387b\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xffc\xe9\xdaѶz\xc9i"[0m
 [33m[tester::#ZN8] [handshake] [0m[92mReceived RDB file[0m
 [33m[tester::#ZN8] [test] [client] [0m[94m$ redis-cli SET foo 123[0m
 [33m[tester::#ZN8] [test] [client] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$3\r\nfoo\r\n$3\r\n123\r\n"[0m
 [33m[tester::#ZN8] [test] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#ZN8] [test] [client] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#ZN8] [test] [0m[92mReceived "OK"[0m
+[33m[tester::#ZN8] [test] [client] [0m[92mReceived "OK"[0m
 [33m[tester::#ZN8] [test] [client] [0m[94m> SET bar 456[0m
 [33m[tester::#ZN8] [test] [client] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$3\r\nbar\r\n$3\r\n456\r\n"[0m
 [33m[tester::#ZN8] [test] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#ZN8] [test] [client] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#ZN8] [test] [0m[92mReceived "OK"[0m
+[33m[tester::#ZN8] [test] [client] [0m[92mReceived "OK"[0m
 [33m[tester::#ZN8] [test] [client] [0m[94m> SET baz 789[0m
 [33m[tester::#ZN8] [test] [client] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$3\r\nbaz\r\n$3\r\n789\r\n"[0m
 [33m[tester::#ZN8] [test] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#ZN8] [test] [client] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#ZN8] [test] [0m[92mReceived "OK"[0m
-[33m[tester::#ZN8] [test] [0m[92mSent 3 SET commands to master successfully.[0m
-[33m[tester::#ZN8] [test] [0m[94mreplica: Expecting "SET foo 123" to be propagated[0m
+[33m[tester::#ZN8] [test] [client] [0m[92mReceived "OK"[0m
+[33m[tester::#ZN8] [test] [client] [0m[92mSent 3 SET commands to master successfully.[0m
+[33m[tester::#ZN8] [test] [replica] [0m[94mExpecting "SET foo 123" to be propagated[0m
 [33m[tester::#ZN8] [test] [replica] [0m[36mReceived bytes: "*2\r\n$6\r\nSELECT\r\n$1\r\n0\r\n"[0m
 [33m[tester::#ZN8] [test] [replica] [0m[36mReceived RESP array: ["SELECT", "0"][0m
 [33m[tester::#ZN8] [test] [replica] [0m[36mReceived bytes: "*3\r\n$3\r\nSET\r\n$3\r\nfoo\r\n$3\r\n123\r\n"[0m
 [33m[tester::#ZN8] [test] [replica] [0m[36mReceived RESP array: ["SET", "foo", "123"][0m
-[33m[tester::#ZN8] [test] [0m[92mReceived ["SET", "foo", "123"][0m
-[33m[tester::#ZN8] [test] [0m[94mreplica: Expecting "SET bar 456" to be propagated[0m
+[33m[tester::#ZN8] [test] [replica] [0m[92mReceived ["SET", "foo", "123"][0m
+[33m[tester::#ZN8] [test] [replica] [0m[94mExpecting "SET bar 456" to be propagated[0m
 [33m[tester::#ZN8] [test] [replica] [0m[36mReceived bytes: "*3\r\n$3\r\nSET\r\n$3\r\nbar\r\n$3\r\n456\r\n"[0m
 [33m[tester::#ZN8] [test] [replica] [0m[36mReceived RESP array: ["SET", "bar", "456"][0m
-[33m[tester::#ZN8] [test] [0m[92mReceived ["SET", "bar", "456"][0m
-[33m[tester::#ZN8] [test] [0m[94mreplica: Expecting "SET baz 789" to be propagated[0m
+[33m[tester::#ZN8] [test] [replica] [0m[92mReceived ["SET", "bar", "456"][0m
+[33m[tester::#ZN8] [test] [replica] [0m[94mExpecting "SET baz 789" to be propagated[0m
 [33m[tester::#ZN8] [test] [replica] [0m[36mReceived bytes: "*3\r\n$3\r\nSET\r\n$3\r\nbaz\r\n$3\r\n789\r\n"[0m
 [33m[tester::#ZN8] [test] [replica] [0m[36mReceived RESP array: ["SET", "baz", "789"][0m
-[33m[tester::#ZN8] [test] [0m[92mReceived ["SET", "baz", "789"][0m
+[33m[tester::#ZN8] [test] [replica] [0m[92mReceived ["SET", "baz", "789"][0m
 [33m[tester::#ZN8] [0m[92mTest passed.[0m
 [33m[tester::#ZN8] [0m[36mTerminating program[0m
 [33m[tester::#ZN8] [0m[36mProgram terminated successfully[0m
@@ -1225,24 +1225,24 @@ Debug = true
 [33m[tester::#CF8] [client] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
 [33m[tester::#CF8] [client] [0m[36mReceived bytes: "+PONG\r\n"[0m
 [33m[tester::#CF8] [client] [0m[36mReceived RESP simple string: "PONG"[0m
-[33m[tester::#CF8] [0m[92mReceived "PONG"[0m
+[33m[tester::#CF8] [client] [0m[92mReceived "PONG"[0m
 [33m[tester::#CF8] [client] [0m[94m> REPLCONF listening-port 6380[0m
 [33m[tester::#CF8] [client] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$14\r\nlistening-port\r\n$4\r\n6380\r\n"[0m
 [33m[tester::#CF8] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#CF8] [client] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#CF8] [0m[92mReceived "OK"[0m
+[33m[tester::#CF8] [client] [0m[92mReceived "OK"[0m
 [33m[tester::#CF8] [client] [0m[94m> REPLCONF capa psync2[0m
 [33m[tester::#CF8] [client] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$4\r\ncapa\r\n$6\r\npsync2\r\n"[0m
 [33m[tester::#CF8] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#CF8] [client] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#CF8] [0m[92mReceived "OK"[0m
+[33m[tester::#CF8] [client] [0m[92mReceived "OK"[0m
 [33m[tester::#CF8] [client] [0m[94m> PSYNC ? -1[0m
 [33m[tester::#CF8] [client] [0m[36mSent bytes: "*3\r\n$5\r\nPSYNC\r\n$1\r\n?\r\n$2\r\n-1\r\n"[0m
-[33m[tester::#CF8] [client] [0m[36mReceived bytes: "+FULLRESYNC 218c5507e8f4fafa7574c0d0b927ce4eaae5f155 0\r\n"[0m
-[33m[tester::#CF8] [client] [0m[36mReceived RESP simple string: "FULLRESYNC 218c5507e8f4fafa7574c0d0b927ce4eaae5f155 0"[0m
-[33m[tester::#CF8] [0m[92mReceived "FULLRESYNC 218c5507e8f4fafa7574c0d0b927ce4eaae5f155 0"[0m
-[33m[tester::#CF8] [0m[36mReading RDB file...[0m
-[33m[tester::#CF8] [client] [0m[36mReceived bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\u009f`oh\xfa\bused-mem\xc2P~\r\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(218c5507e8f4fafa7574c0d0b927ce4eaae5f155\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xff\x05\xd0\xf8;\xdf\xe2x\xad"[0m
+[33m[tester::#CF8] [client] [0m[36mReceived bytes: "+FULLRESYNC 554567a43635b57972b0bca9ef2b55ef4bc9f2fe 0\r\n"[0m
+[33m[tester::#CF8] [client] [0m[36mReceived RESP simple string: "FULLRESYNC 554567a43635b57972b0bca9ef2b55ef4bc9f2fe 0"[0m
+[33m[tester::#CF8] [client] [0m[92mReceived "FULLRESYNC 554567a43635b57972b0bca9ef2b55ef4bc9f2fe 0"[0m
+[33m[tester::#CF8] [client] [0m[36mReading RDB file...[0m
+[33m[tester::#CF8] [client] [0m[36mReceived bytes: "$171\r\nREDIS0012\xfa\tredis-ver\x058.0.2\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2\xfaqoh\xfa\bused-mem\xc2P~\r\x00\xfa\x0erepl-stream-db\xc0\x00\xfa\arepl-id(554567a43635b57972b0bca9ef2b55ef4bc9f2fe\xfa\vrepl-offset\xc0\x00\xfa\baof-base\xc0\x00\xffɀ?'W\xe7\x10\xe3"[0m
 [33m[tester::#CF8] [0m[92mReceived RDB file[0m
 [33m[tester::#CF8] [0m[92mTest passed.[0m
 [33m[tester::#CF8] [0m[36mTerminating program[0m
@@ -1254,25 +1254,25 @@ Debug = true
 [33m[tester::#VM3] [client] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
 [33m[tester::#VM3] [client] [0m[36mReceived bytes: "+PONG\r\n"[0m
 [33m[tester::#VM3] [client] [0m[36mReceived RESP simple string: "PONG"[0m
-[33m[tester::#VM3] [0m[92mReceived "PONG"[0m
+[33m[tester::#VM3] [client] [0m[92mReceived "PONG"[0m
 [33m[tester::#VM3] [client] [0m[94m> REPLCONF listening-port 6380[0m
 [33m[tester::#VM3] [client] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$14\r\nlistening-port\r\n$4\r\n6380\r\n"[0m
 [33m[tester::#VM3] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#VM3] [client] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#VM3] [0m[92mReceived "OK"[0m
+[33m[tester::#VM3] [client] [0m[92mReceived "OK"[0m
 [33m[tester::#VM3] [client] [0m[94m> REPLCONF capa psync2[0m
 [33m[tester::#VM3] [client] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$4\r\ncapa\r\n$6\r\npsync2\r\n"[0m
 [33m[tester::#VM3] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#VM3] [client] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#VM3] [0m[92mReceived "OK"[0m
+[33m[tester::#VM3] [client] [0m[92mReceived "OK"[0m
 [33m[tester::#VM3] [client] [0m[94m> PSYNC ? -1[0m
 [33m[tester::#VM3] [client] [0m[36mSent bytes: "*3\r\n$5\r\nPSYNC\r\n$1\r\n?\r\n$2\r\n-1\r\n"[0m
-[33m[tester::#VM3] [client] [0m[36mReceived bytes: "+FULLRESYNC c9bad012a81f80efc8b04a0b399565dfc1c58b89 0\r\n"[0m
-[33m[tester::#VM3] [client] [0m[36mReceived RESP simple string: "FULLRESYNC c9bad012a81f80efc8b04a0b399565dfc1c58b89 0"[0m
-[33m[tester::#VM3] [0m[92mReceived "FULLRESYNC c9bad012a81f80efc8b04a0b399565dfc1c58b89 0"[0m
-[33m[tester::#VM3] [0m[92mTest passed.[0m
-[33m[tester::#VM3] [0m[36mTerminating program[0m
-[33m[tester::#VM3] [0m[36mProgram terminated successfully[0m
+[33m[tester::#VM3] [client] [0m[36mReceived bytes: "+FULLRESYNC 6d14f7209b55c1a1ac078be2b91a52aa80802a8a 0\r\n"[0m
+[33m[tester::#VM3] [client] [0m[36mReceived RESP simple string: "FULLRESYNC 6d14f7209b55c1a1ac078be2b91a52aa80802a8a 0"[0m
+[33m[tester::#VM3] [client] [0m[92mReceived "FULLRESYNC 6d14f7209b55c1a1ac078be2b91a52aa80802a8a 0"[0m
+[33m[tester::#VM3] [client] [0m[92mTest passed.[0m
+[33m[tester::#VM3] [client] [0m[36mTerminating program[0m
+[33m[tester::#VM3] [client] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#FJ0] [0m[94mRunning tests for Stage #FJ0 (fj0)[0m
 [33m[tester::#FJ0] [0m[94m$ ./spawn_redis_server.sh --port 6379[0m
@@ -1280,45 +1280,45 @@ Debug = true
 [33m[tester::#FJ0] [client] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
 [33m[tester::#FJ0] [client] [0m[36mReceived bytes: "+PONG\r\n"[0m
 [33m[tester::#FJ0] [client] [0m[36mReceived RESP simple string: "PONG"[0m
-[33m[tester::#FJ0] [0m[92mReceived "PONG"[0m
+[33m[tester::#FJ0] [client] [0m[92mReceived "PONG"[0m
 [33m[tester::#FJ0] [client] [0m[94m> REPLCONF listening-port 6380[0m
 [33m[tester::#FJ0] [client] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$14\r\nlistening-port\r\n$4\r\n6380\r\n"[0m
 [33m[tester::#FJ0] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#FJ0] [client] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#FJ0] [0m[92mReceived "OK"[0m
+[33m[tester::#FJ0] [client] [0m[92mReceived "OK"[0m
 [33m[tester::#FJ0] [client] [0m[94m> REPLCONF capa psync2[0m
 [33m[tester::#FJ0] [client] [0m[36mSent bytes: "*3\r\n$8\r\nREPLCONF\r\n$4\r\ncapa\r\n$6\r\npsync2\r\n"[0m
 [33m[tester::#FJ0] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#FJ0] [client] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#FJ0] [0m[92mReceived "OK"[0m
-[33m[tester::#FJ0] [0m[92mTest passed.[0m
-[33m[tester::#FJ0] [0m[36mTerminating program[0m
-[33m[tester::#FJ0] [0m[36mProgram terminated successfully[0m
+[33m[tester::#FJ0] [client] [0m[92mReceived "OK"[0m
+[33m[tester::#FJ0] [client] [0m[92mTest passed.[0m
+[33m[tester::#FJ0] [client] [0m[36mTerminating program[0m
+[33m[tester::#FJ0] [client] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#JU6] [0m[94mRunning tests for Stage #JU6 (ju6)[0m
 [33m[tester::#JU6] [0m[94mMaster is running on port 6379[0m
 [33m[tester::#JU6] [0m[94m$ ./spawn_redis_server.sh --port 6380 --replicaof "localhost 6379"[0m
-[33m[tester::#JU6] [0m[94mmaster: Waiting for replica to initiate handshake with "PING" command[0m
+[33m[tester::#JU6] [master] [0m[94mWaiting for replica to initiate handshake with "PING" command[0m
 [33m[tester::#JU6] [master] [0m[36mReceived bytes: "*1\r\n$4\r\nPING\r\n"[0m
 [33m[tester::#JU6] [master] [0m[36mReceived RESP array: ["PING"][0m
-[33m[tester::#JU6] [0m[92mReceived ["PING"][0m
+[33m[tester::#JU6] [master] [0m[92mReceived ["PING"][0m
 [33m[tester::#JU6] [master] [0m[94mSent "PONG"[0m
 [33m[tester::#JU6] [master] [0m[36mSent bytes: "+PONG\r\n"[0m
-[33m[tester::#JU6] [0m[94mmaster: Waiting for replica to send "REPLCONF listening-port 6380" command[0m
+[33m[tester::#JU6] [master] [0m[94mWaiting for replica to send "REPLCONF listening-port 6380" command[0m
 [33m[tester::#JU6] [master] [0m[36mReceived bytes: "*3\r\n$8\r\nREPLCONF\r\n$14\r\nlistening-port\r\n$4\r\n6380\r\n"[0m
 [33m[tester::#JU6] [master] [0m[36mReceived RESP array: [[0m
 [33m[tester::#JU6] [master] [0m[36m  "REPLCONF",[0m
 [33m[tester::#JU6] [master] [0m[36m  "listening-port",[0m
 [33m[tester::#JU6] [master] [0m[36m  "6380"[0m
 [33m[tester::#JU6] [master] [0m[36m][0m
-[33m[tester::#JU6] [0m[92mReceived [[0m
-[33m[tester::#JU6] [0m[92m  "REPLCONF",[0m
-[33m[tester::#JU6] [0m[92m  "listening-port",[0m
-[33m[tester::#JU6] [0m[92m  "6380"[0m
-[33m[tester::#JU6] [0m[92m][0m
+[33m[tester::#JU6] [master] [0m[92mReceived [[0m
+[33m[tester::#JU6] [master] [0m[92m  "REPLCONF",[0m
+[33m[tester::#JU6] [master] [0m[92m  "listening-port",[0m
+[33m[tester::#JU6] [master] [0m[92m  "6380"[0m
+[33m[tester::#JU6] [master] [0m[92m][0m
 [33m[tester::#JU6] [master] [0m[94mSent "OK"[0m
 [33m[tester::#JU6] [master] [0m[36mSent bytes: "+OK\r\n"[0m
-[33m[tester::#JU6] [0m[94mmaster: Waiting for replica to send "REPLCONF capa" command[0m
+[33m[tester::#JU6] [master] [0m[94mWaiting for replica to send "REPLCONF capa" command[0m
 [33m[tester::#JU6] [master] [0m[36mReceived bytes: "*7\r\n$8\r\nREPLCONF\r\n$4\r\ncapa\r\n$3\r\neof\r\n$4\r\ncapa\r\n$6\r\npsync2\r\n$4\r\ncapa\r\n$16\r\nrdb-channel-repl\r\n"[0m
 [33m[tester::#JU6] [master] [0m[36mReceived RESP array: [[0m
 [33m[tester::#JU6] [master] [0m[36m  "REPLCONF",[0m
@@ -1329,21 +1329,21 @@ Debug = true
 [33m[tester::#JU6] [master] [0m[36m  "capa",[0m
 [33m[tester::#JU6] [master] [0m[36m  "rdb-channel-repl"[0m
 [33m[tester::#JU6] [master] [0m[36m][0m
-[33m[tester::#JU6] [0m[92mReceived [[0m
-[33m[tester::#JU6] [0m[92m  "REPLCONF",[0m
-[33m[tester::#JU6] [0m[92m  "capa",[0m
-[33m[tester::#JU6] [0m[92m  "eof",[0m
-[33m[tester::#JU6] [0m[92m  "capa",[0m
-[33m[tester::#JU6] [0m[92m  "psync2",[0m
-[33m[tester::#JU6] [0m[92m  "capa",[0m
-[33m[tester::#JU6] [0m[92m  "rdb-channel-repl"[0m
-[33m[tester::#JU6] [0m[92m][0m
+[33m[tester::#JU6] [master] [0m[92mReceived [[0m
+[33m[tester::#JU6] [master] [0m[92m  "REPLCONF",[0m
+[33m[tester::#JU6] [master] [0m[92m  "capa",[0m
+[33m[tester::#JU6] [master] [0m[92m  "eof",[0m
+[33m[tester::#JU6] [master] [0m[92m  "capa",[0m
+[33m[tester::#JU6] [master] [0m[92m  "psync2",[0m
+[33m[tester::#JU6] [master] [0m[92m  "capa",[0m
+[33m[tester::#JU6] [master] [0m[92m  "rdb-channel-repl"[0m
+[33m[tester::#JU6] [master] [0m[92m][0m
 [33m[tester::#JU6] [master] [0m[94mSent "OK"[0m
 [33m[tester::#JU6] [master] [0m[36mSent bytes: "+OK\r\n"[0m
-[33m[tester::#JU6] [0m[94mmaster: Waiting for replica to send "PSYNC" command[0m
+[33m[tester::#JU6] [master] [0m[94mWaiting for replica to send "PSYNC" command[0m
 [33m[tester::#JU6] [master] [0m[36mReceived bytes: "*3\r\n$5\r\nPSYNC\r\n$1\r\n?\r\n$2\r\n-1\r\n"[0m
 [33m[tester::#JU6] [master] [0m[36mReceived RESP array: ["PSYNC", "?", "-1"][0m
-[33m[tester::#JU6] [0m[92mReceived ["PSYNC", "?", "-1"][0m
+[33m[tester::#JU6] [master] [0m[92mReceived ["PSYNC", "?", "-1"][0m
 [33m[tester::#JU6] [master] [0m[94mSent "FULLRESYNC 75cd7bc10c49047e0d163660f3b90625b1af31dc 0"[0m
 [33m[tester::#JU6] [master] [0m[36mSent bytes: "+FULLRESYNC 75cd7bc10c49047e0d163660f3b90625b1af31dc 0\r\n"[0m
 [33m[tester::#JU6] [0m[92mTest passed.[0m
@@ -1353,27 +1353,27 @@ Debug = true
 [33m[tester::#EH4] [0m[94mRunning tests for Stage #EH4 (eh4)[0m
 [33m[tester::#EH4] [0m[94mMaster is running on port 6379[0m
 [33m[tester::#EH4] [0m[94m$ ./spawn_redis_server.sh --port 6380 --replicaof "localhost 6379"[0m
-[33m[tester::#EH4] [0m[94mmaster: Waiting for replica to initiate handshake with "PING" command[0m
+[33m[tester::#EH4] [master] [0m[94mWaiting for replica to initiate handshake with "PING" command[0m
 [33m[tester::#EH4] [master] [0m[36mReceived bytes: "*1\r\n$4\r\nPING\r\n"[0m
 [33m[tester::#EH4] [master] [0m[36mReceived RESP array: ["PING"][0m
-[33m[tester::#EH4] [0m[92mReceived ["PING"][0m
+[33m[tester::#EH4] [master] [0m[92mReceived ["PING"][0m
 [33m[tester::#EH4] [master] [0m[94mSent "PONG"[0m
 [33m[tester::#EH4] [master] [0m[36mSent bytes: "+PONG\r\n"[0m
-[33m[tester::#EH4] [0m[94mmaster: Waiting for replica to send "REPLCONF listening-port 6380" command[0m
+[33m[tester::#EH4] [master] [0m[94mWaiting for replica to send "REPLCONF listening-port 6380" command[0m
 [33m[tester::#EH4] [master] [0m[36mReceived bytes: "*3\r\n$8\r\nREPLCONF\r\n$14\r\nlistening-port\r\n$4\r\n6380\r\n"[0m
 [33m[tester::#EH4] [master] [0m[36mReceived RESP array: [[0m
 [33m[tester::#EH4] [master] [0m[36m  "REPLCONF",[0m
 [33m[tester::#EH4] [master] [0m[36m  "listening-port",[0m
 [33m[tester::#EH4] [master] [0m[36m  "6380"[0m
 [33m[tester::#EH4] [master] [0m[36m][0m
-[33m[tester::#EH4] [0m[92mReceived [[0m
-[33m[tester::#EH4] [0m[92m  "REPLCONF",[0m
-[33m[tester::#EH4] [0m[92m  "listening-port",[0m
-[33m[tester::#EH4] [0m[92m  "6380"[0m
-[33m[tester::#EH4] [0m[92m][0m
+[33m[tester::#EH4] [master] [0m[92mReceived [[0m
+[33m[tester::#EH4] [master] [0m[92m  "REPLCONF",[0m
+[33m[tester::#EH4] [master] [0m[92m  "listening-port",[0m
+[33m[tester::#EH4] [master] [0m[92m  "6380"[0m
+[33m[tester::#EH4] [master] [0m[92m][0m
 [33m[tester::#EH4] [master] [0m[94mSent "OK"[0m
 [33m[tester::#EH4] [master] [0m[36mSent bytes: "+OK\r\n"[0m
-[33m[tester::#EH4] [0m[94mmaster: Waiting for replica to send "REPLCONF capa" command[0m
+[33m[tester::#EH4] [master] [0m[94mWaiting for replica to send "REPLCONF capa" command[0m
 [33m[tester::#EH4] [master] [0m[36mReceived bytes: "*7\r\n$8\r\nREPLCONF\r\n$4\r\ncapa\r\n$3\r\neof\r\n$4\r\ncapa\r\n$6\r\npsync2\r\n$4\r\ncapa\r\n$16\r\nrdb-channel-repl\r\n"[0m
 [33m[tester::#EH4] [master] [0m[36mReceived RESP array: [[0m
 [33m[tester::#EH4] [master] [0m[36m  "REPLCONF",[0m
@@ -1384,15 +1384,15 @@ Debug = true
 [33m[tester::#EH4] [master] [0m[36m  "capa",[0m
 [33m[tester::#EH4] [master] [0m[36m  "rdb-channel-repl"[0m
 [33m[tester::#EH4] [master] [0m[36m][0m
-[33m[tester::#EH4] [0m[92mReceived [[0m
-[33m[tester::#EH4] [0m[92m  "REPLCONF",[0m
-[33m[tester::#EH4] [0m[92m  "capa",[0m
-[33m[tester::#EH4] [0m[92m  "eof",[0m
-[33m[tester::#EH4] [0m[92m  "capa",[0m
-[33m[tester::#EH4] [0m[92m  "psync2",[0m
-[33m[tester::#EH4] [0m[92m  "capa",[0m
-[33m[tester::#EH4] [0m[92m  "rdb-channel-repl"[0m
-[33m[tester::#EH4] [0m[92m][0m
+[33m[tester::#EH4] [master] [0m[92mReceived [[0m
+[33m[tester::#EH4] [master] [0m[92m  "REPLCONF",[0m
+[33m[tester::#EH4] [master] [0m[92m  "capa",[0m
+[33m[tester::#EH4] [master] [0m[92m  "eof",[0m
+[33m[tester::#EH4] [master] [0m[92m  "capa",[0m
+[33m[tester::#EH4] [master] [0m[92m  "psync2",[0m
+[33m[tester::#EH4] [master] [0m[92m  "capa",[0m
+[33m[tester::#EH4] [master] [0m[92m  "rdb-channel-repl"[0m
+[33m[tester::#EH4] [master] [0m[92m][0m
 [33m[tester::#EH4] [master] [0m[94mSent "OK"[0m
 [33m[tester::#EH4] [master] [0m[36mSent bytes: "+OK\r\n"[0m
 [33m[tester::#EH4] [0m[92mTest passed.[0m
@@ -1402,10 +1402,10 @@ Debug = true
 [33m[tester::#GL7] [0m[94mRunning tests for Stage #GL7 (gl7)[0m
 [33m[tester::#GL7] [0m[94mMaster is running on port 6379.[0m
 [33m[tester::#GL7] [0m[94m$ ./spawn_redis_server.sh --port 6380 --replicaof "localhost 6379"[0m
-[33m[tester::#GL7] [0m[94mmaster: Waiting for replica to initiate handshake with "PING" command[0m
+[33m[tester::#GL7] [master] [0m[94mWaiting for replica to initiate handshake with "PING" command[0m
 [33m[tester::#GL7] [master] [0m[36mReceived bytes: "*1\r\n$4\r\nPING\r\n"[0m
 [33m[tester::#GL7] [master] [0m[36mReceived RESP array: ["PING"][0m
-[33m[tester::#GL7] [0m[92mReceived ["PING"][0m
+[33m[tester::#GL7] [master] [0m[92mReceived ["PING"][0m
 [33m[tester::#GL7] [master] [0m[94mSent "PONG"[0m
 [33m[tester::#GL7] [master] [0m[36mSent bytes: "+PONG\r\n"[0m
 [33m[tester::#GL7] [0m[92mTest passed.[0m
@@ -1416,14 +1416,14 @@ Debug = true
 [33m[tester::#XC1] [0m[94m$ ./spawn_redis_server.sh[0m
 [33m[tester::#XC1] [client] [0m[94m$ redis-cli INFO replication[0m
 [33m[tester::#XC1] [client] [0m[36mSent bytes: "*2\r\n$4\r\nINFO\r\n$11\r\nreplication\r\n"[0m
-[33m[tester::#XC1] [client] [0m[36mReceived bytes: "$349\r\n# Replication\r\nrole:master\r\nconnected_slaves:0\r\nmaster_failover_state:no-failover\r\nmaster_replid:bd7c68f68d016cafe6259da6611eaadc4d168d1a\r\nmaster_replid2:0000000000000000000000000000000000000000\r\nmaster_repl_offset:0\r\nsecond_repl_offset:-1\r\nrepl_backlog_active:0\r\nrepl_backlog_size:1048576\r\nrepl_backlog_first_byte_offset:0\r\nrepl_backlog_histlen:0\r\n\r\n"[0m
-[33m[tester::#XC1] [client] [0m[36mReceived RESP bulk string: "# Replication\r\nrole:master\r\nconnected_slaves:0\r\nmaster_failover_state:no-failover\r\nmaster_replid:bd7c68f68d016cafe6259da6611eaadc4d168d1a\r\nmaster_replid2:0000000000000000000000000000000000000000\r\nmaster_repl_offset:0\r\nsecond_repl_offset:-1\r\nrepl_backlog_active:0\r\nrepl_backlog_size:1048576\r\nrepl_backlog_first_byte_offset:0\r\nrepl_backlog_histlen:0\r\n"[0m
-[33m[tester::#XC1] [0m[92mReceived "# Replication\r\nrole:master\r\nconnected_slaves:0\r\nmaster_failover_state:no-failover\r\nmaster_replid:bd7c68f68d016cafe6259da6611eaadc4d168d1a\r\nmaster_replid2:0000000000000000000000000000000000000000\r\nmaster_repl_offset:0\r\nsecond_repl_offset:-1\r\nrepl_backlog_active:0\r\nrepl_backlog_size:1048576\r\nrepl_backlog_first_byte_offset:0\r\nrepl_backlog_histlen:0\r\n"[0m
-[33m[tester::#XC1] [0m[92mFound master_replid:xxx in response.[0m
-[33m[tester::#XC1] [0m[92mFound master_reploffset:0 in response.[0m
-[33m[tester::#XC1] [0m[92mTest passed.[0m
-[33m[tester::#XC1] [0m[36mTerminating program[0m
-[33m[tester::#XC1] [0m[36mProgram terminated successfully[0m
+[33m[tester::#XC1] [client] [0m[36mReceived bytes: "$349\r\n# Replication\r\nrole:master\r\nconnected_slaves:0\r\nmaster_failover_state:no-failover\r\nmaster_replid:df0a10414ec2850425767237b4e1f3b8992d7f1b\r\nmaster_replid2:0000000000000000000000000000000000000000\r\nmaster_repl_offset:0\r\nsecond_repl_offset:-1\r\nrepl_backlog_active:0\r\nrepl_backlog_size:1048576\r\nrepl_backlog_first_byte_offset:0\r\nrepl_backlog_histlen:0\r\n\r\n"[0m
+[33m[tester::#XC1] [client] [0m[36mReceived RESP bulk string: "# Replication\r\nrole:master\r\nconnected_slaves:0\r\nmaster_failover_state:no-failover\r\nmaster_replid:df0a10414ec2850425767237b4e1f3b8992d7f1b\r\nmaster_replid2:0000000000000000000000000000000000000000\r\nmaster_repl_offset:0\r\nsecond_repl_offset:-1\r\nrepl_backlog_active:0\r\nrepl_backlog_size:1048576\r\nrepl_backlog_first_byte_offset:0\r\nrepl_backlog_histlen:0\r\n"[0m
+[33m[tester::#XC1] [client] [0m[92mReceived "# Replication\r\nrole:master\r\nconnected_slaves:0\r\nmaster_failover_state:no-failover\r\nmaster_replid:df0a10414ec2850425767237b4e1f3b8992d7f1b\r\nmaster_replid2:0000000000000000000000000000000000000000\r\nmaster_repl_offset:0\r\nsecond_repl_offset:-1\r\nrepl_backlog_active:0\r\nrepl_backlog_size:1048576\r\nrepl_backlog_first_byte_offset:0\r\nrepl_backlog_histlen:0\r\n"[0m
+[33m[tester::#XC1] [client] [0m[92mFound master_replid:xxx in response.[0m
+[33m[tester::#XC1] [client] [0m[92mFound master_reploffset:0 in response.[0m
+[33m[tester::#XC1] [client] [0m[92mTest passed.[0m
+[33m[tester::#XC1] [client] [0m[36mTerminating program[0m
+[33m[tester::#XC1] [client] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#HC6] [0m[94mRunning tests for Stage #HC6 (hc6)[0m
 [33m[tester::#HC6] [0m[94mMaster is running on port 6379[0m
@@ -1432,23 +1432,23 @@ Debug = true
 [33m[tester::#HC6] [client] [0m[36mSent bytes: "*2\r\n$4\r\nINFO\r\n$11\r\nreplication\r\n"[0m
 [33m[tester::#HC6] [client] [0m[36mReceived bytes: "$679\r\n# Replication\r\nrole:slave\r\nmaster_host:localhost\r\nmaster_port:6379\r\nmaster_link_status:down\r\nmaster_last_io_seconds_ago:-1\r\nmaster_sync_in_progress:0\r\nslave_read_repl_offset:0\r\nslave_repl_offset:0\r\nreplica_full_sync_buffer_size:0\r\nreplica_full_sync_buffer_peak:0\r\nmaster_link_down_since_seconds:0\r\nslave_priority:100\r\nslave_read_only:1\r\nreplica_announced:1\r\nconnected_slaves:0\r\nmaster_failover_state:no-failover\r\nmaster_replid:75cd7bc10c49047e0d163660f3b90625b1af31dc\r\nmaster_replid2:0000000000000000000000000000000000000000\r\nmaster_repl_offset:0\r\nsecond_repl_offset:-1\r\nrepl_backlog_active:1\r\nrepl_backlog_size:1048576\r\nrepl_backlog_first_byte_offset:1\r\nrepl_backlog_histlen:0\r\n\r\n"[0m
 [33m[tester::#HC6] [client] [0m[36mReceived RESP bulk string: "# Replication\r\nrole:slave\r\nmaster_host:localhost\r\nmaster_port:6379\r\nmaster_link_status:down\r\nmaster_last_io_seconds_ago:-1\r\nmaster_sync_in_progress:0\r\nslave_read_repl_offset:0\r\nslave_repl_offset:0\r\nreplica_full_sync_buffer_size:0\r\nreplica_full_sync_buffer_peak:0\r\nmaster_link_down_since_seconds:0\r\nslave_priority:100\r\nslave_read_only:1\r\nreplica_announced:1\r\nconnected_slaves:0\r\nmaster_failover_state:no-failover\r\nmaster_replid:75cd7bc10c49047e0d163660f3b90625b1af31dc\r\nmaster_replid2:0000000000000000000000000000000000000000\r\nmaster_repl_offset:0\r\nsecond_repl_offset:-1\r\nrepl_backlog_active:1\r\nrepl_backlog_size:1048576\r\nrepl_backlog_first_byte_offset:1\r\nrepl_backlog_histlen:0\r\n"[0m
-[33m[tester::#HC6] [0m[92mReceived "# Replication\r\nrole:slave\r\nmaster_host:localhost\r\nmaster_port:6379\r\nmaster_link_status:down\r\nmaster_last_io_seconds_ago:-1\r\nmaster_sync_in_progress:0\r\nslave_read_repl_offset:0\r\nslave_repl_offset:0\r\nreplica_full_sync_buffer_size:0\r\nreplica_full_sync_buffer_peak:0\r\nmaster_link_down_since_seconds:0\r\nslave_priority:100\r\nslave_read_only:1\r\nreplica_announced:1\r\nconnected_slaves:0\r\nmaster_failover_state:no-failover\r\nmaster_replid:75cd7bc10c49047e0d163660f3b90625b1af31dc\r\nmaster_replid2:0000000000000000000000000000000000000000\r\nmaster_repl_offset:0\r\nsecond_repl_offset:-1\r\nrepl_backlog_active:1\r\nrepl_backlog_size:1048576\r\nrepl_backlog_first_byte_offset:1\r\nrepl_backlog_histlen:0\r\n"[0m
-[33m[tester::#HC6] [0m[92mFound role:slave in response.[0m
-[33m[tester::#HC6] [0m[92mTest passed.[0m
-[33m[tester::#HC6] [0m[36mTerminating program[0m
-[33m[tester::#HC6] [0m[36mProgram terminated successfully[0m
+[33m[tester::#HC6] [client] [0m[92mReceived "# Replication\r\nrole:slave\r\nmaster_host:localhost\r\nmaster_port:6379\r\nmaster_link_status:down\r\nmaster_last_io_seconds_ago:-1\r\nmaster_sync_in_progress:0\r\nslave_read_repl_offset:0\r\nslave_repl_offset:0\r\nreplica_full_sync_buffer_size:0\r\nreplica_full_sync_buffer_peak:0\r\nmaster_link_down_since_seconds:0\r\nslave_priority:100\r\nslave_read_only:1\r\nreplica_announced:1\r\nconnected_slaves:0\r\nmaster_failover_state:no-failover\r\nmaster_replid:75cd7bc10c49047e0d163660f3b90625b1af31dc\r\nmaster_replid2:0000000000000000000000000000000000000000\r\nmaster_repl_offset:0\r\nsecond_repl_offset:-1\r\nrepl_backlog_active:1\r\nrepl_backlog_size:1048576\r\nrepl_backlog_first_byte_offset:1\r\nrepl_backlog_histlen:0\r\n"[0m
+[33m[tester::#HC6] [client] [0m[92mFound role:slave in response.[0m
+[33m[tester::#HC6] [client] [0m[92mTest passed.[0m
+[33m[tester::#HC6] [client] [0m[36mTerminating program[0m
+[33m[tester::#HC6] [client] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#YE5] [0m[94mRunning tests for Stage #YE5 (ye5)[0m
 [33m[tester::#YE5] [0m[94m$ ./spawn_redis_server.sh[0m
 [33m[tester::#YE5] [client] [0m[94m$ redis-cli INFO replication[0m
 [33m[tester::#YE5] [client] [0m[36mSent bytes: "*2\r\n$4\r\nINFO\r\n$11\r\nreplication\r\n"[0m
-[33m[tester::#YE5] [client] [0m[36mReceived bytes: "$349\r\n# Replication\r\nrole:master\r\nconnected_slaves:0\r\nmaster_failover_state:no-failover\r\nmaster_replid:cdaed4553b217e896f632fb0c3398e868891b52b\r\nmaster_replid2:0000000000000000000000000000000000000000\r\nmaster_repl_offset:0\r\nsecond_repl_offset:-1\r\nrepl_backlog_active:0\r\nrepl_backlog_size:1048576\r\nrepl_backlog_first_byte_offset:0\r\nrepl_backlog_histlen:0\r\n\r\n"[0m
-[33m[tester::#YE5] [client] [0m[36mReceived RESP bulk string: "# Replication\r\nrole:master\r\nconnected_slaves:0\r\nmaster_failover_state:no-failover\r\nmaster_replid:cdaed4553b217e896f632fb0c3398e868891b52b\r\nmaster_replid2:0000000000000000000000000000000000000000\r\nmaster_repl_offset:0\r\nsecond_repl_offset:-1\r\nrepl_backlog_active:0\r\nrepl_backlog_size:1048576\r\nrepl_backlog_first_byte_offset:0\r\nrepl_backlog_histlen:0\r\n"[0m
-[33m[tester::#YE5] [0m[92mReceived "# Replication\r\nrole:master\r\nconnected_slaves:0\r\nmaster_failover_state:no-failover\r\nmaster_replid:cdaed4553b217e896f632fb0c3398e868891b52b\r\nmaster_replid2:0000000000000000000000000000000000000000\r\nmaster_repl_offset:0\r\nsecond_repl_offset:-1\r\nrepl_backlog_active:0\r\nrepl_backlog_size:1048576\r\nrepl_backlog_first_byte_offset:0\r\nrepl_backlog_histlen:0\r\n"[0m
-[33m[tester::#YE5] [0m[92mFound role:master in response.[0m
-[33m[tester::#YE5] [0m[92mTest passed.[0m
-[33m[tester::#YE5] [0m[36mTerminating program[0m
-[33m[tester::#YE5] [0m[36mProgram terminated successfully[0m
+[33m[tester::#YE5] [client] [0m[36mReceived bytes: "$349\r\n# Replication\r\nrole:master\r\nconnected_slaves:0\r\nmaster_failover_state:no-failover\r\nmaster_replid:bdef05d85a46c4d9f46f5998e5120c88302651c7\r\nmaster_replid2:0000000000000000000000000000000000000000\r\nmaster_repl_offset:0\r\nsecond_repl_offset:-1\r\nrepl_backlog_active:0\r\nrepl_backlog_size:1048576\r\nrepl_backlog_first_byte_offset:0\r\nrepl_backlog_histlen:0\r\n\r\n"[0m
+[33m[tester::#YE5] [client] [0m[36mReceived RESP bulk string: "# Replication\r\nrole:master\r\nconnected_slaves:0\r\nmaster_failover_state:no-failover\r\nmaster_replid:bdef05d85a46c4d9f46f5998e5120c88302651c7\r\nmaster_replid2:0000000000000000000000000000000000000000\r\nmaster_repl_offset:0\r\nsecond_repl_offset:-1\r\nrepl_backlog_active:0\r\nrepl_backlog_size:1048576\r\nrepl_backlog_first_byte_offset:0\r\nrepl_backlog_histlen:0\r\n"[0m
+[33m[tester::#YE5] [client] [0m[92mReceived "# Replication\r\nrole:master\r\nconnected_slaves:0\r\nmaster_failover_state:no-failover\r\nmaster_replid:bdef05d85a46c4d9f46f5998e5120c88302651c7\r\nmaster_replid2:0000000000000000000000000000000000000000\r\nmaster_repl_offset:0\r\nsecond_repl_offset:-1\r\nrepl_backlog_active:0\r\nrepl_backlog_size:1048576\r\nrepl_backlog_first_byte_offset:0\r\nrepl_backlog_histlen:0\r\n"[0m
+[33m[tester::#YE5] [client] [0m[92mFound role:master in response.[0m
+[33m[tester::#YE5] [client] [0m[92mTest passed.[0m
+[33m[tester::#YE5] [client] [0m[36mTerminating program[0m
+[33m[tester::#YE5] [client] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#BW1] [0m[94mRunning tests for Stage #BW1 (bw1)[0m
 [33m[tester::#BW1] [0m[94m$ ./spawn_redis_server.sh --port 6385[0m
@@ -1463,35 +1463,35 @@ Debug = true
 [33m[tester::#SM4] [0m[36mHexdump of RDB file contents: [0m
 [33m[tester::#SM4] [0m[36mIdx  | Hex                                             | ASCII[0m
 [33m[tester::#SM4] [0m[36m-----+-------------------------------------------------+-----------------[0m
-[33m[tester::#SM4] [0m[36m0000 | 52 45 44 49 53 30 30 31 31 fa 0a 72 65 64 69 73 | REDIS0011..redis[0m
-[33m[tester::#SM4] [0m[36m0010 | 2d 62 69 74 73 c0 40 fa 09 72 65 64 69 73 2d 76 | -bits.@..redis-v[0m
-[33m[tester::#SM4] [0m[36m0020 | 65 72 05 37 2e 32 2e 30 fe 00 fb 03 03 fc 00 0c | er.7.2.0........[0m
+[33m[tester::#SM4] [0m[36m0000 | 52 45 44 49 53 30 30 31 31 fa 09 72 65 64 69 73 | REDIS0011..redis[0m
+[33m[tester::#SM4] [0m[36m0010 | 2d 76 65 72 05 37 2e 32 2e 30 fa 0a 72 65 64 69 | -ver.7.2.0..redi[0m
+[33m[tester::#SM4] [0m[36m0020 | 73 2d 62 69 74 73 c0 40 fe 00 fb 03 03 fc 00 0c | s-bits.@........[0m
 [33m[tester::#SM4] [0m[36m0030 | 28 8a c7 01 00 00 00 09 72 61 73 70 62 65 72 72 | (.......raspberr[0m
 [33m[tester::#SM4] [0m[36m0040 | 79 06 62 61 6e 61 6e 61 fc 00 9c ef 12 7e 01 00 | y.banana.....~..[0m
 [33m[tester::#SM4] [0m[36m0050 | 00 00 06 6f 72 61 6e 67 65 09 70 69 6e 65 61 70 | ...orange.pineap[0m
 [33m[tester::#SM4] [0m[36m0060 | 70 6c 65 fc 00 0c 28 8a c7 01 00 00 00 05 6d 61 | ple...(.......ma[0m
-[33m[tester::#SM4] [0m[36m0070 | 6e 67 6f 06 6f 72 61 6e 67 65 ff d7 e7 47 80 37 | ngo.orange...G.7[0m
-[33m[tester::#SM4] [0m[36m0080 | 1a 2f fb                                        | ./.[0m
+[33m[tester::#SM4] [0m[36m0070 | 6e 67 6f 06 6f 72 61 6e 67 65 ff 58 9d c8 3c e9 | ngo.orange.X..<.[0m
+[33m[tester::#SM4] [0m[36m0080 | bc 46 59                                        | .FY[0m
 [33m[tester::#SM4] [0m[36m[0m
 [33m[tester::#SM4] [0m[94m$ ./spawn_redis_server.sh --dir /private/tmp/rdb-1600 --dbfilename apple.rdb[0m
 [33m[tester::#SM4] [client] [0m[94m$ redis-cli GET raspberry[0m
 [33m[tester::#SM4] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$9\r\nraspberry\r\n"[0m
 [33m[tester::#SM4] [client] [0m[36mReceived bytes: "$6\r\nbanana\r\n"[0m
 [33m[tester::#SM4] [client] [0m[36mReceived RESP bulk string: "banana"[0m
-[33m[tester::#SM4] [0m[92mReceived "banana"[0m
+[33m[tester::#SM4] [client] [0m[92mReceived "banana"[0m
 [33m[tester::#SM4] [client] [0m[94m> GET orange[0m
 [33m[tester::#SM4] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$6\r\norange\r\n"[0m
 [33m[tester::#SM4] [client] [0m[36mReceived bytes: "$-1\r\n"[0m
 [33m[tester::#SM4] [client] [0m[36mReceived RESP null bulk string: "$-1\r\n"[0m
-[33m[tester::#SM4] [0m[92mReceived "$-1\r\n"[0m
+[33m[tester::#SM4] [client] [0m[92mReceived "$-1\r\n"[0m
 [33m[tester::#SM4] [client] [0m[94m> GET mango[0m
 [33m[tester::#SM4] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$5\r\nmango\r\n"[0m
 [33m[tester::#SM4] [client] [0m[36mReceived bytes: "$6\r\norange\r\n"[0m
 [33m[tester::#SM4] [client] [0m[36mReceived RESP bulk string: "orange"[0m
-[33m[tester::#SM4] [0m[92mReceived "orange"[0m
-[33m[tester::#SM4] [0m[92mTest passed.[0m
-[33m[tester::#SM4] [0m[36mTerminating program[0m
-[33m[tester::#SM4] [0m[36mProgram terminated successfully[0m
+[33m[tester::#SM4] [client] [0m[92mReceived "orange"[0m
+[33m[tester::#SM4] [client] [0m[92mTest passed.[0m
+[33m[tester::#SM4] [client] [0m[36mTerminating program[0m
+[33m[tester::#SM4] [client] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#DQ3] [0m[94mRunning tests for Stage #DQ3 (dq3)[0m
 [33m[tester::#DQ3] [0m[94mCreated RDB file with 3 key-value pairs: {"banana": "apple", "pear": "strawberry", "blueberry": "blueberry"}[0m
@@ -1511,20 +1511,20 @@ Debug = true
 [33m[tester::#DQ3] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$6\r\nbanana\r\n"[0m
 [33m[tester::#DQ3] [client] [0m[36mReceived bytes: "$5\r\napple\r\n"[0m
 [33m[tester::#DQ3] [client] [0m[36mReceived RESP bulk string: "apple"[0m
-[33m[tester::#DQ3] [0m[92mReceived "apple"[0m
+[33m[tester::#DQ3] [client] [0m[92mReceived "apple"[0m
 [33m[tester::#DQ3] [client] [0m[94m> GET pear[0m
 [33m[tester::#DQ3] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$4\r\npear\r\n"[0m
 [33m[tester::#DQ3] [client] [0m[36mReceived bytes: "$10\r\nstrawberry\r\n"[0m
 [33m[tester::#DQ3] [client] [0m[36mReceived RESP bulk string: "strawberry"[0m
-[33m[tester::#DQ3] [0m[92mReceived "strawberry"[0m
+[33m[tester::#DQ3] [client] [0m[92mReceived "strawberry"[0m
 [33m[tester::#DQ3] [client] [0m[94m> GET blueberry[0m
 [33m[tester::#DQ3] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$9\r\nblueberry\r\n"[0m
 [33m[tester::#DQ3] [client] [0m[36mReceived bytes: "$9\r\nblueberry\r\n"[0m
 [33m[tester::#DQ3] [client] [0m[36mReceived RESP bulk string: "blueberry"[0m
-[33m[tester::#DQ3] [0m[92mReceived "blueberry"[0m
-[33m[tester::#DQ3] [0m[92mTest passed.[0m
-[33m[tester::#DQ3] [0m[36mTerminating program[0m
-[33m[tester::#DQ3] [0m[36mProgram terminated successfully[0m
+[33m[tester::#DQ3] [client] [0m[92mReceived "blueberry"[0m
+[33m[tester::#DQ3] [client] [0m[92mTest passed.[0m
+[33m[tester::#DQ3] [client] [0m[36mTerminating program[0m
+[33m[tester::#DQ3] [client] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#JW4] [0m[94mRunning tests for Stage #JW4 (jw4)[0m
 [33m[tester::#JW4] [0m[94mCreated RDB file with 5 keys: ["banana", "pineapple", "blueberry", "raspberry", "strawberry"][0m
@@ -1545,24 +1545,24 @@ Debug = true
 [33m[tester::#JW4] [0m[94m$ ./spawn_redis_server.sh --dir /private/tmp/rdb-2389 --dbfilename pineapple.rdb[0m
 [33m[tester::#JW4] [client] [0m[94m$ redis-cli KEYS *[0m
 [33m[tester::#JW4] [client] [0m[36mSent bytes: "*2\r\n$4\r\nKEYS\r\n$1\r\n*\r\n"[0m
-[33m[tester::#JW4] [client] [0m[36mReceived bytes: "*5\r\n$9\r\nblueberry\r\n$9\r\npineapple\r\n$10\r\nstrawberry\r\n$6\r\nbanana\r\n$9\r\nraspberry\r\n"[0m
+[33m[tester::#JW4] [client] [0m[36mReceived bytes: "*5\r\n$6\r\nbanana\r\n$9\r\npineapple\r\n$9\r\nraspberry\r\n$9\r\nblueberry\r\n$10\r\nstrawberry\r\n"[0m
 [33m[tester::#JW4] [client] [0m[36mReceived RESP array: [[0m
-[33m[tester::#JW4] [client] [0m[36m  "blueberry",[0m
-[33m[tester::#JW4] [client] [0m[36m  "pineapple",[0m
-[33m[tester::#JW4] [client] [0m[36m  "strawberry",[0m
 [33m[tester::#JW4] [client] [0m[36m  "banana",[0m
-[33m[tester::#JW4] [client] [0m[36m  "raspberry"[0m
+[33m[tester::#JW4] [client] [0m[36m  "pineapple",[0m
+[33m[tester::#JW4] [client] [0m[36m  "raspberry",[0m
+[33m[tester::#JW4] [client] [0m[36m  "blueberry",[0m
+[33m[tester::#JW4] [client] [0m[36m  "strawberry"[0m
 [33m[tester::#JW4] [client] [0m[36m][0m
-[33m[tester::#JW4] [0m[92mReceived [[0m
-[33m[tester::#JW4] [0m[92m  "blueberry",[0m
-[33m[tester::#JW4] [0m[92m  "pineapple",[0m
-[33m[tester::#JW4] [0m[92m  "strawberry",[0m
-[33m[tester::#JW4] [0m[92m  "banana",[0m
-[33m[tester::#JW4] [0m[92m  "raspberry"[0m
-[33m[tester::#JW4] [0m[92m][0m
-[33m[tester::#JW4] [0m[92mTest passed.[0m
-[33m[tester::#JW4] [0m[36mTerminating program[0m
-[33m[tester::#JW4] [0m[36mProgram terminated successfully[0m
+[33m[tester::#JW4] [client] [0m[92mReceived [[0m
+[33m[tester::#JW4] [client] [0m[92m  "banana",[0m
+[33m[tester::#JW4] [client] [0m[92m  "pineapple",[0m
+[33m[tester::#JW4] [client] [0m[92m  "raspberry",[0m
+[33m[tester::#JW4] [client] [0m[92m  "blueberry",[0m
+[33m[tester::#JW4] [client] [0m[92m  "strawberry"[0m
+[33m[tester::#JW4] [client] [0m[92m][0m
+[33m[tester::#JW4] [client] [0m[92mTest passed.[0m
+[33m[tester::#JW4] [client] [0m[36mTerminating program[0m
+[33m[tester::#JW4] [client] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#GC6] [0m[94mRunning tests for Stage #GC6 (gc6)[0m
 [33m[tester::#GC6] [0m[94mCreated RDB file with a single key-value pair: {"pineapple": "raspberry"}[0m
@@ -1580,10 +1580,10 @@ Debug = true
 [33m[tester::#GC6] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$9\r\npineapple\r\n"[0m
 [33m[tester::#GC6] [client] [0m[36mReceived bytes: "$9\r\nraspberry\r\n"[0m
 [33m[tester::#GC6] [client] [0m[36mReceived RESP bulk string: "raspberry"[0m
-[33m[tester::#GC6] [0m[92mReceived "raspberry"[0m
-[33m[tester::#GC6] [0m[92mTest passed.[0m
-[33m[tester::#GC6] [0m[36mTerminating program[0m
-[33m[tester::#GC6] [0m[36mProgram terminated successfully[0m
+[33m[tester::#GC6] [client] [0m[92mReceived "raspberry"[0m
+[33m[tester::#GC6] [client] [0m[92mTest passed.[0m
+[33m[tester::#GC6] [client] [0m[36mTerminating program[0m
+[33m[tester::#GC6] [client] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#JZ6] [0m[94mRunning tests for Stage #JZ6 (jz6)[0m
 [33m[tester::#JZ6] [0m[94mCreated RDB file with a single key: ["pear"][0m
@@ -1601,10 +1601,10 @@ Debug = true
 [33m[tester::#JZ6] [client] [0m[36mSent bytes: "*2\r\n$4\r\nKEYS\r\n$1\r\n*\r\n"[0m
 [33m[tester::#JZ6] [client] [0m[36mReceived bytes: "*1\r\n$4\r\npear\r\n"[0m
 [33m[tester::#JZ6] [client] [0m[36mReceived RESP array: ["pear"][0m
-[33m[tester::#JZ6] [0m[92mReceived ["pear"][0m
-[33m[tester::#JZ6] [0m[92mTest passed.[0m
-[33m[tester::#JZ6] [0m[36mTerminating program[0m
-[33m[tester::#JZ6] [0m[36mProgram terminated successfully[0m
+[33m[tester::#JZ6] [client] [0m[92mReceived ["pear"][0m
+[33m[tester::#JZ6] [client] [0m[92mTest passed.[0m
+[33m[tester::#JZ6] [client] [0m[36mTerminating program[0m
+[33m[tester::#JZ6] [client] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#ZG5] [0m[94mRunning tests for Stage #ZG5 (zg5)[0m
 [33m[tester::#ZG5] [0m[94m$ ./spawn_redis_server.sh --dir /private/tmp/rdb-1438 --dbfilename pineapple.rdb[0m
@@ -1612,10 +1612,10 @@ Debug = true
 [33m[tester::#ZG5] [client] [0m[36mSent bytes: "*3\r\n$6\r\nCONFIG\r\n$3\r\nGET\r\n$3\r\ndir\r\n"[0m
 [33m[tester::#ZG5] [client] [0m[36mReceived bytes: "*2\r\n$3\r\ndir\r\n$21\r\n/private/tmp/rdb-1438\r\n"[0m
 [33m[tester::#ZG5] [client] [0m[36mReceived RESP array: ["dir", "/private/tmp/rdb-1438"][0m
-[33m[tester::#ZG5] [0m[92mReceived ["dir", "/private/tmp/rdb-1438"][0m
-[33m[tester::#ZG5] [0m[92mTest passed.[0m
-[33m[tester::#ZG5] [0m[36mTerminating program[0m
-[33m[tester::#ZG5] [0m[36mProgram terminated successfully[0m
+[33m[tester::#ZG5] [client] [0m[92mReceived ["dir", "/private/tmp/rdb-1438"][0m
+[33m[tester::#ZG5] [client] [0m[92mTest passed.[0m
+[33m[tester::#ZG5] [client] [0m[36mTerminating program[0m
+[33m[tester::#ZG5] [client] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#YZ1] [0m[94mRunning tests for Stage #YZ1 (yz1)[0m
 [33m[tester::#YZ1] [0m[94m$ ./spawn_redis_server.sh[0m
@@ -1623,24 +1623,24 @@ Debug = true
 [33m[tester::#YZ1] [client] [0m[36mSent bytes: "*5\r\n$3\r\nSET\r\n$6\r\nbanana\r\n$9\r\nraspberry\r\n$2\r\npx\r\n$3\r\n100\r\n"[0m
 [33m[tester::#YZ1] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#YZ1] [client] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#YZ1] [0m[92mReceived "OK"[0m
-[33m[tester::#YZ1] [0m[92mReceived OK at 12:26:38.338[0m
-[33m[tester::#YZ1] [0m[94mFetching key "banana" at 12:26:38.338 (should not be expired)[0m
+[33m[tester::#YZ1] [client] [0m[92mReceived "OK"[0m
+[33m[tester::#YZ1] [client] [0m[92mReceived OK at 13:40:41.986[0m
+[33m[tester::#YZ1] [client] [0m[94mFetching key "banana" at 13:40:41.986 (should not be expired)[0m
 [33m[tester::#YZ1] [client] [0m[94m> GET banana[0m
 [33m[tester::#YZ1] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$6\r\nbanana\r\n"[0m
 [33m[tester::#YZ1] [client] [0m[36mReceived bytes: "$9\r\nraspberry\r\n"[0m
 [33m[tester::#YZ1] [client] [0m[36mReceived RESP bulk string: "raspberry"[0m
-[33m[tester::#YZ1] [0m[92mReceived "raspberry"[0m
-[33m[tester::#YZ1] [0m[36mSleeping for 101ms[0m
-[33m[tester::#YZ1] [0m[94mFetching key "banana" at 12:26:38.442 (should be expired)[0m
+[33m[tester::#YZ1] [client] [0m[92mReceived "raspberry"[0m
+[33m[tester::#YZ1] [client] [0m[36mSleeping for 101ms[0m
+[33m[tester::#YZ1] [client] [0m[94mFetching key "banana" at 13:40:42.089 (should be expired)[0m
 [33m[tester::#YZ1] [client] [0m[94m> GET banana[0m
 [33m[tester::#YZ1] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$6\r\nbanana\r\n"[0m
 [33m[tester::#YZ1] [client] [0m[36mReceived bytes: "$-1\r\n"[0m
 [33m[tester::#YZ1] [client] [0m[36mReceived RESP null bulk string: "$-1\r\n"[0m
-[33m[tester::#YZ1] [0m[92mReceived "$-1\r\n"[0m
-[33m[tester::#YZ1] [0m[92mTest passed.[0m
-[33m[tester::#YZ1] [0m[36mTerminating program[0m
-[33m[tester::#YZ1] [0m[36mProgram terminated successfully[0m
+[33m[tester::#YZ1] [client] [0m[92mReceived "$-1\r\n"[0m
+[33m[tester::#YZ1] [client] [0m[92mTest passed.[0m
+[33m[tester::#YZ1] [client] [0m[36mTerminating program[0m
+[33m[tester::#YZ1] [client] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#LA7] [0m[94mRunning tests for Stage #LA7 (la7)[0m
 [33m[tester::#LA7] [0m[94m$ ./spawn_redis_server.sh[0m
@@ -1649,16 +1649,16 @@ Debug = true
 [33m[tester::#LA7] [client] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$6\r\norange\r\n$9\r\npineapple\r\n"[0m
 [33m[tester::#LA7] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#LA7] [client] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#LA7] [0m[92mReceived "OK"[0m
-[33m[tester::#LA7] [0m[36mGetting key orange[0m
+[33m[tester::#LA7] [client] [0m[92mReceived "OK"[0m
+[33m[tester::#LA7] [client] [0m[36mGetting key orange[0m
 [33m[tester::#LA7] [client] [0m[94m> GET orange[0m
 [33m[tester::#LA7] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$6\r\norange\r\n"[0m
 [33m[tester::#LA7] [client] [0m[36mReceived bytes: "$9\r\npineapple\r\n"[0m
 [33m[tester::#LA7] [client] [0m[36mReceived RESP bulk string: "pineapple"[0m
-[33m[tester::#LA7] [0m[92mReceived "pineapple"[0m
-[33m[tester::#LA7] [0m[92mTest passed.[0m
-[33m[tester::#LA7] [0m[36mTerminating program[0m
-[33m[tester::#LA7] [0m[36mProgram terminated successfully[0m
+[33m[tester::#LA7] [client] [0m[92mReceived "pineapple"[0m
+[33m[tester::#LA7] [client] [0m[92mTest passed.[0m
+[33m[tester::#LA7] [client] [0m[36mTerminating program[0m
+[33m[tester::#LA7] [client] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#QQ0] [0m[94mRunning tests for Stage #QQ0 (qq0)[0m
 [33m[tester::#QQ0] [0m[94m$ ./spawn_redis_server.sh[0m
@@ -1666,10 +1666,10 @@ Debug = true
 [33m[tester::#QQ0] [client] [0m[36mSent bytes: "*2\r\n$4\r\nECHO\r\n$5\r\ngrape\r\n"[0m
 [33m[tester::#QQ0] [client] [0m[36mReceived bytes: "$5\r\ngrape\r\n"[0m
 [33m[tester::#QQ0] [client] [0m[36mReceived RESP bulk string: "grape"[0m
-[33m[tester::#QQ0] [0m[92mReceived "grape"[0m
-[33m[tester::#QQ0] [0m[92mTest passed.[0m
-[33m[tester::#QQ0] [0m[36mTerminating program[0m
-[33m[tester::#QQ0] [0m[36mProgram terminated successfully[0m
+[33m[tester::#QQ0] [client] [0m[92mReceived "grape"[0m
+[33m[tester::#QQ0] [client] [0m[92mTest passed.[0m
+[33m[tester::#QQ0] [client] [0m[36mTerminating program[0m
+[33m[tester::#QQ0] [client] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#ZU2] [0m[94mRunning tests for Stage #ZU2 (zu2)[0m
 [33m[tester::#ZU2] [0m[94m$ ./spawn_redis_server.sh[0m
@@ -1677,38 +1677,38 @@ Debug = true
 [33m[tester::#ZU2] [client-1] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
 [33m[tester::#ZU2] [client-1] [0m[36mReceived bytes: "+PONG\r\n"[0m
 [33m[tester::#ZU2] [client-1] [0m[36mReceived RESP simple string: "PONG"[0m
-[33m[tester::#ZU2] [0m[92mReceived "PONG"[0m
+[33m[tester::#ZU2] [client-1] [0m[92mReceived "PONG"[0m
 [33m[tester::#ZU2] [client-2] [0m[94m$ redis-cli PING[0m
 [33m[tester::#ZU2] [client-2] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
 [33m[tester::#ZU2] [client-2] [0m[36mReceived bytes: "+PONG\r\n"[0m
 [33m[tester::#ZU2] [client-2] [0m[36mReceived RESP simple string: "PONG"[0m
-[33m[tester::#ZU2] [0m[92mReceived "PONG"[0m
+[33m[tester::#ZU2] [client-2] [0m[92mReceived "PONG"[0m
 [33m[tester::#ZU2] [client-1] [0m[94m> PING[0m
 [33m[tester::#ZU2] [client-1] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
 [33m[tester::#ZU2] [client-1] [0m[36mReceived bytes: "+PONG\r\n"[0m
 [33m[tester::#ZU2] [client-1] [0m[36mReceived RESP simple string: "PONG"[0m
-[33m[tester::#ZU2] [0m[92mReceived "PONG"[0m
+[33m[tester::#ZU2] [client-1] [0m[92mReceived "PONG"[0m
 [33m[tester::#ZU2] [client-1] [0m[94m> PING[0m
 [33m[tester::#ZU2] [client-1] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
 [33m[tester::#ZU2] [client-1] [0m[36mReceived bytes: "+PONG\r\n"[0m
 [33m[tester::#ZU2] [client-1] [0m[36mReceived RESP simple string: "PONG"[0m
-[33m[tester::#ZU2] [0m[92mReceived "PONG"[0m
+[33m[tester::#ZU2] [client-1] [0m[92mReceived "PONG"[0m
 [33m[tester::#ZU2] [client-2] [0m[94m> PING[0m
 [33m[tester::#ZU2] [client-2] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
 [33m[tester::#ZU2] [client-2] [0m[36mReceived bytes: "+PONG\r\n"[0m
 [33m[tester::#ZU2] [client-2] [0m[36mReceived RESP simple string: "PONG"[0m
-[33m[tester::#ZU2] [0m[92mReceived "PONG"[0m
-[33m[tester::#ZU2] [0m[36mclient-1: Success, closing connection...[0m
+[33m[tester::#ZU2] [client-2] [0m[92mReceived "PONG"[0m
+[33m[tester::#ZU2] [client-1] [0m[36mSuccess, closing connection...[0m
 [33m[tester::#ZU2] [client-3] [0m[94m$ redis-cli PING[0m
 [33m[tester::#ZU2] [client-3] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
 [33m[tester::#ZU2] [client-3] [0m[36mReceived bytes: "+PONG\r\n"[0m
 [33m[tester::#ZU2] [client-3] [0m[36mReceived RESP simple string: "PONG"[0m
-[33m[tester::#ZU2] [0m[92mReceived "PONG"[0m
-[33m[tester::#ZU2] [0m[36mclient-2: Success, closing connection...[0m
-[33m[tester::#ZU2] [0m[36mclient-3: Success, closing connection...[0m
-[33m[tester::#ZU2] [0m[92mTest passed.[0m
-[33m[tester::#ZU2] [0m[36mTerminating program[0m
-[33m[tester::#ZU2] [0m[36mProgram terminated successfully[0m
+[33m[tester::#ZU2] [client-3] [0m[92mReceived "PONG"[0m
+[33m[tester::#ZU2] [client-2] [0m[36mSuccess, closing connection...[0m
+[33m[tester::#ZU2] [client-3] [0m[36mSuccess, closing connection...[0m
+[33m[tester::#ZU2] [client-3] [0m[92mTest passed.[0m
+[33m[tester::#ZU2] [client-3] [0m[36mTerminating program[0m
+[33m[tester::#ZU2] [client-3] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#WY1] [0m[94mRunning tests for Stage #WY1 (wy1)[0m
 [33m[tester::#WY1] [0m[94m$ ./spawn_redis_server.sh[0m
@@ -1716,21 +1716,21 @@ Debug = true
 [33m[tester::#WY1] [client-1] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
 [33m[tester::#WY1] [client-1] [0m[36mReceived bytes: "+PONG\r\n"[0m
 [33m[tester::#WY1] [client-1] [0m[36mReceived RESP simple string: "PONG"[0m
-[33m[tester::#WY1] [0m[92mReceived "PONG"[0m
+[33m[tester::#WY1] [client-1] [0m[92mReceived "PONG"[0m
 [33m[tester::#WY1] [client-1] [0m[94m> PING[0m
 [33m[tester::#WY1] [client-1] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
 [33m[tester::#WY1] [client-1] [0m[36mReceived bytes: "+PONG\r\n"[0m
 [33m[tester::#WY1] [client-1] [0m[36mReceived RESP simple string: "PONG"[0m
-[33m[tester::#WY1] [0m[92mReceived "PONG"[0m
+[33m[tester::#WY1] [client-1] [0m[92mReceived "PONG"[0m
 [33m[tester::#WY1] [client-1] [0m[94m> PING[0m
 [33m[tester::#WY1] [client-1] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
 [33m[tester::#WY1] [client-1] [0m[36mReceived bytes: "+PONG\r\n"[0m
 [33m[tester::#WY1] [client-1] [0m[36mReceived RESP simple string: "PONG"[0m
-[33m[tester::#WY1] [0m[92mReceived "PONG"[0m
-[33m[tester::#WY1] [0m[36mSuccess, closing connection...[0m
-[33m[tester::#WY1] [0m[92mTest passed.[0m
-[33m[tester::#WY1] [0m[36mTerminating program[0m
-[33m[tester::#WY1] [0m[36mProgram terminated successfully[0m
+[33m[tester::#WY1] [client-1] [0m[92mReceived "PONG"[0m
+[33m[tester::#WY1] [client-1] [0m[36mSuccess, closing connection...[0m
+[33m[tester::#WY1] [client-1] [0m[92mTest passed.[0m
+[33m[tester::#WY1] [client-1] [0m[36mTerminating program[0m
+[33m[tester::#WY1] [client-1] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#RG2] [0m[94mRunning tests for Stage #RG2 (rg2)[0m
 [33m[tester::#RG2] [0m[94m$ ./spawn_redis_server.sh[0m
@@ -1739,10 +1739,10 @@ Debug = true
 [33m[tester::#RG2] [client] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
 [33m[tester::#RG2] [client] [0m[36mReceived bytes: "+PONG\r\n"[0m
 [33m[tester::#RG2] [client] [0m[36mReceived RESP simple string: "PONG"[0m
-[33m[tester::#RG2] [0m[92mReceived "PONG"[0m
-[33m[tester::#RG2] [0m[92mTest passed.[0m
-[33m[tester::#RG2] [0m[36mTerminating program[0m
-[33m[tester::#RG2] [0m[36mProgram terminated successfully[0m
+[33m[tester::#RG2] [client] [0m[92mReceived "PONG"[0m
+[33m[tester::#RG2] [client] [0m[92mTest passed.[0m
+[33m[tester::#RG2] [client] [0m[36mTerminating program[0m
+[33m[tester::#RG2] [client] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#JM1] [0m[94mRunning tests for Stage #JM1 (jm1)[0m
 [33m[tester::#JM1] [0m[94m$ ./spawn_redis_server.sh[0m

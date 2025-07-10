@@ -66,7 +66,7 @@ func testReplMultipleReplicas(stageHarness *test_case_harness.TestCaseHarness) e
 		logger.Infof("Testing Replica %d/%d: %s", i+1, replicaCount, replica.GetIdentifier())
 
 		for i := 1; i <= len(kvMap); i++ {
-			logger.Infof("%s: Expecting \"SET %s %s\" to be propagated", replica.GetIdentifier(), kvMap[i][0], kvMap[i][1])
+			replica.GetLogger(logger).Infof("Expecting \"SET %s %s\" to be propagated", kvMap[i][0], kvMap[i][1])
 
 			receiveValueTestCase := &test_cases.ReceiveValueTestCase{
 				Assertion:                 resp_assertions.NewCommandAssertion("SET", kvMap[i][0], kvMap[i][1]),

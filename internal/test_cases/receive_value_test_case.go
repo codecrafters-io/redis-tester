@@ -47,6 +47,6 @@ func (t *ReceiveValueTestCase) Assert(client *instrumented_resp_connection.Instr
 		}
 	}
 
-	logger.Successf("Received %s", t.ActualValue.FormattedString())
+	client.GetLogger(logger).Successf("Received %s", t.ActualValue.FormattedString())
 	return nil
 }
