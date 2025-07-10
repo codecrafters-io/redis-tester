@@ -9,9 +9,17 @@ import (
 	"github.com/codecrafters-io/tester-utils/logger"
 )
 
+type InstrumentedRespConnection struct {
+	*resp_connection.RespConnection
+
+	identifier string
+}
+
 func defaultCallbacks(logger *logger.Logger, logPrefix string) resp_connection.RespConnectionCallbacks {
 	return resp_connection.RespConnectionCallbacks{
 		BeforeSendCommand: func(reusedConnection bool, command string, args ...string) {
+			logger.PushSecondaryPrefix(logPrefix)
+			defer logger.PopSecondaryPrefix()
 			var commandPrefix string
 			if reusedConnection {
 				commandPrefix = ">"
@@ -20,48 +28,63 @@ func defaultCallbacks(logger *logger.Logger, logPrefix string) resp_connection.R
 			}
 
 			if len(args) > 0 {
-				logger.Infof("%s%s %s %s", logPrefix, commandPrefix, command, strings.Join(args, " "))
+				logger.Infof("%s %s %s", commandPrefix, command, strings.Join(args, " "))
 			} else {
-				logger.Infof("%s%s %s", logPrefix, commandPrefix, command)
+				logger.Infof("%s %s", commandPrefix, command)
 			}
 		},
 		BeforeSendValue: func(value resp_value.Value) {
-			logger.Infof("%sSent %s", logPrefix, value.FormattedString())
+			logger.WithAdditionalSecondaryPrefix(logPrefix, func() {
+				logger.Infof("Sent %s", value.FormattedString())
+			})
 		},
 		BeforeSendBytes: func(bytes []byte) {
-			logger.Debugf("%sSent bytes: %q", logPrefix, string(bytes))
+			logger.WithAdditionalSecondaryPrefix(logPrefix, func() {
+				logger.Debugf("Sent bytes: %q", string(bytes))
+			})
 		},
 		AfterBytesReceived: func(bytes []byte) {
-			logger.Debugf("%sReceived bytes: %q", logPrefix, string(bytes))
+			logger.WithAdditionalSecondaryPrefix(logPrefix, func() {
+				logger.Debugf("Received bytes: %q", string(bytes))
+			})
 		},
 		AfterReadValue: func(value resp_value.Value) {
 			valueTypeLowerCase := strings.ReplaceAll(strings.ToLower(value.Type), "_", " ")
 			if valueTypeLowerCase == "nil" {
 				valueTypeLowerCase = "null bulk string"
 			}
-			logger.Debugf("%sReceived RESP %s: %s", logPrefix, valueTypeLowerCase, value.FormattedString())
-
+			logger.WithAdditionalSecondaryPrefix(logPrefix, func() {
+				logger.Debugf("Received RESP %s: %s", valueTypeLowerCase, value.FormattedString())
+			})
 		},
 	}
 }
 
-func NewFromAddr(logger *logger.Logger, addr string, connIdentifier string) (*resp_connection.RespConnection, error) {
-	logPrefix := ""
-	if connIdentifier != "" {
-		logPrefix = connIdentifier + ": "
+func NewFromAddr(logger *logger.Logger, addr string, connIdentifier string) (*InstrumentedRespConnection, error) {
+	c, err := resp_connection.NewRespConnectionFromAddr(addr, connIdentifier, defaultCallbacks(logger, connIdentifier))
+	if err != nil {
+		return nil, err
 	}
-	return resp_connection.NewRespConnectionFromAddr(
-		addr, connIdentifier, defaultCallbacks(logger, logPrefix),
-	)
+	return &InstrumentedRespConnection{
+		RespConnection: c,
+		identifier:     connIdentifier,
+	}, nil
 }
 
-func NewFromConn(logger *logger.Logger, conn net.Conn, clientIdentifier string) (*resp_connection.RespConnection, error) {
-	logPrefix := ""
-	if clientIdentifier != "" {
-		logPrefix = clientIdentifier + ": "
+func NewFromConn(logger *logger.Logger, conn net.Conn, connIdentifier string) (*InstrumentedRespConnection, error) {
+	c, err := resp_connection.NewRespConnectionFromConn(conn, defaultCallbacks(logger, connIdentifier))
+	if err != nil {
+		return nil, err
 	}
+	return &InstrumentedRespConnection{
+		RespConnection: c,
+		identifier:     connIdentifier,
+	}, nil
+}
 
-	return resp_connection.NewRespConnectionFromConn(
-		conn, defaultCallbacks(logger, logPrefix),
-	)
+func (c *InstrumentedRespConnection) GetIdentifier() string {
+	if c.identifier == "" {
+		panic("Codecrafters Internal Error - InstrumentedRespConnection must have an identifier")
+	}
+	return c.identifier
 }

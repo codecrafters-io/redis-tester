@@ -43,8 +43,9 @@ func doDecodeValue(reader *bytes.Reader) (resp_value.Value, error) {
 		reader.UnreadByte() // Ensure the error points to the correct byte
 
 		return resp_value.Value{}, InvalidInputError{
-			Reader:  reader,
-			Message: fmt.Sprintf("%q is not a valid start of a RESP2 value (expected +, -, :, $ or *)", string(firstByte)),
+			Reader:              reader,
+			Message:             fmt.Sprintf("%q is not a valid start of a RESP2 value (expected +, -, :, $ or *)", string(firstByte)),
+			InvalidRespBeginner: true,
 		}
 	}
 }

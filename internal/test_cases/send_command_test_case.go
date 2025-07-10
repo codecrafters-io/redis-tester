@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	resp_client "github.com/codecrafters-io/redis-tester/internal/resp/connection"
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/tester-utils/logger"
@@ -26,7 +26,7 @@ type SendCommandTestCase struct {
 	readMutex sync.Mutex
 }
 
-func (t *SendCommandTestCase) Run(client *resp_client.RespConnection, logger *logger.Logger) error {
+func (t *SendCommandTestCase) Run(client *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
 	var value resp_value.Value
 	var err error
 	receiveValueTestCase := ReceiveValueTestCase{

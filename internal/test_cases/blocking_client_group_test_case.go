@@ -1,13 +1,13 @@
 package test_cases
 
 import (
-	resp_connection "github.com/codecrafters-io/redis-tester/internal/resp/connection"
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/tester-utils/logger"
 )
 
 type clientWithExpectedResponse struct {
-	Client  *resp_connection.RespConnection
+	Client  *instrumented_resp_connection.InstrumentedRespConnection
 	Command string
 	Args    []string
 
@@ -19,7 +19,7 @@ type BlockingClientGroupTestCase struct {
 	clientsWithExpectedResponses []clientWithExpectedResponse
 }
 
-func (t *BlockingClientGroupTestCase) AddClientWithExpectedResponse(client *resp_connection.RespConnection, command string, args []string, assertion resp_assertions.RESPAssertion) *BlockingClientGroupTestCase {
+func (t *BlockingClientGroupTestCase) AddClientWithExpectedResponse(client *instrumented_resp_connection.InstrumentedRespConnection, command string, args []string, assertion resp_assertions.RESPAssertion) *BlockingClientGroupTestCase {
 	t.clientsWithExpectedResponses = append(t.clientsWithExpectedResponses, clientWithExpectedResponse{
 		Client:    client,
 		Command:   command,
@@ -30,7 +30,7 @@ func (t *BlockingClientGroupTestCase) AddClientWithExpectedResponse(client *resp
 	return t
 }
 
-func (t *BlockingClientGroupTestCase) AddClientWithNoExpectedResponse(client *resp_connection.RespConnection, command string, args []string) *BlockingClientGroupTestCase {
+func (t *BlockingClientGroupTestCase) AddClientWithNoExpectedResponse(client *instrumented_resp_connection.InstrumentedRespConnection, command string, args []string) *BlockingClientGroupTestCase {
 	t.clientsWithExpectedResponses = append(t.clientsWithExpectedResponses, clientWithExpectedResponse{
 		Client:    client,
 		Command:   command,

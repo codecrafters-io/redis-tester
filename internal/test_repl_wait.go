@@ -9,7 +9,6 @@ import (
 
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
-	resp_connection "github.com/codecrafters-io/redis-tester/internal/resp/connection"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 
@@ -110,7 +109,7 @@ func testWait(stageHarness *test_case_harness.TestCaseHarness) error {
 	return nil
 }
 
-func consumeReplicationStreamAndSendAcks(replicas []*resp_connection.RespConnection, logger *logger.Logger, acksSentByReplicaSubsetCount int, command []string) error {
+func consumeReplicationStreamAndSendAcks(replicas []*instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger, acksSentByReplicaSubsetCount int, command []string) error {
 	var err error
 	for j := 0; j < len(replicas); j++ {
 		replica := replicas[j]
@@ -161,7 +160,7 @@ func consumeReplicationStreamAndSendAcks(replicas []*resp_connection.RespConnect
 	return err
 }
 
-func RunWaitTest(client *resp_connection.RespConnection, replicas []*resp_connection.RespConnection, waitTest WaitTest) (err error) {
+func RunWaitTest(client *instrumented_resp_connection.InstrumentedRespConnection, replicas []*instrumented_resp_connection.InstrumentedRespConnection, waitTest WaitTest) (err error) {
 	// Step 1: Issue a write command
 	setCommandTestCase := test_cases.SendCommandTestCase{
 		Command:   waitTest.WriteCommand[0],
