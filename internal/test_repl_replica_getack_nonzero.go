@@ -16,7 +16,7 @@ func testReplGetaAckNonZero(stageHarness *test_case_harness.TestCaseHarness) err
 	deleteRDBfile()
 
 	logger := stageHarness.Logger
-	defer logger.ResetSecondaryPrefix()
+	defer logger.ResetSecondaryPrefixes()
 
 	listener, err := net.Listen("tcp", ":6379")
 	if err != nil {
@@ -46,7 +46,7 @@ func testReplGetaAckNonZero(stageHarness *test_case_harness.TestCaseHarness) err
 		return err
 	}
 
-	logger.UpdateSecondaryPrefix("handshake")
+	logger.UpdateLastSecondaryPrefix("handshake")
 
 	receiveReplicationHandshakeTestCase := test_cases.ReceiveReplicationHandshakeTestCase{}
 
@@ -57,24 +57,24 @@ func testReplGetaAckNonZero(stageHarness *test_case_harness.TestCaseHarness) err
 	// The bytes received and sent during the handshake don't count towards offset.
 	// After finishing the handshake we reset the counters.
 	master.ResetByteCounters()
-	logger.UpdateSecondaryPrefix("test")
+	logger.UpdateLastSecondaryPrefix("test")
 
 	getAckTestCase := test_cases.GetAckTestCase{}
 	if err := getAckTestCase.Run(master, logger, master.SentBytes); err != nil {
 		return err
 	}
 
-	logger.UpdateSecondaryPrefix("propagation")
+	logger.UpdateLastSecondaryPrefix("propagation")
 	if err := master.SendCommand("PING"); err != nil {
 		return err
 	}
 
-	logger.UpdateSecondaryPrefix("test")
+	logger.UpdateLastSecondaryPrefix("test")
 	if err := getAckTestCase.Run(master, logger, master.SentBytes); err != nil {
 		return err
 	}
 
-	logger.UpdateSecondaryPrefix("propagation")
+	logger.UpdateLastSecondaryPrefix("propagation")
 	key := testerutils_random.RandomWord()
 	value := testerutils_random.RandomWord()
 	if err := master.SendCommand("SET", []string{key, value}...); err != nil {
@@ -87,6 +87,6 @@ func testReplGetaAckNonZero(stageHarness *test_case_harness.TestCaseHarness) err
 		return err
 	}
 
-	logger.UpdateSecondaryPrefix("test")
+	logger.UpdateLastSecondaryPrefix("test")
 	return getAckTestCase.Run(master, logger, master.SentBytes)
 }

@@ -17,7 +17,7 @@ func testReplCmdProcessing(stageHarness *test_case_harness.TestCaseHarness) erro
 	deleteRDBfile()
 
 	logger := stageHarness.Logger
-	defer logger.ResetSecondaryPrefix()
+	defer logger.ResetSecondaryPrefixes()
 
 	listener, err := net.Listen("tcp", ":6379")
 	if err != nil {
@@ -34,7 +34,7 @@ func testReplCmdProcessing(stageHarness *test_case_harness.TestCaseHarness) erro
 		return err
 	}
 
-	logger.UpdateSecondaryPrefix("handshake")
+	logger.UpdateLastSecondaryPrefix("handshake")
 
 	conn, err := listener.Accept()
 	if err != nil {
@@ -55,7 +55,7 @@ func testReplCmdProcessing(stageHarness *test_case_harness.TestCaseHarness) erro
 		return err
 	}
 
-	logger.UpdateSecondaryPrefix("propagation")
+	logger.UpdateLastSecondaryPrefix("propagation")
 
 	replicaClient, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6380", "client")
 	if err != nil {
@@ -78,7 +78,7 @@ func testReplCmdProcessing(stageHarness *test_case_harness.TestCaseHarness) erro
 		}
 	}
 
-	logger.UpdateSecondaryPrefix("test")
+	logger.UpdateLastSecondaryPrefix("test")
 
 	for i := 1; i <= len(kvMap); i++ {
 		key, value := kvMap[i][0], kvMap[i][1]
