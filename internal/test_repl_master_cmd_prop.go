@@ -13,7 +13,7 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 	deleteRDBfile()
 
 	logger := stageHarness.Logger
-	defer logger.ResetSecondaryPrefix()
+	defer logger.ResetSecondaryPrefixes()
 
 	// Run the user's code as a master
 	masterBinary := redis_executable.NewRedisExecutable(stageHarness)
@@ -21,7 +21,7 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 		return err
 	}
 
-	logger.UpdateSecondaryPrefix("handshake")
+	logger.UpdateLastSecondaryPrefix("handshake")
 
 	// We use one client to send commands to the master
 	client, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client")
@@ -44,7 +44,7 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 		return err
 	}
 
-	logger.UpdateSecondaryPrefix("test")
+	logger.UpdateLastSecondaryPrefix("test")
 
 	kvMap := map[int][]string{
 		1: {"foo", "123"},
