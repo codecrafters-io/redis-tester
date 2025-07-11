@@ -40,7 +40,6 @@ func testStreamsXreadBlockNoTimeout(stageHarness *test_case_harness.TestCaseHarn
 		return err
 	}
 
-	xreadResult := make(chan error, 1)
 	entryValue = testerutils_random.RandomInt(1, 100)
 	xreadAssertion := resp_assertions.NewXReadResponseAssertion([]resp_assertions.StreamResponse{{
 		Key: streamKey,
@@ -49,18 +48,15 @@ func testStreamsXreadBlockNoTimeout(stageHarness *test_case_harness.TestCaseHarn
 			FieldValuePairs: [][]string{{"temperature", strconv.Itoa(entryValue)}},
 		}},
 	}})
-	xReadTestCase := &test_cases.SendCommandTestCase{
-		Command:                   "XREAD",
-		Args:                      []string{"block", "0", "streams", streamKey, "0-1"},
-		Assertion:                 xreadAssertion,
-		ShouldSkipUnreadDataCheck: true,
-	}
-	xReadTestCase.PauseReadingResponse()
 
-	go func() {
-		err := xReadTestCase.Run(client1, logger)
-		xreadResult <- err
-	}()
+	xReadTestCase := test_cases.BlockingClientGroupTestCase{}
+	xReadTestCase.AddClientWithExpectedResponse(
+		client1,
+		"XREAD",
+		[]string{"block", "0", "streams", streamKey, "0-1"},
+		xreadAssertion,
+	)
+	xReadTestCase.SendBlockingCommands()
 
 	// send xadd from another client
 	client2, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client-2")
@@ -80,6 +76,5 @@ func testStreamsXreadBlockNoTimeout(stageHarness *test_case_harness.TestCaseHarn
 		return err
 	}
 
-	xReadTestCase.ResumeReadingResponse()
-	return <-xreadResult
+	return xReadTestCase.AssertResponses(logger)
 }

@@ -1,6 +1,10 @@
 package formatter
 
-import "github.com/tidwall/pretty"
+import (
+	"bytes"
+
+	"github.com/tidwall/pretty"
+)
 
 var defaultOptions = &pretty.Options{
 	Indent: "  ",
@@ -8,5 +12,7 @@ var defaultOptions = &pretty.Options{
 }
 
 func Prettify(json []byte) string {
-	return string(pretty.PrettyOptions(json, defaultOptions))
+	prettified := pretty.PrettyOptions(json, defaultOptions)
+	prettified = bytes.TrimRight(prettified, "\n")
+	return string(prettified)
 }

@@ -46,6 +46,7 @@ func testReplGetaAckZero(stageHarness *test_case_harness.TestCaseHarness) error 
 	}
 
 	logger.UpdateLastSecondaryPrefix("handshake")
+	master.UpdateBaseLogger(logger)
 
 	receiveReplicationHandshakeTestCase := test_cases.ReceiveReplicationHandshakeTestCase{}
 
@@ -54,6 +55,7 @@ func testReplGetaAckZero(stageHarness *test_case_harness.TestCaseHarness) error 
 	}
 
 	logger.UpdateLastSecondaryPrefix("test")
+	master.UpdateBaseLogger(logger)
 
 	getAckTestCase := test_cases.GetAckTestCase{}
 
