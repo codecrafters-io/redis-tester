@@ -26,7 +26,6 @@ type SendCommandTestCase struct {
 	readMutex sync.Mutex
 }
 
-
 func (t *SendCommandTestCase) Run(client *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
 	receiveValueTestCase := ReceiveValueTestCase{
 		Assertion:                 t.Assertion,
