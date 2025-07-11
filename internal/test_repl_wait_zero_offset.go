@@ -39,7 +39,7 @@ func testWaitZeroOffset(stageHarness *test_case_harness.TestCaseHarness) error {
 	defer client.Close()
 
 	logger.UpdateLastSecondaryPrefix("test")
-	client.UpdateLogger(logger)
+	client.UpdateBaseLogger(logger)
 
 	diff := ((replicaCount + 3) - 3) / 3
 	safeDiff := max(1, diff) // If diff is 0, it will get stuck in an infinite loop

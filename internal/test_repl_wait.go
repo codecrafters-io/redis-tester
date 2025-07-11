@@ -80,9 +80,9 @@ func testWait(stageHarness *test_case_harness.TestCaseHarness) error {
 	defer client.Close()
 
 	logger.UpdateLastSecondaryPrefix("test")
-	client.UpdateLogger(logger)
+	client.UpdateBaseLogger(logger)
 	for _, r := range replicas {
-		r.UpdateLogger(logger)
+		r.UpdateBaseLogger(logger)
 	}
 
 	if err = RunWaitTest(client, replicas, WaitTest{

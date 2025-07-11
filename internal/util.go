@@ -52,14 +52,14 @@ func SpawnReplicas(replicaCount int, stageHarness *test_case_harness.TestCaseHar
 		}
 
 		logger.UpdateLastSecondaryPrefix("handshake")
-		replica.UpdateLogger(logger)
+		replica.UpdateBaseLogger(logger)
 
 		if err := sendHandshakeTestCase.RunAll(replica, logger, listeningPort); err != nil {
 			return nil, err
 		}
 
 		logger.ResetSecondaryPrefixes()
-		replica.UpdateLogger(logger)
+		replica.UpdateBaseLogger(logger)
 
 		listeningPort += 1
 		// The bytes received and sent during the handshake don't count towards offset.

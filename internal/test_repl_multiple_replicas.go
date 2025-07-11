@@ -41,9 +41,9 @@ func testReplMultipleReplicas(stageHarness *test_case_harness.TestCaseHarness) e
 	}
 
 	logger.UpdateLastSecondaryPrefix("test")
-	client.UpdateLogger(logger)
+	client.UpdateBaseLogger(logger)
 	for _, r := range replicas {
-		r.UpdateLogger(logger)
+		r.UpdateBaseLogger(logger)
 	}
 
 	kvMap := map[int][]string{

@@ -39,8 +39,8 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 	}
 	defer replicaClient.Close()
 
-	client.UpdateLogger(logger)
-	replicaClient.UpdateLogger(logger)
+	client.UpdateBaseLogger(logger)
+	replicaClient.UpdateBaseLogger(logger)
 
 	sendHandshakeTestCase := test_cases.SendReplicationHandshakeTestCase{}
 	if err := sendHandshakeTestCase.RunAll(replicaClient, logger, 6380); err != nil {
@@ -48,8 +48,8 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 	}
 
 	logger.UpdateLastSecondaryPrefix("test")
-	client.UpdateLogger(logger)
-	replicaClient.UpdateLogger(logger)
+	client.UpdateBaseLogger(logger)
+	replicaClient.UpdateBaseLogger(logger)
 
 	kvMap := map[int][]string{
 		1: {"foo", "123"},

@@ -56,7 +56,7 @@ func testReplCmdProcessing(stageHarness *test_case_harness.TestCaseHarness) erro
 	}
 
 	logger.UpdateLastSecondaryPrefix("propagation")
-	master.UpdateLogger(logger)
+	master.UpdateBaseLogger(logger)
 
 	replicaClient, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6380", "client")
 	if err != nil {
@@ -80,7 +80,7 @@ func testReplCmdProcessing(stageHarness *test_case_harness.TestCaseHarness) erro
 	}
 
 	logger.UpdateLastSecondaryPrefix("test")
-	replicaClient.UpdateLogger(logger)
+	replicaClient.UpdateBaseLogger(logger)
 
 	for i := 1; i <= len(kvMap); i++ {
 		key, value := kvMap[i][0], kvMap[i][1]

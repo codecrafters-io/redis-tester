@@ -47,7 +47,7 @@ func testReplGetaAckNonZero(stageHarness *test_case_harness.TestCaseHarness) err
 	}
 
 	logger.UpdateLastSecondaryPrefix("handshake")
-	master.UpdateLogger(logger)
+	master.UpdateBaseLogger(logger)
 
 	receiveReplicationHandshakeTestCase := test_cases.ReceiveReplicationHandshakeTestCase{}
 
@@ -59,7 +59,7 @@ func testReplGetaAckNonZero(stageHarness *test_case_harness.TestCaseHarness) err
 	// After finishing the handshake we reset the counters.
 	master.ResetByteCounters()
 	logger.UpdateLastSecondaryPrefix("test")
-	master.UpdateLogger(logger)
+	master.UpdateBaseLogger(logger)
 
 	getAckTestCase := test_cases.GetAckTestCase{}
 	if err := getAckTestCase.Run(master, logger, master.SentBytes); err != nil {
@@ -67,19 +67,19 @@ func testReplGetaAckNonZero(stageHarness *test_case_harness.TestCaseHarness) err
 	}
 
 	logger.UpdateLastSecondaryPrefix("propagation")
-	master.UpdateLogger(logger)
+	master.UpdateBaseLogger(logger)
 	if err := master.SendCommand("PING"); err != nil {
 		return err
 	}
 
 	logger.UpdateLastSecondaryPrefix("test")
-	master.UpdateLogger(logger)
+	master.UpdateBaseLogger(logger)
 	if err := getAckTestCase.Run(master, logger, master.SentBytes); err != nil {
 		return err
 	}
 
 	logger.UpdateLastSecondaryPrefix("propagation")
-	master.UpdateLogger(logger)
+	master.UpdateBaseLogger(logger)
 	key := testerutils_random.RandomWord()
 	value := testerutils_random.RandomWord()
 	if err := master.SendCommand("SET", []string{key, value}...); err != nil {
@@ -93,6 +93,6 @@ func testReplGetaAckNonZero(stageHarness *test_case_harness.TestCaseHarness) err
 	}
 
 	logger.UpdateLastSecondaryPrefix("test")
-	master.UpdateLogger(logger)
+	master.UpdateBaseLogger(logger)
 	return getAckTestCase.Run(master, logger, master.SentBytes)
 }
