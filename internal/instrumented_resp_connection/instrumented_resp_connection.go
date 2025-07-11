@@ -9,7 +9,13 @@ import (
 	"github.com/codecrafters-io/tester-utils/logger"
 )
 
-func defaultCallbacks(logger *logger.Logger, logPrefix string) resp_connection.RespConnectionCallbacks {
+type InstrumentedRespConnection struct {
+	*resp_connection.RespConnection
+
+	Logger *logger.Logger
+}
+
+func defaultCallbacks(logger *logger.Logger) resp_connection.RespConnectionCallbacks {
 	return resp_connection.RespConnectionCallbacks{
 		BeforeSendCommand: func(reusedConnection bool, command string, args ...string) {
 			var commandPrefix string
@@ -20,48 +26,44 @@ func defaultCallbacks(logger *logger.Logger, logPrefix string) resp_connection.R
 			}
 
 			if len(args) > 0 {
-				logger.Infof("%s%s %s %s", logPrefix, commandPrefix, command, strings.Join(args, " "))
+				logger.Infof("%s %s %s", commandPrefix, command, strings.Join(args, " "))
 			} else {
-				logger.Infof("%s%s %s", logPrefix, commandPrefix, command)
+				logger.Infof("%s %s", commandPrefix, command)
 			}
 		},
 		BeforeSendValue: func(value resp_value.Value) {
-			logger.Infof("%sSent %s", logPrefix, value.FormattedString())
+			logger.Infof("Sent %s", value.FormattedString())
 		},
 		BeforeSendBytes: func(bytes []byte) {
-			logger.Debugf("%sSent bytes: %q", logPrefix, string(bytes))
+			logger.Debugf("Sent bytes: %q", string(bytes))
 		},
 		AfterBytesReceived: func(bytes []byte) {
-			logger.Debugf("%sReceived bytes: %q", logPrefix, string(bytes))
+			logger.Debugf("Received bytes: %q", string(bytes))
 		},
 		AfterReadValue: func(value resp_value.Value) {
 			valueTypeLowerCase := strings.ReplaceAll(strings.ToLower(value.Type), "_", " ")
 			if valueTypeLowerCase == "nil" {
 				valueTypeLowerCase = "null bulk string"
 			}
-			logger.Debugf("%sReceived RESP %s: %s", logPrefix, valueTypeLowerCase, value.FormattedString())
-
+			logger.Debugf("Received RESP %s: %s", valueTypeLowerCase, value.FormattedString())
 		},
 	}
 }
 
-func NewFromAddr(logger *logger.Logger, addr string, connIdentifier string) (*resp_connection.RespConnection, error) {
-	logPrefix := ""
-	if connIdentifier != "" {
-		logPrefix = connIdentifier + ": "
-	}
+func NewFromAddr(baseLogger *logger.Logger, addr string, connIdentifier string) (*resp_connection.RespConnection, error) {
+	logger := baseLogger.Clone()
+	logger.PushSecondaryPrefix(connIdentifier)
+
 	return resp_connection.NewRespConnectionFromAddr(
-		addr, connIdentifier, defaultCallbacks(logger, logPrefix),
+		addr, connIdentifier, defaultCallbacks(logger),
 	)
 }
 
-func NewFromConn(logger *logger.Logger, conn net.Conn, clientIdentifier string) (*resp_connection.RespConnection, error) {
-	logPrefix := ""
-	if clientIdentifier != "" {
-		logPrefix = clientIdentifier + ": "
-	}
+func NewFromConn(baseLogger *logger.Logger, conn net.Conn, clientIdentifier string) (*resp_connection.RespConnection, error) {
+	logger := baseLogger.Clone()
+	logger.PushSecondaryPrefix(clientIdentifier)
 
 	return resp_connection.NewRespConnectionFromConn(
-		conn, defaultCallbacks(logger, logPrefix),
+		conn, defaultCallbacks(logger),
 	)
 }
