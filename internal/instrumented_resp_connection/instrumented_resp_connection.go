@@ -15,6 +15,13 @@ type InstrumentedRespConnection struct {
 	Logger *logger.Logger
 }
 
+func (c *InstrumentedRespConnection) UpdateBaseLogger(baseLogger *logger.Logger) {
+	newLogger := baseLogger.Clone()
+	newLogger.PushSecondaryPrefix(c.Logger.GetLastSecondaryPrefix())
+
+	c.Logger = newLogger
+}
+
 func defaultCallbacks(logger *logger.Logger) resp_connection.RespConnectionCallbacks {
 	return resp_connection.RespConnectionCallbacks{
 		BeforeSendCommand: func(reusedConnection bool, command string, args ...string) {

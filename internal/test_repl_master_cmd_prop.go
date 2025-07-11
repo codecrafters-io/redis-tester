@@ -45,6 +45,8 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 	}
 
 	logger.UpdateLastSecondaryPrefix("test")
+	client.UpdateBaseLogger(logger)
+	replicaClient.UpdateBaseLogger(logger)
 
 	kvMap := map[int][]string{
 		1: {"foo", "123"},
