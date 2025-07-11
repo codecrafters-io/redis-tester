@@ -151,8 +151,12 @@ func (c *RespConnection) ReadFullResyncRDBFile() ([]byte, error) {
 
 	value, readBytesCount, err := resp_decoder.DecodeFullResyncRDBFile(c.UnreadBuffer.Bytes())
 
-	if c.Callbacks.AfterBytesReceived != nil && readBytesCount > 0 {
-		c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes()[:readBytesCount])
+	logUptoPosition := readBytesCount
+	if err != nil {
+		logUptoPosition = c.UnreadBuffer.Len()
+	}
+	if c.Callbacks.AfterBytesReceived != nil && logUptoPosition > 0 {
+		c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes()[:logUptoPosition])
 	}
 
 	if err != nil {
@@ -205,8 +209,12 @@ func (c *RespConnection) ReadValueWithTimeout(timeout time.Duration) (resp_value
 
 	value, readBytesCount, err := resp_decoder.Decode(c.UnreadBuffer.Bytes())
 
-	if c.Callbacks.AfterBytesReceived != nil && readBytesCount > 0 {
-		c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes()[:readBytesCount])
+	logUptoPosition := readBytesCount
+	if err != nil {
+		logUptoPosition = c.UnreadBuffer.Len()
+	}
+	if c.Callbacks.AfterBytesReceived != nil && logUptoPosition > 0 {
+		c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes()[:logUptoPosition])
 	}
 
 	if err != nil {

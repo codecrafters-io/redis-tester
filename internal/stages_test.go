@@ -61,6 +61,13 @@ func TestStages(t *testing.T) {
 			StdoutFixturePath:   "./test_helpers/fixtures/ping-pong/without_read_multiple_pongs",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
+		"invalid_resp_error": {
+			StageSlugs:          []string{"rg2"},
+			CodePath:            "./test_helpers/scenarios/invalid-resp/",
+			ExpectedExitCode:    1,
+			StdoutFixturePath:   "./test_helpers/fixtures/invalid-resp/invalid_resp_error",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
 		"expiry_pass": {
 			UntilStageSlug:      "yz1",
 			CodePath:            "./test_helpers/pass_all",
