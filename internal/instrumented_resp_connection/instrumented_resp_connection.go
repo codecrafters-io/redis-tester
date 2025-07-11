@@ -55,13 +55,13 @@ func NewFromAddr(baseLogger *logger.Logger, addr string, connIdentifier string) 
 	logger.PushSecondaryPrefix(connIdentifier)
 
 	return resp_connection.NewRespConnectionFromAddr(
-		addr, connIdentifier, defaultCallbacks(logger),
+		addr, defaultCallbacks(logger),
 	)
 }
 
-func NewFromConn(baseLogger *logger.Logger, conn net.Conn, clientIdentifier string) (*resp_connection.RespConnection, error) {
+func NewFromConn(baseLogger *logger.Logger, conn net.Conn, connIdentifier string) (*resp_connection.RespConnection, error) {
 	logger := baseLogger.Clone()
-	logger.PushSecondaryPrefix(clientIdentifier)
+	logger.PushSecondaryPrefix(connIdentifier)
 
 	return resp_connection.NewRespConnectionFromConn(
 		conn, defaultCallbacks(logger),
