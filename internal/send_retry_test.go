@@ -15,7 +15,7 @@ import (
 
 func TestSendRetry(t *testing.T) {
 	h := &test_case_harness.TestCaseHarness{
-		Logger:     logger.GetLogger(true, ""),
+		Logger:     logger.GetQuietLogger(""),
 		Executable: executable.NewExecutable("./test_helpers/scenarios/send-command-retry/spawn_redis_server.sh"),
 	}
 	b := redis_executable.NewRedisExecutable(h)
