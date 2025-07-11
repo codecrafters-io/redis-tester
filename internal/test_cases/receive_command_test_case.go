@@ -20,11 +20,11 @@ func (t *ReceiveCommandTestCase) Run(conn *instrumented_resp_connection.Instrume
 		ShouldSkipUnreadDataCheck: t.ShouldSkipUnreadDataCheck,
 	}
 	err := receiveValueTestCase.Run(conn, logger)
+	t.ReceivedValue = receiveValueTestCase.ActualValue
+
 	if err != nil {
 		return err
 	}
-	t.ReceivedValue = receiveValueTestCase.ActualValue
-
 	if err := conn.SendValue(t.Response); err != nil {
 		return err
 	}
