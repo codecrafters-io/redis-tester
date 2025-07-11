@@ -27,7 +27,6 @@ type SendCommandTestCase struct {
 }
 
 func (t *SendCommandTestCase) Run(client *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
-	var value resp_value.Value
 	var err error
 	receiveValueTestCase := ReceiveValueTestCase{
 		Assertion:                 t.Assertion,
@@ -60,7 +59,7 @@ func (t *SendCommandTestCase) Run(client *instrumented_resp_connection.Instrumen
 		if t.ShouldRetryFunc == nil {
 			panic(fmt.Sprintf("Received SendCommand with retries: %d but no ShouldRetryFunc.", t.Retries))
 		} else {
-			if t.ShouldRetryFunc(value) {
+			if t.ShouldRetryFunc(receiveValueTestCase.ActualValue) {
 				// If ShouldRetryFunc returns true, we sleep and retry.
 				time.Sleep(500 * time.Millisecond)
 			} else {
