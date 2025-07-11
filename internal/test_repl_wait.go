@@ -80,6 +80,10 @@ func testWait(stageHarness *test_case_harness.TestCaseHarness) error {
 	defer client.Close()
 
 	logger.UpdateLastSecondaryPrefix("test")
+	client.UpdateLogger(logger)
+	for _, r := range replicas {
+		r.UpdateLogger(logger)
+	}
 
 	if err = RunWaitTest(client, replicas, WaitTest{
 		WriteCommand:        []string{"SET", "foo", "123"},
@@ -115,7 +119,7 @@ func consumeReplicationStreamAndSendAcks(replicas []*instrumented_resp_connectio
 		replica := replicas[j]
 		logger.Infof("Testing Replica: %s", replica.GetIdentifier())
 
-		replicaLogger := replica.GetLogger(logger)
+		replicaLogger := replica.GetLogger()
 		replicaLogger.Infof("Expecting \"%s\" to be propagated", strings.Join(command, " "))
 
 		receiveCommandTestCase := &test_cases.ReceiveValueTestCase{

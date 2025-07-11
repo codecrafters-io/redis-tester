@@ -39,12 +39,17 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 	}
 	defer replicaClient.Close()
 
+	client.UpdateLogger(logger)
+	replicaClient.UpdateLogger(logger)
+
 	sendHandshakeTestCase := test_cases.SendReplicationHandshakeTestCase{}
 	if err := sendHandshakeTestCase.RunAll(replicaClient, logger, 6380); err != nil {
 		return err
 	}
 
 	logger.UpdateLastSecondaryPrefix("test")
+	client.UpdateLogger(logger)
+	replicaClient.UpdateLogger(logger)
 
 	kvMap := map[int][]string{
 		1: {"foo", "123"},
@@ -71,7 +76,7 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 
 	// We then assert that as a replica we receive the SET commands in order
 	for i := 1; i <= len(kvMap); i++ {
-		replicaClient.GetLogger(logger).Infof("Expecting \"SET %s %s\" to be propagated", kvMap[i][0], kvMap[i][1])
+		replicaClient.GetLogger().Infof("Expecting \"SET %s %s\" to be propagated", kvMap[i][0], kvMap[i][1])
 
 		receiveCommandTestCase := &test_cases.ReceiveValueTestCase{
 			Assertion:                 resp_assertions.NewCommandAssertion("SET", kvMap[i][0], kvMap[i][1]),

@@ -59,7 +59,7 @@ type RespConnection struct {
 	TotalSentBytes int
 }
 
-func NewRespConnectionFromAddr(addr string, connIdentifier string, callbacks RespConnectionCallbacks) (*RespConnection, error) {
+func NewRespConnectionFromAddr(addr string, callbacks RespConnectionCallbacks) (*RespConnection, error) {
 	conn, err := newConn(addr)
 
 	if err != nil {
@@ -147,20 +147,8 @@ func (c *RespConnection) ReadFullResyncRDBFile() ([]byte, error) {
 
 	value, readBytesCount, err := resp_decoder.DecodeFullResyncRDBFile(c.UnreadBuffer.Bytes())
 
-	/* In case of invalid resp beginner symbol, even though the read bytes is 0
-	we log the entire content
-	*/
-	logUptoPosition := readBytesCount
-	if err != nil {
-		if e, ok := err.(resp_decoder.InvalidInputError); ok {
-			if e.InvalidRespBeginner {
-				logUptoPosition = c.UnreadBuffer.Len()
-			}
-		}
-	}
-
-	if c.Callbacks.AfterBytesReceived != nil && logUptoPosition > 0 {
-		c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes()[:logUptoPosition])
+	if c.Callbacks.AfterBytesReceived != nil && readBytesCount > 0 {
+		c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes()[:readBytesCount])
 	}
 
 	if err != nil {
@@ -213,20 +201,8 @@ func (c *RespConnection) ReadValueWithTimeout(timeout time.Duration) (resp_value
 
 	value, readBytesCount, err := resp_decoder.Decode(c.UnreadBuffer.Bytes())
 
-	/* In case of invalid resp beginner symbol, even though the read bytes is 0
-	we log the entire content
-	*/
-	logUptoPosition := readBytesCount
-	if err != nil {
-		if e, ok := err.(resp_decoder.InvalidInputError); ok {
-			if e.InvalidRespBeginner {
-				logUptoPosition = c.UnreadBuffer.Len()
-			}
-		}
-	}
-
-	if c.Callbacks.AfterBytesReceived != nil && logUptoPosition > 0 {
-		c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes()[:logUptoPosition])
+	if c.Callbacks.AfterBytesReceived != nil && readBytesCount > 0 {
+		c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes()[:readBytesCount])
 	}
 
 	if err != nil {
@@ -268,6 +244,10 @@ func (c *RespConnection) readIntoBufferUntil(condition func([]byte) bool, timeou
 func (c *RespConnection) ResetByteCounters() {
 	c.ReceivedBytes = 0
 	c.SentBytes = 0
+}
+
+func (c *RespConnection) UpdateCallBacks(newCallBacks RespConnectionCallbacks) {
+	c.Callbacks = newCallBacks
 }
 
 func newConn(address string) (net.Conn, error) {

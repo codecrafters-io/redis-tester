@@ -31,9 +31,8 @@ func doDecodeFullResyncRDBFile(reader *bytes.Reader) ([]byte, error) {
 		reader.UnreadByte() // Ensure the error points to the correct byte
 
 		return nil, InvalidInputError{
-			Reader:              reader,
-			Message:             fmt.Sprintf("Expected first byte of RDB file message to be $, got %q", string(firstByte)),
-			InvalidRespBeginner: true,
+			Reader:  reader,
+			Message: fmt.Sprintf("Expected first byte of RDB file message to be $, got %q", string(firstByte)),
 		}
 	}
 

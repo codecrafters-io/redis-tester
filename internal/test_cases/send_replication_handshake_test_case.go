@@ -79,7 +79,7 @@ func (t SendReplicationHandshakeTestCase) RunPsyncStep(client *instrumented_resp
 }
 
 func (t SendReplicationHandshakeTestCase) RunReceiveRDBStep(client *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
-	clientLogger := client.GetLogger(logger)
+	clientLogger := client.GetLogger()
 	clientLogger.Debugln("Reading RDB file...")
 
 	rdbFileBytes, err := client.ReadFullResyncRDBFile()

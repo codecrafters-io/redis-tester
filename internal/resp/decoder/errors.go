@@ -14,9 +14,8 @@ type IncompleteInputError struct {
 }
 
 type InvalidInputError struct {
-	Reader              *bytes.Reader
-	Message             string
-	InvalidRespBeginner bool
+	Reader  *bytes.Reader
+	Message string
 }
 
 func (e IncompleteInputError) Error() string {

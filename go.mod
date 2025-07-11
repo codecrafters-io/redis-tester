@@ -5,7 +5,7 @@ go 1.24
 toolchain go1.24.2
 
 require (
-	github.com/codecrafters-io/tester-utils v0.4.6-0.20250710090454-8eb4b019b0d4
+	github.com/codecrafters-io/tester-utils v0.4.6
 	github.com/hdt3213/rdb v1.2.0
 	github.com/stretchr/testify v1.10.0
 	github.com/tidwall/pretty v1.2.1
