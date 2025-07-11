@@ -55,7 +55,7 @@ func testOnlyTimeout(stageHarness *test_case_harness.TestCaseHarness) error {
 		return err
 	}
 	if end.Before(start.Add(timeoutDuration)) {
-		return fmt.Errorf("%s received a response before timeout of %s", client.GetIdentifier(), timeoutDuration.String())
+		return fmt.Errorf("%s received a response before timeout of %s", client.Logger.GetLastSecondaryPrefix(), timeoutDuration.String())
 	}
 	return nil
 }

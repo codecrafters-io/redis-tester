@@ -1,6 +1,7 @@
 package test_cases
 
 import (
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	resp_client "github.com/codecrafters-io/redis-tester/internal/resp/connection"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/tester-utils/logger"
@@ -16,7 +17,7 @@ type MultiCommandTestCase struct {
 	CommandWithAssertions []CommandWithAssertion
 }
 
-func (t *MultiCommandTestCase) RunAll(client *resp_client.RespConnection, logger *logger.Logger) error {
+func (t *MultiCommandTestCase) RunAll(client *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
 	for _, cwa := range t.CommandWithAssertions {
 		setCommandTestCase := SendCommandTestCase{
 			Command:   cwa.Command[0],

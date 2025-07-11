@@ -50,20 +50,32 @@ func defaultCallbacks(logger *logger.Logger) resp_connection.RespConnectionCallb
 	}
 }
 
-func NewFromAddr(baseLogger *logger.Logger, addr string, connIdentifier string) (*resp_connection.RespConnection, error) {
+func NewFromAddr(baseLogger *logger.Logger, addr string, connIdentifier string) (*InstrumentedRespConnection, error) {
 	logger := baseLogger.Clone()
 	logger.PushSecondaryPrefix(connIdentifier)
 
-	return resp_connection.NewRespConnectionFromAddr(
-		addr, defaultCallbacks(logger),
-	)
+	respConnection, err := resp_connection.NewRespConnectionFromAddr(addr, defaultCallbacks(logger))
+	if err != nil {
+		return nil, err
+	}
+
+	return &InstrumentedRespConnection{
+		RespConnection: respConnection,
+		Logger:         logger,
+	}, nil
 }
 
-func NewFromConn(baseLogger *logger.Logger, conn net.Conn, connIdentifier string) (*resp_connection.RespConnection, error) {
+func NewFromConn(baseLogger *logger.Logger, conn net.Conn, connIdentifier string) (*InstrumentedRespConnection, error) {
 	logger := baseLogger.Clone()
 	logger.PushSecondaryPrefix(connIdentifier)
 
-	return resp_connection.NewRespConnectionFromConn(
-		conn, defaultCallbacks(logger),
-	)
+	respConnection, err := resp_connection.NewRespConnectionFromConn(conn, defaultCallbacks(logger))
+	if err != nil {
+		return nil, err
+	}
+
+	return &InstrumentedRespConnection{
+		RespConnection: respConnection,
+		Logger:         logger,
+	}, nil
 }

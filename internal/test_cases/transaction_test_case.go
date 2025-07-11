@@ -1,7 +1,7 @@
 package test_cases
 
 import (
-	resp_client "github.com/codecrafters-io/redis-tester/internal/resp/connection"
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/tester-utils/logger"
 )
@@ -24,7 +24,7 @@ type TransactionTestCase struct {
 	ExpectedResponseArray []resp_assertions.RESPAssertion
 }
 
-func (t TransactionTestCase) RunAll(client *resp_client.RespConnection, logger *logger.Logger) error {
+func (t TransactionTestCase) RunAll(client *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
 	if err := t.RunMulti(client, logger); err != nil {
 		return err
 	}
@@ -40,7 +40,7 @@ func (t TransactionTestCase) RunAll(client *resp_client.RespConnection, logger *
 	return nil
 }
 
-func (t TransactionTestCase) RunWithoutExec(client *resp_client.RespConnection, logger *logger.Logger) error {
+func (t TransactionTestCase) RunWithoutExec(client *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
 	if err := t.RunMulti(client, logger); err != nil {
 		return err
 	}
@@ -52,7 +52,7 @@ func (t TransactionTestCase) RunWithoutExec(client *resp_client.RespConnection, 
 	return nil
 }
 
-func (t TransactionTestCase) RunMulti(client *resp_client.RespConnection, logger *logger.Logger) error {
+func (t TransactionTestCase) RunMulti(client *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
 	commandTest := SendCommandTestCase{
 		Command:   "MULTI",
 		Args:      []string{},
@@ -62,7 +62,7 @@ func (t TransactionTestCase) RunMulti(client *resp_client.RespConnection, logger
 	return commandTest.Run(client, logger)
 }
 
-func (t TransactionTestCase) RunQueueAll(client *resp_client.RespConnection, logger *logger.Logger) error {
+func (t TransactionTestCase) RunQueueAll(client *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
 	for i, v := range t.CommandQueue {
 		logger.Debugf("Sending command: #%d/#%d", i+1, len(t.CommandQueue))
 		commandTest := SendCommandTestCase{
@@ -78,7 +78,7 @@ func (t TransactionTestCase) RunQueueAll(client *resp_client.RespConnection, log
 	return nil
 }
 
-func (t TransactionTestCase) RunExec(client *resp_client.RespConnection, logger *logger.Logger) error {
+func (t TransactionTestCase) RunExec(client *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
 	setCommandTestCase := SendCommandTestCase{
 		Command:   "EXEC",
 		Args:      []string{},

@@ -3,6 +3,7 @@ package test_cases
 import (
 	"fmt"
 
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	resp_client "github.com/codecrafters-io/redis-tester/internal/resp/connection"
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
@@ -17,7 +18,7 @@ type ReceiveValueTestCase struct {
 	ActualValue resp_value.Value
 }
 
-func (t *ReceiveValueTestCase) Run(client *resp_client.RespConnection, logger *logger.Logger) error {
+func (t *ReceiveValueTestCase) Run(client *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
 	err := t.RunWithoutAssert(client)
 	if err != nil {
 		return err
@@ -25,7 +26,7 @@ func (t *ReceiveValueTestCase) Run(client *resp_client.RespConnection, logger *l
 	return t.Assert(client, logger)
 }
 
-func (t *ReceiveValueTestCase) RunWithoutAssert(client *resp_client.RespConnection) error {
+func (t *ReceiveValueTestCase) RunWithoutAssert(client *instrumented_resp_connection.InstrumentedRespConnection) error {
 	value, err := client.ReadValue()
 	if err != nil {
 		return err
@@ -34,7 +35,7 @@ func (t *ReceiveValueTestCase) RunWithoutAssert(client *resp_client.RespConnecti
 	return nil
 }
 
-func (t *ReceiveValueTestCase) Assert(client *resp_client.RespConnection, logger *logger.Logger) error {
+func (t *ReceiveValueTestCase) Assert(client *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
 	if err := t.Assertion.Run(t.ActualValue); err != nil {
 		return err
 	}

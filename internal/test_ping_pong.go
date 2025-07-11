@@ -118,7 +118,7 @@ func testPingPongConcurrent(stageHarness *test_case_harness.TestCaseHarness) err
 	return nil
 }
 
-func runPing(logger *logger.Logger, client *resp_connection.RespConnection) error {
+func runPing(logger *logger.Logger, client *instrumented_resp_connection.InstrumentedRespConnection) error {
 	commandTestCase := test_cases.SendCommandTestCase{
 		Command:   "ping",
 		Args:      []string{},
