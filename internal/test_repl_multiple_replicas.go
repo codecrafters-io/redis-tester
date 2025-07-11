@@ -41,6 +41,10 @@ func testReplMultipleReplicas(stageHarness *test_case_harness.TestCaseHarness) e
 	}
 
 	logger.UpdateLastSecondaryPrefix("test")
+	client.UpdateBaseLogger(logger)
+	for _, r := range replicas {
+		r.UpdateBaseLogger(logger)
+	}
 
 	kvMap := map[int][]string{
 		1: {"foo", "123"},
@@ -64,9 +68,8 @@ func testReplMultipleReplicas(stageHarness *test_case_harness.TestCaseHarness) e
 	// We then assert that across all the replicas we receive the SET commands in order
 	for i, replica := range replicas {
 		logger.Infof("Testing Replica %d/%d: %s", i+1, replicaCount, replica.GetIdentifier())
-
 		for i := 1; i <= len(kvMap); i++ {
-			logger.Infof("%s: Expecting \"SET %s %s\" to be propagated", replica.GetIdentifier(), kvMap[i][0], kvMap[i][1])
+			replica.GetLogger().Infof("Expecting \"SET %s %s\" to be propagated", kvMap[i][0], kvMap[i][1])
 
 			receiveValueTestCase := &test_cases.ReceiveValueTestCase{
 				Assertion:                 resp_assertions.NewCommandAssertion("SET", kvMap[i][0], kvMap[i][1]),

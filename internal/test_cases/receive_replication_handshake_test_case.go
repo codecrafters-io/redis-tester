@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	resp_connection "github.com/codecrafters-io/redis-tester/internal/resp/connection"
+	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	resp_encoder "github.com/codecrafters-io/redis-tester/internal/resp/encoder"
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
@@ -19,7 +19,7 @@ import (
 // can run each step individually.
 type ReceiveReplicationHandshakeTestCase struct{}
 
-func (t ReceiveReplicationHandshakeTestCase) RunAll(client *resp_connection.RespConnection, logger *logger.Logger) error {
+func (t ReceiveReplicationHandshakeTestCase) RunAll(client *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
 	if err := t.RunPingStep(client, logger); err != nil {
 		return err
 	}
@@ -43,8 +43,8 @@ func (t ReceiveReplicationHandshakeTestCase) RunAll(client *resp_connection.Resp
 	return nil
 }
 
-func (t ReceiveReplicationHandshakeTestCase) RunPingStep(client *resp_connection.RespConnection, logger *logger.Logger) error {
-	logger.Infof("master: Waiting for replica to initiate handshake with %q command", "PING")
+func (t ReceiveReplicationHandshakeTestCase) RunPingStep(client *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
+	client.GetLogger().Infof("Waiting for replica to initiate handshake with %q command", "PING")
 
 	commandTest := ReceiveCommandTestCase{
 		Assertion: resp_assertions.NewCommandAssertion("PING"),
@@ -54,8 +54,8 @@ func (t ReceiveReplicationHandshakeTestCase) RunPingStep(client *resp_connection
 	return commandTest.Run(client, logger)
 }
 
-func (t ReceiveReplicationHandshakeTestCase) RunReplconfStep1(client *resp_connection.RespConnection, logger *logger.Logger) error {
-	logger.Infof("master: Waiting for replica to send %q command", "REPLCONF listening-port 6380")
+func (t ReceiveReplicationHandshakeTestCase) RunReplconfStep1(client *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
+	client.GetLogger().Infof("Waiting for replica to send %q command", "REPLCONF listening-port 6380")
 
 	commandTest := ReceiveCommandTestCase{
 		Assertion:                 resp_assertions.NewCommandAssertion("REPLCONF", "listening-port", "6380"),
@@ -66,8 +66,8 @@ func (t ReceiveReplicationHandshakeTestCase) RunReplconfStep1(client *resp_conne
 	return commandTest.Run(client, logger)
 }
 
-func (t ReceiveReplicationHandshakeTestCase) RunReplconfStep2(client *resp_connection.RespConnection, logger *logger.Logger) error {
-	logger.Infof("master: Waiting for replica to send %q command", "REPLCONF capa")
+func (t ReceiveReplicationHandshakeTestCase) RunReplconfStep2(client *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
+	client.GetLogger().Infof("Waiting for replica to send %q command", "REPLCONF capa")
 
 	commandTest := ReceiveCommandTestCase{
 		Assertion: resp_assertions.NewOnlyCommandAssertion("REPLCONF"),
@@ -112,8 +112,8 @@ func (t ReceiveReplicationHandshakeTestCase) RunReplconfStep2(client *resp_conne
 	return nil
 }
 
-func (t ReceiveReplicationHandshakeTestCase) RunPsyncStep(client *resp_connection.RespConnection, logger *logger.Logger) error {
-	logger.Infof("master: Waiting for replica to send %q command", "PSYNC")
+func (t ReceiveReplicationHandshakeTestCase) RunPsyncStep(client *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
+	client.GetLogger().Infof("Waiting for replica to send %q command", "PSYNC")
 
 	id := "75cd7bc10c49047e0d163660f3b90625b1af31dc"
 	commandTest := ReceiveCommandTestCase{
@@ -124,8 +124,9 @@ func (t ReceiveReplicationHandshakeTestCase) RunPsyncStep(client *resp_connectio
 	return commandTest.Run(client, logger)
 }
 
-func (t ReceiveReplicationHandshakeTestCase) RunSendRDBStep(client *resp_connection.RespConnection, logger *logger.Logger) error {
-	logger.Debugln("Sending RDB file...")
+func (t ReceiveReplicationHandshakeTestCase) RunSendRDBStep(client *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
+	clientLogger := client.GetLogger()
+	clientLogger.Debugln("Sending RDB file...")
 
 	hexStr := "524544495330303131fa0972656469732d76657205372e322e30fa0a72656469732d62697473c040fa056374696d65c26d08bc65fa08757365642d6d656dc2b0c41000fa08616f662d62617365c000fff06e3bfec0ff5aa2"
 	bytes, err := hex.DecodeString(hexStr)
@@ -136,6 +137,6 @@ func (t ReceiveReplicationHandshakeTestCase) RunSendRDBStep(client *resp_connect
 	encodedValue := resp_encoder.EncodeFullResyncRDBFile(bytes)
 	client.SendBytes(encodedValue)
 
-	logger.Successf("Sent RDB file.")
+	clientLogger.Successf("Sent RDB file.")
 	return nil
 }

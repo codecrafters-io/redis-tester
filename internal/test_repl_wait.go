@@ -9,7 +9,6 @@ import (
 
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
-	resp_connection "github.com/codecrafters-io/redis-tester/internal/resp/connection"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 
@@ -81,6 +80,10 @@ func testWait(stageHarness *test_case_harness.TestCaseHarness) error {
 	defer client.Close()
 
 	logger.UpdateLastSecondaryPrefix("test")
+	client.UpdateBaseLogger(logger)
+	for _, r := range replicas {
+		r.UpdateBaseLogger(logger)
+	}
 
 	if err = RunWaitTest(client, replicas, WaitTest{
 		WriteCommand:        []string{"SET", "foo", "123"},
@@ -110,13 +113,14 @@ func testWait(stageHarness *test_case_harness.TestCaseHarness) error {
 	return nil
 }
 
-func consumeReplicationStreamAndSendAcks(replicas []*resp_connection.RespConnection, logger *logger.Logger, acksSentByReplicaSubsetCount int, command []string) error {
+func consumeReplicationStreamAndSendAcks(replicas []*instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger, acksSentByReplicaSubsetCount int, command []string) error {
 	var err error
 	for j := 0; j < len(replicas); j++ {
 		replica := replicas[j]
 		logger.Infof("Testing Replica: %s", replica.GetIdentifier())
 
-		logger.Infof("%s: Expecting \"%s\" to be propagated", replica.GetIdentifier(), strings.Join(command, " "))
+		replicaLogger := replica.GetLogger()
+		replicaLogger.Infof("Expecting \"%s\" to be propagated", strings.Join(command, " "))
 
 		receiveCommandTestCase := &test_cases.ReceiveValueTestCase{
 			Assertion:                 resp_assertions.NewCommandAssertion(command[0], command[1:]...),
@@ -138,7 +142,7 @@ func consumeReplicationStreamAndSendAcks(replicas []*resp_connection.RespConnect
 			}
 		}
 
-		logger.Infof("%s: Expecting \"REPLCONF GETACK *\" from Master", replica.GetIdentifier())
+		replicaLogger.Infof("Expecting \"REPLCONF GETACK *\" from Master")
 
 		receiveGetackCommandTestCase := &test_cases.ReceiveValueTestCase{
 			Assertion:                 resp_assertions.NewCommandAssertion("REPLCONF", "GETACK", "*"),
@@ -149,19 +153,19 @@ func consumeReplicationStreamAndSendAcks(replicas []*resp_connection.RespConnect
 		}
 
 		if j < acksSentByReplicaSubsetCount {
-			logger.Debugf("%s: Sending ACK to Master", replica.GetIdentifier())
+			replicaLogger.Debugf("Sending ACK to Master")
 			// Remove GETACK command bytes from offset before sending ACK.
 			if err := replica.SendCommand("REPLCONF", []string{"ACK", strconv.Itoa(replica.ReceivedBytes - len(replica.LastValueBytes))}...); err != nil {
 				return err
 			}
 		} else {
-			logger.Debugf("%s: Not sending ACK to Master", replica.GetIdentifier())
+			replicaLogger.Debugf("Not sending ACK to Master")
 		}
 	}
 	return err
 }
 
-func RunWaitTest(client *resp_connection.RespConnection, replicas []*resp_connection.RespConnection, waitTest WaitTest) (err error) {
+func RunWaitTest(client *instrumented_resp_connection.InstrumentedRespConnection, replicas []*instrumented_resp_connection.InstrumentedRespConnection, waitTest WaitTest) (err error) {
 	// Step 1: Issue a write command
 	setCommandTestCase := test_cases.SendCommandTestCase{
 		Command:   waitTest.WriteCommand[0],

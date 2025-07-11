@@ -41,7 +41,6 @@ func testStreamsXreadBlock(stageHarness *test_case_harness.TestCaseHarness) erro
 		return err
 	}
 
-	xReadResult := make(chan error, 1)
 	entryValue = testerutils_random.RandomInt(1, 100)
 
 	xreadAssertion := resp_assertions.NewXReadResponseAssertion([]resp_assertions.StreamResponse{{
@@ -52,20 +51,15 @@ func testStreamsXreadBlock(stageHarness *test_case_harness.TestCaseHarness) erro
 		}},
 	}})
 
-	xReadTestCase := &test_cases.SendCommandTestCase{
-		Command:                   "XREAD",
-		Args:                      []string{"block", "1000", "streams", streamKey, "0-1"},
-		Assertion:                 xreadAssertion,
-		ShouldSkipUnreadDataCheck: true,
-	}
-	xReadTestCase.PauseReadingResponse()
+	xreadTestCase := test_cases.BlockingClientGroupTestCase{}
+	xreadTestCase.AddClientWithExpectedResponse(client1, "XREAD",
+		[]string{"block", "1000", "streams", streamKey, "0-1"}, xreadAssertion)
 
-	go func() {
-		err := xReadTestCase.Run(client1, logger)
-		xReadResult <- err
-	}()
+	xreadTestCase.SendBlockingCommands()
 
-	logger.Infof("Waiting for 500ms")
+	logger.WithAdditionalSecondaryPrefix(client1.GetIdentifier(), func() {
+		logger.Infof("Waiting for 500 ms")
+	})
 	time.Sleep(500 * time.Millisecond)
 
 	client2, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client-2")
@@ -82,14 +76,11 @@ func testStreamsXreadBlock(stageHarness *test_case_harness.TestCaseHarness) erro
 		Assertion:                 resp_assertions.NewStringAssertion("0-2"),
 		ShouldSkipUnreadDataCheck: true,
 	}
-
 	if err := xaddCommandTestCase.Run(client2, logger); err != nil {
 		return err
 	}
 
-	xReadTestCase.ResumeReadingResponse()
-
-	err = <-xReadResult
+	err = xreadTestCase.AssertResponses(logger)
 	if err != nil {
 		return err
 	}

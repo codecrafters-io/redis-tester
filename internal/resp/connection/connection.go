@@ -57,12 +57,9 @@ type RespConnection struct {
 	// TotalSentBytes is the total number of bytes sent using this connection, and is not reset or changed when the connection is reset
 	// This should be used for deciding if connection is new / reused and commands be logged as such
 	TotalSentBytes int
-
-	// Identifier is the string that is used to identify on whose behalf (master/replica(port)/client) we are logging
-	identifier string
 }
 
-func NewRespConnectionFromAddr(addr string, connIdentifier string, callbacks RespConnectionCallbacks) (*RespConnection, error) {
+func NewRespConnectionFromAddr(addr string, callbacks RespConnectionCallbacks) (*RespConnection, error) {
 	conn, err := newConn(addr)
 
 	if err != nil {
@@ -73,7 +70,6 @@ func NewRespConnectionFromAddr(addr string, connIdentifier string, callbacks Res
 		Conn:         conn,
 		UnreadBuffer: bytes.Buffer{},
 		Callbacks:    callbacks,
-		identifier:   connIdentifier,
 	}, nil
 }
 
@@ -151,8 +147,12 @@ func (c *RespConnection) ReadFullResyncRDBFile() ([]byte, error) {
 
 	value, readBytesCount, err := resp_decoder.DecodeFullResyncRDBFile(c.UnreadBuffer.Bytes())
 
-	if c.Callbacks.AfterBytesReceived != nil && readBytesCount > 0 {
-		c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes()[:readBytesCount])
+	loggableBytesCount := readBytesCount
+	if err != nil {
+		loggableBytesCount = c.UnreadBuffer.Len()
+	}
+	if c.Callbacks.AfterBytesReceived != nil && loggableBytesCount > 0 {
+		c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes()[:loggableBytesCount])
 	}
 
 	if err != nil {
@@ -205,8 +205,12 @@ func (c *RespConnection) ReadValueWithTimeout(timeout time.Duration) (resp_value
 
 	value, readBytesCount, err := resp_decoder.Decode(c.UnreadBuffer.Bytes())
 
-	if c.Callbacks.AfterBytesReceived != nil && readBytesCount > 0 {
-		c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes()[:readBytesCount])
+	loggableBytesCount := readBytesCount
+	if err != nil {
+		loggableBytesCount = c.UnreadBuffer.Len()
+	}
+	if c.Callbacks.AfterBytesReceived != nil && loggableBytesCount > 0 {
+		c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes()[:loggableBytesCount])
 	}
 
 	if err != nil {
@@ -250,11 +254,8 @@ func (c *RespConnection) ResetByteCounters() {
 	c.SentBytes = 0
 }
 
-func (c *RespConnection) GetIdentifier() string {
-	if c.identifier == "" {
-		panic("Codecrafters Internal Error - connection identifier is empty")
-	}
-	return c.identifier
+func (c *RespConnection) UpdateCallBacks(newCallBacks RespConnectionCallbacks) {
+	c.Callbacks = newCallBacks
 }
 
 func newConn(address string) (net.Conn, error) {

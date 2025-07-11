@@ -3,7 +3,6 @@ package internal
 import (
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
-	resp_connection "github.com/codecrafters-io/redis-tester/internal/resp/connection"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	"github.com/codecrafters-io/tester-utils/logger"
@@ -18,7 +17,7 @@ func testPingPongOnce(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	logger := stageHarness.Logger
 
-	client, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "")
+	client, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client")
 	if err != nil {
 		return err
 	}
@@ -57,7 +56,7 @@ func testPingPongMultiple(stageHarness *test_case_harness.TestCaseHarness) error
 		}
 	}
 
-	logger.Debugf("Success, closing connection...")
+	client.GetLogger().Debugf("Success, closing connection...")
 	client.Close()
 
 	return nil
@@ -98,7 +97,7 @@ func testPingPongConcurrent(stageHarness *test_case_harness.TestCaseHarness) err
 		return err
 	}
 
-	logger.Debugf("client-%d: Success, closing connection...", 1)
+	client1.GetLogger().Debugf("Success, closing connection...")
 	client1.Close()
 
 	client3, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client-3")
@@ -110,15 +109,16 @@ func testPingPongConcurrent(stageHarness *test_case_harness.TestCaseHarness) err
 		return err
 	}
 
-	logger.Debugf("client-%d: Success, closing connection...", 2)
+	client2.GetLogger().Debugf("Success, closing connection...")
 	client2.Close()
-	logger.Debugf("client-%d: Success, closing connection...", 3)
+
+	client3.GetLogger().Debugf("Success, closing connection...")
 	client3.Close()
 
 	return nil
 }
 
-func runPing(logger *logger.Logger, client *resp_connection.RespConnection) error {
+func runPing(logger *logger.Logger, client *instrumented_resp_connection.InstrumentedRespConnection) error {
 	commandTestCase := test_cases.SendCommandTestCase{
 		Command:   "ping",
 		Args:      []string{},

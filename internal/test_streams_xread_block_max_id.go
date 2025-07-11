@@ -21,7 +21,7 @@ func testStreamsXreadBlockMaxID(stageHarness *test_case_harness.TestCaseHarness)
 
 	logger := stageHarness.Logger
 
-	client1, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "redis-cli")
+	client1, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client-1")
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
@@ -42,7 +42,6 @@ func testStreamsXreadBlockMaxID(stageHarness *test_case_harness.TestCaseHarness)
 		return err
 	}
 
-	xReadResult := make(chan error, 1)
 	entryValue = testerutils_random.RandomInt(1, 100)
 
 	xReadAssertion := resp_assertions.NewXReadResponseAssertion([]resp_assertions.StreamResponse{{
@@ -52,22 +51,25 @@ func testStreamsXreadBlockMaxID(stageHarness *test_case_harness.TestCaseHarness)
 			FieldValuePairs: [][]string{{"temperature", strconv.Itoa(entryValue)}},
 		}},
 	}})
-	xReadTestCase := &test_cases.SendCommandTestCase{
-		Command:                   "XREAD",
-		Args:                      []string{"block", "0", "streams", streamKey, "$"},
-		Assertion:                 xReadAssertion,
-		ShouldSkipUnreadDataCheck: true,
-	}
-	xReadTestCase.PauseReadingResponse()
 
-	go func() {
-		err := xReadTestCase.Run(client1, logger)
-		xReadResult <- err
-	}()
+	xreadTestCase := test_cases.BlockingClientGroupTestCase{}
+
+	xreadTestCase.AddClientWithExpectedResponse(
+		client1,
+		"XREAD",
+		[]string{"block", "0", "streams", streamKey, "$"},
+		xReadAssertion,
+	)
+
+	xreadTestCase.SendBlockingCommands()
+
+	logger.WithAdditionalSecondaryPrefix(client1.GetIdentifier(), func() {
+		logger.Infof("Sleeping for 1000 ms")
+	})
 
 	time.Sleep(1000 * time.Millisecond)
 
-	client2, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "other-redis-cli")
+	client2, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client-2")
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
@@ -85,9 +87,7 @@ func testStreamsXreadBlockMaxID(stageHarness *test_case_harness.TestCaseHarness)
 		return err
 	}
 
-	// Ensure the responses of XAdd and XRead are fixed in the fixture
-	xReadTestCase.ResumeReadingResponse()
-	err = <-xReadResult
+	err = xreadTestCase.AssertResponses(logger)
 	if err != nil {
 		return err
 	}

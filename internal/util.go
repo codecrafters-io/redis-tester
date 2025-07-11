@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
-	resp_connection "github.com/codecrafters-io/redis-tester/internal/resp/connection"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	"github.com/codecrafters-io/tester-utils/logger"
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
@@ -32,8 +31,8 @@ func IsSelectCommand(value resp_value.Value) bool {
 		strings.ToLower(value.Array()[0].String()) == "select"
 }
 
-func SpawnReplicas(replicaCount int, stageHarness *test_case_harness.TestCaseHarness, logger *logger.Logger, addr string) ([]*resp_connection.RespConnection, error) {
-	var replicas []*resp_connection.RespConnection
+func SpawnReplicas(replicaCount int, stageHarness *test_case_harness.TestCaseHarness, logger *logger.Logger, addr string) ([]*instrumented_resp_connection.InstrumentedRespConnection, error) {
+	var replicas []*instrumented_resp_connection.InstrumentedRespConnection
 	sendHandshakeTestCase := test_cases.SendReplicationHandshakeTestCase{}
 
 	listeningPort := 6380
@@ -53,12 +52,14 @@ func SpawnReplicas(replicaCount int, stageHarness *test_case_harness.TestCaseHar
 		}
 
 		logger.UpdateLastSecondaryPrefix("handshake")
+		replica.UpdateBaseLogger(logger)
 
 		if err := sendHandshakeTestCase.RunAll(replica, logger, listeningPort); err != nil {
 			return nil, err
 		}
 
 		logger.ResetSecondaryPrefixes()
+		replica.UpdateBaseLogger(logger)
 
 		listeningPort += 1
 		// The bytes received and sent during the handshake don't count towards offset.
@@ -73,8 +74,8 @@ func SpawnReplicas(replicaCount int, stageHarness *test_case_harness.TestCaseHar
 // SpawnClients creates `clientCount` clients connected to the given address.
 // The clients are created using the `instrumented_resp_connection.NewFromAddr` function.
 // Clients are supposed to be closed after use.
-func SpawnClients(clientCount int, addr string, stageHarness *test_case_harness.TestCaseHarness, logger *logger.Logger) ([]*resp_connection.RespConnection, error) {
-	var clients []*resp_connection.RespConnection
+func SpawnClients(clientCount int, addr string, stageHarness *test_case_harness.TestCaseHarness, logger *logger.Logger) ([]*instrumented_resp_connection.InstrumentedRespConnection, error) {
+	var clients []*instrumented_resp_connection.InstrumentedRespConnection
 
 	for i := 0; i < clientCount; i++ {
 		client, err := instrumented_resp_connection.NewFromAddr(logger, addr, fmt.Sprintf("client-%d", i+1))
