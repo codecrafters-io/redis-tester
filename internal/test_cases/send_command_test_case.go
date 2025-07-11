@@ -26,9 +26,8 @@ type SendCommandTestCase struct {
 	readMutex sync.Mutex
 }
 
+
 func (t *SendCommandTestCase) Run(client *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
-	var value resp_value.Value
-	var err error
 	receiveValueTestCase := ReceiveValueTestCase{
 		Assertion:                 t.Assertion,
 		ShouldSkipUnreadDataCheck: t.ShouldSkipUnreadDataCheck,
@@ -41,12 +40,12 @@ func (t *SendCommandTestCase) Run(client *instrumented_resp_connection.Instrumen
 
 		command := strings.ToUpper(t.Command)
 
-		if err = client.SendCommand(command, t.Args...); err != nil {
+		if err := client.SendCommand(command, t.Args...); err != nil {
 			return err
 		}
 
 		t.readMutex.Lock()
-		err = receiveValueTestCase.RunWithoutAssert(client)
+		err := receiveValueTestCase.RunWithoutAssert(client)
 		t.readMutex.Unlock()
 
 		if err != nil {
@@ -60,7 +59,7 @@ func (t *SendCommandTestCase) Run(client *instrumented_resp_connection.Instrumen
 		if t.ShouldRetryFunc == nil {
 			panic(fmt.Sprintf("Received SendCommand with retries: %d but no ShouldRetryFunc.", t.Retries))
 		} else {
-			if t.ShouldRetryFunc(value) {
+			if t.ShouldRetryFunc(receiveValueTestCase.ActualValue) {
 				// If ShouldRetryFunc returns true, we sleep and retry.
 				time.Sleep(500 * time.Millisecond)
 			} else {
@@ -69,6 +68,7 @@ func (t *SendCommandTestCase) Run(client *instrumented_resp_connection.Instrumen
 		}
 	}
 	t.ReceivedResponse = receiveValueTestCase.ActualValue
+
 	return receiveValueTestCase.Assert(client, logger)
 }
 
