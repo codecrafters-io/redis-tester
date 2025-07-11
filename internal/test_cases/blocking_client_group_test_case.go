@@ -53,18 +53,23 @@ func (t *BlockingClientGroupTestCase) SendBlockingCommands() error {
 
 func (t *BlockingClientGroupTestCase) AssertResponses(logger *logger.Logger) error {
 	for _, clientWithExpectedResponse := range t.clientsWithExpectedResponses {
+		clientLogger := clientWithExpectedResponse.Client.GetLogger()
 		if clientWithExpectedResponse.Assertion == nil {
+			clientLogger.Infof("Expecting no response")
 			testCase := NoResponseTestCase{}
 			if err := testCase.Run(clientWithExpectedResponse.Client); err != nil {
 				return err
 			}
+			clientLogger.Successf("Success; no response received")
 		} else {
+			clientLogger.Infof("Expecting reply from server")
 			testCase := ReceiveValueTestCase{
 				Assertion: *clientWithExpectedResponse.Assertion,
 			}
 			if err := testCase.Run(clientWithExpectedResponse.Client, logger); err != nil {
 				return err
 			}
+			clientLogger.Successf("Success; received expected response")
 		}
 	}
 	return nil
