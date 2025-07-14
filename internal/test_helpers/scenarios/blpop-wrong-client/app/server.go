@@ -72,7 +72,7 @@ func (s *RedisServer) handleConnection(conn net.Conn) {
 				return
 			}
 		}
-		if len(command) > 0 && strings.ToLower(command[1]) == "rpush" {
+		if len(command) > 0 && strings.ToLower(command[0]) == "rpush" {
 			s.blocker.NotifyAllWaiters(s.store, s.resp)
 		}
 	}

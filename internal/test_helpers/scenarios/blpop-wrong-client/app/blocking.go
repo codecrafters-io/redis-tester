@@ -2,7 +2,6 @@ package main
 
 import (
 	"container/list"
-	"fmt"
 	"net"
 	"sync"
 )
@@ -37,7 +36,6 @@ func (bm *BlockingManager) WaitForElement(key string, conn net.Conn) {
 
 func (bm *BlockingManager) NotifyAllWaiters(store *Store, resp *RESPCodec) {
 	bm.mu.Lock()
-	fmt.Println("locked from notify")
 	defer bm.mu.Unlock()
 
 	for key, waiters := range bm.waiters {
@@ -47,7 +45,6 @@ func (bm *BlockingManager) NotifyAllWaiters(store *Store, resp *RESPCodec) {
 		value := store.LPop(key)
 		if value != nil {
 			element := waiters.Front()
-			fmt.Println("Getting client: ", element.Value.(*Waiter).conn.RemoteAddr().String())
 			waiter := element.Value.(*Waiter)
 			waiters.Remove(element)
 
