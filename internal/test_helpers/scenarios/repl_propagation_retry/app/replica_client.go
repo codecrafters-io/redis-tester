@@ -196,10 +196,6 @@ func (rc *ReplicaClient) ProcessPropagatedCommands(reader *bufio.Reader, cmdProc
 		// Read command from master
 		command, err := rc.resp.ReadCommand(reader)
 		if err != nil {
-			// Don't log EOF as an error
-			if err != io.EOF {
-				fmt.Println("Error reading propagated command:", err.Error())
-			}
 			return
 		}
 

@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"io"
 	"net"
 	"strings"
 )
@@ -86,10 +85,6 @@ func (s *RedisServer) handleConnection(conn net.Conn) {
 		// read command
 		command, err := s.resp.ReadCommand(reader)
 		if err != nil {
-			// Don't log EOF as an error
-			if err != io.EOF {
-				fmt.Println("Error reading command:", err.Error())
-			}
 			return
 		}
 
