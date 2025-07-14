@@ -6,10 +6,6 @@ import (
 	"strings"
 )
 
-type CommandHandler interface {
-	Handle(args []string) ([]byte, error)
-}
-
 type CommandProcessor struct {
 	store *Store
 	resp  *RESPCodec
