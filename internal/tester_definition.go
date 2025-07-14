@@ -16,6 +16,7 @@ var testerDefinition = tester_definition.TesterDefinition{
 	ExecutableFileName:       "your_program.sh",
 	LegacyExecutableFileName: "spawn_redis_server.sh",
 	TestCases: []tester_definition.TestCase{
+		// Base stages
 		{
 			Slug:     "jm1",
 			TestFunc: testBindToPort,
@@ -45,6 +46,7 @@ var testerDefinition = tester_definition.TesterDefinition{
 			Slug:     "yz1",
 			TestFunc: testExpiry,
 		},
+		// RDB Persistence
 		{
 			Slug:     "zg5",
 			TestFunc: testRdbConfig,
@@ -141,6 +143,7 @@ var testerDefinition = tester_definition.TesterDefinition{
 			Slug:     "na2",
 			TestFunc: testWait,
 		},
+		// Streams
 		{
 			Slug:     "cc3",
 			TestFunc: testStreamsType,
@@ -193,6 +196,7 @@ var testerDefinition = tester_definition.TesterDefinition{
 			Slug:     "xu1",
 			TestFunc: testStreamsXreadBlockMaxID,
 		},
+		// Transactions
 		{
 			Slug:     "si4",
 			TestFunc: testTxIncr1,
@@ -237,6 +241,7 @@ var testerDefinition = tester_definition.TesterDefinition{
 			Slug:     "jf8",
 			TestFunc: testTxMultiTx,
 		},
+		// Lists
 		{
 			Slug:     "mh6",
 			TestFunc: testListRpush1,
@@ -280,6 +285,31 @@ var testerDefinition = tester_definition.TesterDefinition{
 		{
 			Slug:     "xj7",
 			TestFunc: testListBlpopWithTimeout,
+		},
+		// Pub-Sub
+		{
+			Slug:     "mx3",
+			TestFunc: testPubSubSubscribe1,
+		},
+		{
+			Slug:     "zc8",
+			TestFunc: testPubSubSubscribe2,
+		},
+		{
+			Slug:     "aw8",
+			TestFunc: testPubSubSubscribe3,
+		},
+		{
+			Slug:     "hf2",
+			TestFunc: testPubSubPublish1,
+		},
+		{
+			Slug:     "dn4",
+			TestFunc: testPubSubPublish2,
+		},
+		{
+			Slug:     "ze9",
+			TestFunc: testPubSubUnsubscribe,
 		},
 	},
 }
