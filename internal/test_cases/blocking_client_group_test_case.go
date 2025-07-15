@@ -55,7 +55,6 @@ func (t *BlockingClientGroupTestCase) AssertResponses(logger *logger.Logger) err
 	for _, clientWithExpectedResponse := range t.clientsWithExpectedResponses {
 		clientLogger := clientWithExpectedResponse.Client.GetLogger()
 		if clientWithExpectedResponse.Assertion == nil {
-			clientLogger.Infof("Expecting no response")
 			testCase := NoResponseTestCase{}
 			if err := testCase.Run(clientWithExpectedResponse.Client); err != nil {
 				return err
