@@ -88,8 +88,10 @@ func (t *PubSubTestCase) Unsubscribe(client *instrumented_resp_connection.Instru
 		return err
 	}
 
-	// remove the channel from the subscriber
-	t.subscribers[clientIndex].Channels = append(subscribedChannels[:channelIndex], subscribedChannels[channelIndex+1:]...)
+	// remove the channel from the subscriber only if it was previously present
+	if channelIndex != -1 {
+		t.subscribers[clientIndex].Channels = append(subscribedChannels[:channelIndex], subscribedChannels[channelIndex+1:]...)
+	}
 	return nil
 }
 
