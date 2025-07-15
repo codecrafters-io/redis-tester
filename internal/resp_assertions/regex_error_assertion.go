@@ -7,15 +7,19 @@ import (
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 )
 
-type ErrorRegexAssertion struct {
-	expectedRegex regexp.Regexp
+type RegexErrorAssertion struct {
+	expectedRegex *regexp.Regexp
 }
 
-func NewErrorRegexAssertion(expectedRegex regexp.Regexp) RESPAssertion {
-	return ErrorRegexAssertion{expectedRegex: expectedRegex}
+func NewErrorRegexAssertion(expectedPattern string) RESPAssertion {
+	pattern, err := regexp.Compile(expectedPattern)
+	if err != nil {
+		panic(err)
+	}
+	return RegexErrorAssertion{expectedRegex: pattern}
 }
 
-func (a ErrorRegexAssertion) Run(value resp_value.Value) error {
+func (a RegexErrorAssertion) Run(value resp_value.Value) error {
 	if value.Type != resp_value.ERROR {
 		return fmt.Errorf("Expected error, got %s", value.Type)
 	}

@@ -1,8 +1,9 @@
 package internal
 
 import (
-	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
+	"github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
@@ -13,12 +14,42 @@ func testPubSubPublish2(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 
 	logger := stageHarness.Logger
-	client, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client")
+	clients, err := SpawnClients(4, "localhost:6379", stageHarness, logger)
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
 	}
-	defer client.Close()
+	for _, c := range clients {
+		defer c.Close()
+	}
+
+	/*
+		client-1 and client-2 subscribe to channel[0]
+		client-3 subscribes to channel[1]
+		client-4 publishes separate messages for channel[0] and channel[1]
+	*/
+	publisherClient := clients[3]
+	channels := random.RandomWords(2)
+	messages := random.RandomStrings(2)
+
+	pubSubTestCase := test_cases.NewPubSubTestCase()
+	err = pubSubTestCase.
+		AddSubscriber(clients[0], channels[0]).
+		AddSubscriber(clients[1], channels[0]).
+		AddSubscriber(clients[2], channels[1]).
+		SubscribeFromAll(logger)
+
+	if err != nil {
+		return err
+	}
+
+	if err := pubSubTestCase.PublishAndAssertMessages(channels[0], messages[0], publisherClient, logger); err != nil {
+		return err
+	}
+
+	if err := pubSubTestCase.PublishAndAssertMessages(channels[1], messages[1], publisherClient, logger); err != nil {
+		return err
+	}
 
 	return nil
 }
