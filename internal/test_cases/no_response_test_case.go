@@ -13,5 +13,6 @@ func (n *NoResponseTestCase) Run(client *instrumented_resp_connection.Instrument
 	if client.UnreadBuffer.Len() > 0 {
 		return fmt.Errorf("%s received unexpected response: %q", client.GetIdentifier(), client.UnreadBuffer.String())
 	}
+	client.GetLogger().Successf("✔︎ No response received")
 	return nil
 }

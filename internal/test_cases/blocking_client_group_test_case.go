@@ -60,7 +60,6 @@ func (t *BlockingClientGroupTestCase) AssertResponses(logger *logger.Logger) err
 			if err := testCase.Run(clientWithExpectedResponse.Client); err != nil {
 				return err
 			}
-			clientLogger.Successf("Success; no response received")
 		} else {
 			clientLogger.Infof("Expecting response of %s command", clientWithExpectedResponse.Command)
 			testCase := ReceiveValueTestCase{
