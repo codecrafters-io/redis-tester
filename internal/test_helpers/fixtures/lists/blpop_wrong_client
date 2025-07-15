@@ -1,0 +1,22 @@
+Debug = true
+
+[33m[tester::#EC3] [0m[94mRunning tests for Stage #EC3 (ec3)[0m
+[33m[tester::#EC3] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[your_program] [0mLogs from your program will appear here!
+[33m[your_program] [0mRedis server listening on 0.0.0.0:6379
+[33m[tester::#EC3] [client-2] [0m[94m$ redis-cli BLPOP pear 0[0m
+[33m[tester::#EC3] [client-2] [0m[36mSent bytes: "*3\r\n$5\r\nBLPOP\r\n$4\r\npear\r\n$1\r\n0\r\n"[0m
+[33m[tester::#EC3] [client-3] [0m[94m$ redis-cli BLPOP pear 0[0m
+[33m[tester::#EC3] [client-3] [0m[36mSent bytes: "*3\r\n$5\r\nBLPOP\r\n$4\r\npear\r\n$1\r\n0\r\n"[0m
+[33m[tester::#EC3] [client-1] [0m[94m$ redis-cli RPUSH pear orange[0m
+[33m[tester::#EC3] [client-1] [0m[36mSent bytes: "*3\r\n$5\r\nRPUSH\r\n$4\r\npear\r\n$6\r\norange\r\n"[0m
+[33m[tester::#EC3] [client-1] [0m[36mReceived bytes: ":1\r\n"[0m
+[33m[tester::#EC3] [client-1] [0m[36mReceived RESP integer: 1[0m
+[33m[tester::#EC3] [client-1] [0m[92mReceived 1[0m
+[33m[tester::#EC3] [client-2] [0m[94mExpecting response of BLPOP command[0m
+[33m[tester::#EC3] [0m[91mReceived: "" (no content received)[0m
+[33m[tester::#EC3] [0m[91m           ^ error[0m
+[33m[tester::#EC3] [0m[91mError: Expected start of a new RESP2 value (either +, -, :, $ or *)[0m
+[33m[tester::#EC3] [0m[91mTest failed[0m
+[33m[tester::#EC3] [0m[36mTerminating program[0m
+[33m[tester::#EC3] [0m[36mProgram terminated successfully[0m
