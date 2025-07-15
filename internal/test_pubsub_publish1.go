@@ -31,37 +31,19 @@ func testPubSubPublish1(stageHarness *test_case_harness.TestCaseHarness) error {
 		client-2 and client-3 subscribe to channels[1]
 	*/
 
-	firstClient := clients[0]
-	subscribeTestCase1 := test_cases.SendCommandTestCase{
-		Command:   "SUBSCRIBE",
-		Args:      []string{channels[0]},
-		Assertion: resp_assertions.NewSubscribeResponseAssertion(channels[0], 1),
-	}
-	if err := subscribeTestCase1.Run(firstClient, logger); err != nil {
+	pubSubTestCase := test_cases.NewPubSubTestCase()
+
+	err = pubSubTestCase.
+		AddSubscriber(clients[0], channels[0]).
+		AddSubscriber(clients[1], channels[1]).
+		AddSubscriber(clients[2], channels[1]).
+		SubscribeFromAll(logger)
+
+	if err != nil {
 		return err
 	}
 
-	secondClient := clients[1]
-	subscribeTestCase2 := test_cases.SendCommandTestCase{
-		Command:   "SUBSCRIBE",
-		Args:      []string{channels[1]},
-		Assertion: resp_assertions.NewSubscribeResponseAssertion(channels[1], 1),
-	}
-	if err := subscribeTestCase2.Run(secondClient, logger); err != nil {
-		return err
-	}
-
-	thirdClient := clients[2]
-	subscribeTestCase3 := test_cases.SendCommandTestCase{
-		Command:   "SUBSCRIBE",
-		Args:      []string{channels[1]},
-		Assertion: resp_assertions.NewSubscribeResponseAssertion(channels[1], 1),
-	}
-	if err := subscribeTestCase3.Run(thirdClient, logger); err != nil {
-		return err
-	}
-
-	publishClient := clients[3]
+	publisherClient := clients[3]
 	publishTestCase := test_cases.MultiCommandTestCase{
 		CommandWithAssertions: []test_cases.CommandWithAssertion{
 			{
@@ -74,5 +56,5 @@ func testPubSubPublish1(stageHarness *test_case_harness.TestCaseHarness) error {
 			},
 		},
 	}
-	return publishTestCase.RunAll(publishClient, logger)
+	return publishTestCase.RunAll(publisherClient, logger)
 }
