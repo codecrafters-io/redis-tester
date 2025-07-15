@@ -110,6 +110,13 @@ func TestStages(t *testing.T) {
 			StdoutFixturePath:   "./test_helpers/fixtures/transactions/pass",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
+		"lists_blpop_wrong_client": {
+			StageSlugs:          []string{"ec3"},
+			CodePath:            "./test_helpers/scenarios/blpop-wrong-client",
+			ExpectedExitCode:    1,
+			StdoutFixturePath:   "./test_helpers/fixtures/lists/blpop_wrong_client",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
 		"lists_pass": {
 			UntilStageSlug:      "xj7",
 			CodePath:            "./test_helpers/pass_all",
