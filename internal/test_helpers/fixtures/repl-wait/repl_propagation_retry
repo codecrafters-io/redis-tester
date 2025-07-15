@@ -1,0 +1,84 @@
+Debug = true
+
+[33m[tester::#YG4] [0m[94mRunning tests for Stage #YG4 (yg4)[0m
+[33m[tester::#YG4] [0m[94mMaster is running on port 6379[0m
+[33m[tester::#YG4] [0m[94m$ ./spawn_redis_server.sh --port 6380 --replicaof "localhost 6379"[0m
+[33m[your_program] [0mLogs from your program will appear here!
+[33m[your_program] [0mRedis server listening on 0.0.0.0:6380
+[33m[tester::#YG4] [handshake] [master] [0m[94mWaiting for replica to initiate handshake with "PING" command[0m
+[33m[tester::#YG4] [handshake] [master] [0m[36mReceived bytes: "*1\r\n$4\r\nPING\r\n"[0m
+[33m[tester::#YG4] [handshake] [master] [0m[36mReceived RESP array: ["PING"][0m
+[33m[tester::#YG4] [handshake] [master] [0m[92mReceived ["PING"][0m
+[33m[tester::#YG4] [handshake] [master] [0m[94mSent "PONG"[0m
+[33m[tester::#YG4] [handshake] [master] [0m[36mSent bytes: "+PONG\r\n"[0m
+[33m[tester::#YG4] [handshake] [master] [0m[94mWaiting for replica to send "REPLCONF listening-port 6380" command[0m
+[33m[tester::#YG4] [handshake] [master] [0m[36mReceived bytes: "*3\r\n$8\r\nREPLCONF\r\n$14\r\nlistening-port\r\n$4\r\n6380\r\n"[0m
+[33m[tester::#YG4] [handshake] [master] [0m[36mReceived RESP array: [[0m
+[33m[tester::#YG4] [handshake] [master] [0m[36m  "REPLCONF",[0m
+[33m[tester::#YG4] [handshake] [master] [0m[36m  "listening-port",[0m
+[33m[tester::#YG4] [handshake] [master] [0m[36m  "6380"[0m
+[33m[tester::#YG4] [handshake] [master] [0m[36m][0m
+[33m[tester::#YG4] [handshake] [master] [0m[92mReceived [[0m
+[33m[tester::#YG4] [handshake] [master] [0m[92m  "REPLCONF",[0m
+[33m[tester::#YG4] [handshake] [master] [0m[92m  "listening-port",[0m
+[33m[tester::#YG4] [handshake] [master] [0m[92m  "6380"[0m
+[33m[tester::#YG4] [handshake] [master] [0m[92m][0m
+[33m[tester::#YG4] [handshake] [master] [0m[94mSent "OK"[0m
+[33m[tester::#YG4] [handshake] [master] [0m[36mSent bytes: "+OK\r\n"[0m
+[33m[tester::#YG4] [handshake] [master] [0m[94mWaiting for replica to send "REPLCONF capa" command[0m
+[33m[tester::#YG4] [handshake] [master] [0m[36mReceived bytes: "*3\r\n$8\r\nREPLCONF\r\n$4\r\ncapa\r\n$6\r\npsync2\r\n"[0m
+[33m[tester::#YG4] [handshake] [master] [0m[36mReceived RESP array: ["REPLCONF", "capa", "psync2"][0m
+[33m[tester::#YG4] [handshake] [master] [0m[92mReceived ["REPLCONF", "capa", "psync2"][0m
+[33m[tester::#YG4] [handshake] [master] [0m[94mSent "OK"[0m
+[33m[tester::#YG4] [handshake] [master] [0m[36mSent bytes: "+OK\r\n"[0m
+[33m[tester::#YG4] [handshake] [master] [0m[94mWaiting for replica to send "PSYNC" command[0m
+[33m[tester::#YG4] [handshake] [master] [0m[36mReceived bytes: "*3\r\n$5\r\nPSYNC\r\n$1\r\n?\r\n$2\r\n-1\r\n"[0m
+[33m[tester::#YG4] [handshake] [master] [0m[36mReceived RESP array: ["PSYNC", "?", "-1"][0m
+[33m[tester::#YG4] [handshake] [master] [0m[92mReceived ["PSYNC", "?", "-1"][0m
+[33m[tester::#YG4] [handshake] [master] [0m[94mSent "FULLRESYNC 75cd7bc10c49047e0d163660f3b90625b1af31dc 0"[0m
+[33m[tester::#YG4] [handshake] [master] [0m[36mSent bytes: "+FULLRESYNC 75cd7bc10c49047e0d163660f3b90625b1af31dc 0\r\n"[0m
+[33m[tester::#YG4] [handshake] [master] [0m[36mSending RDB file...[0m
+[33m[tester::#YG4] [handshake] [master] [0m[36mSent bytes: "$88\r\nREDIS0011\xfa\tredis-ver\x057.2.0\xfa\nredis-bits\xc0@\xfa\x05ctime\xc2m\b\xbce\xfa\bused-mem°\xc4\x10\x00\xfa\baof-base\xc0\x00\xff\xf0n;\xfe\xc0\xffZ\xa2"[0m
+[33m[tester::#YG4] [handshake] [master] [0m[92mSent RDB file.[0m
+[33m[tester::#YG4] [propagation] [master] [0m[94m> SET foo 123[0m
+[33m[tester::#YG4] [propagation] [master] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$3\r\nfoo\r\n$3\r\n123\r\n"[0m
+[33m[tester::#YG4] [propagation] [master] [0m[94m> SET bar 456[0m
+[33m[tester::#YG4] [propagation] [master] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$3\r\nbar\r\n$3\r\n456\r\n"[0m
+[33m[tester::#YG4] [propagation] [master] [0m[94m> SET baz 789[0m
+[33m[tester::#YG4] [propagation] [master] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$3\r\nbaz\r\n$3\r\n789\r\n"[0m
+[33m[tester::#YG4] [test] [0m[94mGetting key foo[0m
+[33m[tester::#YG4] [test] [client] [0m[94m$ redis-cli GET foo[0m
+[33m[tester::#YG4] [test] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$3\r\nfoo\r\n"[0m
+[33m[tester::#YG4] [test] [client] [0m[36mReceived bytes: "$-1\r\n"[0m
+[33m[tester::#YG4] [test] [client] [0m[36mReceived RESP null bulk string: "$-1\r\n"[0m
+[33m[tester::#YG4] [test] [0m[94mRetrying... (1/5 attempts)[0m
+[33m[tester::#YG4] [test] [client] [0m[94m> GET foo[0m
+[33m[tester::#YG4] [test] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$3\r\nfoo\r\n"[0m
+[33m[tester::#YG4] [test] [client] [0m[36mReceived bytes: "$3\r\n123\r\n"[0m
+[33m[tester::#YG4] [test] [client] [0m[36mReceived RESP bulk string: "123"[0m
+[33m[tester::#YG4] [test] [client] [0m[92mReceived "123"[0m
+[33m[tester::#YG4] [test] [0m[94mGetting key bar[0m
+[33m[tester::#YG4] [test] [client] [0m[94m> GET bar[0m
+[33m[tester::#YG4] [test] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$3\r\nbar\r\n"[0m
+[33m[tester::#YG4] [test] [client] [0m[36mReceived bytes: "$-1\r\n"[0m
+[33m[tester::#YG4] [test] [client] [0m[36mReceived RESP null bulk string: "$-1\r\n"[0m
+[33m[tester::#YG4] [test] [0m[94mRetrying... (1/5 attempts)[0m
+[33m[tester::#YG4] [test] [client] [0m[94m> GET bar[0m
+[33m[tester::#YG4] [test] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$3\r\nbar\r\n"[0m
+[33m[tester::#YG4] [test] [client] [0m[36mReceived bytes: "$3\r\n456\r\n"[0m
+[33m[tester::#YG4] [test] [client] [0m[36mReceived RESP bulk string: "456"[0m
+[33m[tester::#YG4] [test] [client] [0m[92mReceived "456"[0m
+[33m[tester::#YG4] [test] [0m[94mGetting key baz[0m
+[33m[tester::#YG4] [test] [client] [0m[94m> GET baz[0m
+[33m[tester::#YG4] [test] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$3\r\nbaz\r\n"[0m
+[33m[tester::#YG4] [test] [client] [0m[36mReceived bytes: "$-1\r\n"[0m
+[33m[tester::#YG4] [test] [client] [0m[36mReceived RESP null bulk string: "$-1\r\n"[0m
+[33m[tester::#YG4] [test] [0m[94mRetrying... (1/5 attempts)[0m
+[33m[tester::#YG4] [test] [client] [0m[94m> GET baz[0m
+[33m[tester::#YG4] [test] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$3\r\nbaz\r\n"[0m
+[33m[tester::#YG4] [test] [client] [0m[36mReceived bytes: "$3\r\n789\r\n"[0m
+[33m[tester::#YG4] [test] [client] [0m[36mReceived RESP bulk string: "789"[0m
+[33m[tester::#YG4] [test] [client] [0m[92mReceived "789"[0m
+[33m[tester::#YG4] [0m[92mTest passed.[0m
+[33m[tester::#YG4] [0m[36mTerminating program[0m
+[33m[tester::#YG4] [0m[36mProgram terminated successfully[0m

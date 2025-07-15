@@ -82,6 +82,13 @@ func TestStages(t *testing.T) {
 			StdoutFixturePath:   "./test_helpers/fixtures/rdb-read-value-with-expiry/pass",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
+		"repl_propagation_retry": {
+			StageSlugs:          []string{"yg4"},
+			CodePath:            "./test_helpers/scenarios/repl_propagation_retry",
+			ExpectedExitCode:    0,
+			StdoutFixturePath:   "./test_helpers/fixtures/repl-wait/repl_propagation_retry",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
 		"repl_pass": {
 			UntilStageSlug:      "na2",
 			CodePath:            "./test_helpers/pass_all",
