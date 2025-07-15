@@ -1,8 +1,6 @@
 package internal
 
 import (
-	"regexp"
-
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
@@ -40,33 +38,30 @@ func testPubSubSubscribe3(stageHarness *test_case_harness.TestCaseHarness) error
 
 	/* SET */
 	keyAndValue := random.RandomWords(2)
-	errRegex := regexp.MustCompile(`^ERR (?i:Can't execute 'set').*`)
 	setTestCase := test_cases.SendCommandTestCase{
 		Command:   "SET",
 		Args:      keyAndValue,
-		Assertion: resp_assertions.NewErrorRegexAssertion(*errRegex),
+		Assertion: resp_assertions.NewErrorRegexAssertion("^ERR (?i:Can't execute 'set').*"),
 	}
 	if err := setTestCase.Run(client, logger); err != nil {
 		return err
 	}
 
 	/* GET */
-	errRegex = regexp.MustCompile(`^ERR (?i:Can't execute 'get').*`)
 	getTestCase := test_cases.SendCommandTestCase{
 		Command:   "GET",
 		Args:      keyAndValue[1:],
-		Assertion: resp_assertions.NewErrorRegexAssertion(*errRegex),
+		Assertion: resp_assertions.NewErrorRegexAssertion("^ERR (?i:Can't execute 'get').*"),
 	}
 	if err := getTestCase.Run(client, logger); err != nil {
 		return err
 	}
 
 	/* ECHO */
-	errRegex = regexp.MustCompile(`^ERR (?i:Can't execute 'echo').*`)
 	echoTestCase := test_cases.SendCommandTestCase{
 		Command:   "ECHO",
 		Args:      keyAndValue[1:],
-		Assertion: resp_assertions.NewErrorRegexAssertion(*errRegex),
+		Assertion: resp_assertions.NewErrorRegexAssertion("^ERR (?i:Can't execute 'echo').*"),
 	}
 	if err := echoTestCase.Run(client, logger); err != nil {
 		return err
