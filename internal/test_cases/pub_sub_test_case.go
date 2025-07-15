@@ -117,6 +117,7 @@ func assertMessages(t *PubSubTestCase, channel string, message string, logger *l
 	for _, subscriber := range t.subscribers {
 		isSubscribedToChannel := slices.Contains(subscriber.Channels, channel)
 		if isSubscribedToChannel {
+			subscriber.Client.GetLogger().Infof("Expecting published message")
 			receiveTestCase := ReceiveValueTestCase{
 				Assertion: resp_assertions.NewMessageReceivedAssertion(channel, message),
 			}
