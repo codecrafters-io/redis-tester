@@ -21,7 +21,7 @@ func NewPubSubTestCase() *PubSubTestCase {
 	return &PubSubTestCase{subscribers: make([]subscriber, 0)}
 }
 
-func (t *PubSubTestCase) AddSubscriber(client *instrumented_resp_connection.InstrumentedRespConnection, channel string) *PubSubTestCase {
+func (t *PubSubTestCase) AddSubscription(client *instrumented_resp_connection.InstrumentedRespConnection, channel string) *PubSubTestCase {
 	for i := range t.subscribers {
 		if t.subscribers[i].Client == client {
 			t.subscribers[i].Channels = append(t.subscribers[i].Channels, channel)
@@ -35,7 +35,7 @@ func (t *PubSubTestCase) AddSubscriber(client *instrumented_resp_connection.Inst
 	return t
 }
 
-func (t *PubSubTestCase) SubscribeFromAll(logger *logger.Logger) error {
+func (t *PubSubTestCase) RunSubscribeFromAll(logger *logger.Logger) error {
 	// send subscribe from all clients in deterministic order
 	for _, subscriber := range t.subscribers {
 		// We issue SUBSCRIBE separately because we haven't introduced subscribing multiple channels using a single subscribe
@@ -54,24 +54,21 @@ func (t *PubSubTestCase) SubscribeFromAll(logger *logger.Logger) error {
 	return nil
 }
 
-func (t *PubSubTestCase) Unsubscribe(client *instrumented_resp_connection.InstrumentedRespConnection, channel string, logger *logger.Logger) error {
-	var newSubscribedCount int
-	var subscribedChannels []string
-	var channelIndex int
-	var clientIndex int
-
-	// Find the subscriber
-	for i, subscriber := range t.subscribers {
-		if subscriber.Client == client {
-			clientIndex = i
-			subscribedChannels = subscriber.Channels
-			newSubscribedCount = len(subscribedChannels)
-			channelIndex = slices.Index(subscribedChannels, channel)
-			if channelIndex != -1 {
-				newSubscribedCount -= 1
-			}
-			break
+func (t *PubSubTestCase) getSubscriberFromClient(client *instrumented_resp_connection.InstrumentedRespConnection) (subscriber subscriber, idx int) {
+	for i, c := range t.subscribers {
+		if c.Client == client {
+			return c, i
 		}
+	}
+	panic("Codecrafters Internal Error - client is not a valid subscriber")
+}
+
+func (t *PubSubTestCase) RunUnsubscribe(client *instrumented_resp_connection.InstrumentedRespConnection, channel string, logger *logger.Logger) error {
+	subscriber, subscriberIdx := t.getSubscriberFromClient(client)
+	newSubscribedCount := len(subscriber.Channels)
+	channelIndex := slices.Index(subscriber.Channels, channel)
+	if channelIndex != -1 {
+		newSubscribedCount -= 1
 	}
 
 	unsubscribeTestCase := SendCommandTestCase{
@@ -90,12 +87,12 @@ func (t *PubSubTestCase) Unsubscribe(client *instrumented_resp_connection.Instru
 
 	// remove the channel from the subscriber only if it was previously present
 	if channelIndex != -1 {
-		t.subscribers[clientIndex].Channels = append(subscribedChannels[:channelIndex], subscribedChannels[channelIndex+1:]...)
+		t.subscribers[subscriberIdx].Channels = append(subscriber.Channels[:channelIndex], subscriber.Channels[channelIndex+1:]...)
 	}
 	return nil
 }
 
-func publish(t *PubSubTestCase, channel string, message string, publisher *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
+func (t *PubSubTestCase) RunPublishWithoutMessageAssertion(channel string, message string, publisher *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
 	subscriberCount := 0
 	for _, subscriber := range t.subscribers {
 		for _, ch := range subscriber.Channels {
@@ -113,7 +110,7 @@ func publish(t *PubSubTestCase, channel string, message string, publisher *instr
 	return publishTestCase.Run(publisher, logger)
 }
 
-func assertMessages(t *PubSubTestCase, channel string, message string, logger *logger.Logger) error {
+func (t *PubSubTestCase) assertMessages(channel string, message string, logger *logger.Logger) error {
 	for _, subscriber := range t.subscribers {
 		isSubscribedToChannel := slices.Contains(subscriber.Channels, channel)
 		if isSubscribedToChannel {
@@ -135,9 +132,9 @@ func assertMessages(t *PubSubTestCase, channel string, message string, logger *l
 	return nil
 }
 
-func (t *PubSubTestCase) PublishAndAssertMessages(channel string, message string, publisher *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
-	if err := publish(t, channel, message, publisher, logger); err != nil {
+func (t *PubSubTestCase) RunPublish(channel string, message string, publisher *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
+	if err := t.RunPublishWithoutMessageAssertion(channel, message, publisher, logger); err != nil {
 		return err
 	}
-	return assertMessages(t, channel, message, logger)
+	return t.assertMessages(channel, message, logger)
 }

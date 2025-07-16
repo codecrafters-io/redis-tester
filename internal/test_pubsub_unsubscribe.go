@@ -31,26 +31,26 @@ func testPubSubUnsubscribe(stageHarness *test_case_harness.TestCaseHarness) erro
 
 	err = pubSubTestCase.
 		// client-1 subscribes to channels[0] and channels[1]
-		AddSubscriber(clients[0], channels[0]).
-		AddSubscriber(clients[0], channels[1]).
+		AddSubscription(clients[0], channels[0]).
+		AddSubscription(clients[0], channels[1]).
 		// client-2 subscribes to channels[1] and channels[2]
-		AddSubscriber(clients[1], channels[1]).
-		AddSubscriber(clients[1], channels[2]).
-		SubscribeFromAll(logger)
+		AddSubscription(clients[1], channels[1]).
+		AddSubscription(clients[1], channels[2]).
+		RunSubscribeFromAll(logger)
 
 	if err != nil {
 		return err
 	}
 
-	if err := pubSubTestCase.PublishAndAssertMessages(channels[1], messages[0], publisherClient, logger); err != nil {
+	if err := pubSubTestCase.RunPublish(channels[1], messages[0], publisherClient, logger); err != nil {
 		return err
 	}
 
-	if err := pubSubTestCase.Unsubscribe(clients[0], channels[1], logger); err != nil {
+	if err := pubSubTestCase.RunUnsubscribe(clients[0], channels[1], logger); err != nil {
 		return err
 	}
 
-	if err := pubSubTestCase.PublishAndAssertMessages(channels[1], messages[1], publisherClient, logger); err != nil {
+	if err := pubSubTestCase.RunPublish(channels[1], messages[1], publisherClient, logger); err != nil {
 		return err
 	}
 

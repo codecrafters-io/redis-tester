@@ -41,7 +41,7 @@ func testPubSubSubscribe3(stageHarness *test_case_harness.TestCaseHarness) error
 	setTestCase := test_cases.SendCommandTestCase{
 		Command:   "SET",
 		Args:      keyAndValue,
-		Assertion: resp_assertions.NewErrorRegexAssertion("^ERR (?i:Can't execute 'set').*"),
+		Assertion: resp_assertions.NewRegexErrorAssertion("^ERR (?i:Can't execute 'set').*"),
 	}
 	if err := setTestCase.Run(client, logger); err != nil {
 		return err
@@ -51,7 +51,7 @@ func testPubSubSubscribe3(stageHarness *test_case_harness.TestCaseHarness) error
 	getTestCase := test_cases.SendCommandTestCase{
 		Command:   "GET",
 		Args:      keyAndValue[1:],
-		Assertion: resp_assertions.NewErrorRegexAssertion("^ERR (?i:Can't execute 'get').*"),
+		Assertion: resp_assertions.NewRegexErrorAssertion("^ERR (?i:Can't execute 'get').*"),
 	}
 	if err := getTestCase.Run(client, logger); err != nil {
 		return err
@@ -61,7 +61,7 @@ func testPubSubSubscribe3(stageHarness *test_case_harness.TestCaseHarness) error
 	echoTestCase := test_cases.SendCommandTestCase{
 		Command:   "ECHO",
 		Args:      keyAndValue[1:],
-		Assertion: resp_assertions.NewErrorRegexAssertion("^ERR (?i:Can't execute 'echo').*"),
+		Assertion: resp_assertions.NewRegexErrorAssertion("^ERR (?i:Can't execute 'echo').*"),
 	}
 	if err := echoTestCase.Run(client, logger); err != nil {
 		return err

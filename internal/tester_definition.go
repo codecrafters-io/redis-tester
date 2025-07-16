@@ -300,6 +300,10 @@ var testerDefinition = tester_definition.TesterDefinition{
 			TestFunc: testPubSubSubscribe3,
 		},
 		{
+			Slug:     "lf1",
+			TestFunc: testPubSubSubscribe4,
+		},
+		{
 			Slug:     "hf2",
 			TestFunc: testPubSubPublish1,
 		},

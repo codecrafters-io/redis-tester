@@ -7,14 +7,14 @@ import (
 )
 
 type SubscribeResponseAssertion struct {
-	channel         string
-	subscribedCount int
+	ExpectedChannel         string
+	ExpectedSubscribedCount int
 }
 
 func NewSubscribeResponseAssertion(channel string, subscribedCount int) RESPAssertion {
 	return SubscribeResponseAssertion{
-		channel:         channel,
-		subscribedCount: subscribedCount,
+		ExpectedChannel:         channel,
+		ExpectedSubscribedCount: subscribedCount,
 	}
 }
 
@@ -25,8 +25,8 @@ func (c SubscribeResponseAssertion) Run(value resp_value.Value) error {
 
 	arrayAssertion := NewOrderedArrayAssertion([]RESPAssertion{
 		NewStringAssertion("subscribe"),
-		NewStringAssertion(c.channel),
-		NewIntegerAssertion(c.subscribedCount),
+		NewStringAssertion(c.ExpectedChannel),
+		NewIntegerAssertion(c.ExpectedSubscribedCount),
 	})
 
 	return arrayAssertion.Run(value)

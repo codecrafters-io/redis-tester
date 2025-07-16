@@ -37,6 +37,7 @@ func decodeBulkStringOrNil(reader *bytes.Reader) (resp_value.Value, error) {
 
 	if length < 0 {
 		reader.Seek(int64(offsetBeforeLength), io.SeekStart)
+
 		return resp_value.Value{}, InvalidInputError{
 			Reader:  reader,
 			Message: fmt.Sprintf("Invalid bulk string length: %d, expected a positive integer", length),

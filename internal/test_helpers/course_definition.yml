@@ -113,16 +113,15 @@ extensions:
       [lrange-command]: https://redis.io/docs/latest/commands/lrange/
 
   - slug: "pub-sub"
-    name: "Pub-Sub"
+    name: "Pub/Sub"
     description_markdown : |-
       In this challenge extension you'll add support for [Publish/Subscribe (Pub/Sub)][redis-pub-sub] to your Redis implementation.
 
-      Along the way, you'll learn commands like SUBSCRIBE, PUBLISH, and more.
+      Along the way, you'll learn commands like [SUBSCRIBE][subscribe-command], [PUBLISH][publish-command], and more.
 
       [redis-pub-sub]: https://redis.io/docs/latest/develop/pubsub/
       [subscribe-command]: https://redis.io/docs/latest/commands/subscribe/
       [publish-command]: https://redis.io/docs/latest/commands/publish/
-
 
 stages:
   - slug: "jm1"
@@ -3574,6 +3573,12 @@ stages:
     name: "Enter subscribed mode"
     difficulty: medium
     marketing_md: In this stage, you'll add support for marking a client as having entered Subscribed mode.
+    
+  - slug: "lf1"
+    primary_extension_slug: "pub-sub"
+    name: "Change PING behavior"
+    difficulty: easy
+    marketing_md: In this stage, you'll add support for changing the response of `PING` command in Subscribed mode.
 
   - slug: "hf2"
     primary_extension_slug: "pub-sub"

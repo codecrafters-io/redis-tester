@@ -74,7 +74,7 @@ test_list_with_redis: build
 
 test_pubsub_with_redis: build
 	CODECRAFTERS_REPOSITORY_DIR=./internal/test_helpers/pass_all \
-	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\":\"mx3\",\"tester_log_prefix\":\"stage-601\",\"title\":\"Stage #601: SUBSCRIBE-1\"},{\"slug\":\"zc8\",\"tester_log_prefix\":\"stage-602\",\"title\":\"Stage #602: SUBSCRIBE-2\"}, {\"slug\":\"aw8\",\"tester_log_prefix\":\"stage-603\",\"title\":\"Stage #603: SUBSCRIBE-3\"}, {\"slug\":\"hf2\",\"tester_log_prefix\":\"stage-604\",\"title\":\"Stage #604: PUBLISH-1\"}, {\"slug\":\"dn4\",\"tester_log_prefix\":\"stage-605\",\"title\":\"Stage #605: PUBLISH-2\"}, {\"slug\":\"ze9\",\"tester_log_prefix\":\"stage-606\",\"title\":\"Stage #606: UNSUBSCRIBE\"}]" \
+	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\":\"mx3\",\"tester_log_prefix\":\"stage-601\",\"title\":\"Stage #601: SUBSCRIBE-1\"},{\"slug\":\"zc8\",\"tester_log_prefix\":\"stage-602\",\"title\":\"Stage #602: SUBSCRIBE-2\"}, {\"slug\":\"aw8\",\"tester_log_prefix\":\"stage-603\",\"title\":\"Stage #603: SUBSCRIBE-3\"}, {\"slug\":\"lf1\",\"tester_log_prefix\":\"stage-604\",\"title\":\"Stage #604: SUBSCRIBE-4\"}, {\"slug\":\"hf2\",\"tester_log_prefix\":\"stage-605\",\"title\":\"Stage #605: PUBLISH-1\"}, {\"slug\":\"dn4\",\"tester_log_prefix\":\"stage-606\",\"title\":\"Stage #606: PUBLISH-2\"}, {\"slug\":\"ze9\",\"tester_log_prefix\":\"stage-607\",\"title\":\"Stage #607: UNSUBSCRIBE\"}]" \
 	dist/main.out
 
 test_all_with_redis:
