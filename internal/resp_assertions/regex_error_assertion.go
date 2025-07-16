@@ -8,15 +8,15 @@ import (
 )
 
 type RegexErrorAssertion struct {
-	expectedRegex *regexp.Regexp
+	ExpectedPattern *regexp.Regexp
 }
 
-func NewErrorRegexAssertion(expectedPattern string) RESPAssertion {
+func NewRegexErrorAssertion(expectedPattern string) RESPAssertion {
 	pattern, err := regexp.Compile(expectedPattern)
 	if err != nil {
 		panic(err)
 	}
-	return RegexErrorAssertion{expectedRegex: pattern}
+	return RegexErrorAssertion{ExpectedPattern: pattern}
 }
 
 func (a RegexErrorAssertion) Run(value resp_value.Value) error {
@@ -24,8 +24,8 @@ func (a RegexErrorAssertion) Run(value resp_value.Value) error {
 		return fmt.Errorf("Expected error, got %s", value.Type)
 	}
 
-	if !a.expectedRegex.MatchString(value.Error()) {
-		return fmt.Errorf("Expected error to match (%q), got (%q)", a.expectedRegex.String(), value.Error())
+	if !a.ExpectedPattern.MatchString(value.Error()) {
+		return fmt.Errorf("Expected error to match (%q), got (%q)", a.ExpectedPattern.String(), value.Error())
 	}
 
 	return nil

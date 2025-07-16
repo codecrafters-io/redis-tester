@@ -2,7 +2,6 @@ package internal
 
 import (
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
-	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	"github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
@@ -29,21 +28,16 @@ func testPubSubSubscribe2(stageHarness *test_case_harness.TestCaseHarness) error
 	channelsCount := random.RandomInt(3, 6)
 	channels := random.RandomWords(channelsCount)
 
-	subscribeTestCase := test_cases.MultiCommandTestCase{}
-
-	for i, c := range channels {
-		subscribeTestCase.CommandWithAssertions = append(subscribeTestCase.CommandWithAssertions,
-			test_cases.CommandWithAssertion{
-				Command:   []string{"SUBSCRIBE", c},
-				Assertion: resp_assertions.NewSubscribeResponseAssertion(c, i+1),
-			},
-		)
+	pubSubTestCase := test_cases.NewPubSubTestCase()
+	// we loop over separately to maintain order
+	// we want to issue subscribe from first client first
+	// and then the second client to make it more apparent what's going on
+	for _, c := range channels {
+		pubSubTestCase.AddSubscription(firstClient, c)
+	}
+	for _, c := range channels {
+		pubSubTestCase.AddSubscription(secondClient, c)
 	}
 
-	if err := subscribeTestCase.RunAll(firstClient, logger); err != nil {
-		return err
-	}
-
-	/* Run using the another client to check if subscribe counts are maintained on per-client basis */
-	return subscribeTestCase.RunAll(secondClient, logger)
+	return pubSubTestCase.RunSubscribeFromAll(logger)
 }

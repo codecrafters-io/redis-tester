@@ -2,7 +2,6 @@ package internal
 
 import (
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
-	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	"github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
@@ -32,29 +31,23 @@ func testPubSubPublish1(stageHarness *test_case_harness.TestCaseHarness) error {
 	*/
 
 	pubSubTestCase := test_cases.NewPubSubTestCase()
+	pubSubTestCase.
+		AddSubscription(clients[0], channels[0]).
+		AddSubscription(clients[1], channels[1]).
+		AddSubscription(clients[2], channels[1])
 
-	err = pubSubTestCase.
-		AddSubscriber(clients[0], channels[0]).
-		AddSubscriber(clients[1], channels[1]).
-		AddSubscriber(clients[2], channels[1]).
-		SubscribeFromAll(logger)
-
+	err = pubSubTestCase.RunSubscribeFromAll(logger)
 	if err != nil {
 		return err
 	}
 
+	messages := random.RandomWords(2)
 	publisherClient := clients[3]
-	publishTestCase := test_cases.MultiCommandTestCase{
-		CommandWithAssertions: []test_cases.CommandWithAssertion{
-			{
-				Command:   []string{"PUBLISH", channels[1], "msg"},
-				Assertion: resp_assertions.NewIntegerAssertion(2),
-			},
-			{
-				Command:   []string{"PUBLISH", channels[0], "msg"},
-				Assertion: resp_assertions.NewIntegerAssertion(1),
-			},
-		},
+
+	err = pubSubTestCase.RunPublishWithoutMessageAssertion(channels[1], messages[0], publisherClient, logger)
+	if err != nil {
+		return err
 	}
-	return publishTestCase.RunAll(publisherClient, logger)
+
+	return pubSubTestCase.RunPublishWithoutMessageAssertion(channels[0], messages[1], publisherClient, logger)
 }
