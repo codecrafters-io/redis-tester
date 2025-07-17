@@ -30,13 +30,13 @@ func testPubSubPublish1(stageHarness *test_case_harness.TestCaseHarness) error {
 		client-2 and client-3 subscribe to channels[1]
 	*/
 
-	pubSubTestCase := test_cases.NewPubSubTestCase()
-	pubSubTestCase.
+	subscriberGroupTestCase := test_cases.SubscriberGroupTestCase{}
+	subscriberGroupTestCase.
 		AddSubscription(clients[0], channels[0]).
 		AddSubscription(clients[1], channels[1]).
 		AddSubscription(clients[2], channels[1])
 
-	err = pubSubTestCase.RunSubscribeFromAll(logger)
+	err = subscriberGroupTestCase.RunSubscribe(logger)
 	if err != nil {
 		return err
 	}
@@ -44,10 +44,19 @@ func testPubSubPublish1(stageHarness *test_case_harness.TestCaseHarness) error {
 	messages := random.RandomWords(2)
 	publisherClient := clients[3]
 
-	err = pubSubTestCase.RunPublishWithoutMessageAssertion(channels[1], messages[0], publisherClient, logger)
-	if err != nil {
+	publishTestCase1 := test_cases.PublishTestCase{
+		Channel:                 channels[0],
+		Message:                 messages[0],
+		ExpectedSubscriberCount: subscriberGroupTestCase.GetSubscriberCount(channels[0]),
+	}
+	if err := publishTestCase1.Run(publisherClient, logger); err != nil {
 		return err
 	}
 
-	return pubSubTestCase.RunPublishWithoutMessageAssertion(channels[0], messages[1], publisherClient, logger)
+	publishTestCase2 := test_cases.PublishTestCase{
+		Channel:                 channels[1],
+		Message:                 messages[0],
+		ExpectedSubscriberCount: subscriberGroupTestCase.GetSubscriberCount(channels[1]),
+	}
+	return publishTestCase2.Run(publisherClient, logger)
 }

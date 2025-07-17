@@ -30,6 +30,5 @@ func testPubSubSubscribe1(stageHarness *test_case_harness.TestCaseHarness) error
 		Args:      []string{channel},
 		Assertion: resp_assertions.NewSubscribeResponseAssertion(channel, 1),
 	}
-
 	return subscribeTestCase.Run(client, logger)
 }
