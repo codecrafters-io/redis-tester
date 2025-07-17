@@ -55,7 +55,7 @@ func testPubSubPublish1(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	publishTestCase2 := test_cases.PublishTestCase{
 		Channel:                 channels[1],
-		Message:                 messages[0],
+		Message:                 messages[1],
 		ExpectedSubscriberCount: subscriberGroupTestCase.GetSubscriberCount(channels[1]),
 	}
 	return publishTestCase2.Run(publisherClient, logger)
