@@ -28,16 +28,12 @@ func testPubSubSubscribe2(stageHarness *test_case_harness.TestCaseHarness) error
 	channelsCount := random.RandomInt(3, 6)
 	channels := random.RandomWords(channelsCount)
 
-	pubSubTestCase := test_cases.NewPubSubTestCase()
-	// we loop over separately to maintain order
-	// we want to issue subscribe from first client first
-	// and then the second client to make it more apparent what's going on
+	subscribeTestCase := test_cases.SubscriberGroupTestCase{}
+
 	for _, c := range channels {
-		pubSubTestCase.AddSubscription(firstClient, c)
-	}
-	for _, c := range channels {
-		pubSubTestCase.AddSubscription(secondClient, c)
+		subscribeTestCase.AddSubscription(firstClient, c)
+		subscribeTestCase.AddSubscription(secondClient, c)
 	}
 
-	return pubSubTestCase.RunSubscribeFromAll(logger)
+	return subscribeTestCase.RunSubscribe(logger)
 }

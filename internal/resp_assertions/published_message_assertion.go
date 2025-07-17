@@ -9,7 +9,7 @@ type PublishedMessageAssertion struct {
 	ExpectedMessage string
 }
 
-func NewMessageReceivedAssertion(channel string, message string) RESPAssertion {
+func NewPublishedMessageAssertion(channel string, message string) RESPAssertion {
 	return PublishedMessageAssertion{
 		ExpectedChannel: channel,
 		ExpectedMessage: message,

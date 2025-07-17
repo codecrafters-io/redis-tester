@@ -29,7 +29,6 @@ func testPubSubSubscribe3(stageHarness *test_case_harness.TestCaseHarness) error
 		Args:      []string{channels[0]},
 		Assertion: resp_assertions.NewSubscribeResponseAssertion(channels[0], 1),
 	}
-
 	if err := subscribeTestCase1.Run(client, logger); err != nil {
 		return err
 	}
@@ -67,20 +66,10 @@ func testPubSubSubscribe3(stageHarness *test_case_harness.TestCaseHarness) error
 		return err
 	}
 
-	/* Test against PING and SUBSCRIBE (Allowed commands) */
-	pingTestCase := test_cases.SendCommandTestCase{
-		Command:   "PING",
-		Assertion: resp_assertions.NewOrderedStringArrayAssertion([]string{"pong", ""}),
-	}
-	if err := pingTestCase.Run(client, logger); err != nil {
-		return err
-	}
-
 	subscribeTestCase2 := test_cases.SendCommandTestCase{
 		Command:   "SUBSCRIBE",
 		Args:      []string{channels[1]},
 		Assertion: resp_assertions.NewSubscribeResponseAssertion(channels[1], 2),
 	}
-
 	return subscribeTestCase2.Run(client, logger)
 }

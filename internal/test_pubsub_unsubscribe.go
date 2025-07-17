@@ -27,30 +27,53 @@ func testPubSubUnsubscribe(stageHarness *test_case_harness.TestCaseHarness) erro
 	channels := random.RandomWords(3)
 	messages := random.RandomStrings(2)
 
-	pubSubTestCase := test_cases.NewPubSubTestCase()
+	subscriberGroupTestCase := test_cases.SubscriberGroupTestCase{}
 
-	err = pubSubTestCase.
-		// client-1 subscribes to channels[0] and channels[1]
+	// client-1 subscribes to channels[0] and channels[1]
+	// client-2 subscribes to channels[1] and channels[2]
+	subscriberGroupTestCase.
 		AddSubscription(clients[0], channels[0]).
 		AddSubscription(clients[0], channels[1]).
-		// client-2 subscribes to channels[1] and channels[2]
 		AddSubscription(clients[1], channels[1]).
-		AddSubscription(clients[1], channels[2]).
-		RunSubscribeFromAll(logger)
+		AddSubscription(clients[1], channels[2])
 
-	if err != nil {
+	if err := subscriberGroupTestCase.RunSubscribe(logger); err != nil {
 		return err
 	}
 
-	if err := pubSubTestCase.RunPublish(channels[1], messages[0], publisherClient, logger); err != nil {
+	// publish and assert message
+	publishTestCase1 := test_cases.PublishTestCase{
+		Channel:                 channels[1],
+		Message:                 messages[0],
+		ExpectedSubscriberCount: subscriberGroupTestCase.GetSubscriberCount(channels[1]),
+	}
+	if err := publishTestCase1.Run(publisherClient, logger); err != nil {
+		return err
+	}
+	if err := subscriberGroupTestCase.RunAssertionForPublishedMessage(channels[1], messages[0], logger); err != nil {
 		return err
 	}
 
-	if err := pubSubTestCase.RunUnsubscribe(clients[0], channels[1], logger); err != nil {
+	// unsubscribe
+	subscriberGroupTestCase.RemoveSubscription(clients[0], channels[1])
+	unsubscribeTestCase := test_cases.UnsubscribeTestCase{
+		Channel:                                 channels[1],
+		ExpectedSubscriberCountAfterUnsubscribe: subscriberGroupTestCase.GetSubscriberCount(channels[1]),
+	}
+	if err := unsubscribeTestCase.Run(clients[0], logger); err != nil {
 		return err
 	}
 
-	if err := pubSubTestCase.RunPublish(channels[1], messages[1], publisherClient, logger); err != nil {
+	// publish and assert message
+	publishTestCase2 := test_cases.PublishTestCase{
+		Channel:                 channels[1],
+		Message:                 messages[1],
+		ExpectedSubscriberCount: subscriberGroupTestCase.GetSubscriberCount(channels[1]),
+	}
+	if err := publishTestCase2.Run(publisherClient, logger); err != nil {
+		return err
+	}
+	if err := subscriberGroupTestCase.RunAssertionForPublishedMessage(channels[1], messages[1], logger); err != nil {
 		return err
 	}
 

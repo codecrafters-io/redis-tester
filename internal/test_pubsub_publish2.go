@@ -32,24 +32,37 @@ func testPubSubPublish2(stageHarness *test_case_harness.TestCaseHarness) error {
 	channels := random.RandomWords(2)
 	messages := random.RandomStrings(2)
 
-	pubSubTestCase := test_cases.NewPubSubTestCase()
-	err = pubSubTestCase.
+	subscriberGroupTestCase := test_cases.SubscriberGroupTestCase{}
+	subscriberGroupTestCase.
 		AddSubscription(clients[0], channels[0]).
 		AddSubscription(clients[1], channels[0]).
-		AddSubscription(clients[2], channels[1]).
-		RunSubscribeFromAll(logger)
+		AddSubscription(clients[2], channels[1])
 
-	if err != nil {
+	if err := subscriberGroupTestCase.RunSubscribe(logger); err != nil {
 		return err
 	}
 
-	if err := pubSubTestCase.RunPublish(channels[0], messages[0], publisherClient, logger); err != nil {
+	/* Publish message and assert received messages */
+	publishTestCase1 := test_cases.PublishTestCase{
+		Channel:                 channels[0],
+		Message:                 messages[0],
+		ExpectedSubscriberCount: subscriberGroupTestCase.GetSubscriberCount(channels[0]),
+	}
+	if err := publishTestCase1.Run(publisherClient, logger); err != nil {
+		return err
+	}
+	if err := subscriberGroupTestCase.RunAssertionForPublishedMessage(channels[0], messages[0], logger); err != nil {
 		return err
 	}
 
-	if err := pubSubTestCase.RunPublish(channels[1], messages[1], publisherClient, logger); err != nil {
+	/* Publish message on another channel and assert for received messages */
+	publishTestCase2 := test_cases.PublishTestCase{
+		Channel:                 channels[1],
+		Message:                 messages[1],
+		ExpectedSubscriberCount: subscriberGroupTestCase.GetSubscriberCount(channels[1]),
+	}
+	if err := publishTestCase2.Run(publisherClient, logger); err != nil {
 		return err
 	}
-
-	return nil
+	return subscriberGroupTestCase.RunAssertionForPublishedMessage(channels[1], messages[1], logger)
 }
