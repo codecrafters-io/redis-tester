@@ -56,10 +56,10 @@ func (t *SubscriberGroupTestCase) RemoveSubscription(client *instrumented_resp_c
 }
 
 func (t *SubscriberGroupTestCase) GetSubscriberCount(channel string) int {
-	var total int
+	total := 0
 	for _, subscriber := range t.subscribers {
 		if slices.Contains(subscriber.Channels, channel) {
-			total += 1
+			total++
 		}
 	}
 	return total
