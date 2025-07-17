@@ -36,6 +36,7 @@ func decodeBulkStringOrNil(reader *bytes.Reader) (resp_value.Value, error) {
 	}
 
 	if length < 0 {
+		// Ensure error points to the correct byte
 		reader.Seek(int64(offsetBeforeLength), io.SeekStart)
 
 		return resp_value.Value{}, InvalidInputError{
