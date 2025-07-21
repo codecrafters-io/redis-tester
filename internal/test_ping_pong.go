@@ -27,7 +27,7 @@ func testPingPongOnce(stageHarness *test_case_harness.TestCaseHarness) error {
 	commandTestCase := test_cases.SendCommandTestCase{
 		Command:   "ping",
 		Args:      []string{},
-		Assertion: resp_assertions.NewStringAssertion("PONG"),
+		Assertion: resp_assertions.NewSimpleStringAssertion("PONG"),
 	}
 
 	if err := commandTestCase.Run(client, logger); err != nil {
@@ -122,7 +122,7 @@ func runPing(logger *logger.Logger, client *instrumented_resp_connection.Instrum
 	commandTestCase := test_cases.SendCommandTestCase{
 		Command:   "ping",
 		Args:      []string{},
-		Assertion: resp_assertions.NewStringAssertion("PONG"),
+		Assertion: resp_assertions.NewSimpleStringAssertion("PONG"),
 	}
 
 	if err := commandTestCase.Run(client, logger); err != nil {

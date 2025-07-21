@@ -45,7 +45,7 @@ func testPubSubSubscribe4(stageHarness *test_case_harness.TestCaseHarness) error
 	/* Test against ping from a separate (unsubscribed) client */
 	pingTestCase2 := test_cases.SendCommandTestCase{
 		Command:   "PING",
-		Assertion: resp_assertions.NewStringAssertion("PONG"),
+		Assertion: resp_assertions.NewSimpleStringAssertion("PONG"),
 	}
 	return pingTestCase2.Run(clients[1], logger)
 }
