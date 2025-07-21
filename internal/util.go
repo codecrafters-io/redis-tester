@@ -83,7 +83,10 @@ func SpawnClients(clientCount int, addr string, stageHarness *test_case_harness.
 			logFriendlyError(logger, err)
 			return nil, err
 		}
-		logger.Debugf("[Setup] client-%d connected from port %s", i+1, strings.Split(client.Conn.LocalAddr().String(), ":")[1])
+
+		addrParts := strings.Split(client.Conn.LocalAddr().String(), ":")
+		logger.Debugf("[Setup] client-%d connected from port %s", i+1, addrParts[len(addrParts)-1])
+
 		clients = append(clients, client)
 	}
 
