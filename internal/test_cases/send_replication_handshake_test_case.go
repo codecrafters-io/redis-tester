@@ -41,7 +41,7 @@ func (t SendReplicationHandshakeTestCase) RunPingStep(client *instrumented_resp_
 	commandTest := SendCommandTestCase{
 		Command:   "PING",
 		Args:      []string{},
-		Assertion: resp_assertions.NewStringAssertion("PONG"),
+		Assertion: resp_assertions.NewSimpleStringAssertion("PONG"),
 	}
 
 	return commandTest.Run(client, logger)
