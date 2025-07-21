@@ -1,6 +1,8 @@
 package test_cases
 
 import (
+	"time"
+
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/tester-utils/logger"
@@ -46,6 +48,7 @@ func (t *BlockingClientGroupTestCase) SendBlockingCommands() error {
 		if err := clientWithExpectedResponse.Client.SendCommand(clientWithExpectedResponse.Command, clientWithExpectedResponse.Args...); err != nil {
 			return err
 		}
+		time.Sleep(20 * time.Millisecond)
 	}
 
 	return nil
