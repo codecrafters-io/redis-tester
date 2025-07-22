@@ -48,7 +48,7 @@ func (t *BlockingClientGroupTestCase) SendBlockingCommands() error {
 		if err := clientWithExpectedResponse.Client.SendCommand(clientWithExpectedResponse.Command, clientWithExpectedResponse.Args...); err != nil {
 			return err
 		}
-		time.Sleep(1 * time.Millisecond)
+		time.Sleep(1 * time.Millisecond) // Ensure server receives commands in order
 	}
 
 	return nil
