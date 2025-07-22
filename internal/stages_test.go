@@ -151,6 +151,7 @@ func normalizeTesterOutput(testerOutput []byte) []byte {
 		"info_replication_bytes":  {regexp.MustCompile(`"\$[0-9]+\\r\\n# Replication\\r\\n[^"]+"`)},
 		"rdb_keys":                {regexp.MustCompile(`\[tester::#JW4\] .*Received .*`), regexp.MustCompile(`\[tester::#JW4\].*"(apple|orange|banana|pear|grape|pineapple|mango|strawberry|raspberry|blueberry)",?.*`)},
 		"hexdump":                 {regexp.MustCompile(`[0-9a-fA-F]{4} \| [0-9a-fA-F ]{47} \| .{0,16}`)},
+		"client_connected":        {regexp.MustCompile(`Connected \(port \d+ -> port \d+\)`)},
 	}
 
 	for replacement, regexes := range replacements {
