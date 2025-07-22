@@ -118,7 +118,7 @@ func (v *Value) FormattedString() string {
 		}
 		return formatter.Prettify(respJson)
 	case ERROR:
-		return fmt.Sprintf("%q", "ERR: "+v.String())
+		return fmt.Sprintf("%q", v.String())
 	case NIL:
 		return "\"$-1\\r\\n\""
 	}
