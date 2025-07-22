@@ -2,6 +2,7 @@ package internal
 
 import (
 	"fmt"
+	"net"
 	"os"
 	"path/filepath"
 	"strings"
@@ -83,8 +84,15 @@ func SpawnClients(clientCount int, addr string, stageHarness *test_case_harness.
 			logFriendlyError(logger, err)
 			return nil, err
 		}
+
+		clientLogger := client.GetLogger()
+		clientPort := client.Conn.LocalAddr().(*net.TCPAddr).Port
+		serverPort := client.Conn.RemoteAddr().(*net.TCPAddr).Port
+		clientLogger.Debugf("Connected (port %d -> port %d)", clientPort, serverPort)
+
 		clients = append(clients, client)
 	}
+
 	return clients, nil
 }
 
