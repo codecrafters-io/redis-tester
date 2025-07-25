@@ -84,7 +84,7 @@ func (t *SubscriberGroupTestCase) RunSubscribe(logger *logger.Logger) error {
 func (t *SubscriberGroupTestCase) RunAssertionForPublishedMessage(channel string, message string, logger *logger.Logger) error {
 	for _, subscriber := range t.subscribers {
 		if slices.Contains(subscriber.Channels, channel) {
-			subscriber.Client.GetLogger().Infof("Expecting published message: (%s)", message)
+			subscriber.Client.GetLogger().Infof("Expecting published message: %q", message)
 			receiveTestCase := ReceiveValueTestCase{
 				Assertion: resp_assertions.NewPublishedMessageAssertion(channel, message),
 			}
