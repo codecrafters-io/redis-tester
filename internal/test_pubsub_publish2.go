@@ -30,7 +30,7 @@ func testPubSubPublish2(stageHarness *test_case_harness.TestCaseHarness) error {
 	*/
 	publisherClient := clients[3]
 	channels := random.RandomWords(2)
-	messages := random.RandomStrings(2)
+	messages := random.RandomWords(2)
 
 	subscriberGroupTestCase := test_cases.SubscriberGroupTestCase{}
 	subscriberGroupTestCase.

@@ -25,7 +25,7 @@ func testPubSubUnsubscribe(stageHarness *test_case_harness.TestCaseHarness) erro
 
 	publisherClient := clients[2]
 	channels := random.RandomWords(3)
-	messages := random.RandomStrings(2)
+	messages := random.RandomWords(2)
 
 	subscriberGroupTestCase := test_cases.SubscriberGroupTestCase{}
 
