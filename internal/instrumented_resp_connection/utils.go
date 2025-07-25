@@ -5,8 +5,8 @@ import (
 	"strings"
 )
 
-// quoteIfNeeded quotes a string if it contains escapable characters or spaces
-func quoteIfNeeded(s string) string {
+// quoteIfHasSpaceOrEscapeSequence quotes a string if it contains escapable characters or spaces
+func quoteIfHasSpaceOrEscapeSequence(s string) string {
 	quoted := fmt.Sprintf("%q", s)
 	trimmedQuotes := strings.Trim(quoted, "\"")
 
@@ -22,7 +22,7 @@ func quoteIfNeeded(s string) string {
 func quoteCLIArgs(args []string) []string {
 	result := make([]string, len(args))
 	for i, a := range args {
-		result[i] = quoteIfNeeded(a)
+		result[i] = quoteIfHasSpaceOrEscapeSequence(a)
 	}
 	return result
 }
