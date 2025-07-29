@@ -27,8 +27,8 @@ func defaultCallbacks(logger *logger.Logger) resp_connection.RespConnectionCallb
 			}
 
 			commandWithArgs := append([]string{command}, args...)
-			formattedCLIArgs := quoteCLICommand(commandWithArgs)
-			logger.Infof("%s %s", commandPrefix, strings.Join(formattedCLIArgs, " "))
+			formattedCommandWithArgs := quoteCLICommand(commandWithArgs)
+			logger.Infof("%s %s", commandPrefix, strings.Join(formattedCommandWithArgs, " "))
 		},
 		BeforeSendValue: func(value resp_value.Value) {
 			logger.Infof("Sent %s", value.FormattedString())
