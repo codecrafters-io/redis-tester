@@ -18,7 +18,7 @@ func quoteIfHasSpaceOrEscapeSequence(s string) string {
 	return quoted
 }
 
-// quoteCLICommand applies quoteIfHasSpaceOrEscapeSequence to each CLI argument
+// quoteCLICommand applies quoteIfHasSpaceOrEscapeSequence to each item in commandWithArgs
 func quoteCLICommand(commandWithArgs []string) []string {
 	result := make([]string, len(commandWithArgs))
 	for i, a := range commandWithArgs {
