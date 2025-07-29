@@ -18,10 +18,10 @@ func quoteIfHasSpaceOrEscapeSequence(s string) string {
 	return quoted
 }
 
-// quoteCLIArgs applies quoteIfNeeded to each CLI argument
-func quoteCLIArgs(args []string) []string {
-	result := make([]string, len(args))
-	for i, a := range args {
+// quoteCLICommand applies quoteIfNeeded to each CLI argument
+func quoteCLICommand(commandWithArgs []string) []string {
+	result := make([]string, len(commandWithArgs))
+	for i, a := range commandWithArgs {
 		result[i] = quoteIfHasSpaceOrEscapeSequence(a)
 	}
 	return result

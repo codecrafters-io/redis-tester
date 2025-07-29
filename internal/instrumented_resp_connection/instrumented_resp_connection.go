@@ -26,8 +26,8 @@ func defaultCallbacks(logger *logger.Logger) resp_connection.RespConnectionCallb
 				commandPrefix = "$ redis-cli"
 			}
 
-			CLIArgs := append([]string{command}, args...)
-			formattedCLIArgs := quoteCLIArgs(CLIArgs)
+			commandWithArgs := append([]string{command}, args...)
+			formattedCLIArgs := quoteCLICommand(commandWithArgs)
 			logger.Infof("%s %s", commandPrefix, strings.Join(formattedCLIArgs, " "))
 		},
 		BeforeSendValue: func(value resp_value.Value) {
