@@ -10,7 +10,7 @@ func quoteIfHasSpaceOrEscapeSequence(s string) string {
 	quoted := fmt.Sprintf("%q", s)
 
 	// if the string does not change on trimming double quotes, no escapable chracter was present
-	if s == strings.Trim(quoted, "\"") && !strings.Contains(s, " ") {
+	if (s == strings.Trim(quoted, "\"")) && (!strings.Contains(s, " ")) {
 		return s
 	}
 
