@@ -186,3 +186,50 @@ func MkdirTemp(prefix string) (string, error) {
 
 	return tmpDir, nil
 }
+
+type ZSetMember struct {
+	Name  string
+	Score float64
+}
+
+type ZsetMemberGenerationOption struct {
+	Count          int // Total number of members to generate
+	SameScoreCount int // Number of members with same score (for testing lexicographic sorting)
+}
+
+func GenerateRandomZSetMembers(option ZsetMemberGenerationOption) []ZSetMember {
+	count := option.Count
+	sameScoreCount := option.SameScoreCount
+
+	members := testerutils_random.RandomWords(int(count))
+	scores := make([]float64, count)
+
+	if sameScoreCount > count {
+		sameScoreCount = count
+	}
+
+	// generate members with same scores
+	baseScore := GetRandomZSetScore()
+	for i := 0; i < int(sameScoreCount); i++ {
+		scores[i] = baseScore
+	}
+
+	offset := int(sameScoreCount)
+	for i := 0; i < int(count-sameScoreCount); i++ {
+		scores[offset+i] = GetRandomZSetScore()
+	}
+
+	result := make([]ZSetMember, count)
+	for i := 0; i < int(count); i++ {
+		result[i] = ZSetMember{
+			Name:  members[i],
+			Score: scores[i],
+		}
+	}
+	return result
+}
+
+// GetRandomZSetScore returns a random value of score for a sorted set
+func GetRandomZSetScore() float64 {
+	return testerutils_random.RandomFloat64(1, 100)
+}
