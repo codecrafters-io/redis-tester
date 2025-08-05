@@ -26,41 +26,55 @@ func testZsetZrangePosIndex(stageHarness *test_case_harness.TestCaseHarness) err
 	defer client.Close()
 
 	zsetkey := testerutils_random.RandomWord()
-	zsetSize := testerutils_random.RandomInt(4, 8)
-	members := GenerateRandomZSetMembers(ZsetMemberGenerationOption{
-		Count:          zsetSize,
-		SameScoreCount: 2,
-	})
+	sortedSet := GenerateRandomSortedSet(SortedSetGenerationOption{Count: testerutils_random.RandomInt(4, 8), SameScoreCount: 2})
 
-	zaddTestCase := test_cases.NewZsetTestCase(zsetkey)
-	for _, m := range members {
-		zaddTestCase.AddMember(m.Name, m.Score)
-	}
-	if err := zaddTestCase.RunZaddAll(client, logger); err != nil {
-		return err
-	}
+	for _, m := range sortedSet.Members() {
+		zaddTestCase := test_cases.ZaddTestCase{
+			Key:    zsetkey,
+			Member: m,
+		}
 
-	middleIndex := testerutils_random.RandomInt(1, zsetSize-1)
-
-	// usual test cases
-	if err := zaddTestCase.RunZrange(client, logger, 0, middleIndex); err != nil {
-		return err
-	}
-	if err := zaddTestCase.RunZrange(client, logger, middleIndex, zsetSize-1); err != nil {
-		return err
-	}
-	if err := zaddTestCase.RunZrange(client, logger, 0, zsetSize-1); err != nil {
-		return err
+		if err := zaddTestCase.Run(client, logger); err != nil {
+			return err
+		}
 	}
 
-	// start index > end index
-	if err := zaddTestCase.RunZrange(client, logger, 1, 0); err != nil {
-		return err
+	middleIndex := testerutils_random.RandomInt(1, sortedSet.Size()-1)
+
+	zrangeTestCases := []test_cases.ZrangeTestCase{
+		// Happy-path cases
+		{
+			Key:                zsetkey,
+			Start:              0,
+			End:                middleIndex,
+			ExpectedMemberKeys: sortedSet.MemberKeys()[0:middleIndex],
+		},
+		{
+			Key:                zsetkey,
+			Start:              middleIndex,
+			End:                sortedSet.Size() - 1,
+			ExpectedMemberKeys: sortedSet.MemberKeys()[middleIndex:],
+		},
+		// Start index > end index
+		{
+			Key:                zsetkey,
+			Start:              1,
+			End:                0,
+			ExpectedMemberKeys: []string{},
+		},
+		// End index out of bounds
+		{
+			Key:                zsetkey,
+			Start:              0,
+			End:                sortedSet.Size() + 2,
+			ExpectedMemberKeys: []string{},
+		},
 	}
 
-	// end index out of bounds
-	if err := zaddTestCase.RunZrange(client, logger, 0, zsetSize+2); err != nil {
-		return err
+	for _, zrangeTestCase := range zrangeTestCases {
+		if err := zrangeTestCase.Run(client, logger); err != nil {
+			return err
+		}
 	}
 
 	// key does not exist
