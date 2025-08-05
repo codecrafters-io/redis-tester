@@ -315,5 +315,38 @@ var testerDefinition = tester_definition.TesterDefinition{
 			Slug:     "ze9",
 			TestFunc: testPubSubUnsubscribe,
 		},
+		// Sorted sets
+		{
+			Slug:     "ct1",
+			TestFunc: testZsetZadd1,
+		},
+		{
+			Slug:     "hf1",
+			TestFunc: testZsetZadd2,
+		},
+		{
+			Slug:     "lg6",
+			TestFunc: testZsetZrank,
+		},
+		{
+			Slug:     "ic1",
+			TestFunc: testZsetZrangePosIndex,
+		},
+		{
+			Slug:     "bj4",
+			TestFunc: testZsetZrangeNegIndex,
+		},
+		{
+			Slug:     "kn4",
+			TestFunc: testZsetZcard,
+		},
+		{
+			Slug:     "gd7",
+			TestFunc: testZsetZscore,
+		},
+		{
+			Slug:     "sq7",
+			TestFunc: testZsetZrem,
+		},
 	},
 }

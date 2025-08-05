@@ -131,6 +131,13 @@ func TestStages(t *testing.T) {
 			StdoutFixturePath:   "./test_helpers/fixtures/pubsub/pass",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
+		"zset_pass": {
+			UntilStageSlug:      "sq7",
+			CodePath:            "./test_helpers/pass_all",
+			ExpectedExitCode:    0,
+			StdoutFixturePath:   "./test_helpers/fixtures/zset/pass",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
 	}
 
 	tester_utils_testing.TestTesterOutput(t, testerDefinition, testCases)
