@@ -2,6 +2,7 @@ package data_structures
 
 import (
 	"sort"
+	"strconv"
 
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 )
@@ -110,8 +111,12 @@ func GenerateZsetWithRandomMembers(option ZsetMemberGenerationOption) *SortedSet
 }
 
 // GetRandomZSetScore returns a random value of score for a sorted set
+// We clip digits after 12 decimal places so there are no inconsistencies in tests
 func GetRandomZSetScore() float64 {
-	return testerutils_random.RandomFloat64(1, 100)
+	raw := testerutils_random.RandomFloat64(1, 100)
+	clippedStr := strconv.FormatFloat(raw, 'f', 12, 64)
+	clippedFloat, _ := strconv.ParseFloat(clippedStr, 64)
+	return clippedFloat
 }
 
 // sort orders members by ascending value of score
