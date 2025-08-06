@@ -1,6 +1,7 @@
 package internal
 
 import (
+	ds "github.com/codecrafters-io/redis-tester/internal/data_structures"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
@@ -22,41 +23,72 @@ func testZsetZrangeNegIndex(stageHarness *test_case_harness.TestCaseHarness) err
 	}
 	defer client.Close()
 
-	zsetkey := testerutils_random.RandomWord()
-	zsetSize := testerutils_random.RandomInt(4, 8)
-	members := GenerateRandomZSetMembers(ZsetMemberGenerationOption{
-		Count:          zsetSize,
+	zsetKey := testerutils_random.RandomWord()
+	sortedSet := ds.GenerateZsetWithRandomMembers(ds.ZsetMemberGenerationOption{
+		Count:          testerutils_random.RandomInt(4, 8),
 		SameScoreCount: 2,
 	})
+	members := sortedSet.GetMembers()
 
-	zaddTestCase := test_cases.NewZsetTestCase(zsetkey)
-	for _, m := range members {
-		zaddTestCase.AddMember(m.Name, m.Score)
-	}
-	if err := zaddTestCase.RunZaddAll(client, logger); err != nil {
-		return err
-	}
-
-	startIndex := -zsetSize
-	endIndex := -1
-	middleIndex := zsetSize + testerutils_random.RandomInt(startIndex+1, -1)
-
-	// usual test cases
-	if err := zaddTestCase.RunZrange(client, logger, 0, middleIndex); err != nil {
-		return err
-	}
-	if err := zaddTestCase.RunZrange(client, logger, middleIndex, endIndex); err != nil {
-		return err
-	}
-	if err := zaddTestCase.RunZrange(client, logger, startIndex, endIndex); err != nil {
-		return err
+	// Add members
+	shuffledMembers := testerutils_random.ShuffleArray(members)
+	for _, m := range shuffledMembers {
+		zaddTestCase := test_cases.ZaddTestCase{
+			Key:                  zsetKey,
+			Member:               m,
+			ExpectedAddedMembers: 1,
+		}
+		if err := zaddTestCase.Run(client, logger); err != nil {
+			return err
+		}
 	}
 
-	// start index > end index
-	if err := zaddTestCase.RunZrange(client, logger, -1, -2); err != nil {
-		return err
+	memberNames := sortedSet.GetMemberNames()
+
+	middleIndex := testerutils_random.RandomInt(-sortedSet.Size()+1, -1)
+	middleIndexTranslated := middleIndex + sortedSet.Size()
+
+	zrangeTestCases := []test_cases.ZrangeTestCase{
+		// usual test cases
+		{
+			Key:                 zsetKey,
+			StartIndex:          0,
+			EndIndex:            middleIndex,
+			ExpectedMemberNames: memberNames[0 : middleIndexTranslated+1],
+		},
+		{
+			Key:                 zsetKey,
+			StartIndex:          middleIndex,
+			EndIndex:            -1,
+			ExpectedMemberNames: memberNames[middleIndexTranslated:],
+		},
+		{
+			Key:                 zsetKey,
+			StartIndex:          0,
+			EndIndex:            -1,
+			ExpectedMemberNames: memberNames,
+		},
+		// start Index > end index
+		{
+			Key:                 zsetKey,
+			StartIndex:          -1,
+			EndIndex:            -2,
+			ExpectedMemberNames: []string{},
+		},
+		// start index out of bounds
+		{
+			Key:                 zsetKey,
+			StartIndex:          -sortedSet.Size() - 1,
+			EndIndex:            -1,
+			ExpectedMemberNames: memberNames,
+		},
 	}
 
-	// end index out of bounds
-	return zaddTestCase.RunZrange(client, logger, startIndex-1, endIndex)
+	for _, zrangeTestCase := range zrangeTestCases {
+		if err := zrangeTestCase.Run(client, logger); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

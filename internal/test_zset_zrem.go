@@ -3,6 +3,7 @@ package internal
 import (
 	"fmt"
 
+	ds "github.com/codecrafters-io/redis-tester/internal/data_structures"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
@@ -26,22 +27,26 @@ func testZsetZrem(stageHarness *test_case_harness.TestCaseHarness) error {
 	defer client.Close()
 
 	zsetKey := testerutils_random.RandomWord()
-	zsetSize := testerutils_random.RandomInt(4, 8)
-	members := GenerateRandomZSetMembers(ZsetMemberGenerationOption{
-		Count: zsetSize,
+	sortedSet := ds.GenerateZsetWithRandomMembers(ds.ZsetMemberGenerationOption{
+		Count: testerutils_random.RandomInt(4, 8),
 	})
+	members := sortedSet.GetMembers()
 
-	zsetTestCase := test_cases.NewZsetTestCase(zsetKey)
-	for _, m := range members {
-		zsetTestCase.AddMember(m.Name, m.Score)
+	// add members
+	shuffledMembers := testerutils_random.ShuffleArray(members)
+	for _, m := range shuffledMembers {
+		zaddTestCase := test_cases.ZaddTestCase{
+			Key:                  zsetKey,
+			Member:               m,
+			ExpectedAddedMembers: 1,
+		}
+		if err := zaddTestCase.Run(client, logger); err != nil {
+			return err
+		}
 	}
 
-	if err := zsetTestCase.RunZaddAll(client, logger); err != nil {
-		return err
-	}
-
-	idxToRemove := testerutils_random.RandomInt(0, zsetSize)
-	memberToRemove := members[idxToRemove].Name
+	// remove a member
+	memberToRemove := members[testerutils_random.RandomInt(0, sortedSet.Size())].GetName()
 	zremTestCase := test_cases.SendCommandTestCase{
 		Command:   "ZREM",
 		Args:      []string{zsetKey, memberToRemove},
@@ -51,12 +56,20 @@ func testZsetZrem(stageHarness *test_case_harness.TestCaseHarness) error {
 		return err
 	}
 
-	zsetTestCase.RemoveMember(memberToRemove)
-	if err := zsetTestCase.RunZrange(client, logger, 0, -1); err != nil {
+	// check remaining members
+	sortedSet.RemoveMember(memberToRemove)
+	updatedMemberNames := sortedSet.GetMemberNames()
+	zrangeTestCase := test_cases.ZrangeTestCase{
+		Key:                 zsetKey,
+		StartIndex:          0,
+		EndIndex:            -1,
+		ExpectedMemberNames: updatedMemberNames,
+	}
+	if err := zrangeTestCase.Run(client, logger); err != nil {
 		return err
 	}
 
-	/* Remove a missing member */
+	// remove a missing member
 	missing_member := fmt.Sprintf("missing_member_%d", testerutils_random.RandomInt(1, 100))
 	zremTestCase = test_cases.SendCommandTestCase{
 		Command:   "ZREM",
@@ -68,6 +81,6 @@ func testZsetZrem(stageHarness *test_case_harness.TestCaseHarness) error {
 		return err
 	}
 
-	/* Zset shouldn't change */
-	return zsetTestCase.RunZrange(client, logger, 0, -1)
+	// verify that the sorted set hasn't changed
+	return zrangeTestCase.Run(client, logger)
 }

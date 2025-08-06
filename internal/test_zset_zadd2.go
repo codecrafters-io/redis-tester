@@ -1,11 +1,9 @@
 package internal
 
 import (
-	"strconv"
-
+	ds "github.com/codecrafters-io/redis-tester/internal/data_structures"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
-	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
@@ -26,29 +24,31 @@ func testZsetZadd2(stageHarness *test_case_harness.TestCaseHarness) error {
 	defer client.Close()
 
 	zsetKey := testerutils_random.RandomWord()
-	zsetSize := testerutils_random.RandomInt(4, 8)
-	members := GenerateRandomZSetMembers(ZsetMemberGenerationOption{
-		Count: zsetSize,
+	sortedSet := ds.GenerateZsetWithRandomMembers(ds.ZsetMemberGenerationOption{
+		Count: testerutils_random.RandomInt(4, 8),
 	})
+	members := sortedSet.GetMembers()
 
-	zsetTestCase := test_cases.NewZsetTestCase(zsetKey)
+	// Test using new members
 	for _, m := range members {
-		zsetTestCase.AddMember(m.Name, m.Score)
+		zaddTestCase := test_cases.ZaddTestCase{
+			Key:                  zsetKey,
+			Member:               m,
+			ExpectedAddedMembers: 1,
+		}
+		if err := zaddTestCase.Run(client, logger); err != nil {
+			return err
+		}
 	}
 
-	// add all members
-	if err := zsetTestCase.RunZaddAll(client, logger); err != nil {
-		return err
+	// Test by updating an existing member
+	memberToUpdate := members[testerutils_random.RandomInt(0, sortedSet.Size())]
+	newScore := ds.GetRandomZSetScore()
+	zaddTestCase := test_cases.ZaddTestCase{
+		Key:                  zsetKey,
+		Member:               ds.NewSortedSetMember(memberToUpdate.GetName(), newScore),
+		ExpectedAddedMembers: 0,
 	}
 
-	// test by updating an existing element
-	updateAtIdx := testerutils_random.RandomInt(0, zsetSize)
-	newScore := strconv.FormatFloat(GetRandomZSetScore(), 'f', -1, 64)
-	sendCommandTestCase := test_cases.SendCommandTestCase{
-		Command:   "ZADD",
-		Args:      []string{zsetKey, newScore, members[updateAtIdx].Name},
-		Assertion: resp_assertions.NewIntegerAssertion(0),
-	}
-
-	return sendCommandTestCase.Run(client, logger)
+	return zaddTestCase.Run(client, logger)
 }

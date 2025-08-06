@@ -3,6 +3,7 @@ package internal
 import (
 	"fmt"
 
+	ds "github.com/codecrafters-io/redis-tester/internal/data_structures"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
@@ -26,25 +27,36 @@ func testZsetZrank(stageHarness *test_case_harness.TestCaseHarness) error {
 	defer client.Close()
 
 	zsetKey := testerutils_random.RandomWord()
-	zsetSize := testerutils_random.RandomInt(4, 8)
-	members := GenerateRandomZSetMembers(ZsetMemberGenerationOption{
-		Count:          zsetSize,
+	sortedSet := ds.GenerateZsetWithRandomMembers(ds.ZsetMemberGenerationOption{
+		Count:          testerutils_random.RandomInt(4, 8),
 		SameScoreCount: 2,
 	})
+	members := sortedSet.GetMembers()
 
-	zsetTestCase := test_cases.NewZsetTestCase(zsetKey)
-	for _, m := range members {
-		zsetTestCase.AddMember(m.Name, m.Score)
+	shuffledMembers := testerutils_random.ShuffleArray(members)
+	for _, m := range shuffledMembers {
+		zaddTestCase := test_cases.ZaddTestCase{
+			Key:                  zsetKey,
+			Member:               m,
+			ExpectedAddedMembers: 1,
+		}
+		if err := zaddTestCase.Run(client, logger); err != nil {
+			return err
+		}
 	}
 
-	// Add all members
-	if err := zsetTestCase.RunZaddAll(client, logger); err != nil {
-		return err
-	}
+	// Run zrank for random elements
+	ranksToTest := testerutils_random.RandomInts(0, sortedSet.Size(), sortedSet.Size()/2)
+	for _, rank := range ranksToTest {
+		zrankTestCase := test_cases.SendCommandTestCase{
+			Command:   "ZRANK",
+			Args:      []string{zsetKey, members[rank].GetName()},
+			Assertion: resp_assertions.NewIntegerAssertion(rank),
+		}
 
-	// Run zrank for all members
-	if err := zsetTestCase.RunZrankAll(client, logger); err != nil {
-		return err
+		if err := zrankTestCase.Run(client, logger); err != nil {
+			return err
+		}
 	}
 
 	// Test ranks using missing key and missing member
@@ -57,7 +69,7 @@ func testZsetZrank(stageHarness *test_case_harness.TestCaseHarness) error {
 				Assertion: resp_assertions.NewNilAssertion(),
 			},
 			{
-				Command:   []string{"ZRANK", missingKey, members[0].Name},
+				Command:   []string{"ZRANK", missingKey, members[0].GetName()},
 				Assertion: resp_assertions.NewNilAssertion(),
 			},
 		},

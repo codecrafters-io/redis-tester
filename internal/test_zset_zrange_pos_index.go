@@ -3,9 +3,9 @@ package internal
 import (
 	"fmt"
 
+	ds "github.com/codecrafters-io/redis-tester/internal/data_structures"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
-	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
@@ -25,51 +25,78 @@ func testZsetZrangePosIndex(stageHarness *test_case_harness.TestCaseHarness) err
 	}
 	defer client.Close()
 
-	zsetkey := testerutils_random.RandomWord()
-	zsetSize := testerutils_random.RandomInt(4, 8)
-	members := GenerateRandomZSetMembers(ZsetMemberGenerationOption{
-		Count:          zsetSize,
+	zsetKey := testerutils_random.RandomWord()
+	sortedSet := ds.GenerateZsetWithRandomMembers(ds.ZsetMemberGenerationOption{
+		Count:          testerutils_random.RandomInt(4, 8),
 		SameScoreCount: 2,
 	})
+	members := sortedSet.GetMembers()
 
-	zaddTestCase := test_cases.NewZsetTestCase(zsetkey)
-	for _, m := range members {
-		zaddTestCase.AddMember(m.Name, m.Score)
-	}
-	if err := zaddTestCase.RunZaddAll(client, logger); err != nil {
-		return err
-	}
-
-	middleIndex := testerutils_random.RandomInt(1, zsetSize-1)
-
-	// usual test cases
-	if err := zaddTestCase.RunZrange(client, logger, 0, middleIndex); err != nil {
-		return err
-	}
-	if err := zaddTestCase.RunZrange(client, logger, middleIndex, zsetSize-1); err != nil {
-		return err
-	}
-	if err := zaddTestCase.RunZrange(client, logger, 0, zsetSize-1); err != nil {
-		return err
+	// Add members
+	shuffledMembers := testerutils_random.ShuffleArray(members)
+	for _, m := range shuffledMembers {
+		zaddTestCase := test_cases.ZaddTestCase{
+			Key:                  zsetKey,
+			Member:               m,
+			ExpectedAddedMembers: 1,
+		}
+		if err := zaddTestCase.Run(client, logger); err != nil {
+			return err
+		}
 	}
 
-	// start index > end index
-	if err := zaddTestCase.RunZrange(client, logger, 1, 0); err != nil {
-		return err
-	}
-
-	// end index out of bounds
-	if err := zaddTestCase.RunZrange(client, logger, 0, zsetSize+2); err != nil {
-		return err
-	}
-
-	// key does not exist
+	memberNames := sortedSet.GetMemberNames()
+	middleIndex := testerutils_random.RandomInt(1, sortedSet.Size()-1)
 	missingKey := fmt.Sprintf("missing_key_%d", testerutils_random.RandomInt(1, 100))
-	missingKeyZrangeTestCase := test_cases.SendCommandTestCase{
-		Command:   "ZRANGE",
-		Args:      []string{missingKey, "0", "1"},
-		Assertion: resp_assertions.NewOrderedArrayAssertion(nil),
+
+	zrangeTestCases := []test_cases.ZrangeTestCase{
+		// usual test cases
+		{
+			Key:                 zsetKey,
+			StartIndex:          0,
+			EndIndex:            middleIndex,
+			ExpectedMemberNames: memberNames[0 : middleIndex+1],
+		},
+		{
+			Key:                 zsetKey,
+			StartIndex:          middleIndex,
+			EndIndex:            sortedSet.Size() - 1,
+			ExpectedMemberNames: memberNames[middleIndex:],
+		},
+		{
+			Key:                 zsetKey,
+			StartIndex:          0,
+			EndIndex:            sortedSet.Size() - 1,
+			ExpectedMemberNames: memberNames,
+		},
+		// start Index > end index
+		{
+			Key:                 zsetKey,
+			StartIndex:          1,
+			EndIndex:            0,
+			ExpectedMemberNames: []string{},
+		},
+		// end index out of bounds
+		{
+			Key:                 zsetKey,
+			StartIndex:          0,
+			EndIndex:            sortedSet.Size() * 2,
+			ExpectedMemberNames: memberNames,
+		},
+		// key does not exist
+		{
+			Key:                 missingKey,
+			StartIndex:          0,
+			EndIndex:            1,
+			ExpectedMemberNames: []string{},
+		},
 	}
 
-	return missingKeyZrangeTestCase.Run(client, logger)
+	for _, zrangeTestCase := range zrangeTestCases {
+		if err := zrangeTestCase.Run(client, logger); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
