@@ -112,6 +112,9 @@ func GenerateZsetWithRandomMembers(option ZsetMemberGenerationOption) *SortedSet
 
 // GetRandomZSetScore returns a random value of score for a sorted set
 // We clip digits after 12 decimal places so there are no inconsistencies in tests
+// I'll remove this comment later. The cause was: https://github.com/codecrafters-io/redis-tester/actions/runs/16774410706/job/47496959864
+// I tried testing this in isolation but couldn't reproduce the bug
+// I think we should change this logic in tester utils itself if we were to do this
 func GetRandomZSetScore() float64 {
 	raw := testerutils_random.RandomFloat64(1, 100)
 	clippedStr := strconv.FormatFloat(raw, 'f', 12, 64)
