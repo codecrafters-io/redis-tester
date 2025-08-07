@@ -2,7 +2,6 @@ package data_structures
 
 import (
 	"sort"
-	"strconv"
 
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 )
@@ -95,10 +94,7 @@ func GenerateSortedSetWithRandomMembers(option SortedSetMemberGenerationOption) 
 
 // GetRandomSortedSetScore returns a random value of score for a sorted set
 func GetRandomSortedSetScore() float64 {
-	raw := testerutils_random.RandomFloat64(1, 100)
-	clippedStr := strconv.FormatFloat(raw, 'f', 12, 64)
-	clippedFloat, _ := strconv.ParseFloat(clippedStr, 64)
-	return clippedFloat
+	return testerutils_random.RandomFloat64(1, 100)
 }
 
 // sort orders members by ascending value of score
