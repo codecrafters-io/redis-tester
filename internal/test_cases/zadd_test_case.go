@@ -10,17 +10,17 @@ import (
 )
 
 type ZaddTestCase struct {
-	Key                  string
-	Member               data_structures.SortedSetMember
-	ExpectedAddedMembers int
+	Key                       string
+	Member                    data_structures.SortedSetMember
+	ExpectedAddedMembersCount int
 }
 
 func (t *ZaddTestCase) Run(client *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
-	scoreStr := strconv.FormatFloat(t.Member.GetScore(), 'f', -1, 64)
+	scoreStr := strconv.FormatFloat(t.Member.Score, 'f', -1, 64)
 	sendCommandTestCase := SendCommandTestCase{
 		Command:   "ZADD",
-		Args:      []string{t.Key, scoreStr, t.Member.GetName()},
-		Assertion: resp_assertions.NewIntegerAssertion(t.ExpectedAddedMembers),
+		Args:      []string{t.Key, scoreStr, t.Member.Name},
+		Assertion: resp_assertions.NewIntegerAssertion(t.ExpectedAddedMembersCount),
 	}
 	return sendCommandTestCase.Run(client, logger)
 }

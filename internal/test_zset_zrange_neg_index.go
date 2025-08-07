@@ -1,7 +1,7 @@
 package internal
 
 import (
-	ds "github.com/codecrafters-io/redis-tester/internal/data_structures"
+	"github.com/codecrafters-io/redis-tester/internal/data_structures"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
@@ -24,8 +24,8 @@ func testZsetZrangeNegIndex(stageHarness *test_case_harness.TestCaseHarness) err
 	defer client.Close()
 
 	zsetKey := testerutils_random.RandomWord()
-	sortedSet := ds.GenerateZsetWithRandomMembers(ds.ZsetMemberGenerationOption{
-		Count:          testerutils_random.RandomInt(4, 8),
+	sortedSet := data_structures.GenerateSortedSetWithRandomMembers(data_structures.SortedSetMemberGenerationOption{
+		Count:          testerutils_random.RandomInt(3, 5),
 		SameScoreCount: 2,
 	})
 	members := sortedSet.GetMembers()
@@ -34,9 +34,9 @@ func testZsetZrangeNegIndex(stageHarness *test_case_harness.TestCaseHarness) err
 	shuffledMembers := testerutils_random.ShuffleArray(members)
 	for _, m := range shuffledMembers {
 		zaddTestCase := test_cases.ZaddTestCase{
-			Key:                  zsetKey,
-			Member:               m,
-			ExpectedAddedMembers: 1,
+			Key:                       zsetKey,
+			Member:                    m,
+			ExpectedAddedMembersCount: 1,
 		}
 		if err := zaddTestCase.Run(client, logger); err != nil {
 			return err
@@ -46,7 +46,7 @@ func testZsetZrangeNegIndex(stageHarness *test_case_harness.TestCaseHarness) err
 	memberNames := sortedSet.GetMemberNames()
 
 	middleIndex := testerutils_random.RandomInt(-sortedSet.Size()+1, -1)
-	middleIndexTranslated := middleIndex + sortedSet.Size()
+	middleIndexAsPositiveIndex := middleIndex + sortedSet.Size()
 
 	zrangeTestCases := []test_cases.ZrangeTestCase{
 		// usual test cases
@@ -54,13 +54,13 @@ func testZsetZrangeNegIndex(stageHarness *test_case_harness.TestCaseHarness) err
 			Key:                 zsetKey,
 			StartIndex:          0,
 			EndIndex:            middleIndex,
-			ExpectedMemberNames: memberNames[0 : middleIndexTranslated+1],
+			ExpectedMemberNames: memberNames[0 : middleIndexAsPositiveIndex+1],
 		},
 		{
 			Key:                 zsetKey,
 			StartIndex:          middleIndex,
 			EndIndex:            -1,
-			ExpectedMemberNames: memberNames[middleIndexTranslated:],
+			ExpectedMemberNames: memberNames[middleIndexAsPositiveIndex:],
 		},
 		{
 			Key:                 zsetKey,

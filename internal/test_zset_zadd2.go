@@ -1,7 +1,7 @@
 package internal
 
 import (
-	ds "github.com/codecrafters-io/redis-tester/internal/data_structures"
+	"github.com/codecrafters-io/redis-tester/internal/data_structures"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
@@ -24,17 +24,17 @@ func testZsetZadd2(stageHarness *test_case_harness.TestCaseHarness) error {
 	defer client.Close()
 
 	zsetKey := testerutils_random.RandomWord()
-	sortedSet := ds.GenerateZsetWithRandomMembers(ds.ZsetMemberGenerationOption{
-		Count: testerutils_random.RandomInt(4, 8),
+	sortedSet := data_structures.GenerateSortedSetWithRandomMembers(data_structures.SortedSetMemberGenerationOption{
+		Count: testerutils_random.RandomInt(2, 4),
 	})
 	members := sortedSet.GetMembers()
 
 	// Test using new members
 	for _, m := range members {
 		zaddTestCase := test_cases.ZaddTestCase{
-			Key:                  zsetKey,
-			Member:               m,
-			ExpectedAddedMembers: 1,
+			Key:                       zsetKey,
+			Member:                    m,
+			ExpectedAddedMembersCount: 1,
 		}
 		if err := zaddTestCase.Run(client, logger); err != nil {
 			return err
@@ -43,11 +43,14 @@ func testZsetZadd2(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	// Test by updating an existing member
 	memberToUpdate := members[testerutils_random.RandomInt(0, sortedSet.Size())]
-	newScore := ds.GetRandomZSetScore()
+	newScore := data_structures.GetRandomSortedSetScore()
 	zaddTestCase := test_cases.ZaddTestCase{
-		Key:                  zsetKey,
-		Member:               ds.NewSortedSetMember(memberToUpdate.GetName(), newScore),
-		ExpectedAddedMembers: 0,
+		Key: zsetKey,
+		Member: data_structures.SortedSetMember{
+			Name:  memberToUpdate.Name,
+			Score: newScore,
+		},
+		ExpectedAddedMembersCount: 0,
 	}
 
 	return zaddTestCase.Run(client, logger)

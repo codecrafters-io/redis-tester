@@ -1,7 +1,7 @@
 package internal
 
 import (
-	ds "github.com/codecrafters-io/redis-tester/internal/data_structures"
+	"github.com/codecrafters-io/redis-tester/internal/data_structures"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
@@ -26,13 +26,18 @@ func testZsetZadd1(stageHarness *test_case_harness.TestCaseHarness) error {
 	keyMemberPair := testerutils_random.RandomWords(2)
 
 	zsetKey := keyMemberPair[0]
-	memberName := keyMemberPair[1]
-	memberScore := ds.GetRandomZSetScore()
+	sortedSet := data_structures.GenerateSortedSetWithRandomMembers(data_structures.SortedSetMemberGenerationOption{
+		Count: 1,
+	})
+	member := sortedSet.GetMembers()[0]
 
 	zaddTestCase := test_cases.ZaddTestCase{
-		Key:                  zsetKey,
-		Member:               ds.NewSortedSetMember(memberName, memberScore),
-		ExpectedAddedMembers: 1,
+		Key: zsetKey,
+		Member: data_structures.SortedSetMember{
+			Name:  member.Name,
+			Score: member.Score,
+		},
+		ExpectedAddedMembersCount: 1,
 	}
 
 	return zaddTestCase.Run(client, logger)

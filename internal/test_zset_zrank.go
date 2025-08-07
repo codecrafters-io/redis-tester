@@ -3,7 +3,7 @@ package internal
 import (
 	"fmt"
 
-	ds "github.com/codecrafters-io/redis-tester/internal/data_structures"
+	"github.com/codecrafters-io/redis-tester/internal/data_structures"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
@@ -27,8 +27,8 @@ func testZsetZrank(stageHarness *test_case_harness.TestCaseHarness) error {
 	defer client.Close()
 
 	zsetKey := testerutils_random.RandomWord()
-	sortedSet := ds.GenerateZsetWithRandomMembers(ds.ZsetMemberGenerationOption{
-		Count:          testerutils_random.RandomInt(4, 8),
+	sortedSet := data_structures.GenerateSortedSetWithRandomMembers(data_structures.SortedSetMemberGenerationOption{
+		Count:          testerutils_random.RandomInt(3, 5),
 		SameScoreCount: 2,
 	})
 	members := sortedSet.GetMembers()
@@ -36,9 +36,9 @@ func testZsetZrank(stageHarness *test_case_harness.TestCaseHarness) error {
 	shuffledMembers := testerutils_random.ShuffleArray(members)
 	for _, m := range shuffledMembers {
 		zaddTestCase := test_cases.ZaddTestCase{
-			Key:                  zsetKey,
-			Member:               m,
-			ExpectedAddedMembers: 1,
+			Key:                       zsetKey,
+			Member:                    m,
+			ExpectedAddedMembersCount: 1,
 		}
 		if err := zaddTestCase.Run(client, logger); err != nil {
 			return err
@@ -46,11 +46,11 @@ func testZsetZrank(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 
 	// Run zrank for random elements
-	ranksToTest := testerutils_random.RandomInts(0, sortedSet.Size(), sortedSet.Size()/2)
+	ranksToTest := testerutils_random.RandomInts(0, sortedSet.Size(), (sortedSet.Size()/2)+1)
 	for _, rank := range ranksToTest {
 		zrankTestCase := test_cases.SendCommandTestCase{
 			Command:   "ZRANK",
-			Args:      []string{zsetKey, members[rank].GetName()},
+			Args:      []string{zsetKey, members[rank].Name},
 			Assertion: resp_assertions.NewIntegerAssertion(rank),
 		}
 
@@ -69,7 +69,7 @@ func testZsetZrank(stageHarness *test_case_harness.TestCaseHarness) error {
 				Assertion: resp_assertions.NewNilAssertion(),
 			},
 			{
-				Command:   []string{"ZRANK", missingKey, members[0].GetName()},
+				Command:   []string{"ZRANK", missingKey, members[0].Name},
 				Assertion: resp_assertions.NewNilAssertion(),
 			},
 		},

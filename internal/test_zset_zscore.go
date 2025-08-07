@@ -1,7 +1,7 @@
 package internal
 
 import (
-	ds "github.com/codecrafters-io/redis-tester/internal/data_structures"
+	"github.com/codecrafters-io/redis-tester/internal/data_structures"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
@@ -25,8 +25,8 @@ func testZsetZscore(stageHarness *test_case_harness.TestCaseHarness) error {
 	defer client.Close()
 
 	zsetKey := testerutils_random.RandomWord()
-	sortedSet := ds.GenerateZsetWithRandomMembers(ds.ZsetMemberGenerationOption{
-		Count:          testerutils_random.RandomInt(4, 8),
+	sortedSet := data_structures.GenerateSortedSetWithRandomMembers(data_structures.SortedSetMemberGenerationOption{
+		Count:          testerutils_random.RandomInt(3, 5),
 		SameScoreCount: 2,
 	})
 	members := sortedSet.GetMembers()
@@ -34,9 +34,9 @@ func testZsetZscore(stageHarness *test_case_harness.TestCaseHarness) error {
 	shuffledMembers := testerutils_random.ShuffleArray(members)
 	for _, m := range shuffledMembers {
 		zaddTestCase := test_cases.ZaddTestCase{
-			Key:                  zsetKey,
-			Member:               m,
-			ExpectedAddedMembers: 1,
+			Key:                       zsetKey,
+			Member:                    m,
+			ExpectedAddedMembersCount: 1,
 		}
 		if err := zaddTestCase.Run(client, logger); err != nil {
 			return err
@@ -48,8 +48,8 @@ func testZsetZscore(stageHarness *test_case_harness.TestCaseHarness) error {
 	memberToTest := members[testerutils_random.RandomInt(0, sortedSet.Size())]
 	zscoreTestCase := test_cases.SendCommandTestCase{
 		Command:   "ZSCORE",
-		Args:      []string{zsetKey, memberToTest.GetName()},
-		Assertion: resp_assertions.NewFloatingPointBulkStringAssertion(memberToTest.GetScore(), zscoreTolerance),
+		Args:      []string{zsetKey, memberToTest.Name},
+		Assertion: resp_assertions.NewFloatingPointBulkStringAssertion(memberToTest.Score, zscoreTolerance),
 	}
 
 	if err := zscoreTestCase.Run(client, logger); err != nil {
@@ -57,11 +57,14 @@ func testZsetZscore(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 
 	// Update an existing member
-	newScore := ds.GetRandomZSetScore()
+	newScore := data_structures.GetRandomSortedSetScore()
 	zaddTestCase := test_cases.ZaddTestCase{
-		Key:                  zsetKey,
-		Member:               ds.NewSortedSetMember(memberToTest.GetName(), newScore),
-		ExpectedAddedMembers: 0,
+		Key: zsetKey,
+		Member: data_structures.SortedSetMember{
+			Name:  memberToTest.Name,
+			Score: newScore,
+		},
+		ExpectedAddedMembersCount: 0,
 	}
 
 	if err := zaddTestCase.Run(client, logger); err != nil {
@@ -71,7 +74,7 @@ func testZsetZscore(stageHarness *test_case_harness.TestCaseHarness) error {
 	// Test the score
 	zscoreTestCase = test_cases.SendCommandTestCase{
 		Command:   "ZSCORE",
-		Args:      []string{zsetKey, memberToTest.GetName()},
+		Args:      []string{zsetKey, memberToTest.Name},
 		Assertion: resp_assertions.NewFloatingPointBulkStringAssertion(newScore, zscoreTolerance),
 	}
 

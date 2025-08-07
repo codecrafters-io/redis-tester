@@ -8,29 +8,12 @@ import (
 )
 
 type SortedSetMember struct {
-	name  string
-	score float64
+	Name  string
+	Score float64
 }
 
-func NewSortedSetMember(name string, score float64) SortedSetMember {
-	return SortedSetMember{
-		name:  name,
-		score: score,
-	}
-}
-
-func (m SortedSetMember) GetName() string {
-	return m.name
-}
-
-func (m SortedSetMember) GetScore() float64 {
-	return m.score
-}
-
-/* SortedSet is a data structure that offers automatically sorting of its elements based on their scores
-If the scores are same, the elements are sorted lexicographically
-*/
-
+// SortedSet is a data structure that maintains its elements sorted by score.
+// If multiple elements have the same score, they are ordered lexicographically.
 type SortedSet struct {
 	members []SortedSetMember
 }
@@ -47,7 +30,7 @@ func (ss *SortedSet) AddMember(m SortedSetMember) *SortedSet {
 
 func (ss *SortedSet) RemoveMember(name string) *SortedSet {
 	for i, m := range ss.members {
-		if m.name == name {
+		if m.Name == name {
 			ss.members = append(ss.members[:i], ss.members[i+1:]...)
 			return ss
 		}
@@ -70,17 +53,17 @@ func (ss *SortedSet) GetMembers() []SortedSetMember {
 func (ss *SortedSet) GetMemberNames() []string {
 	memberNames := make([]string, len(ss.members))
 	for i, m := range ss.members {
-		memberNames[i] = m.name
+		memberNames[i] = m.Name
 	}
 	return memberNames
 }
 
-type ZsetMemberGenerationOption struct {
+type SortedSetMemberGenerationOption struct {
 	Count          int // Total number of members to generate
 	SameScoreCount int // Number of members with same score (for testing lexicographic sorting)
 }
 
-func GenerateZsetWithRandomMembers(option ZsetMemberGenerationOption) *SortedSet {
+func GenerateSortedSetWithRandomMembers(option SortedSetMemberGenerationOption) *SortedSet {
 	count := option.Count
 	sameScoreCount := min(option.SameScoreCount, count)
 	differentScoresCount := count - sameScoreCount
@@ -91,31 +74,27 @@ func GenerateZsetWithRandomMembers(option ZsetMemberGenerationOption) *SortedSet
 
 	// generate members with different scores
 	for i := range differentScoresCount {
-		score := GetRandomZSetScore()
+		score := GetRandomSortedSetScore()
 		ss.AddMember(SortedSetMember{
-			name:  memberNames[i],
-			score: score,
+			Name:  memberNames[i],
+			Score: score,
 		})
 	}
 
 	// generate members with same score
-	baseScore := GetRandomZSetScore()
+	baseScore := GetRandomSortedSetScore()
 	for i := range sameScoreCount {
 		ss.AddMember(SortedSetMember{
-			name:  memberNames[differentScoresCount+i],
-			score: baseScore,
+			Name:  memberNames[differentScoresCount+i],
+			Score: baseScore,
 		})
 	}
 
 	return ss
 }
 
-// GetRandomZSetScore returns a random value of score for a sorted set
-// We clip digits after 12 decimal places so there are no inconsistencies in tests
-// I'll remove this comment later. The cause was: https://github.com/codecrafters-io/redis-tester/actions/runs/16774410706/job/47496959864
-// I tried testing this in isolation but couldn't reproduce the bug
-// I think we should change this logic in tester utils itself if we were to do this
-func GetRandomZSetScore() float64 {
+// GetRandomSortedSetScore returns a random value of score for a sorted set
+func GetRandomSortedSetScore() float64 {
 	raw := testerutils_random.RandomFloat64(1, 100)
 	clippedStr := strconv.FormatFloat(raw, 'f', 12, 64)
 	clippedFloat, _ := strconv.ParseFloat(clippedStr, 64)
@@ -126,9 +105,9 @@ func GetRandomZSetScore() float64 {
 // if scores are same, the members are sorted lexicographically
 func (ss *SortedSet) sort() {
 	sort.Slice(ss.members, func(i, j int) bool {
-		if ss.members[i].score != ss.members[j].score {
-			return ss.members[i].score < ss.members[j].score
+		if ss.members[i].Score != ss.members[j].Score {
+			return ss.members[i].Score < ss.members[j].Score
 		}
-		return ss.members[i].name < ss.members[j].name
+		return ss.members[i].Name < ss.members[j].Name
 	})
 }

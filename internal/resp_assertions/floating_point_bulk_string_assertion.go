@@ -2,6 +2,7 @@ package resp_assertions
 
 import (
 	"fmt"
+	"math"
 	"strconv"
 
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
@@ -25,19 +26,16 @@ func (a FloatingPointBulkStringAssertion) Run(value resp_value.Value) error {
 	}
 
 	stringValue := value.String()
-	f, err := strconv.ParseFloat(stringValue, 64)
+	floatValue, err := strconv.ParseFloat(stringValue, 64)
 	if err != nil {
 		return fmt.Errorf("Expected %q to be a floating point number", stringValue)
 	}
 
-	diff := f - a.ExpectedValue
-	if diff < 0 {
-		diff = -diff
-	}
+	diff := math.Abs(floatValue - a.ExpectedValue)
 
 	if diff > a.Tolerance {
 		expectedStr := fmt.Sprintf("%g ± %g", a.ExpectedValue, a.Tolerance)
-		return fmt.Errorf("Expected %s, got %g", expectedStr, f)
+		return fmt.Errorf("Expected %s, got %g", expectedStr, floatValue)
 	}
 
 	return nil

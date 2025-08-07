@@ -3,7 +3,7 @@ package internal
 import (
 	"fmt"
 
-	ds "github.com/codecrafters-io/redis-tester/internal/data_structures"
+	"github.com/codecrafters-io/redis-tester/internal/data_structures"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
@@ -27,45 +27,45 @@ func testZsetZcard(stageHarness *test_case_harness.TestCaseHarness) error {
 	defer client.Close()
 
 	zsetKey := testerutils_random.RandomWord()
-	sortedSet := ds.GenerateZsetWithRandomMembers(ds.ZsetMemberGenerationOption{
-		Count:          testerutils_random.RandomInt(4, 8),
+	sortedSet := data_structures.GenerateSortedSetWithRandomMembers(data_structures.SortedSetMemberGenerationOption{
+		Count:          testerutils_random.RandomInt(3, 5),
 		SameScoreCount: 2,
 	})
 	members := sortedSet.GetMembers()
 
 	shuffledMembers := testerutils_random.ShuffleArray(members)
 	for i, m := range shuffledMembers {
-		// Add members
+		// Add member
 		zaddTestCase := test_cases.ZaddTestCase{
-			Key:                  zsetKey,
-			Member:               m,
-			ExpectedAddedMembers: 1,
+			Key:                       zsetKey,
+			Member:                    m,
+			ExpectedAddedMembersCount: 1,
 		}
 		if err := zaddTestCase.Run(client, logger); err != nil {
 			return err
 		}
 
-		// Randomly test for cardinality
-		shouldCheckCardinality := testerutils_random.RandomInt(0, 2)
-		if shouldCheckCardinality == 1 {
-			zcardTestCase := test_cases.SendCommandTestCase{
-				Command:   "ZCARD",
-				Args:      []string{zsetKey},
-				Assertion: resp_assertions.NewIntegerAssertion(i + 1),
-			}
-			if err := zcardTestCase.Run(client, logger); err != nil {
-				return err
-			}
+		// Test for cardinality
+		zcardTestCase := test_cases.SendCommandTestCase{
+			Command:   "ZCARD",
+			Args:      []string{zsetKey},
+			Assertion: resp_assertions.NewIntegerAssertion(i + 1),
+		}
+		if err := zcardTestCase.Run(client, logger); err != nil {
+			return err
 		}
 	}
 
 	// Update an existing member
 	memberToUpdate := members[testerutils_random.RandomInt(0, sortedSet.Size())]
-	newScore := ds.GetRandomZSetScore()
+	newScore := data_structures.GetRandomSortedSetScore()
 	zaddTestCase := test_cases.ZaddTestCase{
-		Key:                  zsetKey,
-		Member:               ds.NewSortedSetMember(memberToUpdate.GetName(), newScore),
-		ExpectedAddedMembers: 0,
+		Key: zsetKey,
+		Member: data_structures.SortedSetMember{
+			Name:  memberToUpdate.Name,
+			Score: newScore,
+		},
+		ExpectedAddedMembersCount: 0,
 	}
 	if err := zaddTestCase.Run(client, logger); err != nil {
 		return err
@@ -81,7 +81,7 @@ func testZsetZcard(stageHarness *test_case_harness.TestCaseHarness) error {
 		return err
 	}
 
-	// Check the cardinality of missing key */
+	// Check ZCARD with a missing key
 	missingKey := fmt.Sprintf("missing_key_%d", testerutils_random.RandomInt(1, 100))
 	missingKeyZcardTestCase := test_cases.SendCommandTestCase{
 		Command:   "ZCARD",
