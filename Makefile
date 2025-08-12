@@ -77,6 +77,11 @@ test_pubsub_with_redis: build
 	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\":\"mx3\",\"tester_log_prefix\":\"stage-601\",\"title\":\"Stage #601: SUBSCRIBE-1\"},{\"slug\":\"zc8\",\"tester_log_prefix\":\"stage-602\",\"title\":\"Stage #602: SUBSCRIBE-2\"}, {\"slug\":\"aw8\",\"tester_log_prefix\":\"stage-603\",\"title\":\"Stage #603: SUBSCRIBE-3\"}, {\"slug\":\"lf1\",\"tester_log_prefix\":\"stage-604\",\"title\":\"Stage #604: SUBSCRIBE-4\"}, {\"slug\":\"hf2\",\"tester_log_prefix\":\"stage-605\",\"title\":\"Stage #605: PUBLISH-1\"}, {\"slug\":\"dn4\",\"tester_log_prefix\":\"stage-606\",\"title\":\"Stage #606: PUBLISH-2\"}, {\"slug\":\"ze9\",\"tester_log_prefix\":\"stage-607\",\"title\":\"Stage #607: UNSUBSCRIBE\"}]" \
 	dist/main.out
 
+test_zset_with_redis: build
+	CODECRAFTERS_REPOSITORY_DIR=./internal/test_helpers/pass_all \
+	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\":\"ct1\",\"tester_log_prefix\":\"stage-701\",\"title\":\"Stage #701: ZADD-1\"},{\"slug\":\"hf1\",\"tester_log_prefix\":\"stage-702\",\"title\":\"Stage #702: ZADD-2\"}, {\"slug\":\"lg6\",\"tester_log_prefix\":\"stage-703\",\"title\":\"Stage #703: ZRANK\"}, {\"slug\":\"ic1\",\"tester_log_prefix\":\"stage-704\",\"title\":\"Stage #704: ZRANGE-1\"}, {\"slug\":\"bj4\",\"tester_log_prefix\":\"stage-705\",\"title\":\"Stage #705: ZRANGE-2\"}, {\"slug\":\"kn4\",\"tester_log_prefix\":\"stage-706\",\"title\":\"Stage #706: ZCARD\"}, {\"slug\":\"gd7\",\"tester_log_prefix\":\"stage-707\",\"title\":\"Stage #707: ZSCORE\"}, {\"slug\":\"sq7\",\"tester_log_prefix\":\"stage-708\",\"title\":\"Stage #708: ZREM\"} ]" \
+	dist/main.out
+
 test_all_with_redis:
 	make test_base_with_redis || true
 	make test_repl_with_redis || true
@@ -85,6 +90,7 @@ test_all_with_redis:
 	make test_txn_with_redis || true
 	make test_list_with_redis || true
 	make test_pubsub_with_redis || true
+	make test_zset_with_redis || true
 
 setup:
 	echo "Setting up redis-tester prerequisites for Linux"
