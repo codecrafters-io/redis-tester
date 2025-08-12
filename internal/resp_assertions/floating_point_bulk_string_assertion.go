@@ -34,8 +34,10 @@ func (a FloatingPointBulkStringAssertion) Run(value resp_value.Value) error {
 	diff := math.Abs(floatValue - a.ExpectedValue)
 
 	if diff > a.Tolerance {
-		expectedStr := fmt.Sprintf("%g ± %g", a.ExpectedValue, a.Tolerance)
-		return fmt.Errorf("Expected %s, got %g", expectedStr, floatValue)
+		// display full precision
+		expectedValueStr := strconv.FormatFloat(a.ExpectedValue, 'f', -1, 64)
+		expectedStr := fmt.Sprintf("%s ± %g", expectedValueStr, a.Tolerance)
+		return fmt.Errorf("Expected %s, got %s", expectedStr, stringValue)
 	}
 
 	return nil
