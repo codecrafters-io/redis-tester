@@ -36,7 +36,7 @@ func (a FloatingPointBulkStringAssertion) Run(value resp_value.Value) error {
 	if diff > a.Tolerance {
 		// display full precision
 		expectedValueStr := strconv.FormatFloat(a.ExpectedValue, 'f', -1, 64)
-		expectedStr := fmt.Sprintf("%s ± %g", expectedValueStr, a.Tolerance)
+		expectedStr := fmt.Sprintf("%s (± %g)", expectedValueStr, a.Tolerance)
 		return fmt.Errorf("Expected %s, got %s", expectedStr, stringValue)
 	}
 
