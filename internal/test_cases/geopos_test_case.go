@@ -19,7 +19,7 @@ type GeoPosTestCase struct {
 // From its use in `test_geospatial_geopos.go`, it is not apparent that nil is converted to NilAssertion()
 // While if we use an ExpectedResponseArray like TransactionTestCase, that will either result in:
 // 1. repitition of the logic: line 25-33 below.
-// 2. if we delegate this logic to some utility function, it introduces one more step, resulting in the same issue as line 19 above
+// 2. if we delegate this logic to some utility function from the caller, it introduces one more step, resulting in the same issue as line 19 above
 func (t *GeoPosTestCase) Run(client *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
 	assertion := make([]resp_assertions.RESPAssertion, len(t.ExpectedCoordinates))
 	for i, coordinate := range t.ExpectedCoordinates {
