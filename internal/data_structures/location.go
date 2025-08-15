@@ -19,6 +19,12 @@ type Coordinates struct {
 	Longitude float64
 }
 
+// Location : I'll remove this comment later
+// I'm not sure if making a strucutre like `LocationSet` is a good idea
+// Given that the data will not encapsulate any new information regarding the locations (unlike ZSET where order, etc is preserved)
+// I didn't find it necessary to create one
+// However, I found myself repeating the same logic {}Location[] -> {}string[] for each location
+// so, i'm not sure if a utility function will suffice or we should create a datastructure like `LocationSet`
 type Location struct {
 	Coordinates *Coordinates
 	Name        string
