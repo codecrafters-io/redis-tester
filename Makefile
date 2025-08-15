@@ -82,6 +82,11 @@ test_zset_with_redis: build
 	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\":\"ct1\",\"tester_log_prefix\":\"stage-701\",\"title\":\"Stage #701: ZADD-1\"},{\"slug\":\"hf1\",\"tester_log_prefix\":\"stage-702\",\"title\":\"Stage #702: ZADD-2\"}, {\"slug\":\"lg6\",\"tester_log_prefix\":\"stage-703\",\"title\":\"Stage #703: ZRANK\"}, {\"slug\":\"ic1\",\"tester_log_prefix\":\"stage-704\",\"title\":\"Stage #704: ZRANGE-1\"}, {\"slug\":\"bj4\",\"tester_log_prefix\":\"stage-705\",\"title\":\"Stage #705: ZRANGE-2\"}, {\"slug\":\"kn4\",\"tester_log_prefix\":\"stage-706\",\"title\":\"Stage #706: ZCARD\"}, {\"slug\":\"gd7\",\"tester_log_prefix\":\"stage-707\",\"title\":\"Stage #707: ZSCORE\"}, {\"slug\":\"sq7\",\"tester_log_prefix\":\"stage-708\",\"title\":\"Stage #708: ZREM\"} ]" \
 	dist/main.out
 
+test_geospatial_with_redis: build
+	CODECRAFTERS_REPOSITORY_DIR=./internal/test_helpers/pass_all \
+	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\":\"ek6\",\"tester_log_prefix\":\"stage-807\",\"title\":\"Stage #807: GEODIST\"}, {\"slug\":\"rm9\",\"tester_log_prefix\":\"stage-808\",\"title\":\"Stage #808: GEOSEARCH\"} ]" \
+	dist/main.out
+
 test_all_with_redis:
 	make test_base_with_redis || true
 	make test_repl_with_redis || true
