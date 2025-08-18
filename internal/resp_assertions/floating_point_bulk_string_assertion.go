@@ -37,7 +37,9 @@ func (a FloatingPointBulkStringAssertion) Run(value resp_value.Value) error {
 		// display full precision
 		expectedValueStr := strconv.FormatFloat(a.ExpectedValue, 'f', -1, 64)
 		toleranceStr := ""
-		// We don't need to print tolerance if it is 0
+		// WILL_REMOVE: We don't need to print tolerance if it is 0
+		// for eg. ZSCORE for geospatial stages where the score is actually an integer (casted as a float)
+		// So it makes sense to not display tolerance in such cases
 		if a.Tolerance != 0 {
 			toleranceStr = "(± %g)"
 		}
