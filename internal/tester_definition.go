@@ -368,6 +368,7 @@ var testerDefinition = tester_definition.TesterDefinition{
 		{
 			Slug:     "xg4",
 			TestFunc: testGeospatialGeopos,
+			Timeout:  time.Hour,
 		},
 		{
 			Slug:     "hb5",

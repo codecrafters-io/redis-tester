@@ -25,10 +25,13 @@ func testGeospatialGeoadd(stageHarness *test_case_harness.TestCaseHarness) error
 	defer client.Close()
 
 	locationKey := random.RandomWord()
+	location := data_structures.GenerateRandomLocationSet(1).GetLocations()[0]
 
-	location := data_structures.GenerateRandomLocations(1)[0]
-
-	geoAddTestCase := test_cases.NewGeoAddTestCaseWithValidCoordinates(locationKey, location, 1)
+	geoAddTestCase := test_cases.GeoAddTestCase{
+		Key:                         locationKey,
+		Location:                    location,
+		ExpectedAddedLocationsCount: 1,
+	}
 
 	return geoAddTestCase.Run(client, logger)
 }

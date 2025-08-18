@@ -1,9 +1,12 @@
 package internal
 
 import (
+	"strconv"
+
 	"github.com/codecrafters-io/redis-tester/internal/data_structures"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
@@ -25,54 +28,69 @@ func testGeospatialValidateCoordinates(stageHarness *test_case_harness.TestCaseH
 	defer client.Close()
 
 	locationKey := testerutils_random.RandomWord()
-	// The co-ordinates of this location are used as a valid longitude/latitude in each test case
-	location := data_structures.GenerateRandomLocations(1)[0]
+	location := data_structures.GenerateRandomLocationSet(1).GetLocations()[0]
+
+	// WILL_REMOVE: re-use valid values of latitude and longitude to avoid generation and conversion of coordinates to float everytime
+	// we generate a new location, because we're concerned only with invalid values in this stage
+	locationName := location.Name
+	validLatitude := strconv.FormatFloat(location.GetLatitude(), 'f', -1, 64)
+	validLongitude := strconv.FormatFloat(location.GetLongitude(), 'f', -1, 64)
 
 	// Invalid latitude, valid longitude
 	errorPatternWrongLatitude := `^ERR.*(?i:latitude)`
 
+	// WILL_REMOVE: I could not use GeoAddTestCase since it is built using Location struct,
+	// which is a valid location in mercator projection
+	// If we remove the validations in the NewCoordinates(),
+	// that way we can re-use GeoAddTestCase for this stage as well
+	// however, we'll have to change the implementation of GeoAddTestCase to expect both error and integer (for invalid and valid coordinates respectively)
+	// so we have to use two different constructor functions:
+	// NewGeoAddTestCaseWithValidLocation() and NewGeoAddTestCaseWithInvalidLocation()
+	// and move the coordinates checks in NewCoordinates() to these constructors, which does seem like unification of concern,
+	// and (over-engineering?? not sure) given that NewGeoAddTestCaseWithInvalidLocation() is being used only in this stage and
+	// NewGeoAddTestCaseWithValidLocation() is being used in all others except this one
+	// But, let me know if there is a better way to do this
+
 	// Latitude greater than max boundary
-	locationName := testerutils_random.RandomWord()
-	invalidLocation := data_structures.NewLocation(locationName, data_structures.Coordinates{
-		Latitude:  testerutils_random.RandomFloat64(data_structures.LATITUDE_MAX+1, 500),
-		Longitude: location.GetLongitude(),
-	})
-	geoAddTestCase := test_cases.NewGeoAddTestCaseWithInvalidCoordinates(locationKey, invalidLocation, errorPatternWrongLatitude)
-	if err := geoAddTestCase.Run(client, logger); err != nil {
+	invalidLatitude := strconv.FormatFloat(testerutils_random.RandomFloat64(data_structures.LATITUDE_MAX, 500), 'f', -1, 64)
+	positiveInvalidLatitudeTestCase := test_cases.SendCommandTestCase{
+		Command:   "GEOADD",
+		Args:      []string{locationKey, validLongitude, invalidLatitude, locationName},
+		Assertion: resp_assertions.NewRegexErrorAssertion(errorPatternWrongLatitude),
+	}
+	if err := positiveInvalidLatitudeTestCase.Run(client, logger); err != nil {
 		return err
 	}
 
-	// Latitude smaller than min boundary
-	locationName = testerutils_random.RandomWord()
-	invalidLocation = data_structures.NewLocation(locationName, data_structures.Coordinates{
-		Latitude:  testerutils_random.RandomFloat64(-500, data_structures.LATITUDE_MIN),
-		Longitude: location.GetLongitude(),
-	})
-	geoAddTestCase = test_cases.NewGeoAddTestCaseWithInvalidCoordinates(locationKey, invalidLocation, errorPatternWrongLatitude)
-	if err := geoAddTestCase.Run(client, logger); err != nil {
+	invalidLatitude = strconv.FormatFloat(testerutils_random.RandomFloat64(-500, data_structures.LATITUDE_MIN), 'f', -1, 64)
+	negativeInvalidLatitudeTestCase := test_cases.SendCommandTestCase{
+		Command:   "GEOADD",
+		Args:      []string{locationKey, validLongitude, invalidLatitude, locationName},
+		Assertion: resp_assertions.NewRegexErrorAssertion(errorPatternWrongLatitude),
+	}
+	if err := negativeInvalidLatitudeTestCase.Run(client, logger); err != nil {
 		return err
 	}
 
 	// Invalid longitude, but valid latitude
 	errorPatternWrongLongitude := `^ERR.*(?i:longitude)`
 
-	// Longitude greater than max boundary
-	locationName = testerutils_random.RandomWord()
-	invalidLocation = data_structures.NewLocation(locationName, data_structures.Coordinates{
-		Latitude:  location.GetLatitude(),
-		Longitude: testerutils_random.RandomFloat64(data_structures.LONGITUDE_MAX+1, 500),
-	})
-	geoAddTestCase = test_cases.NewGeoAddTestCaseWithInvalidCoordinates(locationKey, invalidLocation, errorPatternWrongLongitude)
-	if err := geoAddTestCase.Run(client, logger); err != nil {
+	invalidLongitude := strconv.FormatFloat(testerutils_random.RandomFloat64(data_structures.LONGITUDE_MAX+1, 500), 'f', -1, 64)
+	positiveInvalidLongitudeTestCase := test_cases.SendCommandTestCase{
+		Command:   "GEOADD",
+		Args:      []string{locationKey, invalidLongitude, validLatitude, locationName},
+		Assertion: resp_assertions.NewRegexErrorAssertion(errorPatternWrongLongitude),
+	}
+	if err := positiveInvalidLongitudeTestCase.Run(client, logger); err != nil {
 		return err
 	}
 
 	// Longitude smaller than min boundary
-	locationName = testerutils_random.RandomWord()
-	invalidLocation = data_structures.NewLocation(locationName, data_structures.Coordinates{
-		Latitude:  location.GetLatitude(),
-		Longitude: testerutils_random.RandomFloat64(-500, data_structures.LONGITUDE_MIN),
-	})
-	geoAddTestCase = test_cases.NewGeoAddTestCaseWithInvalidCoordinates(locationKey, invalidLocation, errorPatternWrongLongitude)
-	return geoAddTestCase.Run(client, logger)
+	invalidLongitude = strconv.FormatFloat(testerutils_random.RandomFloat64(-500, data_structures.LONGITUDE_MIN), 'f', -1, 64)
+	negativeInvalidLongitudeTestCase := test_cases.SendCommandTestCase{
+		Command:   "GEOADD",
+		Args:      []string{locationKey, invalidLongitude, validLatitude, locationName},
+		Assertion: resp_assertions.NewRegexErrorAssertion(errorPatternWrongLongitude),
+	}
+	return negativeInvalidLongitudeTestCase.Run(client, logger)
 }

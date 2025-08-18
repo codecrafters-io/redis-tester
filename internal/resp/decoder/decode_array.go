@@ -32,7 +32,7 @@ func decodeArray(reader *bytes.Reader) (resp_value.Value, error) {
 	}
 
 	if length == -1 {
-		return resp_value.NewNilValue(), nil
+		return resp_value.NewNilArrayValue(), nil
 	}
 
 	if length < -1 {

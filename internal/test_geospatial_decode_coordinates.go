@@ -26,9 +26,11 @@ func testGeospatialDecodeCoordinates(stageHarness *test_case_harness.TestCaseHar
 
 	locationKey := testerutils_random.RandomWord()
 
-	locations := data_structures.GenerateRandomLocations(testerutils_random.RandomInt(2, 4))
+	locationSet := data_structures.GenerateRandomLocationSet(testerutils_random.RandomInt(2, 4))
 
-	for _, location := range locations {
+	// We use ZADD to add the locations so the user implementation requires that they decode
+	// co-ordinates from the score
+	for _, location := range locationSet.GetLocations() {
 		zaddTestCase := test_cases.ZaddTestCase{
 			Key: locationKey,
 			Member: data_structures.SortedSetMember{
@@ -42,21 +44,8 @@ func testGeospatialDecodeCoordinates(stageHarness *test_case_harness.TestCaseHar
 		}
 	}
 
-	locationNames := make([]string, len(locations))
-	expectedCoordinates := make([]*data_structures.Coordinates, len(locations))
-
-	for i, location := range locations {
-		locationNames[i] = location.Name
-		currentCoordinate := location.GetGeoGridCenterCoordinates()
-		expectedCoordinates[i] = &currentCoordinate
-	}
-
-	geoPosTestCase := test_cases.GeoPosTestCase{
-		Key:                 locationKey,
-		LocationNames:       locationNames,
-		Tolerance:           10e-4,
-		ExpectedCoordinates: expectedCoordinates,
-	}
+	geoPosTestCase := test_cases.NewGeoPosTestCase(locationKey)
+	geoPosTestCase.AddLocations(locationSet.GetLocations(), false)
 
 	return geoPosTestCase.Run(client, logger)
 }

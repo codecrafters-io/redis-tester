@@ -14,6 +14,7 @@ const (
 	ARRAY         string = "ARRAY"
 	ERROR         string = "ERROR"
 	NIL           string = "NIL"
+	NIL_ARRAY     string = "NIL_ARRAY"
 )
 
 type Value struct {
@@ -76,6 +77,12 @@ func NewNilValue() Value {
 	}
 }
 
+func NewNilArrayValue() Value {
+	return Value{
+		Type: NIL_ARRAY,
+	}
+}
+
 func (v *Value) Bytes() []byte {
 	return v.bytes
 }
@@ -121,6 +128,8 @@ func (v *Value) FormattedString() string {
 		return fmt.Sprintf("%q", v.String())
 	case NIL:
 		return "\"$-1\\r\\n\""
+	case NIL_ARRAY:
+		return "\"*-1\\r\\n\""
 	}
 	return ""
 }

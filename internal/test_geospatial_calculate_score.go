@@ -26,17 +26,23 @@ func testGeospatialCalculateScore(stageHarness *test_case_harness.TestCaseHarnes
 	defer client.Close()
 
 	locationKey := testerutils_random.RandomWord()
-	locations := data_structures.GenerateRandomLocations(testerutils_random.RandomInt(2, 4))
+	locationSet := data_structures.GenerateRandomLocationSet(testerutils_random.RandomInt(2, 4))
+	locations := locationSet.GetLocations()
 
 	// Add locations
 	for _, location := range locations {
-		geoAddTestCase := test_cases.NewGeoAddTestCaseWithValidCoordinates(locationKey, location, 1)
+		geoAddTestCase := test_cases.GeoAddTestCase{
+			Key:                         locationKey,
+			Location:                    location,
+			ExpectedAddedLocationsCount: 1,
+		}
 		if err := geoAddTestCase.Run(client, logger); err != nil {
 			return err
 		}
 	}
 
 	// Check the score of each location
+	logger.Infof("Checking the scores of added locations")
 	for _, l := range locations {
 		zscoreTestCase := test_cases.SendCommandTestCase{
 			Command:   "ZSCORE",

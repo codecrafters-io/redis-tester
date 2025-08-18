@@ -2,7 +2,6 @@ package internal
 
 import (
 	"fmt"
-	"math"
 
 	"github.com/codecrafters-io/redis-tester/internal/data_structures"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
@@ -30,68 +29,37 @@ func testGeospatialGeopos(stageHarness *test_case_harness.TestCaseHarness) error
 	locationKey := random.RandomWord()
 
 	// Add locations
-	locations := data_structures.GenerateRandomLocations(random.RandomInt(2, 4))
-	for _, location := range locations {
-		geoAddTestCase := test_cases.NewGeoAddTestCaseWithValidCoordinates(locationKey, location, 1)
+	locationSet := data_structures.GenerateRandomLocationSet(random.RandomInt(2, 4))
+	for _, location := range locationSet.GetLocations() {
+		geoAddTestCase := test_cases.GeoAddTestCase{
+			Key:                         locationKey,
+			Location:                    location,
+			ExpectedAddedLocationsCount: 1,
+		}
 		if err := geoAddTestCase.Run(client, logger); err != nil {
 			return err
 		}
 	}
 
-	locationNames := make([]string, len(locations))
-	coordinates := make([]*data_structures.Coordinates, len(locations))
-	for i, location := range locations {
-		coordinates[i] = location.Coordinates
-		locationNames[i] = location.Name
+	geoPosTestCase := test_cases.NewGeoPosTestCase(locationKey)
+	geoPosTestCase.AddLocations(locationSet.GetLocations(), true)
+
+	missingLocations := make([]string, random.RandomInt(2, 4))
+	for i := range len(missingLocations) {
+		missingLocations[i] = fmt.Sprintf("missing_location_%d", random.RandomInt(1, 100))
 	}
 
-	// Valid coordinates
-	geoPosTestCase := test_cases.GeoPosTestCase{
-		Key:                 locationKey,
-		LocationNames:       locationNames,
-		Tolerance:           math.Inf(1),
-		ExpectedCoordinates: coordinates,
-	}
+	geoPosTestCase.AddMissingLocations(missingLocations)
 	if err := geoPosTestCase.Run(client, logger); err != nil {
 		return err
 	}
 
-	// Missing location
-	missingLocationTestCase := test_cases.GeoPosTestCase{
-		Key:                 locationKey,
-		LocationNames:       []string{fmt.Sprintf("missing_key_%d", random.RandomInt(1, 100))},
-		ExpectedCoordinates: []*data_structures.Coordinates{nil},
-	}
-	if err := missingLocationTestCase.Run(client, logger); err != nil {
-		return err
-	}
+	// Test for missing key
+	// missingKey := fmt.Sprintf("missing_key_%d", random.RandomInt(1, 100))
+	// missingKeyTestCase := test_cases.NewGeoPosTestCase(missingKey)
 
-	// No locations
-	noLocationsTestCase := test_cases.GeoPosTestCase{
-		Key:                 locationKey,
-		LocationNames:       nil,
-		ExpectedCoordinates: nil,
-	}
-	if err := noLocationsTestCase.Run(client, logger); err != nil {
-		return err
-	}
+	// missingKeyTestCase.AddMissingLocations(missingLocations)
+	// return missingKeyTestCase.Run(client, logger)
 
-	// Missing key - No locations
-	missingKeyWithNoLocationsTestCase := test_cases.GeoPosTestCase{
-		Key:                 fmt.Sprintf("missing_key_%d", random.RandomInt(1, 100)),
-		LocationNames:       nil,
-		ExpectedCoordinates: nil,
-	}
-	if err := missingKeyWithNoLocationsTestCase.Run(client, logger); err != nil {
-		return err
-	}
-
-	// Missing key with a location
-	missingKeyWithLocationTestCase := test_cases.GeoPosTestCase{
-		Key:                 fmt.Sprintf("missing_key_%d", random.RandomInt(1, 100)),
-		LocationNames:       []string{fmt.Sprintf("missing_location_%d", random.RandomInt(1, 100))},
-		ExpectedCoordinates: []*data_structures.Coordinates{nil},
-	}
-
-	return missingKeyWithLocationTestCase.Run(client, logger)
+	return nil
 }

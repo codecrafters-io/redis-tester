@@ -21,6 +21,7 @@ func (t *GeoSearchTestCase) Run(client *instrumented_resp_connection.Instrumente
 	latitudeStr := strconv.FormatFloat(t.FromLatitude, 'f', -1, 64)
 	radiusStr := strconv.FormatFloat(t.Radius, 'f', -1, 64)
 
+	// we use unordered assertion because we do not cover ASC/DESC option for GEOSEARCH
 	sendCommandTestCase := SendCommandTestCase{
 		Command:   "GEOSEARCH",
 		Args:      []string{t.Key, "FROMLONLAT", longitudeStr, latitudeStr, "BYRADIUS", radiusStr, "m"},

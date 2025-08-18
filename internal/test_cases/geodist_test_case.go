@@ -7,10 +7,12 @@ import (
 	"github.com/codecrafters-io/tester-utils/logger"
 )
 
+const _GEODIST_TOLERANCE = 10e-4
+
 type GeoDistTestCase struct {
 	Key              string
-	Location1        *data_structures.Location
-	Location2        *data_structures.Location
+	Location1        data_structures.Location
+	Location2        data_structures.Location
 	ExpectedDistance float64
 }
 
@@ -19,7 +21,7 @@ func (t *GeoDistTestCase) Run(client *instrumented_resp_connection.InstrumentedR
 	geodistTestCase := SendCommandTestCase{
 		Command:   "GEODIST",
 		Args:      []string{t.Key, t.Location1.Name, t.Location2.Name},
-		Assertion: resp_assertions.NewFloatingPointBulkStringAssertion(distance, 10e-4),
+		Assertion: resp_assertions.NewFloatingPointBulkStringAssertion(distance, _GEODIST_TOLERANCE),
 	}
 	return geodistTestCase.Run(client, logger)
 }

@@ -10,47 +10,18 @@ import (
 )
 
 type GeoAddTestCase struct {
-	key      string
-	location data_structures.Location
-
-	isExpectingError bool
-
-	// Only one of them is used depending on the validity of location's coordinate
-	expectedAddedLocationsCount int
-	expectedPattern             string
-}
-
-func NewGeoAddTestCaseWithValidCoordinates(key string, location *data_structures.Location, expectedAddedMembersCount int) *GeoAddTestCase {
-	return &GeoAddTestCase{
-		key:                         key,
-		location:                    *location,
-		expectedAddedLocationsCount: expectedAddedMembersCount,
-	}
-}
-
-func NewGeoAddTestCaseWithInvalidCoordinates(key string, location *data_structures.Location, expectedPattern string) *GeoAddTestCase {
-	return &GeoAddTestCase{
-		key:              key,
-		location:         *location,
-		isExpectingError: true,
-		expectedPattern:  expectedPattern,
-	}
+	Key                         string
+	Location                    data_structures.Location
+	ExpectedAddedLocationsCount int
 }
 
 func (t *GeoAddTestCase) Run(client *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
-	longitudeStr := strconv.FormatFloat(t.location.GetLongitude(), 'f', -1, 64)
-	latitudeStr := strconv.FormatFloat(t.location.GetLatitude(), 'f', -1, 64)
-
-	var assertion resp_assertions.RESPAssertion
-	if t.isExpectingError {
-		assertion = resp_assertions.NewRegexErrorAssertion(t.expectedPattern)
-	} else {
-		assertion = resp_assertions.NewIntegerAssertion(t.expectedAddedLocationsCount)
-	}
+	longitudeStr := strconv.FormatFloat(t.Location.GetLongitude(), 'f', -1, 64)
+	latitudeStr := strconv.FormatFloat(t.Location.GetLatitude(), 'f', -1, 64)
 	sendCommandTestCase := SendCommandTestCase{
 		Command:   "GEOADD",
-		Args:      []string{t.key, longitudeStr, latitudeStr, t.location.Name},
-		Assertion: assertion,
+		Args:      []string{t.Key, longitudeStr, latitudeStr, t.Location.Name},
+		Assertion: resp_assertions.NewIntegerAssertion(t.ExpectedAddedLocationsCount),
 	}
 	return sendCommandTestCase.Run(client, logger)
 }

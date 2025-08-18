@@ -84,7 +84,7 @@ test_zset_with_redis: build
 
 test_geospatial_with_redis: build
 	CODECRAFTERS_REPOSITORY_DIR=./internal/test_helpers/pass_all \
-	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\":\"ek6\",\"tester_log_prefix\":\"stage-807\",\"title\":\"Stage #807: GEODIST\"}, {\"slug\":\"rm9\",\"tester_log_prefix\":\"stage-808\",\"title\":\"Stage #808: GEOSEARCH\"} ]" \
+	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\":\"zt4\",\"tester_log_prefix\":\"stage-801\",\"title\":\"Stage #801: GEOADD-1\"},{\"slug\":\"ck3\",\"tester_log_prefix\":\"stage-802\",\"title\":\"Stage #802: GEOADD-2\"}, {\"slug\":\"tn5\",\"tester_log_prefix\":\"stage-803\",\"title\":\"Stage #803: GEOADD-3\"}, {\"slug\":\"cr3\",\"tester_log_prefix\":\"stage-804\",\"title\":\"Stage #804: GEOADD-4\"}, {\"slug\":\"xg4\",\"tester_log_prefix\":\"stage-805\",\"title\":\"Stage #805: GEOPOS-1\"}, {\"slug\":\"hb5\",\"tester_log_prefix\":\"stage-806\",\"title\":\"Stage #806: GEOPOS-2\"}, {\"slug\":\"ek6\",\"tester_log_prefix\":\"stage-807\",\"title\":\"Stage #807: GEODIST\"}, {\"slug\":\"rm9\",\"tester_log_prefix\":\"stage-808\",\"title\":\"Stage #808: GEOSEARCH\"}]" \
 	dist/main.out
 
 test_all_with_redis:

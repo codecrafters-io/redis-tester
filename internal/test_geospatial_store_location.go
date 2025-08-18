@@ -4,6 +4,7 @@ import (
 	"github.com/codecrafters-io/redis-tester/internal/data_structures"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
@@ -25,20 +26,27 @@ func testGeospatialStoreLocation(stageHarness *test_case_harness.TestCaseHarness
 	defer client.Close()
 
 	locationKey := testerutils_random.RandomWord()
-	location := data_structures.GenerateRandomLocations(1)[0]
+	locationSet := data_structures.GenerateRandomLocationSet(testerutils_random.RandomInt(2, 4))
 
 	// Add a location
-	geoAddTestCase := test_cases.NewGeoAddTestCaseWithValidCoordinates(locationKey, location, 1)
-	if err := geoAddTestCase.Run(client, logger); err != nil {
-		return err
+	for _, location := range locationSet.GetLocations() {
+		geoAddTestCase := test_cases.GeoAddTestCase{
+			Key:                         locationKey,
+			Location:                    location,
+			ExpectedAddedLocationsCount: 1,
+		}
+		if err := geoAddTestCase.Run(client, logger); err != nil {
+			return err
+		}
 	}
 
+	logger.Infof("Checking if %s is stored as a sorted set", locationKey)
 	// Verify location is stored as a sorted set
-	zrangeTestCase := test_cases.ZrangeTestCase{
-		Key:                 locationKey,
-		StartIndex:          0,
-		EndIndex:            -1,
-		ExpectedMemberNames: []string{location.Name},
+	// We don't use ZrangeTestCase as the score calculation is not done yet, the order should not matter
+	zrangeTestCase := test_cases.SendCommandTestCase{
+		Command:   "ZRANGE",
+		Args:      []string{locationKey, "0", "-1"},
+		Assertion: resp_assertions.NewUnorderedStringArrayAssertion(locationSet.GetLocationNames()),
 	}
 	return zrangeTestCase.Run(client, logger)
 }

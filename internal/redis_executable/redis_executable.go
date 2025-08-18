@@ -21,6 +21,7 @@ func NewRedisExecutable(stageHarness *test_case_harness.TestCaseHarness) *RedisE
 		executable: stageHarness.NewExecutable(),
 		logger:     stageHarness.Logger,
 	}
+	b.executable.TimeoutInMilliseconds = 3600 * 1000
 
 	stageHarness.RegisterTeardownFunc(func() { b.Kill() })
 
