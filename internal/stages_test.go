@@ -139,7 +139,7 @@ func TestStages(t *testing.T) {
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 		"geospatial_pass": {
-			UntilStageSlug:      "rm7",
+			UntilStageSlug:      "rm9",
 			CodePath:            "./test_helpers/pass_all",
 			ExpectedExitCode:    0,
 			StdoutFixturePath:   "./test_helpers/fixtures/geospatial/pass",
