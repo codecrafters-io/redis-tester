@@ -50,7 +50,7 @@ func (t *GeoPosTestCase) Run(client *instrumented_resp_connection.InstrumentedRe
 
 	offset := len(t.locations)
 	for i := range t.missingLocations {
-		assertions[offset+i] = resp_assertions.NewNilArrayAssertion()
+		assertions[offset+i] = resp_assertions.NewNilAssertion()
 	}
 
 	allLocationNames := make([]string, len(t.locations)+len(t.missingLocations))
