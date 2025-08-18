@@ -15,17 +15,18 @@ type GeoPosTestCase struct {
 	key              string
 	locations        []data_structures.Location
 	missingLocations []string
-	// If onlyParseCoordinates is true, the only floating point parsing is checked
-	onlyParseCoordinates bool
+	// If verifyCoordinates is true, only floating point parsing is checked for existing locations
+	verifyCoordinates bool
 }
 
-func NewGeoPosTestCase(key string) *GeoPosTestCase {
+func NewGeoPosTestCase(key string, onlyParseCoordinates bool) *GeoPosTestCase {
 	return &GeoPosTestCase{
-		key: key,
+		key:               key,
+		verifyCoordinates: onlyParseCoordinates,
 	}
 }
 
-func (t *GeoPosTestCase) AddLocations(locations []data_structures.Location, onlyParseCoordinates bool) {
+func (t *GeoPosTestCase) AddLocations(locations []data_structures.Location) {
 	t.locations = append(t.locations, locations...)
 }
 
@@ -38,7 +39,7 @@ func (t *GeoPosTestCase) Run(client *instrumented_resp_connection.InstrumentedRe
 
 	for i, coordinate := range t.locations {
 		tolerance := math.Inf(1)
-		if !t.onlyParseCoordinates {
+		if t.verifyCoordinates {
 			tolerance = _GEOPOS_TOLERANCE
 		}
 		coordinatesAssertion := resp_assertions.NewOrderedArrayAssertion([]resp_assertions.RESPAssertion{

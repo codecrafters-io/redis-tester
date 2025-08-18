@@ -41,7 +41,7 @@ func (a FloatingPointBulkStringAssertion) Run(value resp_value.Value) error {
 		// for eg. ZSCORE for geospatial stages where the score is actually an integer (casted as a float)
 		// So it makes sense to not display tolerance in such cases
 		if a.Tolerance != 0 {
-			toleranceStr = "(± %g)"
+			toleranceStr = fmt.Sprintf("(± %g)", a.Tolerance)
 		}
 		expectedStr := fmt.Sprintf("%s %s", expectedValueStr, toleranceStr)
 		return fmt.Errorf("Expected %s, got %s", expectedStr, stringValue)

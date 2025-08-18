@@ -44,8 +44,8 @@ func testGeospatialDecodeCoordinates(stageHarness *test_case_harness.TestCaseHar
 		}
 	}
 
-	geoPosTestCase := test_cases.NewGeoPosTestCase(locationKey)
-	geoPosTestCase.AddLocations(locationSet.GetLocations(), false)
+	geoPosTestCase := test_cases.NewGeoPosTestCase(locationKey, true)
+	geoPosTestCase.AddLocations(locationSet.GetLocations())
 
 	return geoPosTestCase.Run(client, logger)
 }

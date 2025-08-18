@@ -262,7 +262,7 @@ func decodeGeoCodeToCoordinates(geoCode uint64) Coordinates {
 
 	gridLatitudeMin := LATITUDE_MIN + latitude_scale*(float64(gridLatitudeNumber)*1.0/(1<<26))
 	gridLatitudeMax := LATITUDE_MIN + latitude_scale*(float64(gridLatitudeNumber+1)*1.0/(1<<26))
-	gridLongitudeMin := LONGITUDE_MIN + longitude_scale*(float64(gridLongitudeNumber+1)*1.0/(1<<26))
+	gridLongitudeMin := LONGITUDE_MIN + longitude_scale*(float64(gridLongitudeNumber)*1.0/(1<<26))
 	gridLongitudeMax := LONGITUDE_MIN + longitude_scale*(float64(gridLongitudeNumber+1)*1.0/(1<<26))
 
 	latitude := (gridLatitudeMin + gridLatitudeMax) / 2
