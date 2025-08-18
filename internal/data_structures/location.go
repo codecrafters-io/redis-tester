@@ -90,7 +90,7 @@ func (l Location) GetGeoCode() uint64 {
 	return x | (y << 1)
 }
 
-func (l Location) CalculateDistance(location Location) float64 {
+func (l Location) DistanceFrom(location Location) float64 {
 	l1 := l.GetGeoGridCenterCoordinates()
 	l2 := location.GetGeoGridCenterCoordinates()
 
@@ -138,6 +138,59 @@ func (ls *LocationSet) Center(centerLocationName string) Location {
 		Name:        centerLocationName,
 		Coordinates: NewCoordinates(latitudeAverage, longitudeAverage),
 	}
+}
+
+// ClosestTo returns the location in the LocationSet that is closest to the supplied location
+func (ls *LocationSet) ClosestTo(location Location) Location {
+	if ls.Size() == 0 {
+		panic("Codecrafters Internal Error - Cannot find closest location from empty LocationSet")
+	}
+
+	closestLocation := ls.locations[0]
+	closestDistance := location.DistanceFrom(closestLocation)
+
+	for _, loc := range ls.locations {
+		distance := location.DistanceFrom(loc)
+		if distance < closestDistance {
+			closestDistance = distance
+			closestLocation = loc
+		}
+	}
+
+	return closestLocation
+}
+
+// FarthestFrom returns the location in the LocationSet that is farthest from the supplied location
+func (ls *LocationSet) FarthestFrom(location Location) Location {
+	if ls.Size() == 0 {
+		panic("Codecrafters Internal Error - Cannot find farthest location from empty LocationSet")
+	}
+
+	farthestLocation := ls.locations[0]
+	farthestDistance := location.DistanceFrom(farthestLocation)
+
+	for _, loc := range ls.locations {
+		distance := location.DistanceFrom(loc)
+		if distance > farthestDistance {
+			farthestDistance = distance
+			farthestLocation = loc
+		}
+	}
+	return farthestLocation
+}
+
+// WithinRadius returns a new LocationSet with all the locations that are within a given radius from the given location
+func (ls *LocationSet) WithinRadius(referenceLocation Location, radius float64) *LocationSet {
+	result := NewLocationSet()
+
+	for _, location := range ls.locations {
+		distance := referenceLocation.DistanceFrom(location)
+		if distance <= radius {
+			result.AddLocation(location)
+		}
+	}
+
+	return result
 }
 
 // GetLocations returns a copy of all the locations in the location set

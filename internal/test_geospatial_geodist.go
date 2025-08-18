@@ -47,7 +47,7 @@ func testGeospatialGeodist(stageHarness *test_case_harness.TestCaseHarness) erro
 				Key:              locationKey,
 				Location1:        locations[i],
 				Location2:        locations[j],
-				ExpectedDistance: locations[i].CalculateDistance(locations[j]),
+				ExpectedDistance: locations[i].DistanceFrom(locations[j]),
 			}
 			if err := geodistTestCase.Run(client, logger); err != nil {
 				return err

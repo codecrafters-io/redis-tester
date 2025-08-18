@@ -1,8 +1,6 @@
 package internal
 
 import (
-	"sort"
-
 	"github.com/codecrafters-io/redis-tester/internal/data_structures"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
@@ -46,18 +44,14 @@ func testGeospatialGeosearch(stageHarness *test_case_harness.TestCaseHarness) er
 		}
 	}
 
-	// Sort by increasing distance
-	sort.Slice(locations, func(i, j int) bool {
-		return centerLocation.CalculateDistance(locations[i]) < centerLocation.CalculateDistance(locations[j])
-	})
-
 	// Get 3 radii for testing:
 	// 1. Smaller than the closest location
 	// 2. Larger than farthest location
 	// 3. Somewhere in between
 
 	// GEOSEARCH with radius smaller than closest location from center - expect 0 results
-	closestRadius := centerLocation.CalculateDistance(locations[0])
+	closestPoint := locationSet.ClosestTo(centerLocation)
+	closestRadius := closestPoint.DistanceFrom(centerLocation)
 	smallestRadius := closestRadius * 0.75 // 3/4 of the smallest distance to include no locations
 	geosearchSmallRadiusTestCase := test_cases.GeoSearchTestCase{
 		Key:                   locationKey,
@@ -71,7 +65,8 @@ func testGeospatialGeosearch(stageHarness *test_case_harness.TestCaseHarness) er
 	}
 
 	// GEOSEARCH with radius larger than furthest location from center - expect all locations
-	furthestRadius := centerLocation.CalculateDistance(locations[len(locations)-1])
+	farthestPoint := locationSet.FarthestFrom(centerLocation)
+	furthestRadius := centerLocation.DistanceFrom(farthestPoint)
 	largeRadius := furthestRadius * 1.25 // 1.25x greater than the furthest location to include all
 	geosearchLargeRadiusTestCase := test_cases.GeoSearchTestCase{
 		Key:                   locationKey,
@@ -86,18 +81,13 @@ func testGeospatialGeosearch(stageHarness *test_case_harness.TestCaseHarness) er
 
 	// Test GEOSEARCH with radius in between - expect only the locations inside of the radius
 	midRadius := (closestRadius + furthestRadius) / 2
-	expectedLocationNames := []string{}
-	for _, location := range locations {
-		if centerLocation.CalculateDistance(location) < midRadius {
-			expectedLocationNames = append(expectedLocationNames, location.Name)
-		}
-	}
+	locationsInsideRadius := locationSet.WithinRadius(centerLocation, midRadius)
 	geosearchMidRadiusTestCase := test_cases.GeoSearchTestCase{
 		Key:                   locationKey,
 		FromLongitude:         centerLocation.GetLongitude(),
 		FromLatitude:          centerLocation.GetLatitude(),
 		Radius:                midRadius,
-		ExpectedLocationNames: expectedLocationNames,
+		ExpectedLocationNames: locationsInsideRadius.GetLocationNames(),
 	}
 	return geosearchMidRadiusTestCase.Run(client, logger)
 }
