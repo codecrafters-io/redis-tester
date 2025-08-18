@@ -29,7 +29,6 @@ func NewCoordinates(latitude float64, longitude float64) Coordinates {
 			longitude: longitude,
 		}
 	}
-	// TODO: Test this
 	panic(fmt.Sprintf("Codecrafters Internal Error - Invalid latitude, longitude pair (%.6f, %.6f) in NewCoordinates()", latitude, longitude))
 }
 
@@ -54,8 +53,11 @@ func (l Location) GetLongitude() float64 {
 	return l.Coordinates.longitude
 }
 
-// GetGeoGridCenterCoordinates returns the coordiantes of the center of the smallest geogrid that
-// the location lies in
+// GetGeoGridCenterCoordinates decodes latitude and longitude from the geoCode
+// The decoded coordinates will be slightly different from the original one.
+// It is due to the fact that Redis drops precision at 52 bits.
+// The coordinates of the returned location is the center of the smallest geo grid the location
+// lies in
 func (l Location) GetGeoGridCenterCoordinates() Coordinates {
 	geoCode := l.GetGeoCode()
 	return decodeGeoCodeToCoordinates(geoCode)
@@ -90,14 +92,17 @@ func (l Location) GetGeoCode() uint64 {
 	return x | (y << 1)
 }
 
+// DistanceFrom returns distance between two locations using haversine great circle distance formula
+// While calculating distance, the locations actually used is the center of the geogrid instead of the
+// coordinates of the location. It is done to mimic's Redis' way of calculating distance
 func (l Location) DistanceFrom(location Location) float64 {
 	l1 := l.GetGeoGridCenterCoordinates()
 	l2 := location.GetGeoGridCenterCoordinates()
 
-	lat1radians := degToRad(l1.latitude)
-	lat2radians := degToRad(l2.latitude)
-	lon1radians := degToRad(l1.longitude)
-	lon2radians := degToRad(l2.longitude)
+	lat1radians := degreesToRadians(l1.latitude)
+	lat2radians := degreesToRadians(l2.latitude)
+	lon1radians := degreesToRadians(l1.longitude)
+	lon2radians := degreesToRadians(l2.longitude)
 
 	v := math.Sin((lon2radians - lon1radians) / 2)
 	u := math.Sin((lat2radians - lat1radians) / 2)
@@ -123,6 +128,9 @@ func (ls *LocationSet) Size() int {
 	return len(ls.locations)
 }
 
+// Center returns a location whose latitude and longitude are respectively the mean-value of latitude and longitude of all the locations in the set.
+// This is different from circumcenter of a spherical triangle (https://brsr.github.io/2021/05/02/spherical-triangle-centers.html)
+// It is done because we want to include some and exclude other locations while testing for geosearch with a fixed radius
 func (ls *LocationSet) Center(centerLocationName string) Location {
 	latitudeAverage := 0.0
 	longitudeAverage := 0.0
@@ -262,7 +270,7 @@ func decodeGeoCodeToCoordinates(geoCode uint64) Coordinates {
 
 	// Clamp to bounds
 	// While there is no scenario in which these cases will be met (this function is private and will be called using a valid
-	// value of geoCode, let's keep the checks and corrections to mimic's Redis behavior in case we need to make this public)
+	// value of geoCode, let's keep the checks and corrections to mimic's Redis behavior in case we need to make this public
 	if latitude > LATITUDE_MAX {
 		latitude = LATITUDE_MAX
 	}
@@ -279,6 +287,6 @@ func decodeGeoCodeToCoordinates(geoCode uint64) Coordinates {
 	return NewCoordinates(latitude, longitude)
 }
 
-func degToRad(deg float64) float64 {
+func degreesToRadians(deg float64) float64 {
 	return deg * math.Pi / 180
 }

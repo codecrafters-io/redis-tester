@@ -39,9 +39,15 @@ func defaultCallbacks(logger *logger.Logger) resp_connection.RespConnectionCallb
 			logger.Debugf("Received bytes: %q", string(bytes))
 		},
 		AfterReadValue: func(value resp_value.Value) {
+			// TO_REMOVE: We can avoid the steps from 44 to 49 by properly assigning value of
+			// NIL and NIL_ARRAY to "null_bulk_string" and "null_array" respectively. I am not sure
+			// why we're handling it this way. I'll change this after confirmation.
 			valueTypeLowerCase := strings.ReplaceAll(strings.ToLower(value.Type), "_", " ")
 			if valueTypeLowerCase == "nil" {
 				valueTypeLowerCase = "null bulk string"
+			}
+			if valueTypeLowerCase == "nil array" {
+				valueTypeLowerCase = "null array"
 			}
 			logger.Debugf("Received RESP %s: %s", valueTypeLowerCase, value.FormattedString())
 		},
