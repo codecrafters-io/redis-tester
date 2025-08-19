@@ -6,11 +6,11 @@ type Location struct {
 }
 
 func (l Location) GetLatitude() float64 {
-	return l.Coordinates.latitude
+	return l.Coordinates.Latitude
 }
 
 func (l Location) GetLongitude() float64 {
-	return l.Coordinates.longitude
+	return l.Coordinates.Longitude
 }
 
 // GetGeoGridCenterCoordinates decodes latitude and longitude from the geoCode of a location

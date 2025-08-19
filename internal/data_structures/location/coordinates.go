@@ -14,8 +14,8 @@ const (
 )
 
 type Coordinates struct {
-	latitude  float64
-	longitude float64
+	Latitude  float64
+	Longitude float64
 }
 
 func NewCoordinates(latitude float64, longitude float64) Coordinates {
@@ -28,17 +28,9 @@ func NewCoordinates(latitude float64, longitude float64) Coordinates {
 	}
 
 	return Coordinates{
-		latitude:  latitude,
-		longitude: longitude,
+		Latitude:  latitude,
+		Longitude: longitude,
 	}
-}
-
-func (c Coordinates) GetLatitude() float64 {
-	return c.latitude
-}
-
-func (c Coordinates) GetLongitude() float64 {
-	return c.longitude
 }
 
 // GetGeoGridCenterCoordinates decodes latitude and longitude from the geoCode
@@ -55,8 +47,8 @@ func (c Coordinates) GetGeoGridCenterCoordinates() Coordinates {
 // This is the same geocode used by Redis
 func (c Coordinates) GetGeoCode() uint64 {
 	// Normalize to the range 0-2^26
-	latitudeOffset := (c.GetLatitude() - LATITUDE_MIN) / (LATITUDE_MAX - LATITUDE_MIN)
-	longitudeOffset := (c.GetLongitude() - LONGITUDE_MIN) / (LONGITUDE_MAX - LONGITUDE_MIN)
+	latitudeOffset := (c.Latitude - LATITUDE_MIN) / (LATITUDE_MAX - LATITUDE_MIN)
+	longitudeOffset := (c.Longitude - LONGITUDE_MIN) / (LONGITUDE_MAX - LONGITUDE_MIN)
 
 	latitudeOffset *= (1 << 26)
 	longitudeOffset *= (1 << 26)
@@ -87,10 +79,10 @@ func (c Coordinates) DistanceFrom(coordinates Coordinates) float64 {
 	c1 := c.GetGeoGridCenterCoordinates()
 	c2 := coordinates.GetGeoGridCenterCoordinates()
 
-	lat1radians := degreesToRadians(c1.latitude)
-	lat2radians := degreesToRadians(c2.latitude)
-	lon1radians := degreesToRadians(c1.longitude)
-	lon2radians := degreesToRadians(c2.longitude)
+	lat1radians := degreesToRadians(c1.Latitude)
+	lat2radians := degreesToRadians(c2.Latitude)
+	lon1radians := degreesToRadians(c1.Longitude)
+	lon2radians := degreesToRadians(c2.Longitude)
 
 	v := math.Sin((lon2radians - lon1radians) / 2)
 	u := math.Sin((lat2radians - lat1radians) / 2)
