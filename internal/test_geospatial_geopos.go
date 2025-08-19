@@ -3,7 +3,7 @@ package internal
 import (
 	"fmt"
 
-	"github.com/codecrafters-io/redis-tester/internal/data_structures"
+	"github.com/codecrafters-io/redis-tester/internal/data_structures/location"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
@@ -29,7 +29,7 @@ func testGeospatialGeopos(stageHarness *test_case_harness.TestCaseHarness) error
 	locationKey := random.RandomWord()
 
 	// Add locations
-	locationSet := data_structures.GenerateRandomLocationSet(random.RandomInt(2, 4))
+	locationSet := location.GenerateRandomLocationSet(random.RandomInt(2, 4))
 	for _, location := range locationSet.GetLocations() {
 		geoAddTestCase := test_cases.GeoAddTestCase{
 			Key:                         locationKey,

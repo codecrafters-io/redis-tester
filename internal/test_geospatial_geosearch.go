@@ -1,7 +1,7 @@
 package internal
 
 import (
-	"github.com/codecrafters-io/redis-tester/internal/data_structures"
+	"github.com/codecrafters-io/redis-tester/internal/data_structures/location"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
@@ -27,16 +27,16 @@ func testGeospatialGeosearch(stageHarness *test_case_harness.TestCaseHarness) er
 	locationKey := random.RandomWord()
 
 	// Generate random locations
-	locationSet := data_structures.GenerateRandomLocationSet(random.RandomInt(4, 6))
+	locationSet := location.GenerateRandomLocationSet(random.RandomInt(4, 6))
 
 	centerLocation := locationSet.Center("center")
 
 	locations := locationSet.GetLocations()
 
-	for _, location := range locations {
+	for _, loc := range locations {
 		geoAddTestCase := test_cases.GeoAddTestCase{
 			Key:                         locationKey,
-			Location:                    location,
+			Location:                    loc,
 			ExpectedAddedLocationsCount: 1,
 		}
 		if err := geoAddTestCase.Run(client, logger); err != nil {

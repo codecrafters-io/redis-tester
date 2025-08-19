@@ -1,7 +1,7 @@
 package internal
 
 import (
-	"github.com/codecrafters-io/redis-tester/internal/data_structures"
+	"github.com/codecrafters-io/redis-tester/internal/data_structures/location"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
@@ -26,13 +26,13 @@ func testGeospatialGeodist(stageHarness *test_case_harness.TestCaseHarness) erro
 
 	locationKey := testerutils_random.RandomWord()
 
-	locationSet := data_structures.GenerateRandomLocationSet(testerutils_random.RandomInt(3, 5))
+	locationSet := location.GenerateRandomLocationSet(testerutils_random.RandomInt(3, 5))
 	locations := locationSet.GetLocations()
 
-	for _, location := range locations {
+	for _, loc := range locations {
 		geoAddTestCase := test_cases.GeoAddTestCase{
 			Key:                         locationKey,
-			Location:                    location,
+			Location:                    loc,
 			ExpectedAddedLocationsCount: 1,
 		}
 		if err := geoAddTestCase.Run(client, logger); err != nil {
@@ -55,13 +55,13 @@ func testGeospatialGeodist(stageHarness *test_case_harness.TestCaseHarness) erro
 		}
 	}
 
-	// Test distance from a location to itself (should be 0)
-	location := testerutils_random.RandomElementFromArray(locations)
+	// Test distance from a loc to itself (should be 0)
+	loc := testerutils_random.RandomElementFromArray(locations)
 	if len(locations) > 0 {
 		selfDistanceTestCase := test_cases.GeoDistTestCase{
 			Key:              locationKey,
-			Location1:        location,
-			Location2:        location,
+			Location1:        loc,
+			Location2:        loc,
 			ExpectedDistance: 0.0,
 		}
 		if err := selfDistanceTestCase.Run(client, logger); err != nil {

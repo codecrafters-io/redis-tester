@@ -1,7 +1,7 @@
 package internal
 
 import (
-	"github.com/codecrafters-io/redis-tester/internal/data_structures"
+	"github.com/codecrafters-io/redis-tester/internal/data_structures/location"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
@@ -25,11 +25,11 @@ func testGeospatialGeoadd(stageHarness *test_case_harness.TestCaseHarness) error
 	defer client.Close()
 
 	locationKey := random.RandomWord()
-	location := data_structures.GenerateRandomLocationSet(1).GetLocations()[0]
+	newLocation := location.GenerateRandomLocationSet(1).GetLocations()[0]
 
 	geoAddTestCase := test_cases.GeoAddTestCase{
 		Key:                         locationKey,
-		Location:                    location,
+		Location:                    newLocation,
 		ExpectedAddedLocationsCount: 1,
 	}
 

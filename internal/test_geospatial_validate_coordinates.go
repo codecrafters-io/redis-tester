@@ -3,7 +3,7 @@ package internal
 import (
 	"strconv"
 
-	"github.com/codecrafters-io/redis-tester/internal/data_structures"
+	"github.com/codecrafters-io/redis-tester/internal/data_structures/location"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
@@ -28,13 +28,13 @@ func testGeospatialValidateCoordinates(stageHarness *test_case_harness.TestCaseH
 	defer client.Close()
 
 	locationKey := testerutils_random.RandomWord()
-	location := data_structures.GenerateRandomLocationSet(1).GetLocations()[0]
+	validLocation := location.GenerateRandomLocationSet(1).GetLocations()[0]
 
 	// WILL_REMOVE: re-use valid values of latitude and longitude to avoid generation and conversion of coordinates to float everytime
 	// we generate a new location, because we're concerned only with invalid values in this stage
-	locationName := location.Name
-	validLatitude := strconv.FormatFloat(location.GetLatitude(), 'f', -1, 64)
-	validLongitude := strconv.FormatFloat(location.GetLongitude(), 'f', -1, 64)
+	locationName := validLocation.Name
+	validLatitude := strconv.FormatFloat(validLocation.GetLatitude(), 'f', -1, 64)
+	validLongitude := strconv.FormatFloat(validLocation.GetLongitude(), 'f', -1, 64)
 
 	// Invalid latitude, valid longitude
 	errorPatternWrongLatitude := `^ERR.*(?i:latitude)`
@@ -52,7 +52,7 @@ func testGeospatialValidateCoordinates(stageHarness *test_case_harness.TestCaseH
 	// But, let me know if there is a better way to do this
 
 	// Latitude greater than max boundary
-	invalidLatitude := strconv.FormatFloat(testerutils_random.RandomFloat64(data_structures.LATITUDE_MAX, 500), 'f', -1, 64)
+	invalidLatitude := strconv.FormatFloat(testerutils_random.RandomFloat64(location.LATITUDE_MAX, 500), 'f', -1, 64)
 	positiveInvalidLatitudeTestCase := test_cases.SendCommandTestCase{
 		Command:   "GEOADD",
 		Args:      []string{locationKey, validLongitude, invalidLatitude, locationName},
@@ -62,7 +62,7 @@ func testGeospatialValidateCoordinates(stageHarness *test_case_harness.TestCaseH
 		return err
 	}
 
-	invalidLatitude = strconv.FormatFloat(testerutils_random.RandomFloat64(-500, data_structures.LATITUDE_MIN), 'f', -1, 64)
+	invalidLatitude = strconv.FormatFloat(testerutils_random.RandomFloat64(-500, location.LATITUDE_MIN), 'f', -1, 64)
 	negativeInvalidLatitudeTestCase := test_cases.SendCommandTestCase{
 		Command:   "GEOADD",
 		Args:      []string{locationKey, validLongitude, invalidLatitude, locationName},
@@ -75,7 +75,7 @@ func testGeospatialValidateCoordinates(stageHarness *test_case_harness.TestCaseH
 	// Invalid longitude, but valid latitude
 	errorPatternWrongLongitude := `^ERR.*(?i:longitude)`
 
-	invalidLongitude := strconv.FormatFloat(testerutils_random.RandomFloat64(data_structures.LONGITUDE_MAX+1, 500), 'f', -1, 64)
+	invalidLongitude := strconv.FormatFloat(testerutils_random.RandomFloat64(location.LONGITUDE_MAX+1, 500), 'f', -1, 64)
 	positiveInvalidLongitudeTestCase := test_cases.SendCommandTestCase{
 		Command:   "GEOADD",
 		Args:      []string{locationKey, invalidLongitude, validLatitude, locationName},
@@ -86,7 +86,7 @@ func testGeospatialValidateCoordinates(stageHarness *test_case_harness.TestCaseH
 	}
 
 	// Longitude smaller than min boundary
-	invalidLongitude = strconv.FormatFloat(testerutils_random.RandomFloat64(-500, data_structures.LONGITUDE_MIN), 'f', -1, 64)
+	invalidLongitude = strconv.FormatFloat(testerutils_random.RandomFloat64(-500, location.LONGITUDE_MIN), 'f', -1, 64)
 	negativeInvalidLongitudeTestCase := test_cases.SendCommandTestCase{
 		Command:   "GEOADD",
 		Args:      []string{locationKey, invalidLongitude, validLatitude, locationName},

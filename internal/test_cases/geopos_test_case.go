@@ -3,7 +3,7 @@ package test_cases
 import (
 	"math"
 
-	"github.com/codecrafters-io/redis-tester/internal/data_structures"
+	"github.com/codecrafters-io/redis-tester/internal/data_structures/location"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/tester-utils/logger"
@@ -13,7 +13,7 @@ const _GEOPOS_TOLERANCE = 10e-6
 
 type GeoPosTestCase struct {
 	key              string
-	locations        []data_structures.Location
+	locations        []location.Location
 	missingLocations []string
 	// If verifyCoordinates is true, only floating point parsing is checked for existing locations
 	verifyCoordinates bool
@@ -26,7 +26,7 @@ func NewGeoPosTestCase(key string, onlyParseCoordinates bool) *GeoPosTestCase {
 	}
 }
 
-func (t *GeoPosTestCase) AddLocations(locations []data_structures.Location) {
+func (t *GeoPosTestCase) AddLocations(locations []location.Location) {
 	t.locations = append(t.locations, locations...)
 }
 

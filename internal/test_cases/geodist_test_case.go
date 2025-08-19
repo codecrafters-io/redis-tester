@@ -1,7 +1,7 @@
 package test_cases
 
 import (
-	"github.com/codecrafters-io/redis-tester/internal/data_structures"
+	"github.com/codecrafters-io/redis-tester/internal/data_structures/location"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/tester-utils/logger"
@@ -11,8 +11,8 @@ const _GEODIST_TOLERANCE = 10e-4
 
 type GeoDistTestCase struct {
 	Key              string
-	Location1        data_structures.Location
-	Location2        data_structures.Location
+	Location1        location.Location
+	Location2        location.Location
 	ExpectedDistance float64
 }
 
