@@ -25,6 +25,7 @@ func (ls *LocationSet) Size() int {
 func (ls *LocationSet) Center(centerLocationName string) Location {
 	latitudeAverage := 0.0
 	longitudeAverage := 0.0
+
 	for _, location := range ls.locations {
 		latitudeAverage += location.GetLatitude()
 		longitudeAverage += location.GetLongitude()
@@ -75,6 +76,7 @@ func (ls *LocationSet) FarthestFrom(location Location) Location {
 			farthestLocation = loc
 		}
 	}
+
 	return farthestLocation
 }
 
@@ -102,9 +104,11 @@ func (ls *LocationSet) GetLocations() []Location {
 // GetLocationNames returns the name of all the locations in the location set
 func (ls *LocationSet) GetLocationNames() []string {
 	locationNames := make([]string, len(ls.locations))
+
 	for i, location := range ls.locations {
 		locationNames[i] = location.Name
 	}
+
 	return locationNames
 }
 
@@ -121,5 +125,6 @@ func GenerateRandomLocationSet(count int) *LocationSet {
 			Coordinates: NewCoordinates(latitude, longitude),
 		})
 	}
+
 	return locationSet
 }

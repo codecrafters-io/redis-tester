@@ -43,6 +43,7 @@ func testGeospatialCalculateScore(stageHarness *test_case_harness.TestCaseHarnes
 
 	// Check the score of each location
 	logger.Infof("Checking the scores of added locations")
+
 	for _, loc := range locations {
 		zscoreTestCase := test_cases.SendCommandTestCase{
 			Command:   "ZSCORE",

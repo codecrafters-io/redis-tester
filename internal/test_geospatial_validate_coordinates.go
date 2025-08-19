@@ -58,6 +58,7 @@ func testGeospatialValidateCoordinates(stageHarness *test_case_harness.TestCaseH
 		Args:      []string{locationKey, validLongitude, invalidLatitude, locationName},
 		Assertion: resp_assertions.NewRegexErrorAssertion(errorPatternWrongLatitude),
 	}
+
 	if err := positiveInvalidLatitudeTestCase.Run(client, logger); err != nil {
 		return err
 	}
@@ -68,6 +69,7 @@ func testGeospatialValidateCoordinates(stageHarness *test_case_harness.TestCaseH
 		Args:      []string{locationKey, validLongitude, invalidLatitude, locationName},
 		Assertion: resp_assertions.NewRegexErrorAssertion(errorPatternWrongLatitude),
 	}
+
 	if err := negativeInvalidLatitudeTestCase.Run(client, logger); err != nil {
 		return err
 	}
@@ -81,6 +83,7 @@ func testGeospatialValidateCoordinates(stageHarness *test_case_harness.TestCaseH
 		Args:      []string{locationKey, invalidLongitude, validLatitude, locationName},
 		Assertion: resp_assertions.NewRegexErrorAssertion(errorPatternWrongLongitude),
 	}
+
 	if err := positiveInvalidLongitudeTestCase.Run(client, logger); err != nil {
 		return err
 	}

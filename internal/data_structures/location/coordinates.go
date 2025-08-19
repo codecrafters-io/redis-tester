@@ -22,9 +22,11 @@ func NewCoordinates(latitude float64, longitude float64) Coordinates {
 	if (latitude >= LATITUDE_MAX) && (latitude <= LATITUDE_MIN) {
 		panic(fmt.Sprintf("Codecrafters Internal Error - Invalid latitude %.8f in NewCoordinates()", latitude))
 	}
+
 	if (longitude >= LONGITUDE_MAX) && (longitude <= LONGITUDE_MIN) {
 		panic(fmt.Sprintf("Codecrafters Internal Error - Invalid longitude %.8f in NewCoordinates()", longitude))
 	}
+
 	return Coordinates{
 		latitude:  latitude,
 		longitude: longitude,
@@ -132,20 +134,12 @@ func decodeGeoCodeToCoordinates(geoCode uint64) Coordinates {
 	latitude := (gridLatitudeMin + gridLatitudeMax) / 2
 	longitude := (gridLongitudeMin + gridLongitudeMax) / 2
 
-	// Clamp to bounds
-	// While there is no scenario in which these cases will be met (this function is private and will be called using a valid
-	// value of geoCode, let's keep the checks and corrections to mimic's Redis behavior in case we need to make this public
-	if latitude > LATITUDE_MAX {
-		latitude = LATITUDE_MAX
+	if latitude > LATITUDE_MAX || latitude < LATITUDE_MIN {
+		panic(fmt.Sprintf("Codecrafters Internal Error - Decoded latitude %8f is outside of valid range", latitude))
 	}
-	if latitude < LATITUDE_MIN {
-		latitude = LATITUDE_MIN
-	}
-	if longitude > LONGITUDE_MAX {
-		longitude = LONGITUDE_MAX
-	}
-	if longitude < LONGITUDE_MIN {
-		longitude = LONGITUDE_MIN
+
+	if longitude > LONGITUDE_MAX || longitude < LONGITUDE_MIN {
+		panic(fmt.Sprintf("Codecrafters Internal Error - Decoded longitude %8f is outside of valid range", longitude))
 	}
 
 	return NewCoordinates(latitude, longitude)

@@ -27,5 +27,6 @@ func (t *GeoSearchTestCase) Run(client *instrumented_resp_connection.Instrumente
 		Args:      []string{t.Key, "FROMLONLAT", longitudeStr, latitudeStr, "BYRADIUS", radiusStr, "m"},
 		Assertion: resp_assertions.NewUnorderedStringArrayAssertion(t.ExpectedLocationNames),
 	}
+
 	return sendCommandTestCase.Run(client, logger)
 }

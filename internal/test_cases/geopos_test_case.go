@@ -39,9 +39,11 @@ func (t *GeoPosTestCase) Run(client *instrumented_resp_connection.InstrumentedRe
 
 	for i, coordinate := range t.locations {
 		tolerance := math.Inf(1)
+
 		if t.verifyCoordinates {
 			tolerance = _GEOPOS_TOLERANCE
 		}
+
 		coordinatesAssertion := resp_assertions.NewOrderedArrayAssertion([]resp_assertions.RESPAssertion{
 			resp_assertions.NewFloatingPointBulkStringAssertion(coordinate.GetLongitude(), tolerance),
 			resp_assertions.NewFloatingPointBulkStringAssertion(coordinate.GetLatitude(), tolerance),
@@ -50,14 +52,17 @@ func (t *GeoPosTestCase) Run(client *instrumented_resp_connection.InstrumentedRe
 	}
 
 	offset := len(t.locations)
+
 	for i := range t.missingLocations {
 		assertions[offset+i] = resp_assertions.NewNilAssertion()
 	}
 
 	allLocationNames := make([]string, len(t.locations)+len(t.missingLocations))
+
 	for i, location := range t.locations {
 		allLocationNames[i] = location.Name
 	}
+
 	for i, missingLocation := range t.missingLocations {
 		allLocationNames[offset+i] = missingLocation
 	}

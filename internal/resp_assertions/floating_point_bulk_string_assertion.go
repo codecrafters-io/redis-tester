@@ -27,6 +27,7 @@ func (a FloatingPointBulkStringAssertion) Run(value resp_value.Value) error {
 
 	stringValue := value.String()
 	floatValue, err := strconv.ParseFloat(stringValue, 64)
+
 	if err != nil {
 		return fmt.Errorf("Expected %q to be a floating point number", stringValue)
 	}
@@ -37,13 +38,12 @@ func (a FloatingPointBulkStringAssertion) Run(value resp_value.Value) error {
 		// display full precision
 		expectedValueStr := strconv.FormatFloat(a.ExpectedValue, 'f', -1, 64)
 		toleranceStr := ""
-		// WILL_REMOVE: We don't need to print tolerance if it is 0
-		// for eg. ZSCORE for geospatial stages where the score is actually an integer (casted as a float)
-		// So it makes sense to not display tolerance in such cases
+
 		if a.Tolerance != 0 {
-			toleranceStr = fmt.Sprintf("(± %g)", a.Tolerance)
+			toleranceStr = fmt.Sprintf(" (± %g)", a.Tolerance)
 		}
-		expectedStr := fmt.Sprintf("%s %s", expectedValueStr, toleranceStr)
+
+		expectedStr := fmt.Sprintf("%s%s", expectedValueStr, toleranceStr)
 		return fmt.Errorf("Expected %s, got %s", expectedStr, stringValue)
 	}
 
