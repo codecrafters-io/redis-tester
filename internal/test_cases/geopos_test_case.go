@@ -54,6 +54,7 @@ func (t *GeoPosTestCase) Run(client *instrumented_resp_connection.InstrumentedRe
 	offset := len(t.locations)
 
 	for i := range t.missingLocations {
+		// WILL_CHANGE: To NewNilArrayAssertion() after PR#211 (RESP NIL Array) is merged
 		assertions[offset+i] = resp_assertions.NewNilAssertion()
 	}
 
