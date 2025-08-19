@@ -1,4 +1,4 @@
-package data_structures
+package sorted_set
 
 import (
 	"sort"
