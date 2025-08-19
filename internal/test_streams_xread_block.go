@@ -88,7 +88,7 @@ func testStreamsXreadBlock(stageHarness *test_case_harness.TestCaseHarness) erro
 	xreadCommandTestCase := &test_cases.SendCommandTestCase{
 		Command:                   "XREAD",
 		Args:                      []string{"block", "1000", "streams", streamKey, "0-2"},
-		Assertion:                 resp_assertions.NewNilAssertion(),
+		Assertion:                 resp_assertions.NewNilArrayAssertion(),
 		ShouldSkipUnreadDataCheck: false,
 	}
 
