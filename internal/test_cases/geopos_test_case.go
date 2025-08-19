@@ -19,10 +19,10 @@ type GeoPosTestCase struct {
 	verifyCoordinates bool
 }
 
-func NewGeoPosTestCase(key string, onlyParseCoordinates bool) *GeoPosTestCase {
+func NewGeoPosTestCase(key string, verifyCoordinates bool) *GeoPosTestCase {
 	return &GeoPosTestCase{
 		key:               key,
-		verifyCoordinates: onlyParseCoordinates,
+		verifyCoordinates: verifyCoordinates,
 	}
 }
 

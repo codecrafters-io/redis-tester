@@ -30,17 +30,13 @@ func testGeospatialStoreLocation(stageHarness *test_case_harness.TestCaseHarness
 
 	// Add a location
 	for _, loc := range locationSet.GetLocations() {
-		geoAddTestCase := test_cases.GeoAddTestCase{
-			Key:                         locationKey,
-			Location:                    loc,
-			ExpectedAddedLocationsCount: 1,
-		}
+		geoAddTestCase := test_cases.NewGeoAddTestCaseWithAddedLocation(locationKey, loc, 1)
 		if err := geoAddTestCase.Run(client, logger); err != nil {
 			return err
 		}
 	}
 
-	logger.Infof("Checking if %s is stored as a sorted set", locationKey)
+	logger.Infof("Checking if %q is stored as a sorted set", locationKey)
 	// Verify location is stored as a sorted set
 	// We don't use ZrangeTestCase as the score calculation is not done yet, the order should not matter
 	zrangeTestCase := test_cases.SendCommandTestCase{

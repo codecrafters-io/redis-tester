@@ -27,3 +27,10 @@ func (l Location) GetGeoCode() uint64 {
 func (l Location) DistanceFrom(location Location) float64 {
 	return l.Coordinates.DistanceFrom(location.Coordinates)
 }
+
+// AsRedisCommandArgs converts a location struct to string slice
+// The order is: <longitude> <latitude> <name>
+// This is the same order used in Redis CLI
+func (l Location) AsRedisCommandArgs() []string {
+	return append(l.Coordinates.AsRedisCommandArgs(), l.Name)
+}

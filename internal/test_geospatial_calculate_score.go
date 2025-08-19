@@ -31,11 +31,7 @@ func testGeospatialCalculateScore(stageHarness *test_case_harness.TestCaseHarnes
 
 	// Add locations
 	for _, loc := range locations {
-		geoAddTestCase := test_cases.GeoAddTestCase{
-			Key:                         locationKey,
-			Location:                    loc,
-			ExpectedAddedLocationsCount: 1,
-		}
+		geoAddTestCase := test_cases.NewGeoAddTestCaseWithAddedLocation(locationKey, loc, 1)
 		if err := geoAddTestCase.Run(client, logger); err != nil {
 			return err
 		}

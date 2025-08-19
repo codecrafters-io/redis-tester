@@ -3,6 +3,7 @@ package location
 import (
 	"fmt"
 	"math"
+	"strconv"
 )
 
 const (
@@ -19,12 +20,24 @@ type Coordinates struct {
 }
 
 func NewCoordinates(latitude float64, longitude float64) Coordinates {
-	if (latitude >= LATITUDE_MAX) && (latitude <= LATITUDE_MIN) {
-		panic(fmt.Sprintf("Codecrafters Internal Error - Invalid latitude %.8f in NewCoordinates()", latitude))
+	if !isValidLatitudeLongitudePair(latitude, longitude) {
+		panic(fmt.Sprintf("Codecrafters Internal Error - Invalid coordinates (lat=%.8f,lon=%.8f) in NewCoordinates()",
+			latitude, longitude,
+		))
 	}
 
-	if (longitude >= LONGITUDE_MAX) && (longitude <= LONGITUDE_MIN) {
-		panic(fmt.Sprintf("Codecrafters Internal Error - Invalid longitude %.8f in NewCoordinates()", longitude))
+	return Coordinates{
+		Latitude:  latitude,
+		Longitude: longitude,
+	}
+}
+
+func NewInvalidCoordinates(latitude float64, longitude float64) Coordinates {
+	if isValidLatitudeLongitudePair(latitude, longitude) {
+		panic(fmt.Sprintf(
+			"Codecrafters Internal Error - Valid coordinates (lat=%.8f, lon=%.8f) in NewInvalidCoordinates()",
+			latitude, longitude,
+		))
 	}
 
 	return Coordinates{
@@ -91,6 +104,14 @@ func (c Coordinates) DistanceFrom(coordinates Coordinates) float64 {
 	return 2.0 * EARTH_RADIUS_IN_METERS * math.Asin(math.Sqrt(a))
 }
 
+// AsRedisCommandArgs converts a Coordinate struct to a string slice [longitude, latitude]
+// The order is how coordinates are supplied as arguments in Redis CLI
+func (c Coordinates) AsRedisCommandArgs() []string {
+	longitudeStr := strconv.FormatFloat(c.Longitude, 'f', -1, 64)
+	latitudeStr := strconv.FormatFloat(c.Latitude, 'f', -1, 64)
+	return []string{longitudeStr, latitudeStr}
+}
+
 // decodeGeoCodeToCoordinates decodes a geocode and returns the coordinates of
 // the center of the geocode's decoded area
 func decodeGeoCodeToCoordinates(geoCode uint64) Coordinates {
@@ -139,4 +160,9 @@ func decodeGeoCodeToCoordinates(geoCode uint64) Coordinates {
 
 func degreesToRadians(deg float64) float64 {
 	return deg * math.Pi / 180
+}
+
+func isValidLatitudeLongitudePair(latitude float64, longitude float64) bool {
+	return latitude >= LATITUDE_MIN && latitude <= LATITUDE_MAX &&
+		longitude >= LONGITUDE_MIN && longitude <= LONGITUDE_MAX
 }

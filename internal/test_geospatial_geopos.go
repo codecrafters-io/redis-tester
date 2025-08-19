@@ -32,11 +32,7 @@ func testGeospatialGeopos(stageHarness *test_case_harness.TestCaseHarness) error
 	locationSet := location.GenerateRandomLocationSet(random.RandomInt(2, 4))
 
 	for _, location := range locationSet.GetLocations() {
-		geoAddTestCase := test_cases.GeoAddTestCase{
-			Key:                         locationKey,
-			Location:                    location,
-			ExpectedAddedLocationsCount: 1,
-		}
+		geoAddTestCase := test_cases.NewGeoAddTestCaseWithAddedLocation(locationKey, location, 1)
 		if err := geoAddTestCase.Run(client, logger); err != nil {
 			return err
 		}
