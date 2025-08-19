@@ -2,7 +2,6 @@ package instrumented_resp_connection
 
 import (
 	"net"
-	"strings"
 
 	resp_connection "github.com/codecrafters-io/redis-tester/internal/resp/connection"
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
@@ -39,11 +38,7 @@ func defaultCallbacks(logger *logger.Logger) resp_connection.RespConnectionCallb
 			logger.Debugf("Received bytes: %q", string(bytes))
 		},
 		AfterReadValue: func(value resp_value.Value) {
-			valueTypeLowerCase := strings.ReplaceAll(strings.ToLower(value.Type), "_", " ")
-			if valueTypeLowerCase == "nil" {
-				valueTypeLowerCase = "null bulk string"
-			}
-			logger.Debugf("Received RESP %s: %s", valueTypeLowerCase, value.FormattedString())
+			logger.Debugf("Received RESP %s: %s", value.Type, value.FormattedString())
 		},
 	}
 }
