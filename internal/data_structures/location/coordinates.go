@@ -87,7 +87,7 @@ func (c Coordinates) GetGeoCode() uint64 {
 
 // DistanceFrom returns distance between two pair of coordinates using haversine great circle distance formula
 // While calculating distance, the coordinates actually used is the center of the geogrid instead of the
-// original coordinates. It is done to mimic's Redis' way of calculating distance
+// original coordinates. It is done to mimic Redis' way of calculating distance
 func (c Coordinates) DistanceFrom(coordinates Coordinates) float64 {
 	c1 := c.GetGeoGridCenterCoordinates()
 	c2 := coordinates.GetGeoGridCenterCoordinates()
@@ -147,12 +147,10 @@ func decodeGeoCodeToCoordinates(geoCode uint64) Coordinates {
 	latitude := (gridLatitudeMin + gridLatitudeMax) / 2
 	longitude := (gridLongitudeMin + gridLongitudeMax) / 2
 
-	if latitude > LATITUDE_MAX || latitude < LATITUDE_MIN {
-		panic(fmt.Sprintf("Codecrafters Internal Error - Decoded latitude %8f is outside of valid range", latitude))
-	}
-
-	if longitude > LONGITUDE_MAX || longitude < LONGITUDE_MIN {
-		panic(fmt.Sprintf("Codecrafters Internal Error - Decoded longitude %8f is outside of valid range", longitude))
+	if !isValidLatitudeLongitudePair(latitude, longitude) {
+		panic(
+			fmt.Sprintf("Codecrafters Internal Error - Decoded coordinates (lat=%.8f, lon=%.8f) is out of valid range", latitude, longitude),
+		)
 	}
 
 	return NewCoordinates(latitude, longitude)

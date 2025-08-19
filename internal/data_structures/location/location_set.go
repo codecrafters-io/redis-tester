@@ -20,8 +20,9 @@ func (ls *LocationSet) Size() int {
 }
 
 // Center returns a location whose latitude and longitude are respectively the mean-value of latitude and longitude of all the locations in the set.
-// This is different from circumcenter of a spherical triangle (https://brsr.github.io/2021/05/02/spherical-triangle-centers.html)
-// It is done because we want to include some and exclude other locations while testing for geosearch with a fixed radius
+// This is different center (not equidistant from all points) compared to the circumcenter of a spherical triangle
+// (https://brsr.github.io/2021/05/02/spherical-triangle-centers.html), which is equidistant from all the points
+// It is done because we want to include some and exclude other locations while testing for geosearch
 func (ls *LocationSet) Center(centerLocationName string) Location {
 	latitudeAverage := 0.0
 	longitudeAverage := 0.0
@@ -112,7 +113,7 @@ func (ls *LocationSet) GetLocationNames() []string {
 	return locationNames
 }
 
-// GenerateRandomLocationSet returns a LocationSet with 'count' number of random locations
+// GenerateRandomLocationSet returns a LocationSet with 'count' number of valid random locations
 func GenerateRandomLocationSet(count int) *LocationSet {
 	locationSet := NewLocationSet()
 	locationNames := random.RandomWords(count)
