@@ -53,13 +53,12 @@ func testGeospatialGeosearch(stageHarness *test_case_harness.TestCaseHarness) er
 	// GEOSEARCH with radius smaller than closest location from center - expect 0 results
 	closestLocation := locationSet.ClosestTo(centerCoordinates)
 	closestRadius := centerCoordinates.DistanceFrom(closestLocation.Coordinates)
-	smallestRadius := closestRadius * 0.75 // 3/4 of the smallest distance to include no locations
 
 	geosearchSmallRadiusTestCase := test_cases.GeoSearchTestCase{
 		Key:                   locationKey,
 		FromCoordinates:       centerCoordinates,
-		Radius:                smallestRadius,
-		ExpectedLocationNames: []string{}, // No results expected
+		Radius:                closestRadius * 0.75, // 3/4 of the smallest distance to include no locations
+		ExpectedLocationNames: []string{},           // No locations expected
 	}
 
 	if err := geosearchSmallRadiusTestCase.Run(client, logger); err != nil {
@@ -69,13 +68,12 @@ func testGeospatialGeosearch(stageHarness *test_case_harness.TestCaseHarness) er
 	// GEOSEARCH with radius larger than furthest location from center - expect all locations
 	farthestLocation := locationSet.FarthestFrom(centerCoordinates)
 	furthestRadius := centerCoordinates.DistanceFrom(farthestLocation.Coordinates)
-	largeRadius := furthestRadius * 1.25 // 1.25x greater than the furthest location to include all
 
 	geosearchLargeRadiusTestCase := test_cases.GeoSearchTestCase{
 		Key:                   locationKey,
 		FromCoordinates:       centerCoordinates,
-		Radius:                largeRadius,
-		ExpectedLocationNames: locationSet.GetLocationNames(),
+		Radius:                furthestRadius * 1.25,          // 1.25x greater than the furthest location to include all
+		ExpectedLocationNames: locationSet.GetLocationNames(), // All locations expected
 	}
 
 	if err := geosearchLargeRadiusTestCase.Run(client, logger); err != nil {

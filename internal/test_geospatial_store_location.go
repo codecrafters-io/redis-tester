@@ -49,5 +49,6 @@ func testGeospatialStoreLocation(stageHarness *test_case_harness.TestCaseHarness
 		Args:      []string{locationKey, "0", "-1"},
 		Assertion: resp_assertions.NewUnorderedStringArrayAssertion(locationSet.GetLocationNames()),
 	}
+
 	return zrangeTestCase.Run(client, logger)
 }

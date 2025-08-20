@@ -68,5 +68,6 @@ func testGeospatialGeopos(stageHarness *test_case_harness.TestCaseHarness) error
 		MissingLocationNames:    missingLocationNames,
 		ShouldVerifyCoordinates: false,
 	}
+
 	return missingKeyTestCase.Run(client, logger)
 }
