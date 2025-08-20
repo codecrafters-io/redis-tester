@@ -29,7 +29,7 @@ func testGeospatialGeosearch(stageHarness *test_case_harness.TestCaseHarness) er
 	// Generate random locations
 	locationSet := location.GenerateRandomLocationSet(random.RandomInt(4, 6))
 
-	centerCoordinates := locationSet.Center()
+	centerCoordinates := locationSet.CenterCoordinates()
 
 	locations := locationSet.GetLocations()
 

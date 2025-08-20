@@ -21,12 +21,12 @@ func (ls *LocationSet) Size() int {
 	return len(ls.locations)
 }
 
-// Center returns a Coordinate pair whose latitude and longitude are respectively the mean-value of
+// CenterCoordinates returns a Coordinate pair whose latitude and longitude are respectively the mean-value of
 // latitude and longitude of all the locations in the set.
 // This is different center (not equidistant from all points) compared to the circumcenter of a spherical triangle
 // (https://brsr.github.io/2021/05/02/spherical-triangle-centers.html), which is equidistant from all the points
 // It is done because we want to include some and exclude other locations while testing for geosearch
-func (ls *LocationSet) Center() Coordinates {
+func (ls *LocationSet) CenterCoordinates() Coordinates {
 	latitudeAverage := 0.0
 	longitudeAverage := 0.0
 

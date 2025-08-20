@@ -24,10 +24,10 @@ func (t *GeoPosTestCase) Run(client *instrumented_resp_connection.InstrumentedRe
 	allLocationNames := make([]string, allLocationsLen)
 	allAssertions := make([]resp_assertions.RESPAssertion, allLocationsLen)
 
-	tolerance := 10e-6
+	tolerance := math.Inf(1)
 
-	if !t.ShouldVerifyCoordinates {
-		tolerance = math.Inf(1)
+	if t.ShouldVerifyCoordinates {
+		tolerance = 10e-6
 	}
 
 	// Populate location names and assertion for existing locations
@@ -42,6 +42,7 @@ func (t *GeoPosTestCase) Run(client *instrumented_resp_connection.InstrumentedRe
 
 	// Populate location names and assertion for missing locations
 	offset := len(t.Locations)
+
 	for i, missingLocationName := range t.MissingLocationNames {
 		allLocationNames[offset+i] = missingLocationName
 		// WILL_CHANGE: NewNilArrayAssertion() after PR#211 is merged
