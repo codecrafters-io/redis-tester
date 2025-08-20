@@ -104,12 +104,16 @@ func (c Coordinates) DistanceFrom(coordinates Coordinates) float64 {
 	return 2.0 * EARTH_RADIUS_IN_METERS * math.Asin(math.Sqrt(a))
 }
 
-// AsRedisCommandArgs converts a Coordinate struct to a string slice [longitude, latitude]
-// The order is how coordinates are supplied as arguments in Redis CLI
-func (c Coordinates) AsRedisCommandArgs() []string {
-	longitudeStr := strconv.FormatFloat(c.Longitude, 'f', -1, 64)
-	latitudeStr := strconv.FormatFloat(c.Latitude, 'f', -1, 64)
-	return []string{longitudeStr, latitudeStr}
+// LongitudeAsRedisCommandArg converts longitude of a coordinate to its
+// string representation with full precision
+func (c Coordinates) LongitudeAsRedisCommandArg() string {
+	return strconv.FormatFloat(c.Longitude, 'f', -1, 64)
+}
+
+// LatitudeAsRedisCommandArg converts latitude of a coordinate to its
+// string representation with full precision
+func (c Coordinates) LatitudeAsRedisCommandArg() string {
+	return strconv.FormatFloat(c.Latitude, 'f', -1, 64)
 }
 
 // decodeGeoCodeToCoordinates decodes a geocode and returns the coordinates of

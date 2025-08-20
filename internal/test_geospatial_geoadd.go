@@ -27,7 +27,11 @@ func testGeospatialGeoadd(stageHarness *test_case_harness.TestCaseHarness) error
 	locationKey := random.RandomWord()
 	newLocation := location.GenerateRandomLocationSet(1).GetLocations()[0]
 
-	geoAddTestCase := test_cases.NewGeoAddTestCaseWithAddedLocation(locationKey, newLocation, 1)
+	geoAddTestCase := test_cases.GeoAddTestCase{
+		Key:                         locationKey,
+		Location:                    newLocation,
+		ExpectedAddedLocationsCount: 1,
+	}
 
 	return geoAddTestCase.Run(client, logger)
 }

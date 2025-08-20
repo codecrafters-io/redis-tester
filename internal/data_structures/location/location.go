@@ -28,9 +28,12 @@ func (l Location) DistanceFrom(location Location) float64 {
 	return l.Coordinates.DistanceFrom(location.Coordinates)
 }
 
-// AsRedisCommandArgs converts a location struct to string slice
-// The order is: <longitude> <latitude> <name>
-// This is the same order used in Redis CLI
-func (l Location) AsRedisCommandArgs() []string {
-	return append(l.Coordinates.AsRedisCommandArgs(), l.Name)
+// LongitudeAsRedisCommandArg converts a location's longitude to its string representation
+func (l Location) LongitudeAsRedisCommandArg() string {
+	return l.Coordinates.LongitudeAsRedisCommandArg()
+}
+
+// LatitudeAsRedisCommandArg converts a location's latitude to its string representation
+func (l Location) LatitudeAsRedisCommandArg() string {
+	return l.Coordinates.LatitudeAsRedisCommandArg()
 }

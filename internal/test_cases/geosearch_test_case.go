@@ -3,6 +3,7 @@ package test_cases
 import (
 	"strconv"
 
+	"github.com/codecrafters-io/redis-tester/internal/data_structures/location"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/tester-utils/logger"
@@ -10,15 +11,14 @@ import (
 
 type GeoSearchTestCase struct {
 	Key                   string
-	FromLongitude         float64
-	FromLatitude          float64
+	FromCoordinates       location.Coordinates
 	Radius                float64
 	ExpectedLocationNames []string
 }
 
 func (t *GeoSearchTestCase) Run(client *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
-	longitudeStr := strconv.FormatFloat(t.FromLongitude, 'f', -1, 64)
-	latitudeStr := strconv.FormatFloat(t.FromLatitude, 'f', -1, 64)
+	longitudeStr := t.FromCoordinates.LongitudeAsRedisCommandArg()
+	latitudeStr := t.FromCoordinates.LatitudeAsRedisCommandArg()
 	radiusStr := strconv.FormatFloat(t.Radius, 'f', -1, 64)
 
 	// we use unordered assertion because we do not cover ASC/DESC option for GEOSEARCH

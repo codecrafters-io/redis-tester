@@ -1,6 +1,8 @@
 package location
 
-import "github.com/codecrafters-io/tester-utils/random"
+import (
+	"github.com/codecrafters-io/tester-utils/random"
+)
 
 type LocationSet struct {
 	locations []Location
@@ -19,11 +21,12 @@ func (ls *LocationSet) Size() int {
 	return len(ls.locations)
 }
 
-// Center returns a location whose latitude and longitude are respectively the mean-value of latitude and longitude of all the locations in the set.
+// Center returns a Coordinate pair whose latitude and longitude are respectively the mean-value of
+// latitude and longitude of all the locations in the set.
 // This is different center (not equidistant from all points) compared to the circumcenter of a spherical triangle
 // (https://brsr.github.io/2021/05/02/spherical-triangle-centers.html), which is equidistant from all the points
 // It is done because we want to include some and exclude other locations while testing for geosearch
-func (ls *LocationSet) Center(centerLocationName string) Location {
+func (ls *LocationSet) Center() Coordinates {
 	latitudeAverage := 0.0
 	longitudeAverage := 0.0
 
@@ -35,23 +38,20 @@ func (ls *LocationSet) Center(centerLocationName string) Location {
 	latitudeAverage = latitudeAverage / float64(ls.Size())
 	longitudeAverage = longitudeAverage / float64(ls.Size())
 
-	return Location{
-		Name:        centerLocationName,
-		Coordinates: NewCoordinates(latitudeAverage, longitudeAverage),
-	}
+	return NewCoordinates(latitudeAverage, longitudeAverage)
 }
 
-// ClosestTo returns the location in the LocationSet that is closest to the supplied location
-func (ls *LocationSet) ClosestTo(location Location) Location {
+// ClosestTo returns the location in the LocationSet that is closest to the supplied coordinates
+func (ls *LocationSet) ClosestTo(referenceCoordinates Coordinates) Location {
 	if ls.Size() == 0 {
 		panic("Codecrafters Internal Error - Cannot find closest location from empty LocationSet")
 	}
 
 	closestLocation := ls.locations[0]
-	closestDistance := location.DistanceFrom(closestLocation)
+	closestDistance := referenceCoordinates.DistanceFrom(closestLocation.Coordinates)
 
 	for _, loc := range ls.locations {
-		distance := location.DistanceFrom(loc)
+		distance := referenceCoordinates.DistanceFrom(loc.Coordinates)
 		if distance < closestDistance {
 			closestDistance = distance
 			closestLocation = loc
@@ -61,17 +61,17 @@ func (ls *LocationSet) ClosestTo(location Location) Location {
 	return closestLocation
 }
 
-// FarthestFrom returns the location in the LocationSet that is farthest from the supplied location
-func (ls *LocationSet) FarthestFrom(location Location) Location {
+// FarthestFrom returns the location in the LocationSet that is farthest from the supplied coordinates
+func (ls *LocationSet) FarthestFrom(referenceCoordinates Coordinates) Location {
 	if ls.Size() == 0 {
 		panic("Codecrafters Internal Error - Cannot find farthest location from empty LocationSet")
 	}
 
 	farthestLocation := ls.locations[0]
-	farthestDistance := location.DistanceFrom(farthestLocation)
+	farthestDistance := farthestLocation.Coordinates.DistanceFrom(referenceCoordinates)
 
 	for _, loc := range ls.locations {
-		distance := location.DistanceFrom(loc)
+		distance := referenceCoordinates.DistanceFrom(loc.Coordinates)
 		if distance > farthestDistance {
 			farthestDistance = distance
 			farthestLocation = loc
@@ -82,11 +82,11 @@ func (ls *LocationSet) FarthestFrom(location Location) Location {
 }
 
 // WithinRadius returns a new LocationSet with all the locations that are within a given radius from the given location
-func (ls *LocationSet) WithinRadius(referenceLocation Location, radius float64) *LocationSet {
+func (ls *LocationSet) WithinRadius(referenceCoordinates Coordinates, radius float64) *LocationSet {
 	result := NewLocationSet()
 
 	for _, location := range ls.locations {
-		distance := referenceLocation.DistanceFrom(location)
+		distance := referenceCoordinates.DistanceFrom(location.Coordinates)
 		if distance <= radius {
 			result.AddLocation(location)
 		}
