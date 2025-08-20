@@ -1,8 +1,8 @@
 package internal
 
 import (
-	"github.com/codecrafters-io/redis-tester/internal/data_structures"
 	"github.com/codecrafters-io/redis-tester/internal/data_structures/location"
+	"github.com/codecrafters-io/redis-tester/internal/data_structures/sorted_set"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
@@ -34,7 +34,7 @@ func testGeospatialDecodeCoordinates(stageHarness *test_case_harness.TestCaseHar
 	for _, loc := range locationSet.GetLocations() {
 		zaddTestCase := test_cases.ZaddTestCase{
 			Key: locationKey,
-			Member: data_structures.SortedSetMember{
+			Member: sorted_set.SortedSetMember{
 				Name:  loc.Name,
 				Score: float64(loc.GetGeoCode()),
 			},
