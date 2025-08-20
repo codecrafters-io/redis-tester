@@ -39,6 +39,7 @@ func testGeospatialGeosearch(stageHarness *test_case_harness.TestCaseHarness) er
 			Location:                    loc,
 			ExpectedAddedLocationsCount: 1,
 		}
+
 		if err := geoAddTestCase.Run(client, logger); err != nil {
 			return err
 		}
@@ -53,12 +54,14 @@ func testGeospatialGeosearch(stageHarness *test_case_harness.TestCaseHarness) er
 	closestLocation := locationSet.ClosestTo(centerCoordinates)
 	closestRadius := centerCoordinates.DistanceFrom(closestLocation.Coordinates)
 	smallestRadius := closestRadius * 0.75 // 3/4 of the smallest distance to include no locations
+
 	geosearchSmallRadiusTestCase := test_cases.GeoSearchTestCase{
 		Key:                   locationKey,
 		FromCoordinates:       centerCoordinates,
 		Radius:                smallestRadius,
 		ExpectedLocationNames: []string{}, // No results expected
 	}
+
 	if err := geosearchSmallRadiusTestCase.Run(client, logger); err != nil {
 		return err
 	}
@@ -67,12 +70,14 @@ func testGeospatialGeosearch(stageHarness *test_case_harness.TestCaseHarness) er
 	farthestLocation := locationSet.FarthestFrom(centerCoordinates)
 	furthestRadius := centerCoordinates.DistanceFrom(farthestLocation.Coordinates)
 	largeRadius := furthestRadius * 1.25 // 1.25x greater than the furthest location to include all
+
 	geosearchLargeRadiusTestCase := test_cases.GeoSearchTestCase{
 		Key:                   locationKey,
 		FromCoordinates:       centerCoordinates,
 		Radius:                largeRadius,
 		ExpectedLocationNames: locationSet.GetLocationNames(),
 	}
+
 	if err := geosearchLargeRadiusTestCase.Run(client, logger); err != nil {
 		return err
 	}
@@ -80,11 +85,13 @@ func testGeospatialGeosearch(stageHarness *test_case_harness.TestCaseHarness) er
 	// Test GEOSEARCH with radius in between - expect only the locations inside of the radius
 	midRadius := (closestRadius + furthestRadius) / 2
 	locationsInsideRadius := locationSet.WithinRadius(centerCoordinates, midRadius)
+
 	geosearchMidRadiusTestCase := test_cases.GeoSearchTestCase{
 		Key:                   locationKey,
 		FromCoordinates:       centerCoordinates,
 		Radius:                midRadius,
 		ExpectedLocationNames: locationsInsideRadius.GetLocationNames(),
 	}
+
 	return geosearchMidRadiusTestCase.Run(client, logger)
 }

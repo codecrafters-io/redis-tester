@@ -35,6 +35,7 @@ func testGeospatialStoreLocation(stageHarness *test_case_harness.TestCaseHarness
 			Location:                    loc,
 			ExpectedAddedLocationsCount: 1,
 		}
+
 		if err := geoAddTestCase.Run(client, logger); err != nil {
 			return err
 		}
@@ -42,7 +43,7 @@ func testGeospatialStoreLocation(stageHarness *test_case_harness.TestCaseHarness
 
 	logger.Infof("Checking if %q is stored as a sorted set", locationKey)
 	// Verify location is stored as a sorted set
-	// We don't use ZrangeTestCase as the score calculation is not done yet, the order should not matter
+	// We don't use ZrangeTestCase as the score calculation stage is not covered yet, the order should not matter
 	zrangeTestCase := test_cases.SendCommandTestCase{
 		Command:   "ZRANGE",
 		Args:      []string{locationKey, "0", "-1"},

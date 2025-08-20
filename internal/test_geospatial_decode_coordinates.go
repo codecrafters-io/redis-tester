@@ -40,13 +40,17 @@ func testGeospatialDecodeCoordinates(stageHarness *test_case_harness.TestCaseHar
 			},
 			ExpectedAddedMembersCount: 1,
 		}
+
 		if err := zaddTestCase.Run(client, logger); err != nil {
 			return err
 		}
 	}
 
-	geoPosTestCase := test_cases.NewGeoPosTestCase(locationKey, true)
-	geoPosTestCase.AddLocations(locationSet.GetLocations())
+	geoPosTestCase := test_cases.GeoPosTestCase{
+		Key:                     locationKey,
+		Locations:               locationSet.GetLocations(),
+		ShouldVerifyCoordinates: true,
+	}
 
 	return geoPosTestCase.Run(client, logger)
 }

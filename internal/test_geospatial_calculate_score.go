@@ -36,6 +36,7 @@ func testGeospatialCalculateScore(stageHarness *test_case_harness.TestCaseHarnes
 			Location:                    loc,
 			ExpectedAddedLocationsCount: 1,
 		}
+
 		if err := geoAddTestCase.Run(client, logger); err != nil {
 			return err
 		}
@@ -50,6 +51,7 @@ func testGeospatialCalculateScore(stageHarness *test_case_harness.TestCaseHarnes
 			Args:      []string{locationKey, loc.Name},
 			Assertion: resp_assertions.NewFloatingPointBulkStringAssertion(float64(loc.GetGeoCode()), 0),
 		}
+
 		if err := zscoreTestCase.Run(client, logger); err != nil {
 			return err
 		}

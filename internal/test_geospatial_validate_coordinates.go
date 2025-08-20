@@ -40,11 +40,13 @@ func testGeospatialValidateCoordinates(stageHarness *test_case_harness.TestCaseH
 		),
 		Name: testerutils_random.RandomWord(),
 	}
+
 	positiveInvalidLatitudeTestCase := test_cases.InvalidGeoAddTestCase{
 		Key:                  locationKey,
 		Location:             locationWithPositiveInvalidLatitude,
 		ExpectedErrorPattern: errorPatternWrongLatitude,
 	}
+
 	if err := positiveInvalidLatitudeTestCase.Run(client, logger); err != nil {
 		return err
 	}
@@ -57,11 +59,13 @@ func testGeospatialValidateCoordinates(stageHarness *test_case_harness.TestCaseH
 		),
 		Name: testerutils_random.RandomWord(),
 	}
+
 	negativeInvalidLatitudeTestCase := test_cases.InvalidGeoAddTestCase{
 		Key:                  locationKey,
 		Location:             locationWithNegativeInvalidLatitude,
 		ExpectedErrorPattern: errorPatternWrongLatitude,
 	}
+
 	if err := negativeInvalidLatitudeTestCase.Run(client, logger); err != nil {
 		return err
 	}
@@ -75,11 +79,13 @@ func testGeospatialValidateCoordinates(stageHarness *test_case_harness.TestCaseH
 		),
 		Name: testerutils_random.RandomWord(),
 	}
+
 	positiveInvalidLongitudeTestCase := test_cases.InvalidGeoAddTestCase{
 		Key:                  locationKey,
 		Location:             locationWithPositiveInvalidLongitude,
 		ExpectedErrorPattern: errorPatternWrongLongitude,
 	}
+
 	if err := positiveInvalidLongitudeTestCase.Run(client, logger); err != nil {
 		return err
 	}
@@ -92,10 +98,12 @@ func testGeospatialValidateCoordinates(stageHarness *test_case_harness.TestCaseH
 		),
 		Name: testerutils_random.RandomWord(),
 	}
+
 	negativeInvalidLongitudeTestCase := test_cases.InvalidGeoAddTestCase{
 		Key:                  locationKey,
 		Location:             locationWithNegativeInvalidLongitude,
 		ExpectedErrorPattern: errorPatternWrongLongitude,
 	}
+
 	return negativeInvalidLongitudeTestCase.Run(client, logger)
 }

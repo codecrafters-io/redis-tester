@@ -35,6 +35,7 @@ func testGeospatialGeodist(stageHarness *test_case_harness.TestCaseHarness) erro
 			Location:                    loc,
 			ExpectedAddedLocationsCount: 1,
 		}
+
 		if err := geoAddTestCase.Run(client, logger); err != nil {
 			return err
 		}
@@ -49,6 +50,7 @@ func testGeospatialGeodist(stageHarness *test_case_harness.TestCaseHarness) erro
 				Location2:        locations[j],
 				ExpectedDistance: locations[i].DistanceFrom(locations[j]),
 			}
+
 			if err := geodistTestCase.Run(client, logger); err != nil {
 				return err
 			}
@@ -65,6 +67,7 @@ func testGeospatialGeodist(stageHarness *test_case_harness.TestCaseHarness) erro
 			Location2:        loc,
 			ExpectedDistance: 0.0,
 		}
+
 		if err := selfDistanceTestCase.Run(client, logger); err != nil {
 			return err
 		}

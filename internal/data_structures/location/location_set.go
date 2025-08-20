@@ -52,6 +52,7 @@ func (ls *LocationSet) ClosestTo(referenceCoordinates Coordinates) Location {
 
 	for _, loc := range ls.locations {
 		distance := referenceCoordinates.DistanceFrom(loc.Coordinates)
+
 		if distance < closestDistance {
 			closestDistance = distance
 			closestLocation = loc
@@ -72,6 +73,7 @@ func (ls *LocationSet) FarthestFrom(referenceCoordinates Coordinates) Location {
 
 	for _, loc := range ls.locations {
 		distance := referenceCoordinates.DistanceFrom(loc.Coordinates)
+
 		if distance > farthestDistance {
 			farthestDistance = distance
 			farthestLocation = loc
@@ -87,6 +89,7 @@ func (ls *LocationSet) WithinRadius(referenceCoordinates Coordinates, radius flo
 
 	for _, location := range ls.locations {
 		distance := referenceCoordinates.DistanceFrom(location.Coordinates)
+
 		if distance <= radius {
 			result.AddLocation(location)
 		}
@@ -121,6 +124,7 @@ func GenerateRandomLocationSet(count int) *LocationSet {
 	for i := range count {
 		latitude := random.RandomFloat64(LATITUDE_MIN, LATITUDE_MAX)
 		longitude := random.RandomFloat64(LONGITUDE_MIN, LONGITUDE_MAX)
+
 		locationSet.AddLocation(Location{
 			Name:        locationNames[i],
 			Coordinates: NewCoordinates(latitude, longitude),

@@ -37,27 +37,36 @@ func testGeospatialGeopos(stageHarness *test_case_harness.TestCaseHarness) error
 			Location:                    loc,
 			ExpectedAddedLocationsCount: 1,
 		}
+
 		if err := geoAddTestCase.Run(client, logger); err != nil {
 			return err
 		}
 	}
 
-	geoPosTestCase := test_cases.NewGeoPosTestCase(locationKey, false)
-	geoPosTestCase.AddLocations(locationSet.GetLocations())
+	missingLocationNames := make([]string, random.RandomInt(2, 4))
 
-	missingLocations := make([]string, random.RandomInt(2, 4))
-	for i := range len(missingLocations) {
-		missingLocations[i] = fmt.Sprintf("missing_location_%d", random.RandomInt(1, 100))
+	for i := range len(missingLocationNames) {
+		missingLocationNames[i] = fmt.Sprintf("missing_location_%d", random.RandomInt(1, 100))
 	}
 
-	geoPosTestCase.AddMissingLocations(missingLocations)
+	geoPosTestCase := test_cases.GeoPosTestCase{
+		Key:                     locationKey,
+		Locations:               locationSet.GetLocations(),
+		MissingLocationNames:    missingLocationNames,
+		ShouldVerifyCoordinates: false,
+	}
+
 	if err := geoPosTestCase.Run(client, logger); err != nil {
 		return err
 	}
 
 	// Test for missing key
 	missingKey := fmt.Sprintf("missing_key_%d", random.RandomInt(1, 100))
-	missingKeyTestCase := test_cases.NewGeoPosTestCase(missingKey, false)
-	missingKeyTestCase.AddMissingLocations(missingLocations)
+
+	missingKeyTestCase := test_cases.GeoPosTestCase{
+		Key:                     missingKey,
+		MissingLocationNames:    missingLocationNames,
+		ShouldVerifyCoordinates: false,
+	}
 	return missingKeyTestCase.Run(client, logger)
 }
