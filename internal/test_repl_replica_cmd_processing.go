@@ -3,6 +3,7 @@ package internal
 import (
 	"fmt"
 	"net"
+	"time"
 
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
@@ -81,6 +82,7 @@ func testReplCmdProcessing(stageHarness *test_case_harness.TestCaseHarness) erro
 
 	logger.UpdateLastSecondaryPrefix("test")
 	replicaClient.UpdateBaseLogger(logger)
+	time.Sleep(time.Millisecond)
 
 	for i := 1; i <= len(kvMap); i++ {
 		key, value := kvMap[i][0], kvMap[i][1]
