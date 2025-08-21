@@ -1,7 +1,7 @@
 package internal
 
 import (
-	"github.com/codecrafters-io/redis-tester/internal/data_structures/location"
+	location_ds "github.com/codecrafters-io/redis-tester/internal/data_structures/location"
 	"github.com/codecrafters-io/redis-tester/internal/data_structures/sorted_set"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
@@ -27,16 +27,16 @@ func testGeospatialDecodeCoordinates(stageHarness *test_case_harness.TestCaseHar
 
 	locationKey := testerutils_random.RandomWord()
 
-	locationSet := location.GenerateRandomLocationSet(testerutils_random.RandomInt(2, 4))
+	locationSet := location_ds.GenerateRandomLocationSet(testerutils_random.RandomInt(2, 4))
 
 	// We use ZADD to add the locations so the user implementation requires that they decode
 	// co-ordinates from the score
-	for _, loc := range locationSet.GetLocations() {
+	for _, location := range locationSet.GetLocations() {
 		zaddTestCase := test_cases.ZaddTestCase{
 			Key: locationKey,
 			Member: sorted_set.SortedSetMember{
-				Name:  loc.Name,
-				Score: float64(loc.GetGeoCode()),
+				Name:  location.Name,
+				Score: float64(location.GetGeoCode()),
 			},
 			ExpectedAddedMembersCount: 1,
 		}
@@ -47,9 +47,8 @@ func testGeospatialDecodeCoordinates(stageHarness *test_case_harness.TestCaseHar
 	}
 
 	geoPosTestCase := test_cases.GeoPosTestCase{
-		Key:                     locationKey,
-		Locations:               locationSet.GetLocations(),
-		ShouldVerifyCoordinates: true,
+		Key:       locationKey,
+		Locations: locationSet.GetLocations(),
 	}
 
 	return geoPosTestCase.Run(client, logger)

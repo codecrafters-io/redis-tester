@@ -1,7 +1,7 @@
 package internal
 
 import (
-	"github.com/codecrafters-io/redis-tester/internal/data_structures/location"
+	location_ds "github.com/codecrafters-io/redis-tester/internal/data_structures/location"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
@@ -25,7 +25,7 @@ func testGeospatialValidateCoordinates(stageHarness *test_case_harness.TestCaseH
 	defer client.Close()
 
 	locationKey := testerutils_random.RandomWord()
-	validLocation := location.GenerateRandomLocationSet(1).GetLocations()[0]
+	validLocation := location_ds.GenerateRandomLocationSet(1).GetLocations()[0]
 	validLatitude := validLocation.GetLatitude()
 	validLongitude := validLocation.GetLongitude()
 	errorPatternWrongLatitude := `^ERR.*(?i:latitude)`
@@ -33,9 +33,9 @@ func testGeospatialValidateCoordinates(stageHarness *test_case_harness.TestCaseH
 
 	// Invalid latitude, valid longitude
 	// Latitude greater than max boundary
-	locationWithPositiveInvalidLatitude := location.Location{
-		Coordinates: location.NewInvalidCoordinates(
-			testerutils_random.RandomFloat64(location.LATITUDE_MAX+1, 500),
+	locationWithPositiveInvalidLatitude := location_ds.Location{
+		Coordinates: location_ds.NewInvalidCoordinates(
+			testerutils_random.RandomFloat64(location_ds.LATITUDE_MAX+1, 500),
 			validLongitude,
 		),
 		Name: testerutils_random.RandomWord(),
@@ -52,9 +52,9 @@ func testGeospatialValidateCoordinates(stageHarness *test_case_harness.TestCaseH
 	}
 
 	// Latitude smaller than min boundary
-	locationWithNegativeInvalidLatitude := location.Location{
-		Coordinates: location.NewInvalidCoordinates(
-			testerutils_random.RandomFloat64(-500, location.LATITUDE_MIN-1),
+	locationWithNegativeInvalidLatitude := location_ds.Location{
+		Coordinates: location_ds.NewInvalidCoordinates(
+			testerutils_random.RandomFloat64(-500, location_ds.LATITUDE_MIN-1),
 			validLongitude,
 		),
 		Name: testerutils_random.RandomWord(),
@@ -72,10 +72,10 @@ func testGeospatialValidateCoordinates(stageHarness *test_case_harness.TestCaseH
 
 	// Invalid longitude, but valid latitude
 	// Longitude greater than max boundary
-	locationWithPositiveInvalidLongitude := location.Location{
-		Coordinates: location.NewInvalidCoordinates(
+	locationWithPositiveInvalidLongitude := location_ds.Location{
+		Coordinates: location_ds.NewInvalidCoordinates(
 			validLatitude,
-			testerutils_random.RandomFloat64(location.LONGITUDE_MAX+1, 500),
+			testerutils_random.RandomFloat64(location_ds.LONGITUDE_MAX+1, 500),
 		),
 		Name: testerutils_random.RandomWord(),
 	}
@@ -91,10 +91,10 @@ func testGeospatialValidateCoordinates(stageHarness *test_case_harness.TestCaseH
 	}
 
 	// Longitude smaller than min boundary
-	locationWithNegativeInvalidLongitude := location.Location{
-		Coordinates: location.NewInvalidCoordinates(
+	locationWithNegativeInvalidLongitude := location_ds.Location{
+		Coordinates: location_ds.NewInvalidCoordinates(
 			validLatitude,
-			testerutils_random.RandomFloat64(-500, location.LONGITUDE_MIN-1),
+			testerutils_random.RandomFloat64(-500, location_ds.LONGITUDE_MIN-1),
 		),
 		Name: testerutils_random.RandomWord(),
 	}

@@ -3,7 +3,7 @@ package test_cases
 import (
 	"strconv"
 
-	"github.com/codecrafters-io/redis-tester/internal/data_structures/location"
+	location_ds "github.com/codecrafters-io/redis-tester/internal/data_structures/location"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/tester-utils/logger"
@@ -11,7 +11,7 @@ import (
 
 type GeoSearchTestCase struct {
 	Key                   string
-	FromCoordinates       location.Coordinates
+	FromCoordinates       location_ds.Coordinates
 	Radius                float64
 	ExpectedLocationNames []string
 }

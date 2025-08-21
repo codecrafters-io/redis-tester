@@ -1,7 +1,7 @@
 package test_cases
 
 import (
-	"github.com/codecrafters-io/redis-tester/internal/data_structures/location"
+	location_ds "github.com/codecrafters-io/redis-tester/internal/data_structures/location"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/tester-utils/logger"
@@ -9,7 +9,7 @@ import (
 
 type GeoAddTestCase struct {
 	Key                         string
-	Location                    location.Location
+	Location                    location_ds.Location
 	ExpectedAddedLocationsCount int
 }
 

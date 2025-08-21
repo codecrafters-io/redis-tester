@@ -3,11 +3,11 @@ package internal
 import (
 	"fmt"
 
-	"github.com/codecrafters-io/redis-tester/internal/data_structures/location"
+	location_ds "github.com/codecrafters-io/redis-tester/internal/data_structures/location"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
-	"github.com/codecrafters-io/tester-utils/random"
+	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
@@ -26,15 +26,15 @@ func testGeospatialGeopos(stageHarness *test_case_harness.TestCaseHarness) error
 	}
 	defer client.Close()
 
-	locationKey := random.RandomWord()
+	locationKey := testerutils_random.RandomWord()
 
 	// Add locations
-	locationSet := location.GenerateRandomLocationSet(random.RandomInt(2, 4))
+	locationSet := location_ds.GenerateRandomLocationSet(testerutils_random.RandomInt(2, 4))
 
-	for _, loc := range locationSet.GetLocations() {
+	for _, location := range locationSet.GetLocations() {
 		geoAddTestCase := test_cases.GeoAddTestCase{
 			Key:                         locationKey,
-			Location:                    loc,
+			Location:                    location,
 			ExpectedAddedLocationsCount: 1,
 		}
 
@@ -43,17 +43,17 @@ func testGeospatialGeopos(stageHarness *test_case_harness.TestCaseHarness) error
 		}
 	}
 
-	missingLocationNames := make([]string, random.RandomInt(2, 4))
+	missingLocationNames := make([]string, testerutils_random.RandomInt(2, 4))
 
 	for i := range len(missingLocationNames) {
-		missingLocationNames[i] = fmt.Sprintf("missing_location_%d", random.RandomInt(1, 100))
+		missingLocationNames[i] = fmt.Sprintf("missing_location_%d", testerutils_random.RandomInt(1, 100))
 	}
 
 	geoPosTestCase := test_cases.GeoPosTestCase{
-		Key:                     locationKey,
-		Locations:               locationSet.GetLocations(),
-		MissingLocationNames:    missingLocationNames,
-		ShouldVerifyCoordinates: false,
+		Key:                              locationKey,
+		Locations:                        locationSet.GetLocations(),
+		MissingLocationNames:             missingLocationNames,
+		ShouldSkipCoordinateVerification: true,
 	}
 
 	if err := geoPosTestCase.Run(client, logger); err != nil {
@@ -61,12 +61,12 @@ func testGeospatialGeopos(stageHarness *test_case_harness.TestCaseHarness) error
 	}
 
 	// Test for missing key
-	missingKey := fmt.Sprintf("missing_key_%d", random.RandomInt(1, 100))
+	missingKey := fmt.Sprintf("missing_key_%d", testerutils_random.RandomInt(1, 100))
 
 	missingKeyTestCase := test_cases.GeoPosTestCase{
-		Key:                     missingKey,
-		MissingLocationNames:    missingLocationNames,
-		ShouldVerifyCoordinates: false,
+		Key:                              missingKey,
+		MissingLocationNames:             missingLocationNames,
+		ShouldSkipCoordinateVerification: true,
 	}
 
 	return missingKeyTestCase.Run(client, logger)
