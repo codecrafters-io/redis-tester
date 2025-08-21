@@ -1,11 +1,7 @@
 # Use Ubuntu latest as base image
-FROM ubuntu:latest
+FROM golang:1.24-bookworm
 
 # Set environment variables
-ENV DEBIAN_FRONTEND=noninteractive
-ENV GO_VERSION=1.24.2
-ENV GOPATH=/go
-ENV PATH=$GOPATH/bin:/usr/local/go/bin:$PATH
 ENV CGO_ENABLED=0
 ENV GOOS=linux
 ENV GOARCH=amd64
@@ -25,10 +21,6 @@ RUN apt-get update && apt-get install -y \
     netcat-openbsd \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Go
-RUN wget -q https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz \
-    && tar -C /usr/local -xzf go${GO_VERSION}.linux-amd64.tar.gz \
-    && rm go${GO_VERSION}.linux-amd64.tar.gz
 
 # Install Redis
 RUN curl -fsSL https://packages.redis.io/gpg | gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg \
