@@ -7,7 +7,7 @@ import (
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/tester-utils/logger"
-	"github.com/codecrafters-io/tester-utils/random"
+	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 )
 
 type GeoPosTestCase struct {
@@ -32,7 +32,7 @@ func (c *locationAssertionCollection) append(locationAssertion locationNameWithA
 }
 
 func (c *locationAssertionCollection) shuffle() {
-	c.locationAssertions = random.ShuffleArray(c.locationAssertions)
+	c.locationAssertions = testerutils_random.ShuffleArray(c.locationAssertions)
 }
 
 func (c *locationAssertionCollection) locationNames() []string {
@@ -79,7 +79,7 @@ func (t *GeoPosTestCase) Run(client *instrumented_resp_connection.InstrumentedRe
 	for _, missingLocationName := range t.MissingLocationNames {
 		locationAssertions.append(locationNameWithAssertion{
 			LocationName: missingLocationName,
-			Assertion:    resp_assertions.NewNilAssertion(),
+			Assertion:    resp_assertions.NewNilArrayAssertion(),
 		})
 	}
 
