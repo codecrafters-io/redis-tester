@@ -1,4 +1,4 @@
-# Use Ubuntu latest as base image
+# Use official Go 1.24 image as base
 FROM golang:1.24-bookworm
 
 # Set environment variables
