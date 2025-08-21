@@ -71,12 +71,12 @@ func (ls *LocationSet) FarthestFrom(referenceCoordinates Coordinates) Location {
 	farthestLocation := ls.locations[0]
 	farthestDistance := farthestLocation.Coordinates.DistanceFrom(referenceCoordinates)
 
-	for _, loc := range ls.locations {
-		distance := referenceCoordinates.DistanceFrom(loc.Coordinates)
+	for _, location := range ls.locations {
+		distance := referenceCoordinates.DistanceFrom(location.Coordinates)
 
 		if distance > farthestDistance {
 			farthestDistance = distance
-			farthestLocation = loc
+			farthestLocation = location
 		}
 	}
 
