@@ -11,10 +11,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build Docker image
-        run: docker build -t my-test-image -f docker_ci/ubuntu.Dockerfile .
+        run: docker build -t redis-tester -f docker_ci/ubuntu.Dockerfile .
 
       - name: Run tests in container
-        run: docker run --rm my-test-image bash -c "service redis-server start && make test"
+        run: docker run --rm -it -v "$(pwd)":/app -w /app redis-tester make test
 
 
   lint:
