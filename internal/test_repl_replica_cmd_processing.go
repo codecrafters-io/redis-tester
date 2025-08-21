@@ -3,6 +3,7 @@ package internal
 import (
 	"fmt"
 	"net"
+	"time"
 
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
@@ -81,6 +82,10 @@ func testReplCmdProcessing(stageHarness *test_case_harness.TestCaseHarness) erro
 
 	logger.UpdateLastSecondaryPrefix("test")
 	replicaClient.UpdateBaseLogger(logger)
+	// Add a small delay to wait for commands to be propagated
+	// This was done in https://github.com/codecrafters-io/redis-tester/pull/212 to adjust fixtures
+	// when fixtures are recorded from docker container
+	time.Sleep(time.Millisecond)
 
 	for i := 1; i <= len(kvMap); i++ {
 		key, value := kvMap[i][0], kvMap[i][1]
