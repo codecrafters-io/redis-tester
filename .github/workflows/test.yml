@@ -14,7 +14,7 @@ jobs:
         run: docker build -t redis-tester -f docker_ci/ubuntu.Dockerfile .
 
       - name: Run tests in container
-        run: docker run --rm -it -v "$(pwd)":/app -w /app redis-tester make test
+        run: docker run --rm -v "$(pwd)":/app -w /app redis-tester make test
 
 
   lint:
