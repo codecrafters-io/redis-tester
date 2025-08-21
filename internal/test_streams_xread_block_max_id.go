@@ -95,7 +95,7 @@ func testStreamsXreadBlockMaxID(stageHarness *test_case_harness.TestCaseHarness)
 	xreadCommandTestCase := &test_cases.SendCommandTestCase{
 		Command:                   "XREAD",
 		Args:                      []string{"block", "1000", "streams", streamKey, "$"},
-		Assertion:                 resp_assertions.NewNilAssertion(),
+		Assertion:                 resp_assertions.NewNilArrayAssertion(),
 		ShouldSkipUnreadDataCheck: false,
 	}
 

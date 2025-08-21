@@ -40,7 +40,7 @@ func testOnlyTimeout(stageHarness *test_case_harness.TestCaseHarness) error {
 	sendCommandTestCase := test_cases.SendCommandTestCase{
 		Command:   "BLPOP",
 		Args:      []string{randomListKey, timeoutArg},
-		Assertion: resp_assertions.NewNilAssertion(),
+		Assertion: resp_assertions.NewNilArrayAssertion(),
 	}
 
 	resultChan := make(chan error, 1)

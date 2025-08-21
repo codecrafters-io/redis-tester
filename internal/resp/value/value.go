@@ -8,12 +8,13 @@ import (
 )
 
 const (
-	SIMPLE_STRING string = "SIMPLE_STRING"
-	INTEGER       string = "INTEGER"
-	BULK_STRING   string = "BULK_STRING"
-	ARRAY         string = "ARRAY"
-	ERROR         string = "ERROR"
-	NIL           string = "NIL"
+	SIMPLE_STRING string = "simple string"
+	INTEGER       string = "integer"
+	BULK_STRING   string = "bulk string"
+	ARRAY         string = "array"
+	ERROR         string = "error"
+	NIL           string = "null bulk string"
+	NIL_ARRAY     string = "null array"
 )
 
 type Value struct {
@@ -76,6 +77,12 @@ func NewNilValue() Value {
 	}
 }
 
+func NewNilArrayValue() Value {
+	return Value{
+		Type: NIL_ARRAY,
+	}
+}
+
 func (v *Value) Bytes() []byte {
 	return v.bytes
 }
@@ -121,6 +128,8 @@ func (v *Value) FormattedString() string {
 		return fmt.Sprintf("%q", v.String())
 	case NIL:
 		return "\"$-1\\r\\n\""
+	case NIL_ARRAY:
+		return "\"*-1\\r\\n\""
 	}
 	return ""
 }
