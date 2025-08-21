@@ -138,6 +138,13 @@ func TestStages(t *testing.T) {
 			StdoutFixturePath:   "./test_helpers/fixtures/zset/pass",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
+		"geospatial_pass": {
+			UntilStageSlug:      "rm9",
+			CodePath:            "./test_helpers/pass_all",
+			ExpectedExitCode:    0,
+			StdoutFixturePath:   "./test_helpers/fixtures/geospatial/pass",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
 	}
 
 	tester_utils_testing.TestTesterOutput(t, testerDefinition, testCases)
