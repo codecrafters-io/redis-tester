@@ -44,16 +44,17 @@ func testGeospatialGeopos(stageHarness *test_case_harness.TestCaseHarness) error
 	}
 
 	missingLocationNames := make([]string, testerutils_random.RandomInt(2, 4))
+	missing_location_suffix := testerutils_random.RandomInts(1, 100, len(missingLocationNames))
 
 	for i := range len(missingLocationNames) {
-		missingLocationNames[i] = fmt.Sprintf("missing_location_%d", testerutils_random.RandomInt(1, 100))
+		missingLocationNames[i] = fmt.Sprintf("missing_location_%d", missing_location_suffix[i])
 	}
 
 	geoPosTestCase := test_cases.GeoPosTestCase{
 		Key:                              locationKey,
 		Locations:                        locationSet.GetLocations(),
 		MissingLocationNames:             missingLocationNames,
-		ShouldSkipCoordinateVerification: true,
+		ShouldSkipCoordinatesVerfication: true,
 	}
 
 	if err := geoPosTestCase.Run(client, logger); err != nil {
@@ -66,7 +67,7 @@ func testGeospatialGeopos(stageHarness *test_case_harness.TestCaseHarness) error
 	missingKeyTestCase := test_cases.GeoPosTestCase{
 		Key:                              missingKey,
 		MissingLocationNames:             missingLocationNames,
-		ShouldSkipCoordinateVerification: true,
+		ShouldSkipCoordinatesVerfication: true,
 	}
 
 	return missingKeyTestCase.Run(client, logger)

@@ -60,17 +60,15 @@ func testGeospatialGeodist(stageHarness *test_case_harness.TestCaseHarness) erro
 	// Test distance from a location to itself (should be 0)
 	location := testerutils_random.RandomElementFromArray(locations)
 
-	if len(locations) > 0 {
-		selfDistanceTestCase := test_cases.GeoDistTestCase{
-			Key:              locationKey,
-			Location1:        location,
-			Location2:        location,
-			ExpectedDistance: 0.0,
-		}
+	selfDistanceTestCase := test_cases.GeoDistTestCase{
+		Key:              locationKey,
+		Location1:        location,
+		Location2:        location,
+		ExpectedDistance: 0.0,
+	}
 
-		if err := selfDistanceTestCase.Run(client, logger); err != nil {
-			return err
-		}
+	if err := selfDistanceTestCase.Run(client, logger); err != nil {
+		return err
 	}
 
 	return nil

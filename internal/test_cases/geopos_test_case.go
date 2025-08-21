@@ -14,21 +14,20 @@ type GeoPosTestCase struct {
 	Key                  string
 	Locations            []location.Location
 	MissingLocationNames []string
-
-	// If ShouldVerifyCoordinates is true, only floating point parsing is checked for existing locations
-	ShouldSkipCoordinateVerification bool
+	// If ShouldSkipCoordinatesVerfication is true, only floating point parsing is checked for existing locations
+	ShouldSkipCoordinatesVerfication bool
 }
 
-type locationAssertion struct {
+type locationNameWithAssertion struct {
 	LocationName string
 	Assertion    resp_assertions.RESPAssertion
 }
 
 type locationAssertionCollection struct {
-	locationAssertions []locationAssertion
+	locationAssertions []locationNameWithAssertion
 }
 
-func (c *locationAssertionCollection) append(locationAssertion locationAssertion) {
+func (c *locationAssertionCollection) append(locationAssertion locationNameWithAssertion) {
 	c.locationAssertions = append(c.locationAssertions, locationAssertion)
 }
 
@@ -63,11 +62,11 @@ func (t *GeoPosTestCase) Run(client *instrumented_resp_connection.InstrumentedRe
 	for _, location := range t.Locations {
 		tolerance := 10e-6
 
-		if !t.ShouldSkipCoordinateVerification {
+		if t.ShouldSkipCoordinatesVerfication {
 			tolerance = math.Inf(1)
 		}
 
-		locationAssertions.append(locationAssertion{
+		locationAssertions.append(locationNameWithAssertion{
 			LocationName: location.Name,
 			Assertion: resp_assertions.NewOrderedArrayAssertion([]resp_assertions.RESPAssertion{
 				resp_assertions.NewFloatingPointBulkStringAssertion(location.Coordinates.Longitude, tolerance),
@@ -78,7 +77,7 @@ func (t *GeoPosTestCase) Run(client *instrumented_resp_connection.InstrumentedRe
 
 	// Assertions for missing locations
 	for _, missingLocationName := range t.MissingLocationNames {
-		locationAssertions.append(locationAssertion{
+		locationAssertions.append(locationNameWithAssertion{
 			LocationName: missingLocationName,
 			Assertion:    resp_assertions.NewNilAssertion(),
 		})
