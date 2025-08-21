@@ -14,55 +14,82 @@ type GeoPosTestCase struct {
 	Key                  string
 	Locations            []location.Location
 	MissingLocationNames []string
+
 	// If ShouldVerifyCoordinates is true, only floating point parsing is checked for existing locations
-	ShouldVerifyCoordinates bool
+	ShouldSkipCoordinateVerification bool
+}
+
+type locationAssertion struct {
+	LocationName string
+	Assertion    resp_assertions.RESPAssertion
+}
+
+type locationAssertionCollection struct {
+	locationAssertions []locationAssertion
+}
+
+func (c *locationAssertionCollection) append(locationAssertion locationAssertion) {
+	c.locationAssertions = append(c.locationAssertions, locationAssertion)
+}
+
+func (c *locationAssertionCollection) shuffle() {
+	c.locationAssertions = random.ShuffleArray(c.locationAssertions)
+}
+
+func (c *locationAssertionCollection) locationNames() []string {
+	locationNames := []string{}
+
+	for _, locationAssertion := range c.locationAssertions {
+		locationNames = append(locationNames, locationAssertion.LocationName)
+	}
+
+	return locationNames
+}
+
+func (c *locationAssertionCollection) assertions() []resp_assertions.RESPAssertion {
+	assertions := []resp_assertions.RESPAssertion{}
+
+	for _, locationAssertion := range c.locationAssertions {
+		assertions = append(assertions, locationAssertion.Assertion)
+	}
+
+	return assertions
 }
 
 func (t *GeoPosTestCase) Run(client *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
+	locationAssertions := locationAssertionCollection{}
 
-	allLocationsLen := len(t.Locations) + len(t.MissingLocationNames)
-	allLocationNames := make([]string, allLocationsLen)
-	allAssertions := make([]resp_assertions.RESPAssertion, allLocationsLen)
+	// Assertions for existing locations
+	for _, location := range t.Locations {
+		tolerance := 10e-6
 
-	tolerance := math.Inf(1)
+		if !t.ShouldSkipCoordinateVerification {
+			tolerance = math.Inf(1)
+		}
 
-	if t.ShouldVerifyCoordinates {
-		tolerance = 10e-6
-	}
-
-	// Populate location names and assertion for existing locations
-	for i, loc := range t.Locations {
-		allLocationNames[i] = loc.Name
-
-		allAssertions[i] = resp_assertions.NewOrderedArrayAssertion([]resp_assertions.RESPAssertion{
-			resp_assertions.NewFloatingPointBulkStringAssertion(loc.Coordinates.Longitude, tolerance),
-			resp_assertions.NewFloatingPointBulkStringAssertion(loc.Coordinates.Latitude, tolerance),
+		locationAssertions.append(locationAssertion{
+			LocationName: location.Name,
+			Assertion: resp_assertions.NewOrderedArrayAssertion([]resp_assertions.RESPAssertion{
+				resp_assertions.NewFloatingPointBulkStringAssertion(location.Coordinates.Longitude, tolerance),
+				resp_assertions.NewFloatingPointBulkStringAssertion(location.Coordinates.Latitude, tolerance),
+			}),
 		})
 	}
 
-	// Populate location names and assertion for missing locations
-	offset := len(t.Locations)
-
-	for i, missingLocationName := range t.MissingLocationNames {
-		allLocationNames[offset+i] = missingLocationName
-		// WILL_CHANGE: NewNilArrayAssertion() after PR#211 is merged
-		allAssertions[offset+i] = resp_assertions.NewNilAssertion()
+	// Assertions for missing locations
+	for _, missingLocationName := range t.MissingLocationNames {
+		locationAssertions.append(locationAssertion{
+			LocationName: missingLocationName,
+			Assertion:    resp_assertions.NewNilAssertion(),
+		})
 	}
 
-	// Shuffle location names and assertions in same order
-	shuffledLocationNames := make([]string, allLocationsLen)
-	shuffledAssertions := make([]resp_assertions.RESPAssertion, allLocationsLen)
-	shuffledIndexes := random.RandomInts(0, allLocationsLen, allLocationsLen)
-
-	for i, idx := range shuffledIndexes {
-		shuffledLocationNames[i] = allLocationNames[idx]
-		shuffledAssertions[i] = allAssertions[idx]
-	}
+	locationAssertions.shuffle()
 
 	sendCommandTestCase := SendCommandTestCase{
 		Command:   "GEOPOS",
-		Args:      append([]string{t.Key}, shuffledLocationNames...),
-		Assertion: resp_assertions.NewOrderedArrayAssertion(shuffledAssertions),
+		Args:      append([]string{t.Key}, locationAssertions.locationNames()...),
+		Assertion: resp_assertions.NewOrderedArrayAssertion(locationAssertions.assertions()),
 	}
 
 	return sendCommandTestCase.Run(client, logger)
