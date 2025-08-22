@@ -85,3 +85,11 @@ func (c *InstrumentedRespConnection) UpdateBaseLogger(l *logger.Logger) {
 	c.logger = newLogger
 	c.UpdateCallBacks(defaultCallbacks(c.logger))
 }
+
+func (c *InstrumentedRespConnection) SetReceivedBytesTransformation(transformFunction func([]byte) []byte) {
+	c.RespConnection.Callbacks.TransformReceivedBytes = transformFunction
+}
+
+func (c *InstrumentedRespConnection) UnsetReceivedBytesTransformation() {
+	c.RespConnection.Callbacks.TransformReceivedBytes = nil
+}
