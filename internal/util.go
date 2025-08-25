@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
@@ -91,6 +92,7 @@ func SpawnClients(clientCount int, addr string, stageHarness *test_case_harness.
 		clientLogger.Debugf("Connected (port %d -> port %d)", clientPort, serverPort)
 
 		clients = append(clients, client)
+		time.Sleep(8 * time.Millisecond) // Ensure the connection order
 	}
 
 	return clients, nil
