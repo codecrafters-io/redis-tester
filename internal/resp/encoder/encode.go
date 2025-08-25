@@ -19,6 +19,10 @@ func Encode(v resp_value.Value) []byte {
 		return encodeError(v)
 	case resp_value.ARRAY:
 		return encodeArray(v)
+	case resp_value.NIL:
+		return encodeNullBulkString()
+	case resp_value.NIL_ARRAY:
+		return encodeNullArray()
 	default:
 		panic(fmt.Sprintf("unsupported type: %v", v.Type))
 	}
@@ -57,4 +61,12 @@ func encodeArray(v resp_value.Value) []byte {
 	}
 
 	return []byte(fmt.Sprintf("*%d\r\n%s", len(v.Array()), res))
+}
+
+func encodeNullBulkString() []byte {
+	return []byte("$-1\r\n")
+}
+
+func encodeNullArray() []byte {
+	return []byte("*-1\r\n")
 }
