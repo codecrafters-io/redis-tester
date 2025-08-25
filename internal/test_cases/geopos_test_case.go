@@ -104,13 +104,13 @@ func (t *GeoPosTestCase) Run(client *instrumented_resp_connection.InstrumentedRe
 	return sendCommandTestCase.Run(client, logger)
 }
 
-func normalizedRedisGeoCodeBytes(geoCodeBytes []byte) ([]byte, int) {
-	value, decodedLength, err := resp_decoder.Decode(geoCodeBytes)
+func normalizedRedisGeoCodeBytes(geoCodeBytes []byte) []byte {
+	value, _, err := resp_decoder.Decode(geoCodeBytes)
 	if err != nil {
-		return geoCodeBytes, decodedLength
+		return geoCodeBytes
 	}
 	newValue := reducePrecision(value)
-	return resp_encoder.Encode(newValue), decodedLength
+	return resp_encoder.Encode(newValue)
 }
 
 func reducePrecision(value resp_value.Value) resp_value.Value {
