@@ -149,6 +149,11 @@ func (c *RespConnection) ReadFullResyncRDBFile() ([]byte, error) {
 
 	c.readIntoBufferUntil(shouldStopReadingIntoBuffer, 2*time.Second)
 
+	if c.Callbacks.TransformReceivedBytes != nil {
+		transformedBytes, originalDecodedLength := c.Callbacks.TransformReceivedBytes(c.UnreadBuffer.Bytes())
+		c.UnreadBuffer = *bytes.NewBuffer(append(transformedBytes, c.UnreadBuffer.Bytes()[originalDecodedLength:]...))
+	}
+
 	value, readBytesCount, err := resp_decoder.DecodeFullResyncRDBFile(c.UnreadBuffer.Bytes())
 
 	loggableBytesCount := readBytesCount
