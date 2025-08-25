@@ -34,6 +34,8 @@ type RespConnectionCallbacks struct {
 
 	// TransformReceivedbytes is called when raw bytes are read from the server.
 	// This can be useful for transforming the bytes before they are logged or decoded into a value.
+	// The function should return the transformed bytes and the original decoded length, which will be
+	// used for adjusting the UnreadBuffer
 	TransformReceivedBytes func([]byte) ([]byte, int)
 }
 
