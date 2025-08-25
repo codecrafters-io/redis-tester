@@ -32,9 +32,9 @@ type RespConnectionCallbacks struct {
 	// This can be useful for success logs.
 	AfterReadValue func(value resp_value.Value)
 
-	// TransformReceivedbytes is called when raw bytes are read from the server.
+	// TransformReceivedBytes is called when raw bytes are read from the server.
 	// This can be useful for transforming the bytes before they are logged or decoded into a value.
-	TransformReceivedBytes func([]byte) ([]byte, int)
+	TransformReceivedBytes func(bytes []byte) []byte
 }
 
 type RespConnection struct {
@@ -149,19 +149,22 @@ func (c *RespConnection) ReadFullResyncRDBFile() ([]byte, error) {
 
 	c.readIntoBufferUntil(shouldStopReadingIntoBuffer, 2*time.Second)
 
-	if c.Callbacks.TransformReceivedBytes != nil {
-		transformedBytes, originalDecodedLength := c.Callbacks.TransformReceivedBytes(c.UnreadBuffer.Bytes())
-		c.UnreadBuffer = *bytes.NewBuffer(append(transformedBytes, c.UnreadBuffer.Bytes()[originalDecodedLength:]...))
-	}
+	value, decodedBytesCount, err := resp_decoder.DecodeFullResyncRDBFile(c.UnreadBuffer.Bytes())
 
-	value, readBytesCount, err := resp_decoder.DecodeFullResyncRDBFile(c.UnreadBuffer.Bytes())
-
-	loggableBytesCount := readBytesCount
+	readBytesCount := decodedBytesCount
 	if err != nil {
-		loggableBytesCount = c.UnreadBuffer.Len()
+		readBytesCount = c.UnreadBuffer.Len()
 	}
-	if c.Callbacks.AfterBytesReceived != nil && loggableBytesCount > 0 {
-		c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes()[:loggableBytesCount])
+
+	readBytes := c.UnreadBuffer.Bytes()[:readBytesCount]
+
+	if c.Callbacks.TransformReceivedBytes != nil {
+		readBytes = c.Callbacks.TransformReceivedBytes(readBytes)
+		value, _, _ = resp_decoder.DecodeFullResyncRDBFile(readBytes)
+	}
+
+	if c.Callbacks.AfterBytesReceived != nil && readBytesCount > 0 {
+		c.Callbacks.AfterBytesReceived(readBytes)
 	}
 
 	if err != nil {
@@ -212,19 +215,22 @@ func (c *RespConnection) ReadValueWithTimeout(timeout time.Duration) (resp_value
 
 	c.readIntoBufferUntil(shouldStopReadingIntoBuffer, timeout)
 
-	if c.Callbacks.TransformReceivedBytes != nil {
-		transformedBytes, originalDecodedLength := c.Callbacks.TransformReceivedBytes(c.UnreadBuffer.Bytes())
-		c.UnreadBuffer = *bytes.NewBuffer(append(transformedBytes, c.UnreadBuffer.Bytes()[originalDecodedLength:]...))
-	}
+	value, decodedBytesCount, err := resp_decoder.Decode(c.UnreadBuffer.Bytes())
 
-	value, readBytesCount, err := resp_decoder.Decode(c.UnreadBuffer.Bytes())
-
-	loggableBytesCount := readBytesCount
+	readBytesCount := decodedBytesCount
 	if err != nil {
-		loggableBytesCount = c.UnreadBuffer.Len()
+		readBytesCount = c.UnreadBuffer.Len()
 	}
-	if c.Callbacks.AfterBytesReceived != nil && loggableBytesCount > 0 {
-		c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes()[:loggableBytesCount])
+
+	readBytes := c.UnreadBuffer.Bytes()[:readBytesCount]
+
+	if c.Callbacks.TransformReceivedBytes != nil {
+		readBytes = c.Callbacks.TransformReceivedBytes(readBytes)
+		value, _, _ = resp_decoder.Decode(readBytes)
+	}
+
+	if c.Callbacks.AfterBytesReceived != nil && readBytesCount > 0 {
+		c.Callbacks.AfterBytesReceived(readBytes)
 	}
 
 	if err != nil {
