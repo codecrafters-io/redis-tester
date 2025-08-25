@@ -1,13 +1,19 @@
 package test_cases
 
 import (
+	"fmt"
 	"math"
+	"strconv"
 
 	"github.com/codecrafters-io/redis-tester/internal/data_structures/location"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
+	resp_decoder "github.com/codecrafters-io/redis-tester/internal/resp/decoder"
+	resp_encoder "github.com/codecrafters-io/redis-tester/internal/resp/encoder"
+	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/tester-utils/logger"
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
+	"github.com/codecrafters-io/tester-utils/testing"
 )
 
 type GeoPosTestCase struct {
@@ -56,6 +62,10 @@ func (c *locationAssertionCollection) assertions() []resp_assertions.RESPAsserti
 }
 
 func (t *GeoPosTestCase) Run(client *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
+	if testing.IsRecordingOrEvaluatingFixtures() {
+		client.SetReceivedBytesTransform(normalizedRedisGeoCodeBytes)
+		defer client.UnsetReceivedBytesTransform()
+	}
 	locationAssertions := locationAssertionCollection{}
 
 	// Assertions for existing locations
@@ -92,4 +102,53 @@ func (t *GeoPosTestCase) Run(client *instrumented_resp_connection.InstrumentedRe
 	}
 
 	return sendCommandTestCase.Run(client, logger)
+}
+
+func normalizedRedisGeoCodeBytes(geoCodeBytes []byte) ([]byte, int) {
+	value, decodedLength, err := resp_decoder.Decode(geoCodeBytes)
+	if err != nil {
+		return geoCodeBytes, decodedLength
+	}
+	newValue := reducePrecision(value)
+	return resp_encoder.Encode(newValue), decodedLength
+}
+
+func reducePrecision(value resp_value.Value) resp_value.Value {
+	switch value.Type {
+	case resp_value.ARRAY:
+		return reducePrecisionForArray(value)
+	case resp_value.BULK_STRING:
+		return reducePrecisionForBulkString(value)
+	default:
+		return value
+	}
+}
+
+func reducePrecisionForArray(value resp_value.Value) resp_value.Value {
+	if value.Type != resp_value.ARRAY {
+		return value
+	}
+
+	var arrayElements []resp_value.Value
+
+	for _, arrayElement := range value.Array() {
+		arrayElements = append(arrayElements, reducePrecision(arrayElement))
+	}
+
+	return resp_value.NewArrayValue(arrayElements)
+}
+
+func reducePrecisionForBulkString(value resp_value.Value) resp_value.Value {
+	if value.Type != resp_value.BULK_STRING {
+		return value
+	}
+
+	floatValue, err := strconv.ParseFloat(value.String(), 64)
+
+	if err != nil {
+		return value
+	}
+
+	floatStringWithReducedPrecision := fmt.Sprintf("%.10f", floatValue)
+	return resp_value.NewBulkStringValue(floatStringWithReducedPrecision)
 }
