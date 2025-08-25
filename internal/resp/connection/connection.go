@@ -31,6 +31,10 @@ type RespConnectionCallbacks struct {
 	// AfterReadValue is called when a RESP value is decoded from bytes read from the server.
 	// This can be useful for success logs.
 	AfterReadValue func(value resp_value.Value)
+
+	// TransformReceivedbytes is called when raw bytes are read from the server.
+	// This can be useful for transforming the bytes before they are logged or decoded into a value.
+	TransformReceivedBytes func([]byte) ([]byte, int)
 }
 
 type RespConnection struct {
@@ -202,6 +206,11 @@ func (c *RespConnection) ReadValueWithTimeout(timeout time.Duration) (resp_value
 	}
 
 	c.readIntoBufferUntil(shouldStopReadingIntoBuffer, timeout)
+
+	if c.Callbacks.TransformReceivedBytes != nil {
+		transformedBytes, originalDecodedLength := c.Callbacks.TransformReceivedBytes(c.UnreadBuffer.Bytes())
+		c.UnreadBuffer = *bytes.NewBuffer(append(transformedBytes, c.UnreadBuffer.Bytes()[originalDecodedLength:]...))
+	}
 
 	value, readBytesCount, err := resp_decoder.Decode(c.UnreadBuffer.Bytes())
 
