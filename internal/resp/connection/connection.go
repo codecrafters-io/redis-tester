@@ -226,7 +226,7 @@ func (c *RespConnection) ReadValueWithTimeout(timeout time.Duration) (resp_value
 
 	if c.Callbacks.TransformReceivedBytes != nil {
 		readBytes = c.Callbacks.TransformReceivedBytes(readBytes)
-		value, _, _ = resp_decoder.Decode(readBytes)
+		value, _, err = resp_decoder.Decode(readBytes)
 	}
 
 	if c.Callbacks.AfterBytesReceived != nil && readBytesCount > 0 {
