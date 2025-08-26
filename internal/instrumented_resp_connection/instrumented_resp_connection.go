@@ -86,14 +86,10 @@ func (c *InstrumentedRespConnection) UpdateBaseLogger(l *logger.Logger) {
 	c.UpdateCallBacks(defaultCallbacks(c.logger))
 }
 
-// SetReceivedBytesTransform sets the TransformReceivedBytes parameter of the instrumented resp connection
-// to the supplied transformer function
 func (c *InstrumentedRespConnection) SetReceivedBytesTransform(transformer func([]byte) []byte) {
 	c.Callbacks.TransformReceivedBytes = transformer
 }
 
-// UnsetReceivedBytesTransform sets the TransformreceivedBytes parameter of the instrumented resp connection
-// to identify function
 func (c *InstrumentedRespConnection) UnsetReceivedBytesTransform() {
 	c.Callbacks.TransformReceivedBytes = nil
 }

@@ -3,6 +3,7 @@ package resp_connection
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"net"
 	"time"
 
@@ -215,33 +216,37 @@ func (c *RespConnection) ReadValueWithTimeout(timeout time.Duration) (resp_value
 
 	c.readIntoBufferUntil(shouldStopReadingIntoBuffer, timeout)
 
-	value, decodedBytesCount, err := resp_decoder.Decode(c.UnreadBuffer.Bytes())
+	value, initialDecodedBytesCount, initialDecodeErr := resp_decoder.Decode(c.UnreadBuffer.Bytes())
+	initialReadBytesCount := initialDecodedBytesCount
 
-	readBytesCount := decodedBytesCount
-	if err != nil {
-		readBytesCount = c.UnreadBuffer.Len()
+	if initialDecodeErr != nil {
+		initialReadBytesCount = c.UnreadBuffer.Len()
 	}
 
-	readBytes := c.UnreadBuffer.Bytes()[:readBytesCount]
+	readBytes := c.UnreadBuffer.Bytes()[:initialReadBytesCount]
+	var postTransformDecodeError error
 
 	if c.Callbacks.TransformReceivedBytes != nil {
 		readBytes = c.Callbacks.TransformReceivedBytes(readBytes)
-		value, _, err = resp_decoder.Decode(readBytes)
+		value, _, postTransformDecodeError = resp_decoder.Decode(readBytes)
+		if initialDecodeErr == nil && postTransformDecodeError != nil {
+			panic(fmt.Sprintf("Codecrafters Internal Error - Error in decoding transformed bytes %s", readBytes))
+		}
 	}
 
-	if c.Callbacks.AfterBytesReceived != nil && readBytesCount > 0 {
+	if c.Callbacks.AfterBytesReceived != nil && initialReadBytesCount > 0 {
 		c.Callbacks.AfterBytesReceived(readBytes)
 	}
 
-	if err != nil {
-		return resp_value.Value{}, err
+	if initialDecodeErr != nil {
+		return resp_value.Value{}, initialDecodeErr
 	}
 
-	c.ReceivedBytes += readBytesCount
+	c.ReceivedBytes += initialReadBytesCount
 
 	// We've read a value! Let's remove the bytes we've read from the buffer
-	c.LastValueBytes = c.UnreadBuffer.Bytes()[:readBytesCount]
-	c.UnreadBuffer = *bytes.NewBuffer(c.UnreadBuffer.Bytes()[readBytesCount:])
+	c.LastValueBytes = c.UnreadBuffer.Bytes()[:initialReadBytesCount]
+	c.UnreadBuffer = *bytes.NewBuffer(c.UnreadBuffer.Bytes()[initialReadBytesCount:])
 
 	if c.Callbacks.AfterReadValue != nil {
 		c.Callbacks.AfterReadValue(value)
