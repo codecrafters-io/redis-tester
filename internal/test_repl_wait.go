@@ -155,7 +155,7 @@ func consumeReplicationStreamAndSendAcks(replicas []*instrumented_resp_connectio
 		if j < acksSentByReplicaSubsetCount {
 			replicaLogger.Debugf("Sending ACK to Master")
 			// Remove GETACK command bytes from offset before sending ACK.
-			if err := replica.SendCommand("REPLCONF", []string{"ACK", strconv.Itoa(replica.ReceivedBytes - len(replica.LastValueBytes))}...); err != nil {
+			if err := replica.SendCommand("REPLCONF", []string{"ACK", strconv.Itoa(replica.ReceivedBytesCount - replica.LastValueBytesCount)}...); err != nil {
 				return err
 			}
 		} else {

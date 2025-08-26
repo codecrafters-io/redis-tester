@@ -7,8 +7,6 @@ import (
 
 	"github.com/codecrafters-io/redis-tester/internal/data_structures/location"
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
-	resp_decoder "github.com/codecrafters-io/redis-tester/internal/resp/decoder"
-	resp_encoder "github.com/codecrafters-io/redis-tester/internal/resp/encoder"
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/tester-utils/logger"
@@ -63,8 +61,8 @@ func (c *locationAssertionCollection) assertions() []resp_assertions.RESPAsserti
 
 func (t *GeoPosTestCase) Run(client *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
 	if testing.IsRecordingOrEvaluatingFixtures() {
-		client.SetReceivedBytesTransform(normalizedRedisGeoCodeBytes)
-		defer client.UnsetReceivedBytesTransform()
+		client.SetReadValueInterceptor(reducePrecision)
+		defer client.UnsetReadValueInterceptor()
 	}
 	locationAssertions := locationAssertionCollection{}
 
@@ -102,15 +100,6 @@ func (t *GeoPosTestCase) Run(client *instrumented_resp_connection.InstrumentedRe
 	}
 
 	return sendCommandTestCase.Run(client, logger)
-}
-
-func normalizedRedisGeoCodeBytes(geoCodeBytes []byte) []byte {
-	value, _, err := resp_decoder.Decode(geoCodeBytes)
-	if err != nil {
-		return geoCodeBytes
-	}
-	newValue := reducePrecision(value)
-	return resp_encoder.Encode(newValue)
 }
 
 func reducePrecision(value resp_value.Value) resp_value.Value {
