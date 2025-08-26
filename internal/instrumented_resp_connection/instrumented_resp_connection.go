@@ -85,3 +85,11 @@ func (c *InstrumentedRespConnection) UpdateBaseLogger(l *logger.Logger) {
 	c.logger = newLogger
 	c.UpdateCallBacks(defaultCallbacks(c.logger))
 }
+
+func (c *InstrumentedRespConnection) SetReadValueInterceptor(transformer func(value resp_value.Value) resp_value.Value) {
+	c.ReadValueInterceptor = transformer
+}
+
+func (c *InstrumentedRespConnection) UnsetReadValueInterceptor() {
+	c.ReadValueInterceptor = nil
+}

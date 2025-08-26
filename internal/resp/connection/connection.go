@@ -34,29 +34,38 @@ type RespConnectionCallbacks struct {
 }
 
 type RespConnection struct {
-	// Conn is the underlying connection to the Redis server.
-	Conn net.Conn
-
-	// UnreadBuffer contains bytes that have been read but not decoded as a value yet.
-	// It can be used to check whether there are any bytes left in the buffer after reading a value.
-	UnreadBuffer bytes.Buffer
-
-	// LastValueBytes contains the bytes of the last value that was decoded.
-	LastValueBytes []byte
-
 	// Callbacks is a set of functions that are called at various points in the connection's lifecycle.
 	Callbacks RespConnectionCallbacks
 
-	// Offset tracking:
-	// SentBytes is the number of bytes sent using this connection, but this can be mutated when it makes sense (ex: handshake bytes are not counted by redis for acks)
-	SentBytes int
+	// Conn is the underlying connection to the Redis server.
+	// TODO: Make conn private, only expose whatever clients need
+	Conn net.Conn
 
-	// ReceivedBytes is the number of bytes received using this connection.
-	ReceivedBytes int
+	// LastValueBytesCount is the number of bytes in which the last value was decoded
+	// It is needed to send REPLCONF ACK <count>
+	// Where <count> is the number of bytes received from the master except for the count of bytes
+	// of last decoded value
+	LastValueBytesCount int
+
+	// ReadValueInterceptor is a function that is called when a value is read from the connection.
+	// It can be used to intercept a read value and return a different value.
+	ReadValueInterceptor func(value resp_value.Value) resp_value.Value
+
+	// ReceivedBytesCount is the number of bytes received using this connection.
+	ReceivedBytesCount int
+
+	// Offset tracking:
+	// SentBytesCount is the number of bytes sent using this connection, but this can be mutated when it makes sense (ex: handshake bytes are not counted by redis for acks)
+	SentBytesCount int
 
 	// TotalSentBytes is the total number of bytes sent using this connection, and is not reset or changed when the connection is reset
 	// This should be used for deciding if connection is new / reused and commands be logged as such
-	TotalSentBytes int
+	TotalSentBytesCount int
+
+	// UnreadBuffer contains bytes that have been read but not decoded as a value yet.
+	// It can be used to check whether there are any bytes left in the buffer after reading a value.
+	// TODO: Make this private, only expose buffer length or whatever is needed
+	UnreadBuffer bytes.Buffer
 }
 
 func NewRespConnectionFromAddr(addr string, callbacks RespConnectionCallbacks) (*RespConnection, error) {
@@ -87,7 +96,7 @@ func (c *RespConnection) Close() error {
 
 func (c *RespConnection) SendCommand(command string, args ...string) error {
 	if c.Callbacks.BeforeSendCommand != nil {
-		if c.TotalSentBytes > 0 {
+		if c.TotalSentBytesCount > 0 {
 			c.Callbacks.BeforeSendCommand(true, command, args...)
 		} else {
 			c.Callbacks.BeforeSendCommand(false, command, args...)
@@ -117,8 +126,8 @@ func (c *RespConnection) SendBytes(bytes []byte) error {
 		return err
 	}
 
-	c.SentBytes += len(bytes)
-	c.TotalSentBytes += len(bytes)
+	c.SentBytesCount += len(bytes)
+	c.TotalSentBytesCount += len(bytes)
 
 	// TODO: Check when this happens - is it a valid error?
 	if n != len(bytes) {
@@ -145,25 +154,27 @@ func (c *RespConnection) ReadFullResyncRDBFile() ([]byte, error) {
 
 	c.readIntoBufferUntil(shouldStopReadingIntoBuffer, 2*time.Second)
 
-	value, readBytesCount, err := resp_decoder.DecodeFullResyncRDBFile(c.UnreadBuffer.Bytes())
+	value, decodedBytesCount, err := resp_decoder.DecodeFullResyncRDBFile(c.UnreadBuffer.Bytes())
 
-	loggableBytesCount := readBytesCount
+	readBytesCount := decodedBytesCount
 	if err != nil {
-		loggableBytesCount = c.UnreadBuffer.Len()
+		readBytesCount = c.UnreadBuffer.Len()
 	}
-	if c.Callbacks.AfterBytesReceived != nil && loggableBytesCount > 0 {
-		c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes()[:loggableBytesCount])
+
+	readBytes := c.UnreadBuffer.Bytes()[:readBytesCount]
+
+	if c.Callbacks.AfterBytesReceived != nil && readBytesCount > 0 {
+		c.Callbacks.AfterBytesReceived(readBytes)
 	}
 
 	if err != nil {
 		return nil, err
 	}
 
-	c.ReceivedBytes += readBytesCount
-
 	// We've read a value! Let's remove the bytes we've read from the buffer
-	c.LastValueBytes = c.UnreadBuffer.Bytes()[:readBytesCount]
 	c.UnreadBuffer = *bytes.NewBuffer(c.UnreadBuffer.Bytes()[readBytesCount:])
+	c.ReceivedBytesCount += readBytesCount
+	c.LastValueBytesCount = readBytesCount
 
 	return value, nil
 }
@@ -187,41 +198,31 @@ func (c *RespConnection) ReadIntoBuffer() error {
 }
 
 func (c *RespConnection) ReadValueWithTimeout(timeout time.Duration) (resp_value.Value, error) {
-	shouldStopReadingIntoBuffer := func(buf []byte) bool {
-		_, _, err := resp_decoder.Decode(buf)
+	c.readIntoBufferUntil(isRespStreamCompleteOrInvalid, timeout)
 
-		if err == nil {
-			return true // We were able to read a value!
+	value, decodedBytesCount, err := resp_decoder.Decode(c.UnreadBuffer.Bytes())
+	if err != nil {
+		if c.Callbacks.AfterBytesReceived != nil && c.UnreadBuffer.Len() > 0 {
+			c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes())
 		}
 
-		if _, ok := err.(resp_decoder.InvalidInputError); ok {
-			return true // We've read an invalid value, we can stop reading immediately
-		}
-
-		return false
-	}
-
-	c.readIntoBufferUntil(shouldStopReadingIntoBuffer, timeout)
-
-	value, readBytesCount, err := resp_decoder.Decode(c.UnreadBuffer.Bytes())
-
-	loggableBytesCount := readBytesCount
-	if err != nil {
-		loggableBytesCount = c.UnreadBuffer.Len()
-	}
-	if c.Callbacks.AfterBytesReceived != nil && loggableBytesCount > 0 {
-		c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes()[:loggableBytesCount])
-	}
-
-	if err != nil {
 		return resp_value.Value{}, err
 	}
 
-	c.ReceivedBytes += readBytesCount
+	// We've read a value
+	valueBytes := c.UnreadBuffer.Bytes()[:decodedBytesCount]
+	c.ReceivedBytesCount += decodedBytesCount
+	c.UnreadBuffer = *bytes.NewBuffer(c.UnreadBuffer.Bytes()[decodedBytesCount:])
+	c.LastValueBytesCount = decodedBytesCount
 
-	// We've read a value! Let's remove the bytes we've read from the buffer
-	c.LastValueBytes = c.UnreadBuffer.Bytes()[:readBytesCount]
-	c.UnreadBuffer = *bytes.NewBuffer(c.UnreadBuffer.Bytes()[readBytesCount:])
+	if c.ReadValueInterceptor != nil {
+		value = c.ReadValueInterceptor(value)
+		valueBytes = resp_encoder.Encode(value)
+	}
+
+	if c.Callbacks.AfterBytesReceived != nil {
+		c.Callbacks.AfterBytesReceived(valueBytes)
+	}
 
 	if c.Callbacks.AfterReadValue != nil {
 		c.Callbacks.AfterReadValue(value)
@@ -250,8 +251,8 @@ func (c *RespConnection) readIntoBufferUntil(condition func([]byte) bool, timeou
 }
 
 func (c *RespConnection) ResetByteCounters() {
-	c.ReceivedBytes = 0
-	c.SentBytes = 0
+	c.ReceivedBytesCount = 0
+	c.SentBytesCount = 0
 }
 
 func (c *RespConnection) UpdateCallBacks(newCallBacks RespConnectionCallbacks) {
@@ -284,4 +285,18 @@ func newConn(address string) (net.Conn, error) {
 		attempts += 1
 		time.Sleep(100 * time.Millisecond)
 	}
+}
+
+func isRespStreamCompleteOrInvalid(buf []byte) bool {
+	_, _, err := resp_decoder.Decode(buf)
+
+	if err == nil {
+		return true // Complete value
+	}
+
+	if _, ok := err.(resp_decoder.InvalidInputError); ok {
+		return true // We've read an invalid value, we can stop reading immediately
+	}
+
+	return false
 }

@@ -62,7 +62,7 @@ func testReplGetaAckNonZero(stageHarness *test_case_harness.TestCaseHarness) err
 	master.UpdateBaseLogger(logger)
 
 	getAckTestCase := test_cases.GetAckTestCase{}
-	if err := getAckTestCase.Run(master, logger, master.SentBytes); err != nil {
+	if err := getAckTestCase.Run(master, logger, master.SentBytesCount); err != nil {
 		return err
 	}
 
@@ -74,7 +74,7 @@ func testReplGetaAckNonZero(stageHarness *test_case_harness.TestCaseHarness) err
 
 	logger.UpdateLastSecondaryPrefix("test")
 	master.UpdateBaseLogger(logger)
-	if err := getAckTestCase.Run(master, logger, master.SentBytes); err != nil {
+	if err := getAckTestCase.Run(master, logger, master.SentBytesCount); err != nil {
 		return err
 	}
 
@@ -94,5 +94,5 @@ func testReplGetaAckNonZero(stageHarness *test_case_harness.TestCaseHarness) err
 
 	logger.UpdateLastSecondaryPrefix("test")
 	master.UpdateBaseLogger(logger)
-	return getAckTestCase.Run(master, logger, master.SentBytes)
+	return getAckTestCase.Run(master, logger, master.SentBytesCount)
 }
