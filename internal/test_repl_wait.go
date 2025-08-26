@@ -9,6 +9,8 @@ import (
 
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	resp_encoder "github.com/codecrafters-io/redis-tester/internal/resp/encoder"
+	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 
@@ -152,10 +154,16 @@ func consumeReplicationStreamAndSendAcks(replicas []*instrumented_resp_connectio
 			return err
 		}
 
+		getAckCommandBytes := resp_encoder.Encode(resp_value.NewArrayValue([]resp_value.Value{
+			resp_value.NewBulkStringValue("REPLCONF"),
+			resp_value.NewBulkStringValue("GETACK"),
+			resp_value.NewBulkStringValue("*"),
+		}))
+
 		if j < acksSentByReplicaSubsetCount {
 			replicaLogger.Debugf("Sending ACK to Master")
 			// Remove GETACK command bytes from offset before sending ACK.
-			if err := replica.SendCommand("REPLCONF", []string{"ACK", strconv.Itoa(replica.ReceivedBytes - len(replica.LastValueBytes))}...); err != nil {
+			if err := replica.SendCommand("REPLCONF", []string{"ACK", strconv.Itoa(replica.ReceivedBytes - len(getAckCommandBytes))}...); err != nil {
 				return err
 			}
 		} else {

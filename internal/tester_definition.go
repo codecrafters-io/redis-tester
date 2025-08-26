@@ -348,5 +348,38 @@ var testerDefinition = tester_definition.TesterDefinition{
 			Slug:     "sq7",
 			TestFunc: testZsetZrem,
 		},
+		// Geospatial commands
+		{
+			Slug:     "zt4",
+			TestFunc: testGeospatialGeoadd,
+		},
+		{
+			Slug:     "ck3",
+			TestFunc: testGeospatialValidateCoordinates,
+		},
+		{
+			Slug:     "tn5",
+			TestFunc: testGeospatialStoreLocation,
+		},
+		{
+			Slug:     "cr3",
+			TestFunc: testGeospatialCalculateScore,
+		},
+		{
+			Slug:     "xg4",
+			TestFunc: testGeospatialGeopos,
+		},
+		{
+			Slug:     "hb5",
+			TestFunc: testGeospatialDecodeCoordinates,
+		},
+		{
+			Slug:     "ek6",
+			TestFunc: testGeospatialGeodist,
+		},
+		{
+			Slug:     "rm9",
+			TestFunc: testGeospatialGeosearch,
+		},
 	},
 }

@@ -27,6 +27,7 @@ func (a FloatingPointBulkStringAssertion) Run(value resp_value.Value) error {
 
 	stringValue := value.String()
 	floatValue, err := strconv.ParseFloat(stringValue, 64)
+
 	if err != nil {
 		return fmt.Errorf("Expected %q to be a floating point number", stringValue)
 	}
@@ -36,7 +37,13 @@ func (a FloatingPointBulkStringAssertion) Run(value resp_value.Value) error {
 	if diff > a.Tolerance {
 		// display full precision
 		expectedValueStr := strconv.FormatFloat(a.ExpectedValue, 'f', -1, 64)
-		expectedStr := fmt.Sprintf("%s (± %g)", expectedValueStr, a.Tolerance)
+		toleranceStr := ""
+
+		if a.Tolerance != 0 {
+			toleranceStr = fmt.Sprintf(" (± %g)", a.Tolerance)
+		}
+
+		expectedStr := fmt.Sprintf("%s%s", expectedValueStr, toleranceStr)
 		return fmt.Errorf("Expected %s, got %s", expectedStr, stringValue)
 	}
 
