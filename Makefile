@@ -96,6 +96,7 @@ test_all_with_redis:
 	make test_list_with_redis || true
 	make test_pubsub_with_redis || true
 	make test_zset_with_redis || true
+	make test_geospatial_with_redis || true
 
 setup:
 	echo "Setting up redis-tester prerequisites for Linux"

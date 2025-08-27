@@ -68,7 +68,7 @@ func (t *GeoPosTestCase) Run(client *instrumented_resp_connection.InstrumentedRe
 
 	// Assertions for existing locations
 	for _, location := range t.Locations {
-		tolerance := 10e-6
+		tolerance := 1e-6
 
 		if t.ShouldSkipCoordinatesVerfication {
 			tolerance = math.Inf(1)

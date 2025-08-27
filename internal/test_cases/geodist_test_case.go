@@ -20,7 +20,7 @@ func (t *GeoDistTestCase) Run(client *instrumented_resp_connection.InstrumentedR
 	geodistTestCase := SendCommandTestCase{
 		Command:   "GEODIST",
 		Args:      []string{t.Key, t.Location1.Name, t.Location2.Name},
-		Assertion: resp_assertions.NewFloatingPointBulkStringAssertion(distance, 10e-4),
+		Assertion: resp_assertions.NewFloatingPointBulkStringAssertion(distance, 1e-4),
 	}
 
 	return geodistTestCase.Run(client, logger)

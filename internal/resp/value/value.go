@@ -138,6 +138,10 @@ func (v Value) ToSerializable() interface{} {
 	switch v.Type {
 	case BULK_STRING:
 		return v.String()
+	case NIL:
+		return "$-1\r\n"
+	case NIL_ARRAY:
+		return "*-1\r\n"
 	case INTEGER:
 		return v.Integer()
 	case ARRAY:
