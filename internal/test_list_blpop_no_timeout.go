@@ -24,8 +24,6 @@ func testListBlpopNoTimeout(stageHarness *test_case_harness.TestCaseHarness) err
 		defer c.Close()
 	}
 
-	sendingClient := clients[0]
-
 	listKey := testerutils_random.RandomWord()
 	pushValue := testerutils_random.RandomWord()
 
@@ -33,8 +31,8 @@ func testListBlpopNoTimeout(stageHarness *test_case_harness.TestCaseHarness) err
 
 	blockingClientGroupTestCase := test_cases.BlockingClientGroupTestCase{}
 	blockingClientGroupTestCase.
-		AddClientWithExpectedResponse(clients[1], "BLPOP", []string{listKey, "0"}, blPopResponseAssertion).
-		AddClientWithNoExpectedResponse(clients[2], "BLPOP", []string{listKey, "0"})
+		AddClientWithExpectedResponse(clients[0], "BLPOP", []string{listKey, "0"}, blPopResponseAssertion).
+		AddClientWithNoExpectedResponse(clients[1], "BLPOP", []string{listKey, "0"})
 
 	// We only send commands here, not expecting responses yet
 	if err := blockingClientGroupTestCase.SendBlockingCommands(); err != nil {
@@ -47,9 +45,10 @@ func testListBlpopNoTimeout(stageHarness *test_case_harness.TestCaseHarness) err
 		Assertion: resp_assertions.NewIntegerAssertion(1),
 	}
 
+	sendingClient := clients[2]
 	if err := rpushTestCase.Run(sendingClient, logger); err != nil {
 		return err
 	}
 
-	return blockingClientGroupTestCase.AssertResponses(logger)
+	return blockingClientGroupTestCase.AssertResponsesInReverseOrder(logger)
 }
