@@ -18,7 +18,8 @@ type clientWithExpectedResponse struct {
 }
 
 type BlockingClientGroupTestCase struct {
-	clientsWithExpectedResponses []clientWithExpectedResponse
+	clientsWithExpectedResponses        []clientWithExpectedResponse
+	ShouldAssertResponsesInReverseOrder bool
 }
 
 func (t *BlockingClientGroupTestCase) AddClientWithExpectedResponse(client *instrumented_resp_connection.InstrumentedRespConnection, command string, args []string, assertion resp_assertions.RESPAssertion) *BlockingClientGroupTestCase {
@@ -55,38 +56,27 @@ func (t *BlockingClientGroupTestCase) SendBlockingCommands() error {
 }
 
 func (t *BlockingClientGroupTestCase) AssertResponses(logger *logger.Logger) error {
-	for _, clientWithExpectedResponse := range t.clientsWithExpectedResponses {
-		if err := t.assertResponse(&clientWithExpectedResponse, logger); err != nil {
-			return err
-		}
+	start, end, step := 0, len(t.clientsWithExpectedResponses), 1
+	if t.ShouldAssertResponsesInReverseOrder {
+		start, end, step = len(t.clientsWithExpectedResponses)-1, -1, -1
 	}
-	return nil
-}
 
-func (t *BlockingClientGroupTestCase) AssertResponsesInReverseOrder(logger *logger.Logger) error {
-	for i := len(t.clientsWithExpectedResponses) - 1; i >= 0; i-- {
+	for i := start; (t.ShouldAssertResponsesInReverseOrder && i > end) || (!t.ShouldAssertResponsesInReverseOrder && i < end); i += step {
 		clientWithExpectedResponse := t.clientsWithExpectedResponses[i]
-		if err := t.assertResponse(&clientWithExpectedResponse, logger); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func (t *BlockingClientGroupTestCase) assertResponse(clientWithExpectedResponse *clientWithExpectedResponse, logger *logger.Logger) error {
-	clientLogger := clientWithExpectedResponse.Client.GetLogger()
-	if clientWithExpectedResponse.Assertion == nil {
-		testCase := NoResponseTestCase{}
-		if err := testCase.Run(clientWithExpectedResponse.Client); err != nil {
-			return err
-		}
-	} else {
-		clientLogger.Infof("Expecting response of %s command", clientWithExpectedResponse.Command)
-		testCase := ReceiveValueTestCase{
-			Assertion: *clientWithExpectedResponse.Assertion,
-		}
-		if err := testCase.Run(clientWithExpectedResponse.Client, logger); err != nil {
-			return err
+		clientLogger := clientWithExpectedResponse.Client.GetLogger()
+		if clientWithExpectedResponse.Assertion == nil {
+			testCase := NoResponseTestCase{}
+			if err := testCase.Run(clientWithExpectedResponse.Client); err != nil {
+				return err
+			}
+		} else {
+			clientLogger.Infof("Expecting response of %s command", clientWithExpectedResponse.Command)
+			testCase := ReceiveValueTestCase{
+				Assertion: *clientWithExpectedResponse.Assertion,
+			}
+			if err := testCase.Run(clientWithExpectedResponse.Client, logger); err != nil {
+				return err
+			}
 		}
 	}
 	return nil
