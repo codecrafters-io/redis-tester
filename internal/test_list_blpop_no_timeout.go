@@ -29,9 +29,7 @@ func testListBlpopNoTimeout(stageHarness *test_case_harness.TestCaseHarness) err
 
 	blPopResponseAssertion := resp_assertions.NewOrderedStringArrayAssertion([]string{listKey, pushValue})
 
-	blockingClientGroupTestCase := test_cases.BlockingClientGroupTestCase{
-		ShouldAssertResponsesInReverseOrder: true,
-	}
+	blockingClientGroupTestCase := test_cases.BlockingClientGroupTestCase{}
 	blockingClientGroupTestCase.
 		AddClientWithExpectedResponse(clients[0], "BLPOP", []string{listKey, "0"}, blPopResponseAssertion).
 		AddClientWithNoExpectedResponse(clients[1], "BLPOP", []string{listKey, "0"})

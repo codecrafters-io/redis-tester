@@ -18,8 +18,7 @@ type clientWithExpectedResponse struct {
 }
 
 type BlockingClientGroupTestCase struct {
-	clientsWithExpectedResponses        []clientWithExpectedResponse
-	ShouldAssertResponsesInReverseOrder bool
+	clientsWithExpectedResponses []clientWithExpectedResponse
 }
 
 func (t *BlockingClientGroupTestCase) AddClientWithExpectedResponse(client *instrumented_resp_connection.InstrumentedRespConnection, command string, args []string, assertion resp_assertions.RESPAssertion) *BlockingClientGroupTestCase {
@@ -56,12 +55,7 @@ func (t *BlockingClientGroupTestCase) SendBlockingCommands() error {
 }
 
 func (t *BlockingClientGroupTestCase) AssertResponses(logger *logger.Logger) error {
-	start, end, step := 0, len(t.clientsWithExpectedResponses), 1
-	if t.ShouldAssertResponsesInReverseOrder {
-		start, end, step = len(t.clientsWithExpectedResponses)-1, -1, -1
-	}
-
-	for i := start; (t.ShouldAssertResponsesInReverseOrder && i > end) || (!t.ShouldAssertResponsesInReverseOrder && i < end); i += step {
+	for i := len(t.clientsWithExpectedResponses) - 1; i >= 0; i-- {
 		clientWithExpectedResponse := t.clientsWithExpectedResponses[i]
 		clientLogger := clientWithExpectedResponse.Client.GetLogger()
 		if clientWithExpectedResponse.Assertion == nil {
