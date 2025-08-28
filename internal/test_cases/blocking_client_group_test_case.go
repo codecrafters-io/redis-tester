@@ -55,7 +55,8 @@ func (t *BlockingClientGroupTestCase) SendBlockingCommands() error {
 }
 
 func (t *BlockingClientGroupTestCase) AssertResponses(logger *logger.Logger) error {
-	for _, clientWithExpectedResponse := range t.clientsWithExpectedResponses {
+	for i := len(t.clientsWithExpectedResponses) - 1; i >= 0; i-- {
+		clientWithExpectedResponse := t.clientsWithExpectedResponses[i]
 		clientLogger := clientWithExpectedResponse.Client.GetLogger()
 		if clientWithExpectedResponse.Assertion == nil {
 			testCase := NoResponseTestCase{}
