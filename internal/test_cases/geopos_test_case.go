@@ -74,11 +74,13 @@ func (t *GeoPosTestCase) Run(client *instrumented_resp_connection.InstrumentedRe
 			tolerance = math.Inf(1)
 		}
 
+		// Calculate geogrid center coordinates for assertion
+		geoGridCenterCoordinates := location.GetGeoGridCenterCoordinates()
 		locationAssertions.append(locationNameWithAssertion{
 			LocationName: location.Name,
 			Assertion: resp_assertions.NewOrderedArrayAssertion([]resp_assertions.RESPAssertion{
-				resp_assertions.NewFloatingPointBulkStringAssertion(location.Coordinates.Longitude, tolerance),
-				resp_assertions.NewFloatingPointBulkStringAssertion(location.Coordinates.Latitude, tolerance),
+				resp_assertions.NewFloatingPointBulkStringAssertion(geoGridCenterCoordinates.Longitude, tolerance),
+				resp_assertions.NewFloatingPointBulkStringAssertion(geoGridCenterCoordinates.Latitude, tolerance),
 			}),
 		})
 	}
