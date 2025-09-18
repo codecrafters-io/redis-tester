@@ -1,6 +1,7 @@
 package test_cases
 
 import (
+	"sync"
 	"time"
 
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
@@ -55,23 +56,58 @@ func (t *BlockingClientGroupTestCase) SendBlockingCommands() error {
 }
 
 func (t *BlockingClientGroupTestCase) AssertResponses(logger *logger.Logger) error {
-	for i := len(t.clientsWithExpectedResponses) - 1; i >= 0; i-- {
-		clientWithExpectedResponse := t.clientsWithExpectedResponses[i]
-		clientLogger := clientWithExpectedResponse.Client.GetLogger()
-		if clientWithExpectedResponse.Assertion == nil {
-			testCase := NoResponseTestCase{}
-			if err := testCase.Run(clientWithExpectedResponse.Client); err != nil {
-				return err
-			}
-		} else {
-			clientLogger.Infof("Expecting response of %s command", clientWithExpectedResponse.Command)
-			testCase := ReceiveValueTestCase{
-				Assertion: *clientWithExpectedResponse.Assertion,
-			}
-			if err := testCase.Run(clientWithExpectedResponse.Client, logger); err != nil {
-				return err
-			}
+	if len(t.clientsWithExpectedResponses) == 0 {
+		return nil
+	}
+
+	// First, log which clients expect responses
+	// clients which do not expect responses don't need logging because it's automatically handled by NoResponseTestCase
+	for _, clientWithExpectedResponse := range t.clientsWithExpectedResponses {
+		if clientWithExpectedResponse.Assertion != nil {
+			clientWithExpectedResponse.Client.GetLogger().Infof("Expecting response of %s command", clientWithExpectedResponse.Command)
 		}
 	}
+
+	// Use sync.WaitGroup to handle test cases in any order
+	var wg sync.WaitGroup
+	errorChan := make(chan error, len(t.clientsWithExpectedResponses))
+
+	for _, cwr := range t.clientsWithExpectedResponses {
+		wg.Add(1)
+		go func(client clientWithExpectedResponse) {
+			defer wg.Done()
+
+			if client.Assertion == nil {
+				// No response expected
+				testCase := NoResponseTestCase{}
+				if err := testCase.Run(client.Client); err != nil {
+					errorChan <- err
+				}
+				return
+			}
+			// Response expected
+			testCase := ReceiveValueTestCase{
+				Assertion: *client.Assertion,
+			}
+
+			if err := testCase.Run(client.Client, logger); err != nil {
+				errorChan <- err
+			}
+		}(cwr)
+	}
+
+	// Wait for all goroutines to complete
+	go func() {
+		wg.Wait()
+		close(errorChan)
+	}()
+
+	// Check for any errors
+	for err := range errorChan {
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
