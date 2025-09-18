@@ -9,7 +9,7 @@ import (
 	"github.com/codecrafters-io/tester-utils/logger"
 )
 
-type clientWithExpectedResponse struct {
+type clientAssertionBinding struct {
 	Client  *instrumented_resp_connection.InstrumentedRespConnection
 	Command string
 	Args    []string
@@ -19,11 +19,11 @@ type clientWithExpectedResponse struct {
 }
 
 type BlockingClientGroupTestCase struct {
-	clientsWithExpectedResponses []clientWithExpectedResponse
+	clientsWithExpectedAssertions []clientAssertionBinding
 }
 
 func (t *BlockingClientGroupTestCase) AddClientWithExpectedResponse(client *instrumented_resp_connection.InstrumentedRespConnection, command string, args []string, assertion resp_assertions.RESPAssertion) *BlockingClientGroupTestCase {
-	t.clientsWithExpectedResponses = append(t.clientsWithExpectedResponses, clientWithExpectedResponse{
+	t.clientsWithExpectedAssertions = append(t.clientsWithExpectedAssertions, clientAssertionBinding{
 		Client:    client,
 		Command:   command,
 		Args:      args,
@@ -34,7 +34,7 @@ func (t *BlockingClientGroupTestCase) AddClientWithExpectedResponse(client *inst
 }
 
 func (t *BlockingClientGroupTestCase) AddClientWithNoExpectedResponse(client *instrumented_resp_connection.InstrumentedRespConnection, command string, args []string) *BlockingClientGroupTestCase {
-	t.clientsWithExpectedResponses = append(t.clientsWithExpectedResponses, clientWithExpectedResponse{
+	t.clientsWithExpectedAssertions = append(t.clientsWithExpectedAssertions, clientAssertionBinding{
 		Client:    client,
 		Command:   command,
 		Args:      args,
@@ -45,7 +45,7 @@ func (t *BlockingClientGroupTestCase) AddClientWithNoExpectedResponse(client *in
 }
 
 func (t *BlockingClientGroupTestCase) SendBlockingCommands() error {
-	for _, clientWithExpectedResponse := range t.clientsWithExpectedResponses {
+	for _, clientWithExpectedResponse := range t.clientsWithExpectedAssertions {
 		if err := clientWithExpectedResponse.Client.SendCommand(clientWithExpectedResponse.Command, clientWithExpectedResponse.Args...); err != nil {
 			return err
 		}
@@ -56,49 +56,49 @@ func (t *BlockingClientGroupTestCase) SendBlockingCommands() error {
 }
 
 func (t *BlockingClientGroupTestCase) AssertResponses(logger *logger.Logger) error {
-	if len(t.clientsWithExpectedResponses) == 0 {
+	if len(t.clientsWithExpectedAssertions) == 0 {
 		return nil
 	}
 
 	// First, log which clients expect responses
 	// clients which do not expect responses don't need logging because it's automatically handled by NoResponseTestCase
-	for _, clientWithExpectedResponse := range t.clientsWithExpectedResponses {
+	for _, clientWithExpectedResponse := range t.clientsWithExpectedAssertions {
 		if clientWithExpectedResponse.Assertion != nil {
 			clientWithExpectedResponse.Client.GetLogger().Infof("Expecting response of %s command", clientWithExpectedResponse.Command)
 		}
 	}
 
 	// Use sync.WaitGroup to handle test cases in any order
-	var wg sync.WaitGroup
-	errorChan := make(chan error, len(t.clientsWithExpectedResponses))
+	var waitGroup sync.WaitGroup
+	errorChan := make(chan error, len(t.clientsWithExpectedAssertions))
 
-	for _, cwr := range t.clientsWithExpectedResponses {
-		wg.Add(1)
-		go func(client clientWithExpectedResponse) {
-			defer wg.Done()
+	for _, clientWithExpectedResponse := range t.clientsWithExpectedAssertions {
+		waitGroup.Add(1)
+		go func(clientWithExpectedResponse clientAssertionBinding) {
+			defer waitGroup.Done()
 
-			if client.Assertion == nil {
+			if clientWithExpectedResponse.Assertion == nil {
 				// No response expected
 				testCase := NoResponseTestCase{}
-				if err := testCase.Run(client.Client); err != nil {
+				if err := testCase.Run(clientWithExpectedResponse.Client); err != nil {
 					errorChan <- err
 				}
 				return
 			}
 			// Response expected
 			testCase := ReceiveValueTestCase{
-				Assertion: *client.Assertion,
+				Assertion: *clientWithExpectedResponse.Assertion,
 			}
 
-			if err := testCase.Run(client.Client, logger); err != nil {
+			if err := testCase.Run(clientWithExpectedResponse.Client, logger); err != nil {
 				errorChan <- err
 			}
-		}(cwr)
+		}(clientWithExpectedResponse)
 	}
 
 	// Wait for all goroutines to complete
 	go func() {
-		wg.Wait()
+		waitGroup.Wait()
 		close(errorChan)
 	}()
 
