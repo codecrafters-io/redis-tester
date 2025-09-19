@@ -51,9 +51,12 @@ func testStreamsXreadBlock(stageHarness *test_case_harness.TestCaseHarness) erro
 		}},
 	}})
 
-	xreadTestCase := test_cases.BlockingClientGroupTestCase{}
-	xreadTestCase.AddClientWithExpectedResponse(client1, "XREAD",
-		[]string{"block", "1000", "streams", streamKey, "0-1"}, xreadAssertion)
+	xreadTestCase := test_cases.BlockingClientGroupTestCase{
+		CommandToSend:                 []string{"XREAD", "block", "1000", "streams", streamKey, "0-1"},
+		Clients:                       []*instrumented_resp_connection.InstrumentedRespConnection{client1},
+		ResponseExpectingClientsCount: 1,
+		AssertionForReceivedResponse:  xreadAssertion,
+	}
 
 	xreadTestCase.SendBlockingCommands()
 

@@ -76,8 +76,13 @@ func testPushBeforeTimeout(stageHarness *test_case_harness.TestCaseHarness) erro
 	timeoutArg := fmt.Sprintf("%.1f", float32(timeoutMS)/1000)
 
 	blPopResponseAssertion := resp_assertions.NewOrderedStringArrayAssertion([]string{listKey, pushValue})
-	blockingClientGroupTestCase := test_cases.BlockingClientGroupTestCase{}
-	blockingClientGroupTestCase.AddClientWithExpectedResponse(clients[0], "BLPOP", []string{listKey, timeoutArg}, blPopResponseAssertion)
+
+	blockingClientGroupTestCase := test_cases.BlockingClientGroupTestCase{
+		CommandToSend:                 []string{"BLPOP", listKey, timeoutArg},
+		AssertionForReceivedResponse:  blPopResponseAssertion,
+		ResponseExpectingClientsCount: 1,
+		Clients:                       clients[0:1],
+	}
 
 	if err := blockingClientGroupTestCase.SendBlockingCommands(); err != nil {
 		return err
