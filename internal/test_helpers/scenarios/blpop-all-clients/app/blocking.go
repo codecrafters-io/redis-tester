@@ -12,10 +12,6 @@ type BlockingManager struct {
 	mu      sync.RWMutex
 }
 
-type Waiter struct {
-	conn net.Conn
-}
-
 func NewBlockingManager() *BlockingManager {
 	return &BlockingManager{
 		waiters: list.New(),
