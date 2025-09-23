@@ -37,14 +37,18 @@ func (t *BlockingClientGroupTestCase) SendBlockingCommands() error {
 func (t *BlockingClientGroupTestCase) AssertResponses(logger *logger.Logger) error {
 	// ensure that exactly 'ResponseExpectingClientsCount' clients receive the response
 	// if the count is less -> error, more -> error
-	logger.Infof("Expecting %d client(s) to receive response of %s command", t.ResponseExpectingClientsCount, t.CommandToSend[0])
+	clientWord := "client"
+	if t.ResponseExpectingClientsCount != 1 {
+		clientWord = "clients"
+	}
+	logger.Infof("Expecting %d %s to receive response of %s command", t.ResponseExpectingClientsCount, clientWord, t.CommandToSend[0])
 
 	receivedResponsesCount := 0
 
 	// Use a doubly linked list for easy removal during iteration
 	clientsToProcess := list.New()
 	for _, client := range t.Clients {
-		clientsToProcess.PushBack(client)
+		clientsToProcess.PushFront(client)
 	}
 
 	errorChannel := make(chan error)
@@ -69,25 +73,15 @@ func (t *BlockingClientGroupTestCase) AssertResponses(logger *logger.Logger) err
 
 	// Sleep for a small duration so if a wrong client receives a response even a little while later
 	// we don't miss it
-	time.Sleep(1 * time.Second)
+	time.Sleep(1 * time.Millisecond)
 
 	// Check if any clients receive extra response
 	for element := clientsToProcess.Front(); element != nil; element = element.Next() {
 		client := element.Value.(*instrumented_resp_connection.InstrumentedRespConnection)
-		client.ReadIntoBuffer()
-		if client.UnreadBuffer.Len() > 0 {
-			receiveValueTestCase := ReceiveValueTestCase{}
+		receiveValueTestCase := NoResponseTestCase{}
 
-			if err := receiveValueTestCase.RunWithoutAssert(client); err != nil {
-				return err
-			}
-
-			return fmt.Errorf(
-				"%s received response of %s command after %d clients already received it",
-				client.GetIdentifier(),
-				t.CommandToSend[0],
-				t.ResponseExpectingClientsCount,
-			)
+		if err := receiveValueTestCase.Run(client); err != nil {
+			return err
 		}
 	}
 
