@@ -4,15 +4,12 @@ import (
 	"net"
 	"strconv"
 	"strings"
-	"sync"
 )
 
 type CommandProcessor struct {
-	store          *Store
-	resp           *RESPCodec
-	blocker        *BlockingManager
-	blockedClients int
-	mu             sync.Mutex
+	store   *Store
+	resp    *RESPCodec
+	blocker *BlockingManager
 }
 
 func NewCommandProcessor(store *Store, resp *RESPCodec, blocker *BlockingManager) *CommandProcessor {
@@ -89,13 +86,7 @@ func (cp *CommandProcessor) handleBLPop(args []string, conn net.Conn) []byte {
 		return cp.resp.EncodeArray([]string{key, *value})
 	}
 
-	// Always ignore the first client: Bug introduced to send response to wrong client on stage ec3
-	cp.mu.Lock()
-	if cp.blockedClients == 0 {
-		cp.blockedClients += 1
-	} else {
-		cp.blocker.WaitForElement(key, conn)
-	}
-	cp.mu.Unlock()
+	cp.blocker.WaitForElement(key, conn)
+
 	return nil
 }

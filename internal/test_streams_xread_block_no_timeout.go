@@ -49,13 +49,13 @@ func testStreamsXreadBlockNoTimeout(stageHarness *test_case_harness.TestCaseHarn
 		}},
 	}})
 
-	xReadTestCase := test_cases.BlockingClientGroupTestCase{}
-	xReadTestCase.AddClientWithExpectedResponse(
-		client1,
-		"XREAD",
-		[]string{"block", "0", "streams", streamKey, "0-1"},
-		xreadAssertion,
-	)
+	xReadTestCase := test_cases.BlockingClientGroupTestCase{
+		Clients:                       []*instrumented_resp_connection.InstrumentedRespConnection{client1},
+		CommandToSend:                 []string{"XREAD", "block", "0", "streams", streamKey, "0-1"},
+		ResponseExpectingClientsCount: 1,
+		AssertionForReceivedResponse:  xreadAssertion,
+	}
+
 	xReadTestCase.SendBlockingCommands()
 
 	// send xadd from another client

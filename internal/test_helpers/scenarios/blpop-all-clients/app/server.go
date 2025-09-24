@@ -69,8 +69,9 @@ func (s *RedisServer) handleConnection(conn net.Conn) {
 				return
 			}
 		}
-		if len(command) > 0 && strings.ToLower(command[0]) == "rpush" {
-			s.blocker.NotifyAllWaiters(s.store, s.resp)
+		if len(command) > 0 && strings.ToLower(command[0]) == "rpush" && len(command) > 1 {
+			key := command[1] // Get the key from the RPUSH command
+			s.blocker.NotifyAllWaiters(key, s.store, s.resp)
 		}
 	}
 }
