@@ -37,11 +37,12 @@ func (t *BlockingClientGroupTestCase) SendBlockingCommands() error {
 func (t *BlockingClientGroupTestCase) AssertResponses(logger *logger.Logger) error {
 	// ensure that exactly 'ResponseExpectingClientsCount' clients receive the response
 	// if the count is less -> error, more -> error
-	clientWord := "client"
-	if t.ResponseExpectingClientsCount != 1 {
-		clientWord = "clients"
-	}
-	logger.Infof("Expecting %d %s to receive response of %s command", t.ResponseExpectingClientsCount, clientWord, t.CommandToSend[0])
+	logger.Infof(
+		"Expecting %d %s to receive response of %s command",
+		t.ResponseExpectingClientsCount,
+		pluralize(t.ResponseExpectingClientsCount, "client", "clients"),
+		t.CommandToSend[0],
+	)
 
 	receivedResponsesCount := 0
 
