@@ -93,7 +93,7 @@ extensions:
     name: "Transactions"
     description_markdown: |-
       In this challenge extension you'll add support for [Transactions][redis-transactions] to your Redis implementation.
-      
+
       Along the way, you'll learn about the [MULTI][multi-command], [EXEC][exec-command], and [DISCARD][discard-command] commands, as well as how Redis handles transactions atomically.
 
       [redis-transactions]: https://redis.io/docs/latest/develop/interact/transactions/
@@ -103,7 +103,7 @@ extensions:
 
   - slug: "lists"
     name: "Lists"
-    description_markdown : |-
+    description_markdown: |-
       In this challenge extension you'll add support for [Lists][redis-lists] to your Redis implementation.
 
       Along the way, you'll learn commands like RPUSH, LRANGE, and more.
@@ -114,7 +114,7 @@ extensions:
 
   - slug: "pub-sub"
     name: "Pub/Sub"
-    description_markdown : |-
+    description_markdown: |-
       In this challenge extension you'll add support for [Publish/Subscribe (Pub/Sub)][redis-pub-sub] to your Redis implementation.
 
       Along the way, you'll learn commands like [SUBSCRIBE][subscribe-command], [PUBLISH][publish-command], and more.
@@ -125,7 +125,7 @@ extensions:
 
   - slug: "sorted-sets"
     name: "Sorted Sets"
-    description_markdown : |-
+    description_markdown: |-
       In this challenge extension you'll add support for [Sorted Sets (zsets)][redis-zset] to your Redis implementation.
 
       Along the way, you'll learn commands like [ZADD][zadd-command], [ZRANGE][zrange-command], and more.
@@ -463,7 +463,7 @@ stages:
       The expiry for a key can be provided using the "PX" argument to the [SET](https://redis.io/commands/set) command. The expiry is provided in milliseconds.
 
       ```bash
-      $ redis-cli SET foo bar px 100 # Sets the key "foo" to "bar" with an expiry of 100 milliseconds
+      $ redis-cli SET foo bar PX 100 # Sets the key "foo" to "bar" with an expiry of 100 milliseconds
       OK
       ```
 
@@ -485,7 +485,7 @@ stages:
       It'll then send a `SET` command to your server to set a key with an expiry:
 
       ```bash
-      $ redis-cli SET foo bar px 100
+      $ redis-cli SET foo bar PX 100
       ```
 
       It'll then immediately send a `GET` command to retrieve the value:
@@ -3576,7 +3576,7 @@ stages:
     name: "Blocking retrieval with timeout"
     difficulty: medium
     marketing_md: In this stage, you will add support for a non-zero timeout duration for the `BLPOP` command.
-  
+
   # Pub-Sub
   - slug: "mx3"
     primary_extension_slug: "pub-sub"
@@ -3595,7 +3595,7 @@ stages:
     name: "Enter subscribed mode"
     difficulty: medium
     marketing_md: In this stage, you'll add support for marking a client as having entered subscribed mode.
-    
+
   - slug: "lf1"
     primary_extension_slug: "pub-sub"
     name: "PING in subscribed mode"
