@@ -32,7 +32,7 @@ func testExpiry(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	setCommandTestCase := test_cases.SendCommandTestCase{
 		Command:   "set",
-		Args:      []string{key, value, "px", "100"},
+		Args:      []string{key, value, "PX", "100"},
 		Assertion: resp_assertions.NewStringAssertion("OK"),
 	}
 
