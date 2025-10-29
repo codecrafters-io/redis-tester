@@ -7,12 +7,12 @@ import (
 )
 
 type StringAbsentInArrayAssertion struct {
-	expectedAbsentElement string
+	expectedAbsentString string
 }
 
 func NewStringAbsentInArrayAssertion(expectedElement string) *StringAbsentInArrayAssertion {
 	return &StringAbsentInArrayAssertion{
-		expectedAbsentElement: expectedElement,
+		expectedAbsentString: expectedElement,
 	}
 }
 
@@ -23,8 +23,8 @@ func (a StringAbsentInArrayAssertion) Run(value resp_value.Value) error {
 
 	for _, actualElement := range value.Array() {
 
-		if actualElement.String() == a.expectedAbsentElement {
-			return fmt.Errorf("Expecting '%s' to be absent from the array, but is present", a.expectedAbsentElement)
+		if actualElement.String() == a.expectedAbsentString {
+			return fmt.Errorf("Expecting '%s' to be absent from the array, but is present", a.expectedAbsentString)
 		}
 	}
 

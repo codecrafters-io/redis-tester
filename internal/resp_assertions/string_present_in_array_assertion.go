@@ -7,12 +7,12 @@ import (
 )
 
 type StringPresentInArrayAssertion struct {
-	expectedElement string
+	expectedString string
 }
 
 func NewStringPresentInArrayAssertion(expectedElement string) *StringPresentInArrayAssertion {
 	return &StringPresentInArrayAssertion{
-		expectedElement: expectedElement,
+		expectedString: expectedElement,
 	}
 }
 
@@ -25,14 +25,14 @@ func (a StringPresentInArrayAssertion) Run(value resp_value.Value) error {
 
 	for _, actualElement := range value.Array() {
 
-		if actualElement.String() == a.expectedElement {
+		if actualElement.String() == a.expectedString {
 			found = true
 			break
 		}
 	}
 
 	if !found {
-		return fmt.Errorf("'%s' not found in the array", a.expectedElement)
+		return fmt.Errorf("'%s' not found in the array", a.expectedString)
 	}
 
 	return nil
