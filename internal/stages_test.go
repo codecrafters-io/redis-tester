@@ -145,6 +145,13 @@ func TestStages(t *testing.T) {
 			StdoutFixturePath:   "./test_helpers/fixtures/geospatial/pass",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
+		"auth_pass": {
+			StageSlugs:          []string{"jn4", "gx8", "ql6", "pl7", "uv9", "hz3", "nm2", "ws7"},
+			CodePath:            "./test_helpers/pass_all",
+			ExpectedExitCode:    0,
+			StdoutFixturePath:   "./test_helpers/fixtures/auth/pass",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
 	}
 
 	tester_utils_testing.TestTesterOutput(t, testerDefinition, testCases)
