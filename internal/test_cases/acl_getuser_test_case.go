@@ -6,12 +6,14 @@ import (
 	"github.com/codecrafters-io/tester-utils/logger"
 )
 
-// TODO: Remove later: I had a hard time designing the interface for this test case and its assertio
+// TODO: Remove later: I had a hard time designing the interface for this test case and its assertion (AclGetuserResponseAssertion)
 // After much thought, I decided to settle with the current interface
 
 // I am still not quite satisfied with it though! Especially the following parts:
 // - the ExpectXYZ() and the checks are repeated in the AclGetuserResponseAssertion as well
-// - Delivering error messages
+// - Delivering error messages in nested arrays
+
+// Will try a new approach tomorrow. (I can think of kafka-style asserter for nested arrays)
 
 // Need some help on designing a better interface for this test case and its assertion
 
