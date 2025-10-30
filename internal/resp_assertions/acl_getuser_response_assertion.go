@@ -8,10 +8,15 @@ import (
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 )
 
+type passwordHashPair struct {
+	Password string
+	Hash     string
+}
+
 type AclGetuserResponseAssertion struct {
 	expectedFlags     []string
 	unexpectedFlags   []string
-	expectedPasswords map[string]string
+	expectedPasswords []passwordHashPair
 }
 
 func NewAclGetUserResponseAssertion() *AclGetuserResponseAssertion {
@@ -50,11 +55,14 @@ func (a *AclGetuserResponseAssertion) ExpectPasswords(passwords []string) *AclGe
 		panic("Codecrafters Internal Error - Cannot expect nil passwords in AclGetuserResponseAssertion.ExpectPasswords")
 	}
 
-	a.expectedPasswords = make(map[string]string)
+	a.expectedPasswords = make([]passwordHashPair, 0)
 
 	for _, password := range passwords {
 		sha256Hash := fmt.Sprintf("%x", sha256.Sum256([]byte(password)))
-		a.expectedPasswords[password] = sha256Hash
+		a.expectedPasswords = append(a.expectedPasswords, passwordHashPair{
+			Password: password,
+			Hash:     sha256Hash,
+		})
 	}
 
 	return a
@@ -88,20 +96,28 @@ func (a *AclGetuserResponseAssertion) assertFlags(value resp_value.Value) error 
 	flagsArray := value.Array()[1]
 
 	// Assert 'must be present' flags
-	for _, flag := range a.expectedFlags {
-		flagPresentAssertion := NewStringPresentInArrayAssertion(flag)
+	for _, expectedFlag := range a.expectedFlags {
+		foundExpectedFlag := false
 
-		if err := flagPresentAssertion.Run(flagsArray); err != nil {
-			return fmt.Errorf("Expected flag '%s' to be present in the flags array", flag)
+		for _, actualFlag := range flagsArray.Array() {
+			if actualFlag.String() == expectedFlag {
+				foundExpectedFlag = true
+				break
+			}
 		}
+
+		if !foundExpectedFlag {
+			return fmt.Errorf("Expected flag '%s' to be in the flags array", expectedFlag)
+		}
+
 	}
 
 	// Assert 'must be absent' flags
-	for _, flag := range a.unexpectedFlags {
-		flagAbsenseAssertion := NewStringAbsentInArrayAssertion(flag)
-
-		if err := flagAbsenseAssertion.Run(flagsArray); err != nil {
-			return fmt.Errorf("Expected flag '%s' to be absent in the flags array, but is present", flag)
+	for _, unexpectedFlag := range a.unexpectedFlags {
+		for _, actualFlag := range flagsArray.Array() {
+			if actualFlag.String() == unexpectedFlag {
+				return fmt.Errorf("Expected flag '%s' to be absent from the flags array", unexpectedFlag)
+			}
 		}
 	}
 
@@ -118,20 +134,16 @@ func (a *AclGetuserResponseAssertion) assertPasswords(value resp_value.Value) er
 	}
 
 	passwordsArray := value.Array()[3]
+	passwordHashes := []string{}
 
-	if len(a.expectedPasswords) == 0 {
-		emptyArrayAssertion := NewOrderedStringArrayAssertion([]string{})
-		if err := emptyArrayAssertion.Run(passwordsArray); err != nil {
-			return fmt.Errorf("Expected empty passwords array. Assertion failed with '%s'", err)
-		}
-		return nil
+	for _, passwordHashPair := range a.expectedPasswords {
+		passwordHashes = append(passwordHashes, passwordHashPair.Hash)
 	}
 
-	for password, passwordHash := range a.expectedPasswords {
-		passwordHashPresentAssertion := NewStringPresentInArrayAssertion(passwordHash)
-		if err := passwordHashPresentAssertion.Run(passwordsArray); err != nil {
-			return fmt.Errorf("Expected hash of the password '%s' (%s) to be present in the passwords array", password, passwordHash)
-		}
+	passwordsAssertion := NewOrderedStringArrayAssertion(passwordHashes)
+
+	if err := passwordsAssertion.Run(passwordsArray); err != nil {
+		return fmt.Errorf("Passwords array: %w", err)
 	}
 
 	return nil

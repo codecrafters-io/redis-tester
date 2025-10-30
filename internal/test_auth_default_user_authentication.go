@@ -5,7 +5,6 @@ import (
 
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
-	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	"github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
@@ -59,10 +58,8 @@ func testdefaultUserAuthentication(stageHarness *test_case_harness.TestCaseHarne
 
 	defer secondClient.Close()
 
-	whoamiNoauthTestCase := test_cases.SendCommandTestCase{
-		Command:   "ACL",
-		Args:      []string{"WHOAMI"},
-		Assertion: resp_assertions.NewRegexErrorAssertion("^NOAUTH.*"),
+	whoamiNoauthTestCase := test_cases.AclWhoamiErrorTestCase{
+		ExpectedErrorPattern: "^NOAUTH.*",
 	}
 
 	return whoamiNoauthTestCase.Run(secondClient, logger)

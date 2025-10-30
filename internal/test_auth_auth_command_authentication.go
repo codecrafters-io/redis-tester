@@ -61,12 +61,9 @@ func testAuthCommandAuthentication(stageHarness *test_case_harness.TestCaseHarne
 	defer secondClient.Close()
 
 	// Run ACL WHOAMI without authentication
-	whoamiNoauthTestCase := test_cases.SendCommandTestCase{
-		Command:   "ACL",
-		Args:      []string{"WHOAMI"},
-		Assertion: resp_assertions.NewRegexErrorAssertion("^NOAUTH.*"),
+	whoamiNoauthTestCase := test_cases.AclWhoamiErrorTestCase{
+		ExpectedErrorPattern: "^NOAUTH.*",
 	}
-
 	if err := whoamiNoauthTestCase.Run(secondClient, logger); err != nil {
 		return err
 	}

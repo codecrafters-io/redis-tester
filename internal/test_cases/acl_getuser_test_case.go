@@ -13,7 +13,7 @@ import (
 // - the ExpectXYZ() and the checks are repeated in the AclGetuserResponseAssertion as well
 // - Delivering error messages in nested arrays
 
-// Will try a new approach tomorrow. (I can think of kafka-style asserter for nested arrays)
+// Still looking for a better approach
 
 // Need some help on designing a better interface for this test case and its assertion
 
