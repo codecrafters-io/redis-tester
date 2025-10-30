@@ -107,7 +107,7 @@ func (a *AclGetuserResponseAssertion) assertFlags(value resp_value.Value) error 
 		}
 
 		if !foundExpectedFlag {
-			return fmt.Errorf("Expected flag '%s' to be in the flags array", expectedFlag)
+			return fmt.Errorf("Flags array: Expected flag '%s' to be present in the array", expectedFlag)
 		}
 
 	}
@@ -116,7 +116,7 @@ func (a *AclGetuserResponseAssertion) assertFlags(value resp_value.Value) error 
 	for _, unexpectedFlag := range a.unexpectedFlags {
 		for _, actualFlag := range flagsArray.Array() {
 			if actualFlag.String() == unexpectedFlag {
-				return fmt.Errorf("Expected flag '%s' to be absent from the flags array", unexpectedFlag)
+				return fmt.Errorf("Flags array: Expected '%s' to be absent from the array", unexpectedFlag)
 			}
 		}
 	}
