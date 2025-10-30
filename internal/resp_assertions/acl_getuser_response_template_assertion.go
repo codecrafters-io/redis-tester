@@ -56,7 +56,7 @@ func (a AclGetUserResponseTemplateAssertion) assertForFlags(array []resp_value.V
 
 	for i, value := range secondElement.Array() {
 		if value.Type != resp_value.BULK_STRING {
-			return fmt.Errorf("Expected the second element of the array to have only bulk strings, got %s at index %d", value.Type, i)
+			return fmt.Errorf("Expected the flags array to have only bulk strings, got %s at index %d", value.Type, i)
 		}
 	}
 
@@ -85,7 +85,7 @@ func (a AclGetUserResponseTemplateAssertion) assertForPasswords(array []resp_val
 
 	for i, value := range fourthElement.Array() {
 		if value.Type != resp_value.BULK_STRING {
-			return fmt.Errorf("Expected the fourth element of the array to have only bulk strings, got %s at index %d", value.Type, i)
+			return fmt.Errorf("Expected the passwords array to have only bulk strings, got %s at index %d", value.Type, i)
 		}
 	}
 
