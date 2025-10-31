@@ -42,7 +42,6 @@ func NewRESPCodec() *RESPCodec {
 	return &RESPCodec{}
 }
 
-// Constructors for RESPValue
 func SimpleString(s string) RESPValue {
 	return RESPValue{Type: TypeSimpleString, Str: s}
 }
