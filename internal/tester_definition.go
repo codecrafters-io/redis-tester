@@ -381,5 +381,38 @@ var testerDefinition = tester_definition.TesterDefinition{
 			Slug:     "rm9",
 			TestFunc: testGeospatialGeosearch,
 		},
+		// Auth and ACL
+		{
+			Slug:     "jn4",
+			TestFunc: testWhoami,
+		},
+		{
+			Slug:     "gx8",
+			TestFunc: testGetUserResponse,
+		},
+		{
+			Slug:     "ql6",
+			TestFunc: testGetUserNopassFlagRetrieval,
+		},
+		{
+			Slug:     "pl7",
+			TestFunc: testGetUserPasswordsRetrieval,
+		},
+		{
+			Slug:     "uv9",
+			TestFunc: testSetUserPassword,
+		},
+		{
+			Slug:     "hz3",
+			TestFunc: testAuthCommandResponse,
+		},
+		{
+			Slug:     "nm2",
+			TestFunc: testdefaultUserAuthentication,
+		},
+		{
+			Slug:     "ws7",
+			TestFunc: testAuthCommandAuthentication,
+		},
 	},
 }

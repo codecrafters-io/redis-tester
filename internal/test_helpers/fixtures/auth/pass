@@ -1,0 +1,305 @@
+Debug = true
+
+[33m[tester::#JN4] [0m[94mRunning tests for Stage #JN4 (jn4)[0m
+[33m[tester::#JN4] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#JN4] [client] [0m[94m$ redis-cli ACL WHOAMI[0m
+[33m[tester::#JN4] [client] [0m[36mSent bytes: "*2\r\n$3\r\nACL\r\n$6\r\nWHOAMI\r\n"[0m
+[33m[tester::#JN4] [client] [0m[36mReceived bytes: "$7\r\ndefault\r\n"[0m
+[33m[tester::#JN4] [client] [0m[36mReceived RESP bulk string: "default"[0m
+[33m[tester::#JN4] [client] [0m[92m✔︎ Received "default"[0m
+[33m[tester::#JN4] [0m[92mTest passed.[0m
+[33m[tester::#JN4] [0m[36mTerminating program[0m
+[33m[tester::#JN4] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#GX8] [0m[94mRunning tests for Stage #GX8 (gx8)[0m
+[33m[tester::#GX8] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#GX8] [client] [0m[94m$ redis-cli ACL GETUSER default[0m
+[33m[tester::#GX8] [client] [0m[36mSent bytes: "*3\r\n$3\r\nACL\r\n$7\r\nGETUSER\r\n$7\r\ndefault\r\n"[0m
+[33m[tester::#GX8] [client] [0m[36mReceived bytes: "*12\r\n$5\r\nflags\r\n*3\r\n$2\r\non\r\n$6\r\nnopass\r\n$16\r\nsanitize-payload\r\n$9\r\npasswords\r\n*0\r\n$8\r\ncommands\r\n$5\r\n+@all\r\n$4\r\nkeys\r\n$2\r\n~*\r\n$8\r\nchannels\r\n$2\r\n&*\r\n$9\r\nselectors\r\n*0\r\n"[0m
+[33m[tester::#GX8] [client] [0m[36mReceived RESP array: [[0m
+[33m[tester::#GX8] [client] [0m[36m  "flags",[0m
+[33m[tester::#GX8] [client] [0m[36m  [[0m
+[33m[tester::#GX8] [client] [0m[36m    "on",[0m
+[33m[tester::#GX8] [client] [0m[36m    "nopass",[0m
+[33m[tester::#GX8] [client] [0m[36m    "sanitize-payload"[0m
+[33m[tester::#GX8] [client] [0m[36m  ],[0m
+[33m[tester::#GX8] [client] [0m[36m  "passwords",[0m
+[33m[tester::#GX8] [client] [0m[36m  [],[0m
+[33m[tester::#GX8] [client] [0m[36m  "commands",[0m
+[33m[tester::#GX8] [client] [0m[36m  "+@all",[0m
+[33m[tester::#GX8] [client] [0m[36m  "keys",[0m
+[33m[tester::#GX8] [client] [0m[36m  "~*",[0m
+[33m[tester::#GX8] [client] [0m[36m  "channels",[0m
+[33m[tester::#GX8] [client] [0m[36m  "\u0026*",[0m
+[33m[tester::#GX8] [client] [0m[36m  "selectors",[0m
+[33m[tester::#GX8] [client] [0m[36m  [][0m
+[33m[tester::#GX8] [client] [0m[36m][0m
+[33m[tester::#GX8] [client] [0m[92m✔︎ Received [[0m
+[33m[tester::#GX8] [client] [0m[92m  "flags",[0m
+[33m[tester::#GX8] [client] [0m[92m  [[0m
+[33m[tester::#GX8] [client] [0m[92m    "on",[0m
+[33m[tester::#GX8] [client] [0m[92m    "nopass",[0m
+[33m[tester::#GX8] [client] [0m[92m    "sanitize-payload"[0m
+[33m[tester::#GX8] [client] [0m[92m  ],[0m
+[33m[tester::#GX8] [client] [0m[92m  "passwords",[0m
+[33m[tester::#GX8] [client] [0m[92m  [],[0m
+[33m[tester::#GX8] [client] [0m[92m  "commands",[0m
+[33m[tester::#GX8] [client] [0m[92m  "+@all",[0m
+[33m[tester::#GX8] [client] [0m[92m  "keys",[0m
+[33m[tester::#GX8] [client] [0m[92m  "~*",[0m
+[33m[tester::#GX8] [client] [0m[92m  "channels",[0m
+[33m[tester::#GX8] [client] [0m[92m  "\u0026*",[0m
+[33m[tester::#GX8] [client] [0m[92m  "selectors",[0m
+[33m[tester::#GX8] [client] [0m[92m  [][0m
+[33m[tester::#GX8] [client] [0m[92m][0m
+[33m[tester::#GX8] [0m[92mTest passed.[0m
+[33m[tester::#GX8] [0m[36mTerminating program[0m
+[33m[tester::#GX8] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#QL6] [0m[94mRunning tests for Stage #QL6 (ql6)[0m
+[33m[tester::#QL6] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#QL6] [client] [0m[94m$ redis-cli ACL GETUSER default[0m
+[33m[tester::#QL6] [client] [0m[36mSent bytes: "*3\r\n$3\r\nACL\r\n$7\r\nGETUSER\r\n$7\r\ndefault\r\n"[0m
+[33m[tester::#QL6] [client] [0m[36mReceived bytes: "*12\r\n$5\r\nflags\r\n*3\r\n$2\r\non\r\n$6\r\nnopass\r\n$16\r\nsanitize-payload\r\n$9\r\npasswords\r\n*0\r\n$8\r\ncommands\r\n$5\r\n+@all\r\n$4\r\nkeys\r\n$2\r\n~*\r\n$8\r\nchannels\r\n$2\r\n&*\r\n$9\r\nselectors\r\n*0\r\n"[0m
+[33m[tester::#QL6] [client] [0m[36mReceived RESP array: [[0m
+[33m[tester::#QL6] [client] [0m[36m  "flags",[0m
+[33m[tester::#QL6] [client] [0m[36m  [[0m
+[33m[tester::#QL6] [client] [0m[36m    "on",[0m
+[33m[tester::#QL6] [client] [0m[36m    "nopass",[0m
+[33m[tester::#QL6] [client] [0m[36m    "sanitize-payload"[0m
+[33m[tester::#QL6] [client] [0m[36m  ],[0m
+[33m[tester::#QL6] [client] [0m[36m  "passwords",[0m
+[33m[tester::#QL6] [client] [0m[36m  [],[0m
+[33m[tester::#QL6] [client] [0m[36m  "commands",[0m
+[33m[tester::#QL6] [client] [0m[36m  "+@all",[0m
+[33m[tester::#QL6] [client] [0m[36m  "keys",[0m
+[33m[tester::#QL6] [client] [0m[36m  "~*",[0m
+[33m[tester::#QL6] [client] [0m[36m  "channels",[0m
+[33m[tester::#QL6] [client] [0m[36m  "\u0026*",[0m
+[33m[tester::#QL6] [client] [0m[36m  "selectors",[0m
+[33m[tester::#QL6] [client] [0m[36m  [][0m
+[33m[tester::#QL6] [client] [0m[36m][0m
+[33m[tester::#QL6] [client] [0m[92m✔︎ Received [[0m
+[33m[tester::#QL6] [client] [0m[92m  "flags",[0m
+[33m[tester::#QL6] [client] [0m[92m  [[0m
+[33m[tester::#QL6] [client] [0m[92m    "on",[0m
+[33m[tester::#QL6] [client] [0m[92m    "nopass",[0m
+[33m[tester::#QL6] [client] [0m[92m    "sanitize-payload"[0m
+[33m[tester::#QL6] [client] [0m[92m  ],[0m
+[33m[tester::#QL6] [client] [0m[92m  "passwords",[0m
+[33m[tester::#QL6] [client] [0m[92m  [],[0m
+[33m[tester::#QL6] [client] [0m[92m  "commands",[0m
+[33m[tester::#QL6] [client] [0m[92m  "+@all",[0m
+[33m[tester::#QL6] [client] [0m[92m  "keys",[0m
+[33m[tester::#QL6] [client] [0m[92m  "~*",[0m
+[33m[tester::#QL6] [client] [0m[92m  "channels",[0m
+[33m[tester::#QL6] [client] [0m[92m  "\u0026*",[0m
+[33m[tester::#QL6] [client] [0m[92m  "selectors",[0m
+[33m[tester::#QL6] [client] [0m[92m  [][0m
+[33m[tester::#QL6] [client] [0m[92m][0m
+[33m[tester::#QL6] [0m[92mTest passed.[0m
+[33m[tester::#QL6] [0m[36mTerminating program[0m
+[33m[tester::#QL6] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#PL7] [0m[94mRunning tests for Stage #PL7 (pl7)[0m
+[33m[tester::#PL7] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#PL7] [client] [0m[94m$ redis-cli ACL GETUSER default[0m
+[33m[tester::#PL7] [client] [0m[36mSent bytes: "*3\r\n$3\r\nACL\r\n$7\r\nGETUSER\r\n$7\r\ndefault\r\n"[0m
+[33m[tester::#PL7] [client] [0m[36mReceived bytes: "*12\r\n$5\r\nflags\r\n*3\r\n$2\r\non\r\n$6\r\nnopass\r\n$16\r\nsanitize-payload\r\n$9\r\npasswords\r\n*0\r\n$8\r\ncommands\r\n$5\r\n+@all\r\n$4\r\nkeys\r\n$2\r\n~*\r\n$8\r\nchannels\r\n$2\r\n&*\r\n$9\r\nselectors\r\n*0\r\n"[0m
+[33m[tester::#PL7] [client] [0m[36mReceived RESP array: [[0m
+[33m[tester::#PL7] [client] [0m[36m  "flags",[0m
+[33m[tester::#PL7] [client] [0m[36m  [[0m
+[33m[tester::#PL7] [client] [0m[36m    "on",[0m
+[33m[tester::#PL7] [client] [0m[36m    "nopass",[0m
+[33m[tester::#PL7] [client] [0m[36m    "sanitize-payload"[0m
+[33m[tester::#PL7] [client] [0m[36m  ],[0m
+[33m[tester::#PL7] [client] [0m[36m  "passwords",[0m
+[33m[tester::#PL7] [client] [0m[36m  [],[0m
+[33m[tester::#PL7] [client] [0m[36m  "commands",[0m
+[33m[tester::#PL7] [client] [0m[36m  "+@all",[0m
+[33m[tester::#PL7] [client] [0m[36m  "keys",[0m
+[33m[tester::#PL7] [client] [0m[36m  "~*",[0m
+[33m[tester::#PL7] [client] [0m[36m  "channels",[0m
+[33m[tester::#PL7] [client] [0m[36m  "\u0026*",[0m
+[33m[tester::#PL7] [client] [0m[36m  "selectors",[0m
+[33m[tester::#PL7] [client] [0m[36m  [][0m
+[33m[tester::#PL7] [client] [0m[36m][0m
+[33m[tester::#PL7] [client] [0m[92m✔︎ Received [[0m
+[33m[tester::#PL7] [client] [0m[92m  "flags",[0m
+[33m[tester::#PL7] [client] [0m[92m  [[0m
+[33m[tester::#PL7] [client] [0m[92m    "on",[0m
+[33m[tester::#PL7] [client] [0m[92m    "nopass",[0m
+[33m[tester::#PL7] [client] [0m[92m    "sanitize-payload"[0m
+[33m[tester::#PL7] [client] [0m[92m  ],[0m
+[33m[tester::#PL7] [client] [0m[92m  "passwords",[0m
+[33m[tester::#PL7] [client] [0m[92m  [],[0m
+[33m[tester::#PL7] [client] [0m[92m  "commands",[0m
+[33m[tester::#PL7] [client] [0m[92m  "+@all",[0m
+[33m[tester::#PL7] [client] [0m[92m  "keys",[0m
+[33m[tester::#PL7] [client] [0m[92m  "~*",[0m
+[33m[tester::#PL7] [client] [0m[92m  "channels",[0m
+[33m[tester::#PL7] [client] [0m[92m  "\u0026*",[0m
+[33m[tester::#PL7] [client] [0m[92m  "selectors",[0m
+[33m[tester::#PL7] [client] [0m[92m  [][0m
+[33m[tester::#PL7] [client] [0m[92m][0m
+[33m[tester::#PL7] [0m[92mTest passed.[0m
+[33m[tester::#PL7] [0m[36mTerminating program[0m
+[33m[tester::#PL7] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#UV9] [0m[94mRunning tests for Stage #UV9 (uv9)[0m
+[33m[tester::#UV9] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#UV9] [client] [0m[94m$ redis-cli ACL GETUSER default[0m
+[33m[tester::#UV9] [client] [0m[36mSent bytes: "*3\r\n$3\r\nACL\r\n$7\r\nGETUSER\r\n$7\r\ndefault\r\n"[0m
+[33m[tester::#UV9] [client] [0m[36mReceived bytes: "*12\r\n$5\r\nflags\r\n*3\r\n$2\r\non\r\n$6\r\nnopass\r\n$16\r\nsanitize-payload\r\n$9\r\npasswords\r\n*0\r\n$8\r\ncommands\r\n$5\r\n+@all\r\n$4\r\nkeys\r\n$2\r\n~*\r\n$8\r\nchannels\r\n$2\r\n&*\r\n$9\r\nselectors\r\n*0\r\n"[0m
+[33m[tester::#UV9] [client] [0m[36mReceived RESP array: [[0m
+[33m[tester::#UV9] [client] [0m[36m  "flags",[0m
+[33m[tester::#UV9] [client] [0m[36m  [[0m
+[33m[tester::#UV9] [client] [0m[36m    "on",[0m
+[33m[tester::#UV9] [client] [0m[36m    "nopass",[0m
+[33m[tester::#UV9] [client] [0m[36m    "sanitize-payload"[0m
+[33m[tester::#UV9] [client] [0m[36m  ],[0m
+[33m[tester::#UV9] [client] [0m[36m  "passwords",[0m
+[33m[tester::#UV9] [client] [0m[36m  [],[0m
+[33m[tester::#UV9] [client] [0m[36m  "commands",[0m
+[33m[tester::#UV9] [client] [0m[36m  "+@all",[0m
+[33m[tester::#UV9] [client] [0m[36m  "keys",[0m
+[33m[tester::#UV9] [client] [0m[36m  "~*",[0m
+[33m[tester::#UV9] [client] [0m[36m  "channels",[0m
+[33m[tester::#UV9] [client] [0m[36m  "\u0026*",[0m
+[33m[tester::#UV9] [client] [0m[36m  "selectors",[0m
+[33m[tester::#UV9] [client] [0m[36m  [][0m
+[33m[tester::#UV9] [client] [0m[36m][0m
+[33m[tester::#UV9] [client] [0m[92m✔︎ Received [[0m
+[33m[tester::#UV9] [client] [0m[92m  "flags",[0m
+[33m[tester::#UV9] [client] [0m[92m  [[0m
+[33m[tester::#UV9] [client] [0m[92m    "on",[0m
+[33m[tester::#UV9] [client] [0m[92m    "nopass",[0m
+[33m[tester::#UV9] [client] [0m[92m    "sanitize-payload"[0m
+[33m[tester::#UV9] [client] [0m[92m  ],[0m
+[33m[tester::#UV9] [client] [0m[92m  "passwords",[0m
+[33m[tester::#UV9] [client] [0m[92m  [],[0m
+[33m[tester::#UV9] [client] [0m[92m  "commands",[0m
+[33m[tester::#UV9] [client] [0m[92m  "+@all",[0m
+[33m[tester::#UV9] [client] [0m[92m  "keys",[0m
+[33m[tester::#UV9] [client] [0m[92m  "~*",[0m
+[33m[tester::#UV9] [client] [0m[92m  "channels",[0m
+[33m[tester::#UV9] [client] [0m[92m  "\u0026*",[0m
+[33m[tester::#UV9] [client] [0m[92m  "selectors",[0m
+[33m[tester::#UV9] [client] [0m[92m  [][0m
+[33m[tester::#UV9] [client] [0m[92m][0m
+[33m[tester::#UV9] [client] [0m[94m> ACL SETUSER default >pear-592[0m
+[33m[tester::#UV9] [client] [0m[36mSent bytes: "*4\r\n$3\r\nACL\r\n$7\r\nSETUSER\r\n$7\r\ndefault\r\n$9\r\n>pear-592\r\n"[0m
+[33m[tester::#UV9] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
+[33m[tester::#UV9] [client] [0m[36mReceived RESP simple string: "OK"[0m
+[33m[tester::#UV9] [client] [0m[92m✔︎ Received "OK"[0m
+[33m[tester::#UV9] [client] [0m[94m> ACL GETUSER default[0m
+[33m[tester::#UV9] [client] [0m[36mSent bytes: "*3\r\n$3\r\nACL\r\n$7\r\nGETUSER\r\n$7\r\ndefault\r\n"[0m
+[33m[tester::#UV9] [client] [0m[36mReceived bytes: "*12\r\n$5\r\nflags\r\n*2\r\n$2\r\non\r\n$16\r\nsanitize-payload\r\n$9\r\npasswords\r\n*1\r\n$64\r\ne6468555eab6349c3ae937df914694db806242d29fb6764f0179aa576f776ece\r\n$8\r\ncommands\r\n$5\r\n+@all\r\n$4\r\nkeys\r\n$2\r\n~*\r\n$8\r\nchannels\r\n$2\r\n&*\r\n$9\r\nselectors\r\n*0\r\n"[0m
+[33m[tester::#UV9] [client] [0m[36mReceived RESP array: [[0m
+[33m[tester::#UV9] [client] [0m[36m  "flags",[0m
+[33m[tester::#UV9] [client] [0m[36m  ["on", "sanitize-payload"],[0m
+[33m[tester::#UV9] [client] [0m[36m  "passwords",[0m
+[33m[tester::#UV9] [client] [0m[36m  [[0m
+[33m[tester::#UV9] [client] [0m[36m    "e6468555eab6349c3ae937df914694db806242d29fb6764f0179aa576f776ece"[0m
+[33m[tester::#UV9] [client] [0m[36m  ],[0m
+[33m[tester::#UV9] [client] [0m[36m  "commands",[0m
+[33m[tester::#UV9] [client] [0m[36m  "+@all",[0m
+[33m[tester::#UV9] [client] [0m[36m  "keys",[0m
+[33m[tester::#UV9] [client] [0m[36m  "~*",[0m
+[33m[tester::#UV9] [client] [0m[36m  "channels",[0m
+[33m[tester::#UV9] [client] [0m[36m  "\u0026*",[0m
+[33m[tester::#UV9] [client] [0m[36m  "selectors",[0m
+[33m[tester::#UV9] [client] [0m[36m  [][0m
+[33m[tester::#UV9] [client] [0m[36m][0m
+[33m[tester::#UV9] [client] [0m[92m✔︎ Received [[0m
+[33m[tester::#UV9] [client] [0m[92m  "flags",[0m
+[33m[tester::#UV9] [client] [0m[92m  ["on", "sanitize-payload"],[0m
+[33m[tester::#UV9] [client] [0m[92m  "passwords",[0m
+[33m[tester::#UV9] [client] [0m[92m  [[0m
+[33m[tester::#UV9] [client] [0m[92m    "e6468555eab6349c3ae937df914694db806242d29fb6764f0179aa576f776ece"[0m
+[33m[tester::#UV9] [client] [0m[92m  ],[0m
+[33m[tester::#UV9] [client] [0m[92m  "commands",[0m
+[33m[tester::#UV9] [client] [0m[92m  "+@all",[0m
+[33m[tester::#UV9] [client] [0m[92m  "keys",[0m
+[33m[tester::#UV9] [client] [0m[92m  "~*",[0m
+[33m[tester::#UV9] [client] [0m[92m  "channels",[0m
+[33m[tester::#UV9] [client] [0m[92m  "\u0026*",[0m
+[33m[tester::#UV9] [client] [0m[92m  "selectors",[0m
+[33m[tester::#UV9] [client] [0m[92m  [][0m
+[33m[tester::#UV9] [client] [0m[92m][0m
+[33m[tester::#UV9] [0m[92mTest passed.[0m
+[33m[tester::#UV9] [0m[36mTerminating program[0m
+[33m[tester::#UV9] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#HZ3] [0m[94mRunning tests for Stage #HZ3 (hz3)[0m
+[33m[tester::#HZ3] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#HZ3] [client] [0m[94m$ redis-cli ACL SETUSER default >raspberry-200[0m
+[33m[tester::#HZ3] [client] [0m[36mSent bytes: "*4\r\n$3\r\nACL\r\n$7\r\nSETUSER\r\n$7\r\ndefault\r\n$14\r\n>raspberry-200\r\n"[0m
+[33m[tester::#HZ3] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
+[33m[tester::#HZ3] [client] [0m[36mReceived RESP simple string: "OK"[0m
+[33m[tester::#HZ3] [client] [0m[92m✔︎ Received "OK"[0m
+[33m[tester::#HZ3] [client] [0m[94m> AUTH default wrongpassword-7013[0m
+[33m[tester::#HZ3] [client] [0m[36mSent bytes: "*3\r\n$4\r\nAUTH\r\n$7\r\ndefault\r\n$18\r\nwrongpassword-7013\r\n"[0m
+[33m[tester::#HZ3] [client] [0m[36mReceived bytes: "-WRONGPASS invalid username-password pair or user is disabled.\r\n"[0m
+[33m[tester::#HZ3] [client] [0m[36mReceived RESP error: "WRONGPASS invalid username-password pair or user is disabled."[0m
+[33m[tester::#HZ3] [client] [0m[92m✔︎ Received "WRONGPASS invalid username-password pair or user is disabled."[0m
+[33m[tester::#HZ3] [client] [0m[94m> AUTH default raspberry-200[0m
+[33m[tester::#HZ3] [client] [0m[36mSent bytes: "*3\r\n$4\r\nAUTH\r\n$7\r\ndefault\r\n$13\r\nraspberry-200\r\n"[0m
+[33m[tester::#HZ3] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
+[33m[tester::#HZ3] [client] [0m[36mReceived RESP simple string: "OK"[0m
+[33m[tester::#HZ3] [client] [0m[92m✔︎ Received "OK"[0m
+[33m[tester::#HZ3] [0m[92mTest passed.[0m
+[33m[tester::#HZ3] [0m[36mTerminating program[0m
+[33m[tester::#HZ3] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#NM2] [0m[94mRunning tests for Stage #NM2 (nm2)[0m
+[33m[tester::#NM2] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#NM2] [client-1] [0m[94m$ redis-cli ACL SETUSER default >banana-499[0m
+[33m[tester::#NM2] [client-1] [0m[36mSent bytes: "*4\r\n$3\r\nACL\r\n$7\r\nSETUSER\r\n$7\r\ndefault\r\n$11\r\n>banana-499\r\n"[0m
+[33m[tester::#NM2] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
+[33m[tester::#NM2] [client-1] [0m[36mReceived RESP simple string: "OK"[0m
+[33m[tester::#NM2] [client-1] [0m[92m✔︎ Received "OK"[0m
+[33m[tester::#NM2] [client-1] [0m[94m> ACL WHOAMI[0m
+[33m[tester::#NM2] [client-1] [0m[36mSent bytes: "*2\r\n$3\r\nACL\r\n$6\r\nWHOAMI\r\n"[0m
+[33m[tester::#NM2] [client-1] [0m[36mReceived bytes: "$7\r\ndefault\r\n"[0m
+[33m[tester::#NM2] [client-1] [0m[36mReceived RESP bulk string: "default"[0m
+[33m[tester::#NM2] [client-1] [0m[92m✔︎ Received "default"[0m
+[33m[tester::#NM2] [client-2] [0m[94m$ redis-cli ACL WHOAMI[0m
+[33m[tester::#NM2] [client-2] [0m[36mSent bytes: "*2\r\n$3\r\nACL\r\n$6\r\nWHOAMI\r\n"[0m
+[33m[tester::#NM2] [client-2] [0m[36mReceived bytes: "-NOAUTH Authentication required.\r\n"[0m
+[33m[tester::#NM2] [client-2] [0m[36mReceived RESP error: "NOAUTH Authentication required."[0m
+[33m[tester::#NM2] [client-2] [0m[92m✔︎ Received "NOAUTH Authentication required."[0m
+[33m[tester::#NM2] [0m[92mTest passed.[0m
+[33m[tester::#NM2] [0m[36mTerminating program[0m
+[33m[tester::#NM2] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#WS7] [0m[94mRunning tests for Stage #WS7 (ws7)[0m
+[33m[tester::#WS7] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#WS7] [client-1] [0m[94m$ redis-cli ACL SETUSER default >banana-960[0m
+[33m[tester::#WS7] [client-1] [0m[36mSent bytes: "*4\r\n$3\r\nACL\r\n$7\r\nSETUSER\r\n$7\r\ndefault\r\n$11\r\n>banana-960\r\n"[0m
+[33m[tester::#WS7] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
+[33m[tester::#WS7] [client-1] [0m[36mReceived RESP simple string: "OK"[0m
+[33m[tester::#WS7] [client-1] [0m[92m✔︎ Received "OK"[0m
+[33m[tester::#WS7] [client-1] [0m[94m> ACL WHOAMI[0m
+[33m[tester::#WS7] [client-1] [0m[36mSent bytes: "*2\r\n$3\r\nACL\r\n$6\r\nWHOAMI\r\n"[0m
+[33m[tester::#WS7] [client-1] [0m[36mReceived bytes: "$7\r\ndefault\r\n"[0m
+[33m[tester::#WS7] [client-1] [0m[36mReceived RESP bulk string: "default"[0m
+[33m[tester::#WS7] [client-1] [0m[92m✔︎ Received "default"[0m
+[33m[tester::#WS7] [client-2] [0m[94m$ redis-cli ACL WHOAMI[0m
+[33m[tester::#WS7] [client-2] [0m[36mSent bytes: "*2\r\n$3\r\nACL\r\n$6\r\nWHOAMI\r\n"[0m
+[33m[tester::#WS7] [client-2] [0m[36mReceived bytes: "-NOAUTH Authentication required.\r\n"[0m
+[33m[tester::#WS7] [client-2] [0m[36mReceived RESP error: "NOAUTH Authentication required."[0m
+[33m[tester::#WS7] [client-2] [0m[92m✔︎ Received "NOAUTH Authentication required."[0m
+[33m[tester::#WS7] [client-2] [0m[94m> AUTH default banana-960[0m
+[33m[tester::#WS7] [client-2] [0m[36mSent bytes: "*3\r\n$4\r\nAUTH\r\n$7\r\ndefault\r\n$10\r\nbanana-960\r\n"[0m
+[33m[tester::#WS7] [client-2] [0m[36mReceived bytes: "+OK\r\n"[0m
+[33m[tester::#WS7] [client-2] [0m[36mReceived RESP simple string: "OK"[0m
+[33m[tester::#WS7] [client-2] [0m[92m✔︎ Received "OK"[0m
+[33m[tester::#WS7] [client-2] [0m[94m> ACL WHOAMI[0m
+[33m[tester::#WS7] [client-2] [0m[36mSent bytes: "*2\r\n$3\r\nACL\r\n$6\r\nWHOAMI\r\n"[0m
+[33m[tester::#WS7] [client-2] [0m[36mReceived bytes: "$7\r\ndefault\r\n"[0m
+[33m[tester::#WS7] [client-2] [0m[36mReceived RESP bulk string: "default"[0m
+[33m[tester::#WS7] [client-2] [0m[92m✔︎ Received "default"[0m
+[33m[tester::#WS7] [0m[92mTest passed.[0m
+[33m[tester::#WS7] [0m[36mTerminating program[0m
+[33m[tester::#WS7] [0m[36mProgram terminated successfully[0m

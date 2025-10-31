@@ -87,6 +87,11 @@ test_geospatial_with_redis: build
 	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\":\"zt4\",\"tester_log_prefix\":\"stage-801\",\"title\":\"Stage #801: GEOADD-1\"},{\"slug\":\"ck3\",\"tester_log_prefix\":\"stage-802\",\"title\":\"Stage #802: GEOADD-2\"}, {\"slug\":\"tn5\",\"tester_log_prefix\":\"stage-803\",\"title\":\"Stage #803: GEOADD-3\"}, {\"slug\":\"cr3\",\"tester_log_prefix\":\"stage-804\",\"title\":\"Stage #804: GEOADD-4\"}, {\"slug\":\"xg4\",\"tester_log_prefix\":\"stage-805\",\"title\":\"Stage #805: GEOPOS-1\"}, {\"slug\":\"hb5\",\"tester_log_prefix\":\"stage-806\",\"title\":\"Stage #806: GEOPOS-2\"}, {\"slug\":\"ek6\",\"tester_log_prefix\":\"stage-807\",\"title\":\"Stage #807: GEODIST\"}, {\"slug\":\"rm9\",\"tester_log_prefix\":\"stage-808\",\"title\":\"Stage #808: GEOSEARCH\"}]" \
 	dist/main.out
 
+test_auth_with_redis: build
+	CODECRAFTERS_REPOSITORY_DIR=./internal/test_helpers/pass_all \
+	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\":\"jn4\",\"tester_log_prefix\":\"stage-901\",\"title\":\"Stage #901: WHOAMI\"},{\"slug\":\"gx8\",\"tester_log_prefix\":\"stage-902\",\"title\":\"Stage #902: ACL GETUSER-1\"},{\"slug\":\"ql6\",\"tester_log_prefix\":\"stage-903\",\"title\":\"Stage #903: ACL GETUSER-2\"},{\"slug\":\"pl7\",\"tester_log_prefix\":\"stage-904\",\"title\":\"Stage #904: ACL GETUSER-3\"},{\"slug\":\"uv9\",\"tester_log_prefix\":\"stage-905\",\"title\":\"Stage #905: SET USER PASSWORD\"},{\"slug\":\"hz3\",\"tester_log_prefix\":\"stage-906\",\"title\":\"Stage #906: THE AUTH COMMAND\"},{\"slug\":\"nm2\",\"tester_log_prefix\":\"stage-907\",\"title\":\"Stage #907: ENFORCE AUTHENTICATION\"},{\"slug\":\"ws7\",\"tester_log_prefix\":\"stage-908\",\"title\":\"Stage #908: AUTHENTICATE USING AUTH\"}]" \
+	dist/main.out
+
 test_all_with_redis:
 	make test_base_with_redis || true
 	make test_repl_with_redis || true
@@ -97,6 +102,7 @@ test_all_with_redis:
 	make test_pubsub_with_redis || true
 	make test_zset_with_redis || true
 	make test_geospatial_with_redis || true
+	make test_auth_with_redis || true
 
 setup:
 	echo "Setting up redis-tester prerequisites for Linux"
