@@ -122,7 +122,7 @@ func (t *AclGetuserTestCase) addAssertionForFlags(assertion *resp_assertions.Arr
 			})
 	}
 
-	// Assert the presence of unexpected flags
+	// Assert the absence of unexpected flags
 	for _, flagExpectedToBeAbsent := range t.FlagsExpectedToBeAbsent {
 		multiAssertionForFlagsStatus.AssertionSpecifications = append(multiAssertionForFlagsStatus.AssertionSpecifications,
 			resp_assertions.AssertionSpecification{
