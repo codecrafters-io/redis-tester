@@ -27,9 +27,11 @@ func testSetUserPassword(stageHarness *test_case_harness.TestCaseHarness) error 
 	defer client.Close()
 
 	// Run ACL GETUSER default
-	aclGetUserTestCase := test_cases.NewAclGetUserTestCase("default").
-		ExpectFlags([]string{"nopass"}).
-		ExpectPasswords([]string{})
+	aclGetUserTestCase := test_cases.AclGetuserTestCase{
+		Username:                 "default",
+		FlagsExpectedToBePresent: []string{"nopass"},
+		ExpectedPasswords:        []string{},
+	}
 
 	if err := aclGetUserTestCase.Run(client, logger); err != nil {
 		return err
@@ -48,9 +50,12 @@ func testSetUserPassword(stageHarness *test_case_harness.TestCaseHarness) error 
 	}
 
 	// Again run ACL GETUSER default
-	aclGetUserTestCase2 := test_cases.NewAclGetUserTestCase("default").
-		UnexpectFlags([]string{"nopass"}).
-		ExpectPasswords([]string{password})
+
+	aclGetUserTestCase2 := test_cases.AclGetuserTestCase{
+		Username:                "default",
+		FlagsExpectedToBeAbsent: []string{"nopass"},
+		ExpectedPasswords:       []string{password},
+	}
 
 	return aclGetUserTestCase2.Run(client, logger)
 }
