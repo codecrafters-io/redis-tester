@@ -23,9 +23,11 @@ func testGetUserPasswordsRetrieval(stageHarness *test_case_harness.TestCaseHarne
 	}
 	defer client.Close()
 
-	aclGetUserTestCase := test_cases.NewAclGetUserTestCase("default").
-		ExpectFlags([]string{"nopass"}).
-		ExpectPasswords([]string{})
+	aclGetUserTestCase := test_cases.AclGetuserTestCase{
+		Username:                 "default",
+		FlagsExpectedToBePresent: []string{"nopass"},
+		ExpectedPasswords:        []string{},
+	}
 
 	return aclGetUserTestCase.Run(client, logger)
 }

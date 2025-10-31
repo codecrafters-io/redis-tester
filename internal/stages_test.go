@@ -152,6 +152,27 @@ func TestStages(t *testing.T) {
 			StdoutFixturePath:   "./test_helpers/fixtures/auth/pass",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
+		"auth_always_nopass_flag": {
+			StageSlugs:          []string{"uv9"},
+			CodePath:            "./test_helpers/scenarios/auth_always_nopass_flag",
+			ExpectedExitCode:    1,
+			StdoutFixturePath:   "./test_helpers/fixtures/auth/auth_always_nopass_flag",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
+		"auth_mistake_literal_password": {
+			StageSlugs:          []string{"pl7"},
+			CodePath:            "./test_helpers/scenarios/auth_mistake_literal_password",
+			ExpectedExitCode:    1,
+			StdoutFixturePath:   "./test_helpers/fixtures/auth/auth_mistake_literal_password",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
+		"auth_mistake_sha256": {
+			StageSlugs:          []string{"uv9"},
+			CodePath:            "./test_helpers/scenarios/auth_mistake_sha256",
+			ExpectedExitCode:    1,
+			StdoutFixturePath:   "./test_helpers/fixtures/auth/auth_mistake_sha256",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
 	}
 
 	tester_utils_testing.TestTesterOutput(t, testerDefinition, testCases)

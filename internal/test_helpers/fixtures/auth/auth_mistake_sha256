@@ -1,0 +1,61 @@
+Debug = true
+
+[33m[tester::#UV9] [0m[94mRunning tests for Stage #UV9 (uv9)[0m
+[33m[tester::#UV9] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[your_program] [0mLogs from your program will appear here!
+[33m[your_program] [0mThis server always replies with an incorrect password hash in ACL GETUSER. See users.go:hashPassword()
+[33m[your_program] [0mRedis server listening on 0.0.0.0:6379
+[33m[tester::#UV9] [client] [0m[94m$ redis-cli ACL GETUSER default[0m
+[33m[tester::#UV9] [client] [0m[36mSent bytes: "*3\r\n$3\r\nACL\r\n$7\r\nGETUSER\r\n$7\r\ndefault\r\n"[0m
+[33m[tester::#UV9] [client] [0m[36mReceived bytes: "*4\r\n$5\r\nflags\r\n*1\r\n$6\r\nnopass\r\n$9\r\npasswords\r\n*0\r\n"[0m
+[33m[tester::#UV9] [client] [0m[36mReceived RESP array: [[0m
+[33m[tester::#UV9] [client] [0m[36m  "flags",[0m
+[33m[tester::#UV9] [client] [0m[36m  ["nopass"],[0m
+[33m[tester::#UV9] [client] [0m[36m  "passwords",[0m
+[33m[tester::#UV9] [client] [0m[36m  [][0m
+[33m[tester::#UV9] [client] [0m[36m][0m
+[33m[tester::#UV9] [client] [0m[94mChecking if the first element is "flags"[0m
+[33m[tester::#UV9] [client] [0m[92m✔ First element is "flags"[0m
+[33m[tester::#UV9] [client] [0m[94mChecking if the second element is an array[0m
+[33m[tester::#UV9] [client] [0m[92m✔ Second element is an array[0m
+[33m[tester::#UV9] [client] [0m[94mChecking if flag 'nopass' is present in the flags array[0m
+[33m[tester::#UV9] [client] [0m[92m✔ Flag 'nopass' is present in the flags array[0m
+[33m[tester::#UV9] [client] [0m[94mChecking if the third element of the array is "passwords"[0m
+[33m[tester::#UV9] [client] [0m[92m✔ Third element is "passwords"[0m
+[33m[tester::#UV9] [client] [0m[94mChecking passwords array to be empty[0m
+[33m[tester::#UV9] [client] [0m[92m✔ Passwords array is an empty array[0m
+[33m[tester::#UV9] [client] [0m[92m✔︎ Received [[0m
+[33m[tester::#UV9] [client] [0m[92m  "flags",[0m
+[33m[tester::#UV9] [client] [0m[92m  ["nopass"],[0m
+[33m[tester::#UV9] [client] [0m[92m  "passwords",[0m
+[33m[tester::#UV9] [client] [0m[92m  [][0m
+[33m[tester::#UV9] [client] [0m[92m][0m
+[33m[tester::#UV9] [client] [0m[94m> ACL SETUSER default >pear-592[0m
+[33m[tester::#UV9] [client] [0m[36mSent bytes: "*4\r\n$3\r\nACL\r\n$7\r\nSETUSER\r\n$7\r\ndefault\r\n$9\r\n>pear-592\r\n"[0m
+[33m[tester::#UV9] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
+[33m[tester::#UV9] [client] [0m[36mReceived RESP simple string: "OK"[0m
+[33m[tester::#UV9] [client] [0m[92m✔︎ Received "OK"[0m
+[33m[tester::#UV9] [client] [0m[94m> ACL GETUSER default[0m
+[33m[tester::#UV9] [client] [0m[36mSent bytes: "*3\r\n$3\r\nACL\r\n$7\r\nGETUSER\r\n$7\r\ndefault\r\n"[0m
+[33m[tester::#UV9] [client] [0m[36mReceived bytes: "*4\r\n$5\r\nflags\r\n*0\r\n$9\r\npasswords\r\n*1\r\n$40\r\nfd572349f6ee8cc6f77e3c380ee3db86dec2e386\r\n"[0m
+[33m[tester::#UV9] [client] [0m[36mReceived RESP array: [[0m
+[33m[tester::#UV9] [client] [0m[36m  "flags",[0m
+[33m[tester::#UV9] [client] [0m[36m  [],[0m
+[33m[tester::#UV9] [client] [0m[36m  "passwords",[0m
+[33m[tester::#UV9] [client] [0m[36m  [[0m
+[33m[tester::#UV9] [client] [0m[36m    "fd572349f6ee8cc6f77e3c380ee3db86dec2e386"[0m
+[33m[tester::#UV9] [client] [0m[36m  ][0m
+[33m[tester::#UV9] [client] [0m[36m][0m
+[33m[tester::#UV9] [client] [0m[94mChecking if the first element is "flags"[0m
+[33m[tester::#UV9] [client] [0m[92m✔ First element is "flags"[0m
+[33m[tester::#UV9] [client] [0m[94mChecking if the second element is an array[0m
+[33m[tester::#UV9] [client] [0m[92m✔ Second element is an array[0m
+[33m[tester::#UV9] [client] [0m[94mChecking if flag 'nopass' is absent from the flags array[0m
+[33m[tester::#UV9] [client] [0m[92m✔ Flag 'nopass' is absent in the flags array[0m
+[33m[tester::#UV9] [client] [0m[94mChecking if the third element of the array is "passwords"[0m
+[33m[tester::#UV9] [client] [0m[92m✔ Third element is "passwords"[0m
+[33m[tester::#UV9] [client] [0m[94mChecking expected password hashes to be present in the passwords array[0m
+[33m[tester::#UV9] [0m[91mExpected element #1 to be "e6468555eab6349c3ae937df914694db806242d29fb6764f0179aa576f776ece", got "fd572349f6ee8cc6f77e3c380ee3db86dec2e386"[0m
+[33m[tester::#UV9] [0m[91mTest failed[0m
+[33m[tester::#UV9] [0m[36mTerminating program[0m
+[33m[tester::#UV9] [0m[36mProgram terminated successfully[0m

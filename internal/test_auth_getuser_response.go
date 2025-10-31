@@ -24,6 +24,10 @@ func testGetUserResponse(stageHarness *test_case_harness.TestCaseHarness) error 
 	}
 
 	defer client.Close()
-	aclGetUserTestCase := test_cases.NewAclGetUserTestCase("default")
+
+	aclGetUserTestCase := test_cases.AclGetuserTestCase{
+		Username: "default",
+	}
+
 	return aclGetUserTestCase.RunForFlagsTemplateOnly(client, logger)
 }
