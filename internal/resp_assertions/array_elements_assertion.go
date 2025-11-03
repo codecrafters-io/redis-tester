@@ -7,14 +7,14 @@ import (
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 )
 
-type ArrayIndexAssertionSpecification struct {
+type ArrayElementAssertionSpecification struct {
 	ArrayElementAssertion ArrayElementAssertion
 	PreAssertionHook      func()
 	AssertionSuccessHook  func()
 }
 
 type ArrayElementsAssertion struct {
-	ArrayElementAssertionSpecification []ArrayIndexAssertionSpecification
+	ArrayElementAssertionSpecification []ArrayElementAssertionSpecification
 }
 
 func (a ArrayElementsAssertion) Run(value resp_value.Value) error {
@@ -23,7 +23,7 @@ func (a ArrayElementsAssertion) Run(value resp_value.Value) error {
 	}
 
 	// Sort the indexes so the assertion runs serially
-	slices.SortFunc(a.ArrayElementAssertionSpecification, func(aea1, aea2 ArrayIndexAssertionSpecification) int {
+	slices.SortFunc(a.ArrayElementAssertionSpecification, func(aea1, aea2 ArrayElementAssertionSpecification) int {
 		return aea1.ArrayElementAssertion.Index - aea2.ArrayElementAssertion.Index
 	})
 
