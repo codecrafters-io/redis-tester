@@ -27,10 +27,12 @@ func (t *AclGetuserTestCase) RunForFlagsTemplateOnly(client *instrumented_resp_c
 		Command: "ACL",
 		Args:    []string{"GETUSER", t.Username},
 		Assertion: resp_assertions.ArrayElementsAssertion{
-			IndexAssertionSpecifications: []resp_assertions.ArrayIndexAssertionSpecification{
+			ArrayElementAssertionSpecification: []resp_assertions.ArrayIndexAssertionSpecification{
 				{
-					Index:     0,
-					Assertion: resp_assertions.NewStringAssertion("flags"),
+					ArrayElementAssertion: resp_assertions.ArrayElementAssertion{
+						Index:     0,
+						Assertion: resp_assertions.NewStringAssertion("flags"),
+					},
 					PreAssertionHook: func() {
 						clientLogger.Infof("Checking if the first element is \"flags\"")
 					},
@@ -39,8 +41,10 @@ func (t *AclGetuserTestCase) RunForFlagsTemplateOnly(client *instrumented_resp_c
 					},
 				},
 				{
-					Index:     1,
-					Assertion: resp_assertions.DataTypeAssertion{ExpectedType: resp_value.ARRAY},
+					ArrayElementAssertion: resp_assertions.ArrayElementAssertion{
+						Index:     1,
+						Assertion: resp_assertions.DataTypeAssertion{ExpectedType: resp_value.ARRAY},
+					},
 					PreAssertionHook: func() {
 						clientLogger.Infof("Checking if the second element is an array")
 					},
@@ -79,28 +83,44 @@ func (t *AclGetuserTestCase) Run(client *instrumented_resp_connection.Instrument
 func (t *AclGetuserTestCase) addAssertionForFlags(assertion *resp_assertions.ArrayElementsAssertion, logger *logger.Logger) {
 	// Assert for flags
 	// Assertion for "flags" as the first element
-	assertion.IndexAssertionSpecifications = append(assertion.IndexAssertionSpecifications,
+	assertion.ArrayElementAssertionSpecification = append(assertion.ArrayElementAssertionSpecification,
 		resp_assertions.ArrayIndexAssertionSpecification{
-			Index:     0,
-			Assertion: resp_assertions.NewStringAssertion("flags"),
-			PreAssertionHook: func() {
-				logger.Infof("Checking if the first element is \"flags\"")
-			},
-			AssertionSuccessHook: func() {
-				logger.Successf("✔ First element is \"flags\"")
+			ArrayElementAssertion: resp_assertions.ArrayElementAssertion{
+				Index: 0,
+				Assertion: resp_assertions.MultiAssertion{
+					AssertionSpecifications: []resp_assertions.AssertionSpecification{
+						{
+							Assertion: resp_assertions.NewStringAssertion("flags"),
+							PreAssertionHook: func() {
+								logger.Infof("Checking if the first element is \"flags\"")
+							},
+							AssertionSuccessHook: func() {
+								logger.Successf("✔ First element is \"flags\"")
+							},
+						},
+					},
+				},
 			},
 		})
 
 	// Assert the type of 2nd element to be array
-	assertion.IndexAssertionSpecifications = append(assertion.IndexAssertionSpecifications,
+	assertion.ArrayElementAssertionSpecification = append(assertion.ArrayElementAssertionSpecification,
 		resp_assertions.ArrayIndexAssertionSpecification{
-			Index:     1,
-			Assertion: resp_assertions.DataTypeAssertion{ExpectedType: resp_value.ARRAY},
-			PreAssertionHook: func() {
-				logger.Infof("Checking if the second element is an array")
-			},
-			AssertionSuccessHook: func() {
-				logger.Successf("✔ Second element is an array")
+			ArrayElementAssertion: resp_assertions.ArrayElementAssertion{
+				Index: 1,
+				Assertion: resp_assertions.MultiAssertion{
+					AssertionSpecifications: []resp_assertions.AssertionSpecification{
+						{
+							Assertion: resp_assertions.DataTypeAssertion{ExpectedType: resp_value.ARRAY},
+							PreAssertionHook: func() {
+								logger.Infof("Checking if the second element is an array")
+							},
+							AssertionSuccessHook: func() {
+								logger.Successf("✔ Second element is an array")
+							},
+						},
+					},
+				},
 			},
 		})
 
@@ -138,23 +158,33 @@ func (t *AclGetuserTestCase) addAssertionForFlags(assertion *resp_assertions.Arr
 			})
 	}
 
-	assertion.IndexAssertionSpecifications = append(assertion.IndexAssertionSpecifications,
+	assertion.ArrayElementAssertionSpecification = append(assertion.ArrayElementAssertionSpecification,
 		resp_assertions.ArrayIndexAssertionSpecification{
-			Index:     1,
-			Assertion: multiAssertionForFlagsStatus,
+			ArrayElementAssertion: resp_assertions.ArrayElementAssertion{
+				Index:     1,
+				Assertion: multiAssertionForFlagsStatus,
+			},
 		})
 }
 
 func (t *AclGetuserTestCase) addAssertionForPasswords(assertion *resp_assertions.ArrayElementsAssertion, logger *logger.Logger) {
-	assertion.IndexAssertionSpecifications = append(assertion.IndexAssertionSpecifications,
+	assertion.ArrayElementAssertionSpecification = append(assertion.ArrayElementAssertionSpecification,
 		resp_assertions.ArrayIndexAssertionSpecification{
-			Index:     2,
-			Assertion: resp_assertions.NewStringAssertion("passwords"),
-			PreAssertionHook: func() {
-				logger.Infof("Checking if the third element of the array is \"passwords\"")
-			},
-			AssertionSuccessHook: func() {
-				logger.Successf("✔ Third element is \"passwords\"")
+			ArrayElementAssertion: resp_assertions.ArrayElementAssertion{
+				Index: 2,
+				Assertion: resp_assertions.MultiAssertion{
+					AssertionSpecifications: []resp_assertions.AssertionSpecification{
+						{
+							Assertion: resp_assertions.NewStringAssertion("passwords"),
+							PreAssertionHook: func() {
+								logger.Infof("Checking if the third element of the array is \"passwords\"")
+							},
+							AssertionSuccessHook: func() {
+								logger.Successf("✔ Third element is \"passwords\"")
+							},
+						},
+					},
+				},
 			},
 		})
 
@@ -166,24 +196,31 @@ func (t *AclGetuserTestCase) addAssertionForPasswords(assertion *resp_assertions
 
 	}
 
-	assertion.IndexAssertionSpecifications = append(assertion.IndexAssertionSpecifications,
+	assertion.ArrayElementAssertionSpecification = append(assertion.ArrayElementAssertionSpecification,
 		resp_assertions.ArrayIndexAssertionSpecification{
-			Index:     3,
-			Assertion: resp_assertions.NewOrderedStringArrayAssertion(passwordHashes),
-			PreAssertionHook: func() {
-				if len(passwordHashes) == 0 {
-					logger.Infof("Checking passwords array to be empty")
-				} else {
-					logger.Infof("Checking expected password hashes to be present in the passwords array")
-				}
-			},
-			AssertionSuccessHook: func() {
-				if len(passwordHashes) == 0 {
-					logger.Successf("✔ Passwords array is an empty array")
-				} else {
-					logger.Successf("✔ Expected password hashes are present in the passwords array")
-				}
-
+			ArrayElementAssertion: resp_assertions.ArrayElementAssertion{
+				Index: 3,
+				Assertion: resp_assertions.MultiAssertion{
+					AssertionSpecifications: []resp_assertions.AssertionSpecification{
+						{
+							Assertion: resp_assertions.NewOrderedStringArrayAssertion(passwordHashes),
+							PreAssertionHook: func() {
+								if len(passwordHashes) == 0 {
+									logger.Infof("Checking passwords array to be empty")
+								} else {
+									logger.Infof("Checking expected password hashes to be present in the passwords array")
+								}
+							},
+							AssertionSuccessHook: func() {
+								if len(passwordHashes) == 0 {
+									logger.Successf("✔ Passwords array is an empty array")
+								} else {
+									logger.Successf("✔ Expected password hashes are present in the passwords array")
+								}
+							},
+						},
+					},
+				},
 			},
 		})
 }
