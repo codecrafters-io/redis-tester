@@ -23,6 +23,10 @@ func testGetUserNopassFlagRetrieval(stageHarness *test_case_harness.TestCaseHarn
 	}
 
 	defer client.Close()
-	aclGetUserTestCase := test_cases.NewAclGetUserTestCase("default").ExpectFlags([]string{"nopass"})
+	aclGetUserTestCase := test_cases.AclGetuserTestCase{
+		Username:                 "default",
+		FlagsExpectedToBePresent: []string{"nopass"},
+	}
+
 	return aclGetUserTestCase.Run(client, logger)
 }
