@@ -147,7 +147,7 @@ func (t *AclGetuserTestCase) addAssertionForFlags(assertion *resp_assertions.Arr
 		multiAssertionForFlagsStatus.AssertionSpecifications = append(multiAssertionForFlagsStatus.AssertionSpecifications,
 			resp_assertions.AssertionSpecification{
 				Assertion: resp_assertions.BulkStringAbsentFromArrayAssertion{
-					UnexpectedString: flagExpectedToBeAbsent,
+					StringExpectedToBeAbsent: flagExpectedToBeAbsent,
 				},
 				PreAssertionHook: func() {
 					logger.Infof("Checking if flag '%s' is absent from the flags array", flagExpectedToBeAbsent)

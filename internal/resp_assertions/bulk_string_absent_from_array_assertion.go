@@ -7,7 +7,7 @@ import (
 )
 
 type BulkStringAbsentFromArrayAssertion struct {
-	UnexpectedString string
+	StringExpectedToBeAbsent string
 }
 
 func (a BulkStringAbsentFromArrayAssertion) Run(value resp_value.Value) error {
@@ -18,8 +18,8 @@ func (a BulkStringAbsentFromArrayAssertion) Run(value resp_value.Value) error {
 	array := value.Array()
 
 	for _, element := range array {
-		if element.Type == resp_value.BULK_STRING && element.String() == a.UnexpectedString {
-			return fmt.Errorf("Expected string '%s' to be absent from the array, but is present", a.UnexpectedString)
+		if element.Type == resp_value.BULK_STRING && element.String() == a.StringExpectedToBeAbsent {
+			return fmt.Errorf("Expected string '%s' to be absent from the array, but is present", a.StringExpectedToBeAbsent)
 		}
 	}
 
