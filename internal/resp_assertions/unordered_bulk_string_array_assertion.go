@@ -19,9 +19,9 @@ func NewUnorderedBulkStringArrayAssertion(expectedValue []string) RESPAssertion 
 }
 
 func (a UnorderedBulkStringArrayAssertion) Run(value resp_value.Value) error {
-	dataTypeAssertion := DataTypeAssertion{ExpectedType: resp_value.ARRAY}
+	arrayTypeAssertion := DataTypeAssertion{ExpectedType: resp_value.ARRAY}
 
-	if err := dataTypeAssertion.Run(value); err != nil {
+	if err := arrayTypeAssertion.Run(value); err != nil {
 		return err
 	}
 

@@ -21,9 +21,9 @@ func NewFloatingPointBulkStringAssertion(expectedValue float64, tolerance float6
 }
 
 func (a FloatingPointBulkStringAssertion) Run(value resp_value.Value) error {
-	dataTypeAssertion := DataTypeAssertion{ExpectedType: resp_value.BULK_STRING}
+	bulkStringTypeAssertion := DataTypeAssertion{ExpectedType: resp_value.BULK_STRING}
 
-	if err := dataTypeAssertion.Run(value); err != nil {
+	if err := bulkStringTypeAssertion.Run(value); err != nil {
 		return err
 	}
 

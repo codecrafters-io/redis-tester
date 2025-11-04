@@ -17,8 +17,9 @@ func NewXRangeResponseAssertion(expected []StreamEntry) RESPAssertion {
 }
 
 func (x XRangeResponseAssertion) Run(value resp_value.Value) error {
-	dataTypeAssertion := DataTypeAssertion{ExpectedType: resp_value.ARRAY}
-	if err := dataTypeAssertion.Run(value); err != nil {
+	arrayTypeAssertion := DataTypeAssertion{ExpectedType: resp_value.ARRAY}
+
+	if err := arrayTypeAssertion.Run(value); err != nil {
 		return err
 	}
 

@@ -15,8 +15,9 @@ func NewIntegerAssertion(expectedValue int) RESPAssertion {
 }
 
 func (a IntegerAssertion) Run(value resp_value.Value) error {
-	dataTypeAssertion := DataTypeAssertion{ExpectedType: resp_value.INTEGER}
-	if err := dataTypeAssertion.Run(value); err != nil {
+	integerTypeAssertion := DataTypeAssertion{ExpectedType: resp_value.INTEGER}
+
+	if err := integerTypeAssertion.Run(value); err != nil {
 		return err
 	}
 

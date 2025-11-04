@@ -11,9 +11,9 @@ func NewNilArrayAssertion() RESPAssertion {
 }
 
 func (a NilArrayAssertion) Run(value resp_value.Value) error {
-	dataTypeAssertion := DataTypeAssertion{ExpectedType: resp_value.NIL_ARRAY}
+	nilArrayTypeAssertion := DataTypeAssertion{ExpectedType: resp_value.NIL_ARRAY}
 
-	if err := dataTypeAssertion.Run(value); err != nil {
+	if err := nilArrayTypeAssertion.Run(value); err != nil {
 		return err
 	}
 

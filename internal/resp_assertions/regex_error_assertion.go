@@ -20,9 +20,9 @@ func NewRegexErrorAssertion(expectedPattern string) RESPAssertion {
 }
 
 func (a RegexErrorAssertion) Run(value resp_value.Value) error {
-	dataTypeAssertion := DataTypeAssertion{ExpectedType: resp_value.ERROR}
+	respErrorTypeAssertion := DataTypeAssertion{ExpectedType: resp_value.ERROR}
 
-	if err := dataTypeAssertion.Run(value); err != nil {
+	if err := respErrorTypeAssertion.Run(value); err != nil {
 		return err
 	}
 

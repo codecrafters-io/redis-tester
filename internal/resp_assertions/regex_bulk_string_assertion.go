@@ -21,9 +21,9 @@ func NewRegexBulkStringAssertion(expectedPattern string) RESPAssertion {
 }
 
 func (a RegexBulkStringAssertion) Run(value resp_value.Value) error {
-	dataTypeAssertion := DataTypeAssertion{ExpectedType: resp_value.BULK_STRING}
+	bulkStringTypeAssertion := DataTypeAssertion{ExpectedType: resp_value.BULK_STRING}
 
-	if err := dataTypeAssertion.Run(value); err != nil {
+	if err := bulkStringTypeAssertion.Run(value); err != nil {
 		return err
 	}
 
