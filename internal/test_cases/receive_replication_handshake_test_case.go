@@ -89,8 +89,8 @@ func (t ReceiveReplicationHandshakeTestCase) RunReplconfStep2(client *instrument
 
 	firstCapaArg := elements[1].String()
 
-	if elements[1].Type != resp_value.SIMPLE_STRING && elements[1].Type != resp_value.BULK_STRING {
-		return fmt.Errorf("Expected first replconf argument to be a string, got %s", elements[1].Type)
+	if elements[1].Type != resp_value.BULK_STRING {
+		return fmt.Errorf("Expected first replconf argument to be a bulk string, got %s", elements[1].Type)
 	}
 
 	if !strings.EqualFold(firstCapaArg, "capa") {
@@ -98,7 +98,7 @@ func (t ReceiveReplicationHandshakeTestCase) RunReplconfStep2(client *instrument
 	}
 
 	if len(elements) == 5 {
-		if elements[3].Type != resp_value.SIMPLE_STRING && elements[3].Type != resp_value.BULK_STRING {
+		if elements[3].Type != resp_value.BULK_STRING {
 			return fmt.Errorf("Expected third replconf argument to be a string, got %s", elements[3].Type)
 		}
 

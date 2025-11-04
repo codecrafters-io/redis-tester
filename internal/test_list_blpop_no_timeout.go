@@ -27,7 +27,7 @@ func testListBlpopNoTimeout(stageHarness *test_case_harness.TestCaseHarness) err
 	listKey := testerutils_random.RandomWord()
 	pushValue := testerutils_random.RandomWord()
 
-	blPopResponseAssertion := resp_assertions.NewOrderedStringArrayAssertion([]string{listKey, pushValue})
+	blPopResponseAssertion := resp_assertions.NewOrderedBulkStringArrayAssertion([]string{listKey, pushValue})
 
 	blockingClientGroupTestCase := test_cases.BlockingClientGroupTestCase{
 		CommandToSend:                 []string{"BLPOP", listKey, "0"},

@@ -7,22 +7,24 @@ import (
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 )
 
-type RegexStringAssertion struct {
+type RegexSimpleStringAssertion struct {
 	ExpectedPattern *regexp.Regexp
 }
 
-func NewRegexStringAssertion(expectedPattern string) RESPAssertion {
+func NewRegexSimpleStringAssertion(expectedPattern string) RESPAssertion {
 	pattern, err := regexp.Compile(expectedPattern)
 	if err != nil {
 		panic(err)
 	}
 
-	return RegexStringAssertion{ExpectedPattern: pattern}
+	return RegexSimpleStringAssertion{ExpectedPattern: pattern}
 }
 
-func (a RegexStringAssertion) Run(value resp_value.Value) error {
-	if value.Type != resp_value.SIMPLE_STRING && value.Type != resp_value.BULK_STRING {
-		return fmt.Errorf("Expected simple string or bulk string, got %s", value.Type)
+func (a RegexSimpleStringAssertion) Run(value resp_value.Value) error {
+	dataTypeAssertion := DataTypeAssertion{ExpectedType: resp_value.SIMPLE_STRING}
+
+	if err := dataTypeAssertion.Run(value); err != nil {
+		return err
 	}
 
 	if !a.ExpectedPattern.MatchString(value.String()) {

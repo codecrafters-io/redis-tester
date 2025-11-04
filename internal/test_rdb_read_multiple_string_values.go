@@ -63,7 +63,7 @@ func testRdbReadMultipleStringValues(stageHarness *test_case_harness.TestCaseHar
 		commandTestCase := test_cases.SendCommandTestCase{
 			Command:                   "GET",
 			Args:                      []string{key},
-			Assertion:                 resp_assertions.NewStringAssertion(expectedValue),
+			Assertion:                 resp_assertions.NewBulkStringAssertion(expectedValue),
 			ShouldSkipUnreadDataCheck: i < len(keys)-1,
 		}
 

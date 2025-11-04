@@ -170,7 +170,7 @@ func RunWaitTest(client *instrumented_resp_connection.InstrumentedRespConnection
 	setCommandTestCase := test_cases.SendCommandTestCase{
 		Command:   waitTest.WriteCommand[0],
 		Args:      waitTest.WriteCommand[1:],
-		Assertion: resp_assertions.NewStringAssertion("OK"),
+		Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
 	}
 	if err := setCommandTestCase.Run(client, waitTest.Logger); err != nil {
 		return err

@@ -56,7 +56,7 @@ func (t TransactionTestCase) RunMulti(client *instrumented_resp_connection.Instr
 	commandTest := SendCommandTestCase{
 		Command:   "MULTI",
 		Args:      []string{},
-		Assertion: resp_assertions.NewStringAssertion("OK"),
+		Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
 	}
 
 	return commandTest.Run(client, logger)
@@ -68,7 +68,7 @@ func (t TransactionTestCase) RunQueueAll(client *instrumented_resp_connection.In
 		commandTest := SendCommandTestCase{
 			Command:   v[0],
 			Args:      v[1:],
-			Assertion: resp_assertions.NewStringAssertion("QUEUED"),
+			Assertion: resp_assertions.NewSimpleStringAssertion("QUEUED"),
 		}
 		if err := commandTest.Run(client, logger); err != nil {
 			return err

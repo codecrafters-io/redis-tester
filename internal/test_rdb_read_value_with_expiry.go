@@ -82,7 +82,7 @@ func testRdbReadValueWithExpiry(stageHarness *test_case_harness.TestCaseHarness)
 			commandTestCase := test_cases.SendCommandTestCase{
 				Command:                   "GET",
 				Args:                      []string{key},
-				Assertion:                 resp_assertions.NewStringAssertion(keyValueMap[key]),
+				Assertion:                 resp_assertions.NewBulkStringAssertion(keyValueMap[key]),
 				ShouldSkipUnreadDataCheck: false,
 			}
 			if err := commandTestCase.Run(client, logger); err != nil {

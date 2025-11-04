@@ -36,7 +36,7 @@ func testStreamsXaddFullAutoid(stageHarness *test_case_harness.TestCaseHarness) 
 	commandTestCase := &test_cases.SendCommandTestCase{
 		Command:                   "XADD",
 		Args:                      []string{streamKey, "*", "foo", "bar"},
-		Assertion:                 resp_assertions.NewNoopAssertion(),
+		Assertion:                 resp_assertions.DataTypeAssertion{ExpectedType: resp_value.BULK_STRING},
 		ShouldSkipUnreadDataCheck: true,
 	}
 
@@ -45,10 +45,6 @@ func testStreamsXaddFullAutoid(stageHarness *test_case_harness.TestCaseHarness) 
 	}
 
 	responseValue := commandTestCase.ReceivedResponse
-
-	if responseValue.Type != resp_value.BULK_STRING {
-		return fmt.Errorf("Expected bulk string, got %s", responseValue.Type)
-	}
 
 	parts := strings.Split(responseValue.String(), "-")
 

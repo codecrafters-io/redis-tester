@@ -1,8 +1,6 @@
 package resp_assertions
 
 import (
-	"fmt"
-
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 )
 
@@ -13,8 +11,10 @@ func NewNilArrayAssertion() RESPAssertion {
 }
 
 func (a NilArrayAssertion) Run(value resp_value.Value) error {
-	if value.Type != resp_value.NIL_ARRAY {
-		return fmt.Errorf(`Expected null array ("*-1\r\n"), got %s`, value.Type)
+	dataTypeAssertion := DataTypeAssertion{ExpectedType: resp_value.NIL_ARRAY}
+
+	if err := dataTypeAssertion.Run(value); err != nil {
+		return err
 	}
 
 	return nil

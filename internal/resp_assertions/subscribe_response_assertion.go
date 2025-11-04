@@ -1,8 +1,6 @@
 package resp_assertions
 
 import (
-	"fmt"
-
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 )
 
@@ -19,13 +17,9 @@ func NewSubscribeResponseAssertion(channel string, subscribedCount int) RESPAsse
 }
 
 func (c SubscribeResponseAssertion) Run(value resp_value.Value) error {
-	if value.Type != resp_value.ARRAY {
-		return fmt.Errorf("Expected array, got %s", value.Type)
-	}
-
 	arrayAssertion := NewOrderedArrayAssertion([]RESPAssertion{
-		NewStringAssertion("subscribe"),
-		NewStringAssertion(c.ExpectedChannel),
+		NewBulkStringAssertion("subscribe"),
+		NewBulkStringAssertion(c.ExpectedChannel),
 		NewIntegerAssertion(c.ExpectedSubscribedCount),
 	})
 

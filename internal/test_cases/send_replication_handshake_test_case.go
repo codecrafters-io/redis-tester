@@ -51,7 +51,7 @@ func (t SendReplicationHandshakeTestCase) RunReplconfStep(client *instrumented_r
 	commandTest := SendCommandTestCase{
 		Command:   "REPLCONF",
 		Args:      []string{"listening-port", fmt.Sprintf("%d", listeningPort)},
-		Assertion: resp_assertions.NewStringAssertion("OK"),
+		Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
 	}
 
 	if err := commandTest.Run(client, logger); err != nil {
@@ -61,7 +61,7 @@ func (t SendReplicationHandshakeTestCase) RunReplconfStep(client *instrumented_r
 	commandTest = SendCommandTestCase{
 		Command:   "REPLCONF",
 		Args:      []string{"capa", "psync2"},
-		Assertion: resp_assertions.NewStringAssertion("OK"),
+		Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
 	}
 
 	return commandTest.Run(client, logger)
@@ -71,7 +71,7 @@ func (t SendReplicationHandshakeTestCase) RunPsyncStep(client *instrumented_resp
 	commandTest := SendCommandTestCase{
 		Command:                   "PSYNC",
 		Args:                      []string{"?", "-1"},
-		Assertion:                 resp_assertions.NewRegexStringAssertion("FULLRESYNC \\w+ 0"),
+		Assertion:                 resp_assertions.NewRegexSimpleStringAssertion("FULLRESYNC \\w+ 0"),
 		ShouldSkipUnreadDataCheck: true, // We're expecting the RDB file to be sent next
 	}
 

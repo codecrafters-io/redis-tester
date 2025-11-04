@@ -6,16 +6,16 @@ import (
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 )
 
-type SimpleStringAssertion struct {
+type BulkStringAssertion struct {
 	ExpectedValue string
 }
 
-func NewSimpleStringAssertion(expectedValue string) RESPAssertion {
-	return SimpleStringAssertion{ExpectedValue: expectedValue}
+func NewBulkStringAssertion(expectedValue string) RESPAssertion {
+	return BulkStringAssertion{ExpectedValue: expectedValue}
 }
 
-func (a SimpleStringAssertion) Run(value resp_value.Value) error {
-	dataTypeAssertion := DataTypeAssertion{ExpectedType: resp_value.SIMPLE_STRING}
+func (a BulkStringAssertion) Run(value resp_value.Value) error {
+	dataTypeAssertion := DataTypeAssertion{ExpectedType: resp_value.BULK_STRING}
 
 	if err := dataTypeAssertion.Run(value); err != nil {
 		return err

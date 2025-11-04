@@ -38,7 +38,7 @@ func testTxSuccess(stageHarness *test_case_harness.TestCaseHarness) error {
 			{"INCR", key2},
 			{"GET", key2},
 		},
-		ExpectedResponseArray: []resp_assertions.RESPAssertion{resp_assertions.NewStringAssertion("OK"), resp_assertions.NewIntegerAssertion(value + 1), resp_assertions.NewIntegerAssertion(1), resp_assertions.NewStringAssertion("1")},
+		ExpectedResponseArray: []resp_assertions.RESPAssertion{resp_assertions.NewSimpleStringAssertion("OK"), resp_assertions.NewIntegerAssertion(value + 1), resp_assertions.NewIntegerAssertion(1), resp_assertions.NewBulkStringAssertion("1")},
 	}
 
 	if err := transactionTestCase.RunAll(clients[0], logger); err != nil {
@@ -48,7 +48,7 @@ func testTxSuccess(stageHarness *test_case_harness.TestCaseHarness) error {
 	commandTestCase := test_cases.SendCommandTestCase{
 		Command:   "GET",
 		Args:      []string{key1},
-		Assertion: resp_assertions.NewStringAssertion(fmt.Sprint(value + 1)),
+		Assertion: resp_assertions.NewBulkStringAssertion(fmt.Sprint(value + 1)),
 	}
 
 	return commandTestCase.Run(clients[1], logger)

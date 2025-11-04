@@ -15,8 +15,9 @@ func NewErrorAssertion(expectedValue string) RESPAssertion {
 }
 
 func (a ErrorAssertion) Run(value resp_value.Value) error {
-	if value.Type != resp_value.ERROR {
-		return fmt.Errorf("Expected error, got %s", value.Type)
+	dataTypeAssertion := DataTypeAssertion{ExpectedType: resp_value.ERROR}
+	if err := dataTypeAssertion.Run(value); err != nil {
+		return err
 	}
 
 	if value.Error() != a.ExpectedValue {

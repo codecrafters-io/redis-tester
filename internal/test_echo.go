@@ -28,7 +28,7 @@ func testEcho(stageHarness *test_case_harness.TestCaseHarness) error {
 	commandTestCase := test_cases.SendCommandTestCase{
 		Command:   "echo",
 		Args:      []string{randomWord},
-		Assertion: resp_assertions.NewStringAssertion(randomWord),
+		Assertion: resp_assertions.NewBulkStringAssertion(randomWord),
 	}
 
 	if err := commandTestCase.Run(client, logger); err != nil {

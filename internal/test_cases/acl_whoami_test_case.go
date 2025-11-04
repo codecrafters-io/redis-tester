@@ -14,7 +14,7 @@ func (t AclWhoamiTestCase) Run(client *instrumented_resp_connection.Instrumented
 	sendCommandTestCase := SendCommandTestCase{
 		Command:   "ACL",
 		Args:      []string{"WHOAMI"},
-		Assertion: resp_assertions.NewStringAssertion(t.ExpectedUsername),
+		Assertion: resp_assertions.NewBulkStringAssertion(t.ExpectedUsername),
 	}
 
 	return sendCommandTestCase.Run(client, logger)

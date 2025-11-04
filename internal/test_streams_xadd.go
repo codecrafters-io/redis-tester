@@ -31,11 +31,11 @@ func testStreamsXadd(stageHarness *test_case_harness.TestCaseHarness) error {
 		CommandWithAssertions: []test_cases.CommandWithAssertion{
 			{
 				Command:   []string{"XADD", streamKey, "0-1", "foo", "bar"},
-				Assertion: resp_assertions.NewStringAssertion("0-1"),
+				Assertion: resp_assertions.NewBulkStringAssertion("0-1"),
 			},
 			{
 				Command:   []string{"TYPE", streamKey},
-				Assertion: resp_assertions.NewStringAssertion("stream"),
+				Assertion: resp_assertions.NewSimpleStringAssertion("stream"),
 			},
 		},
 	}

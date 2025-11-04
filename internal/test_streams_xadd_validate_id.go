@@ -31,11 +31,11 @@ func testStreamsXaddValidateID(stageHarness *test_case_harness.TestCaseHarness) 
 		CommandWithAssertions: []test_cases.CommandWithAssertion{
 			{
 				Command:   []string{"XADD", streamKey, "1-1", entryKeyAndValues[0], entryKeyAndValues[1]},
-				Assertion: resp_assertions.NewStringAssertion("1-1"),
+				Assertion: resp_assertions.NewBulkStringAssertion("1-1"),
 			},
 			{
 				Command:   []string{"XADD", streamKey, "1-2", entryKeyAndValues[2], entryKeyAndValues[3]},
-				Assertion: resp_assertions.NewStringAssertion("1-2"),
+				Assertion: resp_assertions.NewBulkStringAssertion("1-2"),
 			},
 			{
 				Command:   []string{"XADD", streamKey, "1-2", entryKeyAndValues[4], entryKeyAndValues[5]},

@@ -30,7 +30,7 @@ func testReplInfo(stageHarness *test_case_harness.TestCaseHarness) error {
 	commandTestCase := test_cases.SendCommandTestCase{
 		Command:                   "INFO",
 		Args:                      []string{"replication"},
-		Assertion:                 resp_assertions.NewNoopAssertion(),
+		Assertion:                 resp_assertions.DataTypeAssertion{ExpectedType: resp_value.BULK_STRING},
 		ShouldSkipUnreadDataCheck: true,
 	}
 
@@ -39,10 +39,6 @@ func testReplInfo(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 
 	responseValue := commandTestCase.ReceivedResponse
-
-	if responseValue.Type != resp_value.BULK_STRING && responseValue.Type != resp_value.SIMPLE_STRING {
-		return fmt.Errorf("Expected simple string or bulk string, got %s", responseValue.Type)
-	}
 
 	var patternMatchError error
 

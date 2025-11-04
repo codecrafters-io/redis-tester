@@ -38,11 +38,11 @@ func testListLpop2(stageHarness *test_case_harness.TestCaseHarness) error {
 			},
 			{
 				Command:   []string{"LPOP", listKey, strconv.Itoa(toRemoveCount)},
-				Assertion: resp_assertions.NewOrderedStringArrayAssertion(elements[0:toRemoveCount]),
+				Assertion: resp_assertions.NewOrderedBulkStringArrayAssertion(elements[0:toRemoveCount]),
 			},
 			{
 				Command:   []string{"LRANGE", listKey, strconv.Itoa(0), strconv.Itoa(-1)},
-				Assertion: resp_assertions.NewOrderedStringArrayAssertion(elements[toRemoveCount:]),
+				Assertion: resp_assertions.NewOrderedBulkStringArrayAssertion(elements[toRemoveCount:]),
 			},
 		},
 	}

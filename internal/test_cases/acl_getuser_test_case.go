@@ -31,7 +31,7 @@ func (t *AclGetuserTestCase) RunForFlagsTemplateOnly(client *instrumented_resp_c
 				{
 					ArrayElementAssertion: resp_assertions.ArrayElementAssertion{
 						Index:     0,
-						Assertion: resp_assertions.NewStringAssertion("flags"),
+						Assertion: resp_assertions.NewBulkStringAssertion("flags"),
 					},
 					PreAssertionHook: func() {
 						clientLogger.Infof("Checking if the first element is \"flags\"")
@@ -90,7 +90,7 @@ func (t *AclGetuserTestCase) addAssertionForFlags(assertion *resp_assertions.Arr
 				Assertion: resp_assertions.MultiAssertion{
 					AssertionSpecifications: []resp_assertions.AssertionSpecification{
 						{
-							Assertion: resp_assertions.NewStringAssertion("flags"),
+							Assertion: resp_assertions.NewBulkStringAssertion("flags"),
 							PreAssertionHook: func() {
 								logger.Infof("Checking if the first element is \"flags\"")
 							},
@@ -175,7 +175,7 @@ func (t *AclGetuserTestCase) addAssertionForPasswords(assertion *resp_assertions
 				Assertion: resp_assertions.MultiAssertion{
 					AssertionSpecifications: []resp_assertions.AssertionSpecification{
 						{
-							Assertion: resp_assertions.NewStringAssertion("passwords"),
+							Assertion: resp_assertions.NewBulkStringAssertion("passwords"),
 							PreAssertionHook: func() {
 								logger.Infof("Checking if the third element of the array is \"passwords\"")
 							},
@@ -203,7 +203,7 @@ func (t *AclGetuserTestCase) addAssertionForPasswords(assertion *resp_assertions
 				Assertion: resp_assertions.MultiAssertion{
 					AssertionSpecifications: []resp_assertions.AssertionSpecification{
 						{
-							Assertion: resp_assertions.NewOrderedStringArrayAssertion(passwordHashes),
+							Assertion: resp_assertions.NewOrderedBulkStringArrayAssertion(passwordHashes),
 							PreAssertionHook: func() {
 								if len(passwordHashes) == 0 {
 									logger.Infof("Checking passwords array to be empty")

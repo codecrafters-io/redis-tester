@@ -25,8 +25,10 @@ func NewXReadResponseAssertion(expectedValue []StreamResponse) RESPAssertion {
 }
 
 func (a XReadResponseAssertion) Run(value resp_value.Value) error {
-	if value.Type != resp_value.ARRAY {
-		return fmt.Errorf("Expected array, got %s", value.Type)
+	dataTypeAssertion := DataTypeAssertion{ExpectedType: resp_value.ARRAY}
+
+	if err := dataTypeAssertion.Run(value); err != nil {
+		return err
 	}
 
 	expectedValue := a.buildExpected()

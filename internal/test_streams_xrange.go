@@ -42,7 +42,7 @@ func testStreamsXrange(stageHarness *test_case_harness.TestCaseHarness) error {
 	for i := range entryCount {
 		commandWithAssertions = append(commandWithAssertions, test_cases.CommandWithAssertion{
 			Command:   []string{"XADD", streamKey, entryIDs[i], entryKeysAndValues[i][0], entryKeysAndValues[i][1]},
-			Assertion: resp_assertions.NewStringAssertion(entryIDs[i]),
+			Assertion: resp_assertions.NewBulkStringAssertion(entryIDs[i]),
 		})
 	}
 

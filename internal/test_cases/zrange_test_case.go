@@ -21,7 +21,7 @@ func (t *ZrangeTestCase) Run(client *instrumented_resp_connection.InstrumentedRe
 	sendCommandTestCase := SendCommandTestCase{
 		Command:   "ZRANGE",
 		Args:      []string{t.Key, startIdxStr, endIdxStr},
-		Assertion: resp_assertions.NewOrderedStringArrayAssertion(t.ExpectedMemberNames),
+		Assertion: resp_assertions.NewOrderedBulkStringArrayAssertion(t.ExpectedMemberNames),
 	}
 
 	return sendCommandTestCase.Run(client, logger)

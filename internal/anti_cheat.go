@@ -32,7 +32,7 @@ func antiCheatTest(stageHarness *test_case_harness.TestCaseHarness) error {
 	commandTestCase := test_cases.SendCommandTestCase{
 		Command:                   "MEMORY",
 		Args:                      []string{"DOCTOR"},
-		Assertion:                 resp_assertions.NewRegexStringAssertion("[sS]am"),
+		Assertion:                 resp_assertions.NewRegexBulkStringAssertion("[sS]am"),
 		ShouldSkipUnreadDataCheck: true,
 	}
 	err = commandTestCase.Run(client, logger)
