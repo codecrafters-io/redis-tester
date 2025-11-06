@@ -1,9 +1,11 @@
 package resp_assertions
 
 import (
+	"fmt"
 	"slices"
 
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
+	"github.com/dustin/go-humanize/english"
 )
 
 type ArrayElementAssertionSpecification struct {
@@ -21,6 +23,24 @@ func (a ArrayElementsAssertion) Run(value resp_value.Value) error {
 
 	if err := dataTypeAssertion.Run(value); err != nil {
 		return err
+	}
+
+	array := value.Array()
+
+	if len(array) == 0 {
+		panic("Codecrafters Internal Error - ArrayElementsAssertion called with empty specifications")
+	}
+
+	largestIndex := slices.MaxFunc(a.ArrayElementAssertionSpecification, func(a, b ArrayElementAssertionSpecification) int {
+		return a.ArrayElementAssertion.Index - b.ArrayElementAssertion.Index
+	}).ArrayElementAssertion.Index
+
+	if largestIndex >= len(array) {
+		return fmt.Errorf(
+			"Expected at least %s to be present in the array, got only %d",
+			english.Plural((largestIndex+1), "element", "elements"),
+			len(array),
+		)
 	}
 
 	// Sort the indexes so the assertion runs serially
