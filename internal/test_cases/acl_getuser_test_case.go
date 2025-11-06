@@ -34,10 +34,10 @@ func (t *AclGetuserTestCase) RunForFlagsTemplateOnly(client *instrumented_resp_c
 						Assertion: resp_assertions.NewBulkStringAssertion("flags"),
 					},
 					PreAssertionHook: func() {
-						clientLogger.Infof("Checking if the first element is \"flags\"")
+						clientLogger.Infof("Checking if the first element is the bulk string \"flags\"")
 					},
 					AssertionSuccessHook: func() {
-						clientLogger.Successf("✔ First element is \"flags\"")
+						clientLogger.Successf("✔ First element is the bulk string \"flags\"")
 					},
 				},
 				{
@@ -92,10 +92,10 @@ func (t *AclGetuserTestCase) addAssertionForFlags(assertion *resp_assertions.Arr
 						{
 							Assertion: resp_assertions.NewBulkStringAssertion("flags"),
 							PreAssertionHook: func() {
-								logger.Infof("Checking if the first element is \"flags\"")
+								logger.Infof("Checking if the first element is the bulk string \"flags\"")
 							},
 							AssertionSuccessHook: func() {
-								logger.Successf("✔ First element is \"flags\"")
+								logger.Successf("✔ First element is the bulk string \"flags\"")
 							},
 						},
 					},
@@ -177,10 +177,10 @@ func (t *AclGetuserTestCase) addAssertionForPasswords(assertion *resp_assertions
 						{
 							Assertion: resp_assertions.NewBulkStringAssertion("passwords"),
 							PreAssertionHook: func() {
-								logger.Infof("Checking if the third element of the array is \"passwords\"")
+								logger.Infof("Checking if the third element of the array is the bulk string \"passwords\"")
 							},
 							AssertionSuccessHook: func() {
-								logger.Successf("✔ Third element is \"passwords\"")
+								logger.Successf("✔ Third element is the bulk string \"passwords\"")
 							},
 						},
 					},

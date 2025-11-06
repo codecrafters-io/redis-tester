@@ -99,7 +99,7 @@ func (t ReceiveReplicationHandshakeTestCase) RunReplconfStep2(client *instrument
 
 	if len(elements) == 5 {
 		if elements[3].Type != resp_value.BULK_STRING {
-			return fmt.Errorf("Expected third replconf argument to be a string, got %s", elements[3].Type)
+			return fmt.Errorf("Expected third replconf argument to be a bulk string, got %s", elements[3].Type)
 		}
 
 		secondCapaArg := elements[3].String()

@@ -8,6 +8,7 @@ import (
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/tester-utils/logger"
+	"github.com/dustin/go-humanize/english"
 )
 
 type BlockingClientGroupTestCase struct {
@@ -40,7 +41,7 @@ func (t *BlockingClientGroupTestCase) AssertResponses(logger *logger.Logger) err
 	logger.Infof(
 		"Expecting %d %s to receive response of %s command",
 		t.ResponseExpectingClientsCount,
-		pluralize(t.ResponseExpectingClientsCount, "client", "clients"),
+		english.PluralWord(t.ResponseExpectingClientsCount, "client", "clients"),
 		t.CommandToSend[0],
 	)
 

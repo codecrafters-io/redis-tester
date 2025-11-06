@@ -34,7 +34,7 @@ func (a UnorderedBulkStringArrayAssertion) Run(value resp_value.Value) error {
 		actualElement := value.Array()[i]
 
 		if actualElement.Type != resp_value.BULK_STRING {
-			return fmt.Errorf("Expected element #%d to be a string, got %s", i+1, actualElement.Type)
+			return fmt.Errorf("Expected element #%d to be a bulk string, got %s", i+1, actualElement.Type)
 		}
 
 		actualElementStringArray[i] = value.Array()[i].String()
