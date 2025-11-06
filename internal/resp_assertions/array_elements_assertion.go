@@ -27,6 +27,10 @@ func (a ArrayElementsAssertion) Run(value resp_value.Value) error {
 
 	array := value.Array()
 
+	if len(array) == 0 {
+		panic("Codecrafters Internal Error - ArrayElementsAssertion called with empty specifications")
+	}
+
 	largestIndex := slices.MaxFunc(a.ArrayElementAssertionSpecification, func(a, b ArrayElementAssertionSpecification) int {
 		return a.ArrayElementAssertion.Index - b.ArrayElementAssertion.Index
 	}).ArrayElementAssertion.Index
