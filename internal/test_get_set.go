@@ -33,7 +33,7 @@ func testGetSet(stageHarness *test_case_harness.TestCaseHarness) error {
 	setCommandTestCase := test_cases.SendCommandTestCase{
 		Command:   "set",
 		Args:      []string{key, value},
-		Assertion: resp_assertions.NewStringAssertion("OK"),
+		Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
 	}
 
 	if err := setCommandTestCase.Run(client, logger); err != nil {
@@ -46,7 +46,7 @@ func testGetSet(stageHarness *test_case_harness.TestCaseHarness) error {
 	getCommandTestCase := test_cases.SendCommandTestCase{
 		Command:   "get",
 		Args:      []string{key},
-		Assertion: resp_assertions.NewStringAssertion(value),
+		Assertion: resp_assertions.NewBulkStringAssertion(value),
 	}
 
 	if err := getCommandTestCase.Run(client, logger); err != nil {

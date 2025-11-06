@@ -36,11 +36,11 @@ func testTxErr(stageHarness *test_case_harness.TestCaseHarness) error {
 		CommandWithAssertions: []test_cases.CommandWithAssertion{
 			{
 				Command:   []string{"SET", key1, value1},
-				Assertion: resp_assertions.NewStringAssertion("OK"),
+				Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
 			},
 			{
 				Command:   []string{"SET", key2, fmt.Sprint(value2)},
-				Assertion: resp_assertions.NewStringAssertion("OK"),
+				Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
 			},
 		},
 	}
@@ -68,11 +68,11 @@ func testTxErr(stageHarness *test_case_harness.TestCaseHarness) error {
 		CommandWithAssertions: []test_cases.CommandWithAssertion{
 			{
 				Command:   []string{"GET", key2},
-				Assertion: resp_assertions.NewStringAssertion(fmt.Sprint(value2 + 1)),
+				Assertion: resp_assertions.NewBulkStringAssertion(fmt.Sprint(value2 + 1)),
 			},
 			{
 				Command:   []string{"GET", key1},
-				Assertion: resp_assertions.NewStringAssertion(value1),
+				Assertion: resp_assertions.NewBulkStringAssertion(value1),
 			},
 		},
 	}

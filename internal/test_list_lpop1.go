@@ -37,11 +37,11 @@ func testListLpop1(stageHarness *test_case_harness.TestCaseHarness) error {
 			},
 			{
 				Command:   []string{"LPOP", listKey},
-				Assertion: resp_assertions.NewStringAssertion(elements[0]),
+				Assertion: resp_assertions.NewBulkStringAssertion(elements[0]),
 			},
 			{
 				Command:   []string{"LRANGE", listKey, strconv.Itoa(0), strconv.Itoa(-1)},
-				Assertion: resp_assertions.NewOrderedStringArrayAssertion(elements[1:]),
+				Assertion: resp_assertions.NewOrderedBulkStringArrayAssertion(elements[1:]),
 			},
 		},
 	}

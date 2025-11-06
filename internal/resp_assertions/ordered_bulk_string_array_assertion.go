@@ -6,19 +6,21 @@ import (
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 )
 
-// OrderedStringArrayAssertion : Order of the actual and expected values matters.
+// OrderedBulkStringArrayAssertion : Order of the actual and expected values matters.
 // We don't alter the ordering.
-type OrderedStringArrayAssertion struct {
+type OrderedBulkStringArrayAssertion struct {
 	ExpectedValue []string
 }
 
-func NewOrderedStringArrayAssertion(expectedValue []string) RESPAssertion {
-	return OrderedStringArrayAssertion{ExpectedValue: expectedValue}
+func NewOrderedBulkStringArrayAssertion(expectedValue []string) RESPAssertion {
+	return OrderedBulkStringArrayAssertion{ExpectedValue: expectedValue}
 }
 
-func (a OrderedStringArrayAssertion) Run(value resp_value.Value) error {
-	if value.Type != resp_value.ARRAY {
-		return fmt.Errorf("Expected an array, got %s", value.Type)
+func (a OrderedBulkStringArrayAssertion) Run(value resp_value.Value) error {
+	arrayTypeAssertion := DataTypeAssertion{ExpectedType: resp_value.ARRAY}
+
+	if err := arrayTypeAssertion.Run(value); err != nil {
+		return err
 	}
 
 	if len(value.Array()) != len(a.ExpectedValue) {
@@ -28,7 +30,7 @@ func (a OrderedStringArrayAssertion) Run(value resp_value.Value) error {
 	for i, expectedValue := range a.ExpectedValue {
 		actualElement := value.Array()[i]
 
-		if actualElement.Type != resp_value.BULK_STRING && actualElement.Type != resp_value.SIMPLE_STRING {
+		if actualElement.Type != resp_value.BULK_STRING {
 			return fmt.Errorf("Expected element #%d to be a string, got %s", i+1, actualElement.Type)
 		}
 

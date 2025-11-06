@@ -44,25 +44,25 @@ func testListLrangeNegIndex(stageHarness *test_case_harness.TestCaseHarness) err
 			// usual test cases
 			{
 				Command:   []string{"LRANGE", listKey, "0", strconv.Itoa(middleIndex)},
-				Assertion: resp_assertions.NewOrderedStringArrayAssertion(elements[0 : middleIndexTranslated+1]),
+				Assertion: resp_assertions.NewOrderedBulkStringArrayAssertion(elements[0 : middleIndexTranslated+1]),
 			},
 			{
 				Command:   []string{"LRANGE", listKey, strconv.Itoa(middleIndex), strconv.Itoa(endIndex)},
-				Assertion: resp_assertions.NewOrderedStringArrayAssertion(elements[middleIndexTranslated:listSize]),
+				Assertion: resp_assertions.NewOrderedBulkStringArrayAssertion(elements[middleIndexTranslated:listSize]),
 			},
 			{
 				Command:   []string{"LRANGE", listKey, "0", strconv.Itoa(endIndex)},
-				Assertion: resp_assertions.NewOrderedStringArrayAssertion(elements[0:listSize]),
+				Assertion: resp_assertions.NewOrderedBulkStringArrayAssertion(elements[0:listSize]),
 			},
 			// start index > end index
 			{
 				Command:   []string{"LRANGE", listKey, "-1", "-2"},
-				Assertion: resp_assertions.NewOrderedStringArrayAssertion([]string{}),
+				Assertion: resp_assertions.NewOrderedBulkStringArrayAssertion([]string{}),
 			},
 			// end index out of bounds
 			{
 				Command:   []string{"LRANGE", listKey, strconv.Itoa(startIndex - 1), strconv.Itoa(endIndex)},
-				Assertion: resp_assertions.NewOrderedStringArrayAssertion(elements[0:listSize]),
+				Assertion: resp_assertions.NewOrderedBulkStringArrayAssertion(elements[0:listSize]),
 			},
 		},
 	}

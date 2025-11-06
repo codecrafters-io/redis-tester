@@ -38,7 +38,7 @@ func testRdbConfig(stageHarness *test_case_harness.TestCaseHarness) error {
 	commandTestCase := test_cases.SendCommandTestCase{
 		Command:                   "CONFIG",
 		Args:                      []string{"GET", "dir"},
-		Assertion:                 resp_assertions.NewOrderedStringArrayAssertion([]string{"dir", tmpDir}),
+		Assertion:                 resp_assertions.NewOrderedBulkStringArrayAssertion([]string{"dir", tmpDir}),
 		ShouldSkipUnreadDataCheck: false,
 	}
 

@@ -16,8 +16,8 @@ func (t *UnsubscribeTestCase) Run(client *instrumented_resp_connection.Instrumen
 		Command: "UNSUBSCRIBE",
 		Args:    []string{t.Channel},
 		Assertion: resp_assertions.NewOrderedArrayAssertion([]resp_assertions.RESPAssertion{
-			resp_assertions.NewStringAssertion("unsubscribe"),
-			resp_assertions.NewStringAssertion(t.Channel),
+			resp_assertions.NewBulkStringAssertion("unsubscribe"),
+			resp_assertions.NewBulkStringAssertion(t.Channel),
 			resp_assertions.NewIntegerAssertion(t.ExpectedSubscriberCountAfterUnsubscribe),
 		}),
 	}

@@ -34,7 +34,7 @@ func testTxDiscard(stageHarness *test_case_harness.TestCaseHarness) error {
 	commandTestCase := test_cases.SendCommandTestCase{
 		Command:   "SET",
 		Args:      []string{key2, fmt.Sprint(value2)},
-		Assertion: resp_assertions.NewStringAssertion("OK"),
+		Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
 	}
 
 	if err := commandTestCase.Run(client, logger); err != nil {
@@ -56,7 +56,7 @@ func testTxDiscard(stageHarness *test_case_harness.TestCaseHarness) error {
 		CommandWithAssertions: []test_cases.CommandWithAssertion{
 			{
 				Command:   []string{"DISCARD"},
-				Assertion: resp_assertions.NewStringAssertion("OK"),
+				Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
 			},
 			{
 				Command:   []string{"GET", key1},
@@ -64,7 +64,7 @@ func testTxDiscard(stageHarness *test_case_harness.TestCaseHarness) error {
 			},
 			{
 				Command:   []string{"GET", key2},
-				Assertion: resp_assertions.NewStringAssertion(fmt.Sprint(value2)),
+				Assertion: resp_assertions.NewBulkStringAssertion(fmt.Sprint(value2)),
 			},
 			{
 				Command:   []string{"DISCARD"},

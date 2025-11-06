@@ -36,7 +36,7 @@ func testPubSubSubscribe4(stageHarness *test_case_harness.TestCaseHarness) error
 	/* Test against Ping */
 	pingTestCase1 := test_cases.SendCommandTestCase{
 		Command:   "PING",
-		Assertion: resp_assertions.NewOrderedStringArrayAssertion([]string{"pong", ""}),
+		Assertion: resp_assertions.NewOrderedBulkStringArrayAssertion([]string{"pong", ""}),
 	}
 	if err := pingTestCase1.Run(clients[0], logger); err != nil {
 		return err

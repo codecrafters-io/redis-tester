@@ -15,8 +15,10 @@ func NewSimpleStringAssertion(expectedValue string) RESPAssertion {
 }
 
 func (a SimpleStringAssertion) Run(value resp_value.Value) error {
-	if value.Type != resp_value.SIMPLE_STRING {
-		return fmt.Errorf("Expected simple string, got %s", value.Type)
+	simpleStringTypeAssertion := DataTypeAssertion{ExpectedType: resp_value.SIMPLE_STRING}
+
+	if err := simpleStringTypeAssertion.Run(value); err != nil {
+		return err
 	}
 
 	if value.String() != a.ExpectedValue {

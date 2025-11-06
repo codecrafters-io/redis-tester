@@ -39,7 +39,7 @@ func testTxIncr2(stageHarness *test_case_harness.TestCaseHarness) error {
 			},
 			{
 				Command:   []string{"GET", key},
-				Assertion: resp_assertions.NewStringAssertion("2"),
+				Assertion: resp_assertions.NewBulkStringAssertion("2"),
 			},
 		},
 	}

@@ -1,7 +1,6 @@
 package resp_assertions
 
 import (
-	"fmt"
 	"slices"
 
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
@@ -18,8 +17,10 @@ type ArrayElementsAssertion struct {
 }
 
 func (a ArrayElementsAssertion) Run(value resp_value.Value) error {
-	if value.Type != resp_value.ARRAY {
-		return fmt.Errorf("Expected array, got %s", value.Type)
+	dataTypeAssertion := DataTypeAssertion{ExpectedType: resp_value.ARRAY}
+
+	if err := dataTypeAssertion.Run(value); err != nil {
+		return err
 	}
 
 	// Sort the indexes so the assertion runs serially

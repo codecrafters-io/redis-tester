@@ -38,11 +38,11 @@ func testStreamsXreadMultiple(stageHarness *test_case_harness.TestCaseHarness) e
 		CommandWithAssertions: []test_cases.CommandWithAssertion{
 			{
 				Command:   []string{"XADD", randomKeys[0], entryIDs[0], "temperature", randomInts[0]},
-				Assertion: resp_assertions.NewStringAssertion(entryIDs[0]),
+				Assertion: resp_assertions.NewBulkStringAssertion(entryIDs[0]),
 			},
 			{
 				Command:   []string{"XADD", randomKeys[1], entryIDs[1], "humidity", randomInts[1]},
-				Assertion: resp_assertions.NewStringAssertion(entryIDs[1]),
+				Assertion: resp_assertions.NewBulkStringAssertion(entryIDs[1]),
 			},
 			{
 				Command: []string{"XREAD", "streams", randomKeys[0], randomKeys[1], "0-0", "0-1"},

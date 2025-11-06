@@ -75,7 +75,7 @@ func testPushBeforeTimeout(stageHarness *test_case_harness.TestCaseHarness) erro
 	timeoutMS := testerutils_random.RandomInt(1, 5) * 100
 	timeoutArg := fmt.Sprintf("%.1f", float32(timeoutMS)/1000)
 
-	blPopResponseAssertion := resp_assertions.NewOrderedStringArrayAssertion([]string{listKey, pushValue})
+	blPopResponseAssertion := resp_assertions.NewOrderedBulkStringArrayAssertion([]string{listKey, pushValue})
 
 	blockingClientGroupTestCase := test_cases.BlockingClientGroupTestCase{
 		CommandToSend:                 []string{"BLPOP", listKey, timeoutArg},

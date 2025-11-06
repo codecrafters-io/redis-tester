@@ -15,8 +15,10 @@ func NewIntegerAssertion(expectedValue int) RESPAssertion {
 }
 
 func (a IntegerAssertion) Run(value resp_value.Value) error {
-	if value.Type != resp_value.INTEGER {
-		return fmt.Errorf("Expected integer, got %s", value.Type)
+	integerTypeAssertion := DataTypeAssertion{ExpectedType: resp_value.INTEGER}
+
+	if err := integerTypeAssertion.Run(value); err != nil {
+		return err
 	}
 
 	if value.Integer() != a.ExpectedValue {

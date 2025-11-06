@@ -93,7 +93,7 @@ func testReplCmdProcessing(stageHarness *test_case_harness.TestCaseHarness) erro
 		getCommandTestCase := test_cases.SendCommandTestCase{
 			Command:   "GET",
 			Args:      []string{key},
-			Assertion: resp_assertions.NewStringAssertion(value),
+			Assertion: resp_assertions.NewBulkStringAssertion(value),
 			Retries:   5,
 			ShouldRetryFunc: func(value resp_value.Value) bool {
 				return resp_assertions.NewNilAssertion().Run(value) == nil

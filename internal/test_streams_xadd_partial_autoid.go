@@ -31,15 +31,15 @@ func testStreamsXaddPartialAutoid(stageHarness *test_case_harness.TestCaseHarnes
 		CommandWithAssertions: []test_cases.CommandWithAssertion{
 			{
 				Command:   []string{"XADD", streamKey, "0-*", entryKeyAndValues[0], entryKeyAndValues[1]},
-				Assertion: resp_assertions.NewStringAssertion("0-1"),
+				Assertion: resp_assertions.NewBulkStringAssertion("0-1"),
 			},
 			{
 				Command:   []string{"XADD", streamKey, "1-*", entryKeyAndValues[0], entryKeyAndValues[1]},
-				Assertion: resp_assertions.NewStringAssertion("1-0"),
+				Assertion: resp_assertions.NewBulkStringAssertion("1-0"),
 			},
 			{
 				Command:   []string{"XADD", streamKey, "1-*", entryKeyAndValues[1], entryKeyAndValues[2]},
-				Assertion: resp_assertions.NewStringAssertion("1-1"),
+				Assertion: resp_assertions.NewBulkStringAssertion("1-1"),
 			},
 		},
 	}

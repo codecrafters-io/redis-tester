@@ -34,15 +34,15 @@ func testStreamsType(stageHarness *test_case_harness.TestCaseHarness) error {
 		CommandWithAssertions: []test_cases.CommandWithAssertion{
 			{
 				Command:   []string{"SET", key, value},
-				Assertion: resp_assertions.NewStringAssertion("OK"),
+				Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
 			},
 			{
 				Command:   []string{"TYPE", key},
-				Assertion: resp_assertions.NewStringAssertion("string"),
+				Assertion: resp_assertions.NewSimpleStringAssertion("string"),
 			},
 			{
 				Command:   []string{"TYPE", fmt.Sprintf("missing_key_%s", value)},
-				Assertion: resp_assertions.NewStringAssertion("none"),
+				Assertion: resp_assertions.NewSimpleStringAssertion("none"),
 			},
 		},
 	}

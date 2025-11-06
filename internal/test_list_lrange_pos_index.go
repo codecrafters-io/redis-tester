@@ -41,30 +41,30 @@ func testListLrangePosIdx(stageHarness *test_case_harness.TestCaseHarness) error
 			// usual test cases
 			{
 				Command:   []string{"LRANGE", listKey, "0", strconv.Itoa(middleIndex)},
-				Assertion: resp_assertions.NewOrderedStringArrayAssertion(elements[0 : middleIndex+1]),
+				Assertion: resp_assertions.NewOrderedBulkStringArrayAssertion(elements[0 : middleIndex+1]),
 			},
 			{
 				Command:   []string{"LRANGE", listKey, strconv.Itoa(middleIndex), strconv.Itoa(listSize - 1)},
-				Assertion: resp_assertions.NewOrderedStringArrayAssertion(elements[middleIndex:listSize]),
+				Assertion: resp_assertions.NewOrderedBulkStringArrayAssertion(elements[middleIndex:listSize]),
 			},
 			{
 				Command:   []string{"LRANGE", listKey, "0", strconv.Itoa(listSize - 1)},
-				Assertion: resp_assertions.NewOrderedStringArrayAssertion(elements[0:listSize]),
+				Assertion: resp_assertions.NewOrderedBulkStringArrayAssertion(elements[0:listSize]),
 			},
 			// start index > end index
 			{
 				Command:   []string{"LRANGE", listKey, "1", "0"},
-				Assertion: resp_assertions.NewOrderedStringArrayAssertion([]string{}),
+				Assertion: resp_assertions.NewOrderedBulkStringArrayAssertion([]string{}),
 			},
 			// end index out of bounds
 			{
 				Command:   []string{"LRANGE", listKey, "0", strconv.Itoa(listSize * 2)},
-				Assertion: resp_assertions.NewOrderedStringArrayAssertion(elements[0:listSize]),
+				Assertion: resp_assertions.NewOrderedBulkStringArrayAssertion(elements[0:listSize]),
 			},
 			// key doesn't exist
 			{
 				Command:   []string{"LRANGE", missingKey, "0", "1"},
-				Assertion: resp_assertions.NewOrderedStringArrayAssertion([]string{}),
+				Assertion: resp_assertions.NewOrderedBulkStringArrayAssertion([]string{}),
 			},
 		},
 	}

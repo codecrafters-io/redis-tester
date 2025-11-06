@@ -19,8 +19,10 @@ func NewOrderedArrayAssertion(expectedValue []RESPAssertion) RESPAssertion {
 }
 
 func (a OrderedArrayAssertion) Run(value resp_value.Value) error {
-	if value.Type != resp_value.ARRAY {
-		return fmt.Errorf("Expected an array, got %s", value.Type)
+	arrayTypeAssertion := DataTypeAssertion{ExpectedType: resp_value.ARRAY}
+
+	if err := arrayTypeAssertion.Run(value); err != nil {
+		return err
 	}
 
 	if len(value.Array()) != len(a.ExpectedValue) {

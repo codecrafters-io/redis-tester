@@ -40,7 +40,7 @@ func testListLpush(stageHarness *test_case_harness.TestCaseHarness) error {
 			},
 			{
 				Command:   []string{"LRANGE", listKey, strconv.Itoa(0), strconv.Itoa(-1)},
-				Assertion: resp_assertions.NewOrderedStringArrayAssertion(elements),
+				Assertion: resp_assertions.NewOrderedBulkStringArrayAssertion(elements),
 			},
 		},
 	}

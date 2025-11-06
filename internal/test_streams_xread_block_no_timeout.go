@@ -32,7 +32,7 @@ func testStreamsXreadBlockNoTimeout(stageHarness *test_case_harness.TestCaseHarn
 	xaddCommandTestCase := &test_cases.SendCommandTestCase{
 		Command:                   "XADD",
 		Args:                      []string{streamKey, "0-1", "temperature", strconv.Itoa(entryValue)},
-		Assertion:                 resp_assertions.NewStringAssertion("0-1"),
+		Assertion:                 resp_assertions.NewBulkStringAssertion("0-1"),
 		ShouldSkipUnreadDataCheck: true,
 	}
 
@@ -69,7 +69,7 @@ func testStreamsXreadBlockNoTimeout(stageHarness *test_case_harness.TestCaseHarn
 	xaddCommandTestCase = &test_cases.SendCommandTestCase{
 		Command:                   "XADD",
 		Args:                      []string{streamKey, "0-2", "temperature", strconv.Itoa(entryValue)},
-		Assertion:                 resp_assertions.NewStringAssertion("0-2"),
+		Assertion:                 resp_assertions.NewBulkStringAssertion("0-2"),
 		ShouldSkipUnreadDataCheck: false,
 	}
 	if err := xaddCommandTestCase.Run(client2, logger); err != nil {

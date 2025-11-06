@@ -58,7 +58,7 @@ func testReplMultipleReplicas(stageHarness *test_case_harness.TestCaseHarness) e
 		setCommandTestCase := test_cases.SendCommandTestCase{
 			Command:   "SET",
 			Args:      []string{key, value},
-			Assertion: resp_assertions.NewStringAssertion("OK"),
+			Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
 		}
 		if err := setCommandTestCase.Run(client, logger); err != nil {
 			return err

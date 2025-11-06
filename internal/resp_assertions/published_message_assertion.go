@@ -17,6 +17,6 @@ func NewPublishedMessageAssertion(channel string, message string) RESPAssertion 
 }
 
 func (c PublishedMessageAssertion) Run(value resp_value.Value) error {
-	arrayAssertion := NewOrderedStringArrayAssertion([]string{"message", c.ExpectedChannel, c.ExpectedMessage})
+	arrayAssertion := NewOrderedBulkStringArrayAssertion([]string{"message", c.ExpectedChannel, c.ExpectedMessage})
 	return arrayAssertion.Run(value)
 }

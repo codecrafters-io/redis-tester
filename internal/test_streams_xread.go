@@ -34,7 +34,7 @@ func testStreamsXread(stageHarness *test_case_harness.TestCaseHarness) error {
 		CommandWithAssertions: []test_cases.CommandWithAssertion{
 			{
 				Command:   []string{"XADD", streamKey, entryID, temperature, entryValue},
-				Assertion: resp_assertions.NewStringAssertion(entryID),
+				Assertion: resp_assertions.NewBulkStringAssertion(entryID),
 			},
 			{
 				Command: []string{"XREAD", "streams", streamKey, "0-0"},

@@ -47,7 +47,7 @@ func testRdbReadStringValue(stageHarness *test_case_harness.TestCaseHarness) err
 	commandTestCase := test_cases.SendCommandTestCase{
 		Command:                   "GET",
 		Args:                      []string{randomKey},
-		Assertion:                 resp_assertions.NewStringAssertion(randomValue),
+		Assertion:                 resp_assertions.NewBulkStringAssertion(randomValue),
 		ShouldSkipUnreadDataCheck: false,
 	}
 

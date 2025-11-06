@@ -34,7 +34,7 @@ func testTxIncr1(stageHarness *test_case_harness.TestCaseHarness) error {
 		CommandWithAssertions: []test_cases.CommandWithAssertion{
 			{
 				Command:   []string{"SET", key, fmt.Sprint(value)},
-				Assertion: resp_assertions.NewStringAssertion("OK"),
+				Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
 			},
 			{
 				Command:   []string{"INCR", key},

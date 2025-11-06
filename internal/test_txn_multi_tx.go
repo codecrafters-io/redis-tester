@@ -36,7 +36,7 @@ func testTxMultiTx(stageHarness *test_case_harness.TestCaseHarness) error {
 			CommandWithAssertions: []test_cases.CommandWithAssertion{
 				{
 					Command:   []string{"SET", key2, fmt.Sprint(value)},
-					Assertion: resp_assertions.NewStringAssertion("OK"),
+					Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
 				},
 				{
 					Command:   []string{"INCR", key1},
