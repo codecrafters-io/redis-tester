@@ -51,7 +51,7 @@ func TestStages(t *testing.T) {
 			UntilStageSlug:      "rg2",
 			CodePath:            "./test_helpers/scenarios/ping-pong/slow_response",
 			ExpectedExitCode:    0,
-			StdoutFixturePath:   "./test_helpers/fixtures/fping-pong/slow_response",
+			StdoutFixturePath:   "./test_helpers/fixtures/ping-pong/slow_response",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 		"ping_pong_without_read_multiple_pongs": {
