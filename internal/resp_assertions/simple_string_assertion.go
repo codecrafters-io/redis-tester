@@ -19,7 +19,7 @@ func (a SimpleStringAssertion) Run(value resp_value.Value) error {
 	if value.Type == resp_value.BULK_STRING && value.String() == a.ExpectedValue {
 		return fmt.Errorf(
 			"Expected simple string \"%s\", got bulk string \"%s\" instead",
-			value.String(),
+			a.ExpectedValue,
 			value.String(),
 		)
 	}

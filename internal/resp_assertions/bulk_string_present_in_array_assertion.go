@@ -30,7 +30,7 @@ func (a BulkStringPresentInArrayAssertion) Run(value resp_value.Value) error {
 		if element.Type == resp_value.SIMPLE_STRING && element.String() == a.ExpectedString {
 			return fmt.Errorf(
 				"Expected bulk string '%s' to be present in the array, but simple string '%s' is present instead",
-				element.String(),
+				a.ExpectedString,
 				element.String(),
 			)
 		}
