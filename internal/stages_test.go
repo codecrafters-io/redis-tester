@@ -51,7 +51,7 @@ func TestStages(t *testing.T) {
 			UntilStageSlug:      "rg2",
 			CodePath:            "./test_helpers/scenarios/ping-pong/slow_response",
 			ExpectedExitCode:    0,
-			StdoutFixturePath:   "./test_helpers/fixtures/ping-pong/slow_response",
+			StdoutFixturePath:   "./test_helpers/fixtures/fping-pong/slow_response",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 		"ping_pong_without_read_multiple_pongs": {
@@ -59,6 +59,13 @@ func TestStages(t *testing.T) {
 			CodePath:            "./test_helpers/scenarios/ping-pong/without_read_multiple_pongs",
 			ExpectedExitCode:    1,
 			StdoutFixturePath:   "./test_helpers/fixtures/ping-pong/without_read_multiple_pongs",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
+		"ping_pong_string_type_mismatch": {
+			StageSlugs:          []string{"rg2"},
+			CodePath:            "./test_helpers/scenarios/ping-pong/string_type_mismatch",
+			ExpectedExitCode:    1,
+			StdoutFixturePath:   "./test_helpers/fixtures/ping-pong/string_type_mismatch",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 		"invalid_resp_error": {
