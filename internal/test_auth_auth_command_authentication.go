@@ -89,10 +89,10 @@ func testAuthCommandAuthentication(stageHarness *test_case_harness.TestCaseHarne
 		return err
 	}
 
-	return testRandomCommands(secondClient, logger)
+	return testAuthenticatedClientUsingRandomCommands(secondClient, logger)
 }
 
-func testRandomCommands(client *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
+func testAuthenticatedClientUsingRandomCommands(client *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
 	argumentForEchoCommand := random.RandomWord()
 
 	allTestCases := []test_cases.SendCommandTestCase{
