@@ -7,6 +7,7 @@ import (
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
+	"github.com/codecrafters-io/tester-utils/logger"
 	"github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
@@ -84,5 +85,47 @@ func testAuthCommandAuthentication(stageHarness *test_case_harness.TestCaseHarne
 		ExpectedUsername: "default",
 	}
 
-	return whoamiSuccessTestCase.Run(secondClient, logger)
+	if err := whoamiSuccessTestCase.Run(secondClient, logger); err != nil {
+		return err
+	}
+
+	return testRandomCommands(secondClient, logger)
+}
+
+func testRandomCommands(client *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
+	argumentForEchoCommand := random.RandomWord()
+
+	allTestCases := []test_cases.SendCommandTestCase{
+		{
+			Command:   "SET",
+			Args:      []string{fmt.Sprintf("key-%d", random.RandomInt(1, 1000)), fmt.Sprintf("value-%d", random.RandomInt(1, 1000))},
+			Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
+		},
+		{
+			Command:   "GET",
+			Args:      []string{fmt.Sprintf("nonexistent-key-%d", random.RandomInt(1, 1000))},
+			Assertion: resp_assertions.NewNilAssertion(),
+		},
+		{
+			Command:   "PING",
+			Args:      []string{},
+			Assertion: resp_assertions.NewSimpleStringAssertion("PONG"),
+		},
+		{
+			Command:   "ECHO",
+			Args:      []string{argumentForEchoCommand},
+			Assertion: resp_assertions.NewBulkStringAssertion(argumentForEchoCommand),
+		},
+	}
+
+	selectedTestCases := random.RandomElementsFromArray(allTestCases, 2)
+
+	for i := range selectedTestCases {
+		// var range copies lock: indexing avoids copying of lock inside test case
+		if err := selectedTestCases[i].Run(client, logger); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
