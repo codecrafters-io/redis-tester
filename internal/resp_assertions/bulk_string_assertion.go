@@ -15,6 +15,15 @@ func NewBulkStringAssertion(expectedValue string) RESPAssertion {
 }
 
 func (a BulkStringAssertion) Run(value resp_value.Value) error {
+	// Frequently occurs in user submissions
+	if value.Type == resp_value.SIMPLE_STRING && value.String() == a.ExpectedValue {
+		return fmt.Errorf(
+			"Expected bulk string \"%s\", got simple string \"%s\" instead",
+			a.ExpectedValue,
+			value.String(),
+		)
+	}
+
 	bulkStringTypeAssertion := DataTypeAssertion{ExpectedType: resp_value.BULK_STRING}
 
 	if err := bulkStringTypeAssertion.Run(value); err != nil {

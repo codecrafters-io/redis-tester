@@ -25,5 +25,16 @@ func (a BulkStringPresentInArrayAssertion) Run(value resp_value.Value) error {
 		}
 	}
 
+	// Possible frequent-occurence inferring from the existing errors in user submissions
+	for _, element := range array {
+		if element.Type == resp_value.SIMPLE_STRING && element.String() == a.ExpectedString {
+			return fmt.Errorf(
+				"Expected bulk string '%s' to be present in the array, but simple string '%s' is present instead",
+				a.ExpectedString,
+				element.String(),
+			)
+		}
+	}
+
 	return fmt.Errorf("Expected bulk string '%s' to be present in the array, but is absent", a.ExpectedString)
 }

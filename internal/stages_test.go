@@ -61,6 +61,13 @@ func TestStages(t *testing.T) {
 			StdoutFixturePath:   "./test_helpers/fixtures/ping-pong/without_read_multiple_pongs",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
+		"ping_pong_string_type_mismatch": {
+			StageSlugs:          []string{"rg2"},
+			CodePath:            "./test_helpers/scenarios/ping-pong/string_type_mismatch",
+			ExpectedExitCode:    1,
+			StdoutFixturePath:   "./test_helpers/fixtures/ping-pong/string_type_mismatch",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
 		"invalid_resp_error": {
 			StageSlugs:          []string{"rg2"},
 			CodePath:            "./test_helpers/scenarios/invalid-resp/",
