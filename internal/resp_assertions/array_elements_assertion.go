@@ -27,7 +27,8 @@ func (a ArrayElementsAssertion) Run(value resp_value.Value) error {
 
 	array := value.Array()
 
-	if len(array) == 0 {
+	// If the specification is empty, panic
+	if len(a.ArrayElementAssertionSpecification) == 0 {
 		panic("Codecrafters Internal Error - ArrayElementsAssertion called with empty specifications")
 	}
 
