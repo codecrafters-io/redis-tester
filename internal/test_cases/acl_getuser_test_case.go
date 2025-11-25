@@ -27,7 +27,7 @@ func (t *AclGetuserTestCase) RunForFlagsTemplateOnly(client *instrumented_resp_c
 		Command: "ACL",
 		Args:    []string{"GETUSER", t.Username},
 		Assertion: resp_assertions.ArrayElementsAssertion{
-			ArrayElementAssertionSpecification: []resp_assertions.ArrayElementAssertionSpecification{
+			ArrayElementAssertionSpecifications: []resp_assertions.ArrayElementAssertionSpecification{
 				{
 					ArrayElementAssertion: resp_assertions.ArrayElementAssertion{
 						Index:     0,
@@ -83,7 +83,7 @@ func (t *AclGetuserTestCase) Run(client *instrumented_resp_connection.Instrument
 func (t *AclGetuserTestCase) addAssertionForFlags(assertion *resp_assertions.ArrayElementsAssertion, logger *logger.Logger) {
 	// Assert for flags
 	// Assertion for "flags" as the first element
-	assertion.ArrayElementAssertionSpecification = append(assertion.ArrayElementAssertionSpecification,
+	assertion.ArrayElementAssertionSpecifications = append(assertion.ArrayElementAssertionSpecifications,
 		resp_assertions.ArrayElementAssertionSpecification{
 			ArrayElementAssertion: resp_assertions.ArrayElementAssertion{
 				Index: 0,
@@ -104,7 +104,7 @@ func (t *AclGetuserTestCase) addAssertionForFlags(assertion *resp_assertions.Arr
 		})
 
 	// Assert the type of 2nd element to be array
-	assertion.ArrayElementAssertionSpecification = append(assertion.ArrayElementAssertionSpecification,
+	assertion.ArrayElementAssertionSpecifications = append(assertion.ArrayElementAssertionSpecifications,
 		resp_assertions.ArrayElementAssertionSpecification{
 			ArrayElementAssertion: resp_assertions.ArrayElementAssertion{
 				Index: 1,
@@ -158,7 +158,7 @@ func (t *AclGetuserTestCase) addAssertionForFlags(assertion *resp_assertions.Arr
 			})
 	}
 
-	assertion.ArrayElementAssertionSpecification = append(assertion.ArrayElementAssertionSpecification,
+	assertion.ArrayElementAssertionSpecifications = append(assertion.ArrayElementAssertionSpecifications,
 		resp_assertions.ArrayElementAssertionSpecification{
 			ArrayElementAssertion: resp_assertions.ArrayElementAssertion{
 				Index:     1,
@@ -168,7 +168,7 @@ func (t *AclGetuserTestCase) addAssertionForFlags(assertion *resp_assertions.Arr
 }
 
 func (t *AclGetuserTestCase) addAssertionForPasswords(assertion *resp_assertions.ArrayElementsAssertion, logger *logger.Logger) {
-	assertion.ArrayElementAssertionSpecification = append(assertion.ArrayElementAssertionSpecification,
+	assertion.ArrayElementAssertionSpecifications = append(assertion.ArrayElementAssertionSpecifications,
 		resp_assertions.ArrayElementAssertionSpecification{
 			ArrayElementAssertion: resp_assertions.ArrayElementAssertion{
 				Index: 2,
@@ -196,7 +196,7 @@ func (t *AclGetuserTestCase) addAssertionForPasswords(assertion *resp_assertions
 
 	}
 
-	assertion.ArrayElementAssertionSpecification = append(assertion.ArrayElementAssertionSpecification,
+	assertion.ArrayElementAssertionSpecifications = append(assertion.ArrayElementAssertionSpecifications,
 		resp_assertions.ArrayElementAssertionSpecification{
 			ArrayElementAssertion: resp_assertions.ArrayElementAssertion{
 				Index: 3,
