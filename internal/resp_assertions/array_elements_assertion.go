@@ -15,7 +15,7 @@ type ArrayElementAssertionSpecification struct {
 }
 
 type ArrayElementsAssertion struct {
-	ArrayElementAssertionSpecification []ArrayElementAssertionSpecification
+	ArrayElementAssertionSpecifications []ArrayElementAssertionSpecification
 }
 
 func (a ArrayElementsAssertion) Run(value resp_value.Value) error {
@@ -27,11 +27,12 @@ func (a ArrayElementsAssertion) Run(value resp_value.Value) error {
 
 	array := value.Array()
 
-	if len(array) == 0 {
+	// If the specification is empty, panic
+	if len(a.ArrayElementAssertionSpecifications) == 0 {
 		panic("Codecrafters Internal Error - ArrayElementsAssertion called with empty specifications")
 	}
 
-	largestIndex := slices.MaxFunc(a.ArrayElementAssertionSpecification, func(a, b ArrayElementAssertionSpecification) int {
+	largestIndex := slices.MaxFunc(a.ArrayElementAssertionSpecifications, func(a, b ArrayElementAssertionSpecification) int {
 		return a.ArrayElementAssertion.Index - b.ArrayElementAssertion.Index
 	}).ArrayElementAssertion.Index
 
@@ -44,13 +45,13 @@ func (a ArrayElementsAssertion) Run(value resp_value.Value) error {
 	}
 
 	// Sort the indexes so the assertion runs serially
-	slices.SortFunc(a.ArrayElementAssertionSpecification, func(aea1, aea2 ArrayElementAssertionSpecification) int {
+	slices.SortFunc(a.ArrayElementAssertionSpecifications, func(aea1, aea2 ArrayElementAssertionSpecification) int {
 		return aea1.ArrayElementAssertion.Index - aea2.ArrayElementAssertion.Index
 	})
 
 	multiAssertion := MultiAssertion{}
 
-	for _, arrayElementAssertionSpecification := range a.ArrayElementAssertionSpecification {
+	for _, arrayElementAssertionSpecification := range a.ArrayElementAssertionSpecifications {
 		multiAssertion.AssertionSpecifications = append(multiAssertion.AssertionSpecifications, AssertionSpecification{
 			Assertion:            arrayElementAssertionSpecification.ArrayElementAssertion,
 			PreAssertionHook:     arrayElementAssertionSpecification.PreAssertionHook,
