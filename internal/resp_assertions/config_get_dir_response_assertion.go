@@ -28,17 +28,18 @@ func (a ConfigGetDirResponseAssertion) Run(value resp_value.Value) error {
 	firstElement := value.Array()[0]
 	secondElement := value.Array()[1]
 
-	err := NewBulkStringAssertion("dir").Run(firstElement)
-	if err != nil {
-		return err
+	if firstElement.Type != resp_value.BULK_STRING {
+		return fmt.Errorf("Expected element #1 to be a bulk string, got %s", firstElement.Type)
+	}
+	if firstElement.String() != "dir" {
+		return fmt.Errorf("Expected element #1 to be %q, got %q", "dir", firstElement.String())
 	}
 
 	if secondElement.Type != resp_value.BULK_STRING {
-		return fmt.Errorf("Expected element 1 to be a bulk string, got %s", secondElement.Type)
+		return fmt.Errorf("Expected element #2 to be a bulk string, got %s", secondElement.Type)
 	}
-
 	if secondElement.String() != a.ExpectedDirValue && secondElement.String() != a.ExpectedDirValue+"/" {
-		return fmt.Errorf("Expected element 1 to be %q, got %q", a.ExpectedDirValue, secondElement.String())
+		return fmt.Errorf("Expected element #2 to be %q, got %q", a.ExpectedDirValue, secondElement.String())
 	}
 
 	return nil
