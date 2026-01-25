@@ -5,7 +5,7 @@ go 1.24.0
 toolchain go1.24.2
 
 require (
-	github.com/codecrafters-io/tester-utils v0.4.9
+	github.com/codecrafters-io/tester-utils v0.4.13
 	github.com/dustin/go-humanize v1.0.1
 	github.com/hdt3213/rdb v1.2.0
 	github.com/stretchr/testify v1.10.0
@@ -14,6 +14,7 @@ require (
 )
 
 require (
+	github.com/creack/pty v1.1.24 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fatih/color v1.18.0 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect
