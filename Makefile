@@ -116,5 +116,6 @@ setup:
 	rm -rf /var/lib/apt/lists/*
 
 	sudo service redis-server stop
+	redis-server -v
 
 	echo "Setup complete!"
