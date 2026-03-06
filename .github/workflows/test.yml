@@ -13,34 +13,8 @@ jobs:
         with:
           go-version: 1.24.x
 
-      # Required for tests
-      - name: Install Redis
-        run: |-
-	        echo "Setting up redis-tester prerequisites for Linux"
-
-	        curl -fsSL https://packages.redis.io/gpg | gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg
-          chmod 644 /usr/share/keyrings/redis-archive-keyring.gpg
-          echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/redis.list
-          echo 'Package: redis*' > /etc/apt/preferences.d/redis-8.4.pref
-          echo 'Pin: version 6:8.4*' >> /etc/apt/preferences.d/redis-8.4.pref
-          echo 'Pin-Priority: 1000' >> /etc/apt/preferences.d/redis-8.4.pref
-          apt-get update
-          apt-get install -y redis
-          rm -rf /var/lib/apt/lists/*
-
-	        sudo service redis-server stop
-
-	        echo "Setup complete!"
-
-      - name: "Stop redis service"
-        run: sudo service redis-server stop
-
-      - uses: actions/setup-python@v2
-        with:
-          python-version: "3.x" # Version range or exact version of a Python version to use, using SemVer's version range syntax
-
       - name: Run tests
-        run: make test
+        run: ./docker_ci/docker_ci.sh test
 
   lint:
     runs-on: ubuntu-latest
