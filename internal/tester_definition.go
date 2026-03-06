@@ -414,5 +414,38 @@ var testerDefinition = tester_definition.TesterDefinition{
 			Slug:     "ws7",
 			TestFunc: testAuthCommandAuthentication,
 		},
+		// Optimistic locking
+		{
+			Slug:     "jb7",
+			TestFunc: testOptimisticLockingWatch,
+		},
+		{
+			Slug:     "jq9",
+			TestFunc: testOptimisticLockingWatchInTxn,
+		},
+		{
+			Slug:     "mh8",
+			TestFunc: testOptimisticLockingTrackingKeyModification,
+		},
+		{
+			Slug:     "fp0",
+			TestFunc: testOptimisticLockingWatchMultipleKeys,
+		},
+		{
+			Slug:     "uo9",
+			TestFunc: testOptimisticLockingWatchMissingKeys,
+		},
+		{
+			Slug:     "bn1",
+			TestFunc: testOptimisticLockingUnwatch,
+		},
+		{
+			Slug:     "fn4",
+			TestFunc: testOptimisticLockingUnwatchOnExec,
+		},
+		{
+			Slug:     "hq1",
+			TestFunc: testOptimisticLockingUnwatchOnDiscard,
+		},
 	},
 }
