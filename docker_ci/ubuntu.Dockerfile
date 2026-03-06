@@ -22,12 +22,12 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 
-# Install Redis
+# Install Redis (pinned to 8.4 for CI stability)
 RUN curl -fsSL https://packages.redis.io/gpg | gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg \
     && chmod 644 /usr/share/keyrings/redis-archive-keyring.gpg \
     && echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/redis.list \
     && apt-get update \
-    && apt-get install -y redis \
+    && apt-get install -y redis=6:8.4.1-1rl1~bookworm1 \
     && rm -rf /var/lib/apt/lists/*
 
 # Create workspace directory
