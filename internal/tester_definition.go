@@ -71,6 +71,7 @@ var testerDefinition = tester_definition.TesterDefinition{
 			Slug:     "sm4",
 			TestFunc: testRdbReadValueWithExpiry,
 		},
+		// Replication
 		{
 			Slug:     "bw1",
 			TestFunc: testReplBindToCustomPort,
