@@ -105,17 +105,12 @@ test_all_with_redis:
 setup:
 	echo "Setting up redis-tester prerequisites for Linux"
 
-	curl -fsSL https://packages.redis.io/gpg | gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg
-	chmod 644 /usr/share/keyrings/redis-archive-keyring.gpg
-	echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/redis.list
-	echo 'Package: redis*' > /etc/apt/preferences.d/redis-8.4.pref
-	echo 'Pin: version 6:8.4*' >> /etc/apt/preferences.d/redis-8.4.pref
-	echo 'Pin-Priority: 1000' >> /etc/apt/preferences.d/redis-8.4.pref
-	apt-get update
-	apt-get install -y redis
-	rm -rf /var/lib/apt/lists/*
+	curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg
+	sudo chmod 644 /usr/share/keyrings/redis-archive-keyring.gpg
+	@echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(shell lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/redis.list
+
+	sudo apt-get update && sudo apt-get install redis -y
 
 	sudo service redis-server stop
-	redis-server -v
 
 	echo "Setup complete!"
