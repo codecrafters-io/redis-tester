@@ -1,10 +1,31 @@
 Debug = true
 
 [33m[tester::#JB7] [0m[94mRunning tests for Stage #JB7 (jb7)[0m
+[33m[tester::#JB7] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#JB7] [client] [0m[94m$ redis-cli WATCH pear[0m
+[33m[tester::#JB7] [client] [0m[36mSent bytes: "*2\r\n$5\r\nWATCH\r\n$4\r\npear\r\n"[0m
+[33m[tester::#JB7] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
+[33m[tester::#JB7] [client] [0m[36mReceived RESP simple string: "OK"[0m
+[33m[tester::#JB7] [client] [0m[92m✔︎ Received "OK"[0m
 [33m[tester::#JB7] [0m[92mTest passed.[0m
+[33m[tester::#JB7] [0m[36mTerminating program[0m
+[33m[tester::#JB7] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#JQ9] [0m[94mRunning tests for Stage #JQ9 (jq9)[0m
+[33m[tester::#JQ9] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#JQ9] [client] [0m[94m$ redis-cli MULTI[0m
+[33m[tester::#JQ9] [client] [0m[36mSent bytes: "*1\r\n$5\r\nMULTI\r\n"[0m
+[33m[tester::#JQ9] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
+[33m[tester::#JQ9] [client] [0m[36mReceived RESP simple string: "OK"[0m
+[33m[tester::#JQ9] [client] [0m[92m✔︎ Received "OK"[0m
+[33m[tester::#JQ9] [client] [0m[94m> WATCH orange[0m
+[33m[tester::#JQ9] [client] [0m[36mSent bytes: "*2\r\n$5\r\nWATCH\r\n$6\r\norange\r\n"[0m
+[33m[tester::#JQ9] [client] [0m[36mReceived bytes: "-ERR WATCH inside MULTI is not allowed\r\n"[0m
+[33m[tester::#JQ9] [client] [0m[36mReceived RESP error: "ERR WATCH inside MULTI is not allowed"[0m
+[33m[tester::#JQ9] [client] [0m[92m✔︎ Received "ERR WATCH inside MULTI is not allowed"[0m
 [33m[tester::#JQ9] [0m[92mTest passed.[0m
+[33m[tester::#JQ9] [0m[36mTerminating program[0m
+[33m[tester::#JQ9] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#MH8] [0m[94mRunning tests for Stage #MH8 (mh8)[0m
 [33m[tester::#MH8] [0m[92mTest passed.[0m
