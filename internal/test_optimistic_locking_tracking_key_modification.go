@@ -11,13 +11,16 @@ import (
 )
 
 func testOptimisticLockingTrackingKeyModification(stageHarness *test_case_harness.TestCaseHarness) error {
-	stageHarness.Logger.Infof("Testing transaction by modifying the watched variable")
-
 	if err := testOptimisticLockingScenario(stageHarness, true); err != nil {
 		return err
 	}
 
-	stageHarness.Logger.Infof("Testing transaction by keeping watched variable same")
+	// The executable is not actually torn down, only the clients are
+	// But it's alright to log this as Infof since the old executable is not used
+	// and will be torn down by the stage harness later, and we use a new redis executable each time
+	// TODO: A better log message?
+	stageHarness.Logger.Infof("Tearing down Redis executable and clients")
+
 	return testOptimisticLockingScenario(stageHarness, false)
 }
 
@@ -72,8 +75,10 @@ func testOptimisticLockingScenario(stageHarness *test_case_harness.TestCaseHarne
 	}
 
 	// Client 1: Queue a transaction that updates key2
+	// set expected response array to nil (Expect null array as the response of EXEC)
 	var expectedResponseArray []resp_assertions.RESPAssertion
 	if !modifyWatchedKey {
+		// If watched key was not modified, expect an array containing OK
 		expectedResponseArray = []resp_assertions.RESPAssertion{
 			resp_assertions.NewSimpleStringAssertion("OK"),
 		}
@@ -93,11 +98,18 @@ func testOptimisticLockingScenario(stageHarness *test_case_harness.TestCaseHarne
 		client2Key, client2Value = key1, newValue1
 	}
 
+	if modifyWatchedKey {
+		logger.Infof("Using client-2 to modify the key watched by client-1")
+	} else {
+		logger.Infof("Using client-2 to modify the key that is not watched")
+	}
+
 	modifyKeyTestCase := test_cases.SendCommandTestCase{
 		Command:   "SET",
 		Args:      []string{client2Key, strconv.Itoa(client2Value)},
 		Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
 	}
+
 	if err := modifyKeyTestCase.Run(clients[1], logger); err != nil {
 		return err
 	}
@@ -113,11 +125,16 @@ func testOptimisticLockingScenario(stageHarness *test_case_harness.TestCaseHarne
 		key2ExpectedValue = newValue2
 	}
 
+	if modifyWatchedKey {
+		logger.Infof("Checking if the transaction failed")
+	} else {
+		logger.Infof("Checking if the transaction succeeded")
+	}
+
 	getTestCase := test_cases.SendCommandTestCase{
 		Command:   "GET",
 		Args:      []string{key2},
 		Assertion: resp_assertions.NewBulkStringAssertion(strconv.Itoa(key2ExpectedValue)),
 	}
 	return getTestCase.Run(clients[0], logger)
-
 }
