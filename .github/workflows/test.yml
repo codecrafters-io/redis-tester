@@ -15,7 +15,7 @@ jobs:
 
       # Required for tests
       - name: Install Redis
-        shell: sudo bash {0}
+        shell: sudo bash --noprofile --norc -e -o pipefail {0}
         run: |-
           echo "Setting up redis-tester prerequisites for Linux"
 
