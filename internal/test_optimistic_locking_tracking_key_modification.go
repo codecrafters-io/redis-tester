@@ -42,11 +42,11 @@ func testOptimisticLockingScenario(stageHarness *test_case_harness.TestCaseHarne
 
 	keys := testerutils_random.RandomWords(2)
 	initialValues := testerutils_random.RandomInts(1, 100, 2)
-	newValues := testerutils_random.RandomInts(500, 1000, 2)
+	newValues := testerutils_random.RandomInts(500, 1000, 3)
 
 	key1, key2 := keys[0], keys[1]
 	initialValue1, initialValue2 := initialValues[0], initialValues[1]
-	newValue1, newValue2 := newValues[0], newValues[1]
+	newValue1, newValue2, newValue3 := newValues[0], newValues[1], newValues[2]
 
 	// Client 1: Set initial values
 	setVariablesTestCase := test_cases.MultiCommandTestCase{
@@ -87,7 +87,7 @@ func testOptimisticLockingScenario(stageHarness *test_case_harness.TestCaseHarne
 	}
 
 	// Client 2: Modify either the watched or unwatched key
-	client2Key, client2Value := key2, newValue2
+	client2Key, client2Value := key2, newValue3
 	if modifyWatchedKey {
 		client2Key, client2Value = key1, newValue1
 	}

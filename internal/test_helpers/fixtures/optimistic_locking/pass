@@ -29,8 +29,8 @@ Debug = true
 
 [33m[tester::#MH8] [0m[94mRunning tests for Stage #MH8 (mh8)[0m
 [33m[tester::#MH8] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[tester::#MH8] [client-1] [0m[36mConnected (port 60014 -> port 6379)[0m
-[33m[tester::#MH8] [client-2] [0m[36mConnected (port 60026 -> port 6379)[0m
+[33m[tester::#MH8] [client-1] [0m[36mConnected (port 44944 -> port 6379)[0m
+[33m[tester::#MH8] [client-2] [0m[36mConnected (port 44956 -> port 6379)[0m
 [33m[tester::#MH8] [client-1] [0m[94m$ redis-cli SET orange 71[0m
 [33m[tester::#MH8] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$6\r\norange\r\n$2\r\n71\r\n"[0m
 [33m[tester::#MH8] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
@@ -74,20 +74,20 @@ Debug = true
 [33m[tester::#MH8] [client-1] [0m[92m✔︎ Received "26"[0m
 [33m[tester::#MH8] [0m[94mTearing down Redis executable and clients[0m
 [33m[tester::#MH8] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[tester::#MH8] [client-1] [0m[36mConnected (port 60036 -> port 6379)[0m
-[33m[tester::#MH8] [client-2] [0m[36mConnected (port 60050 -> port 6379)[0m
-[33m[tester::#MH8] [client-1] [0m[94m$ redis-cli SET blueberry 52[0m
-[33m[tester::#MH8] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nblueberry\r\n$2\r\n52\r\n"[0m
-[33m[tester::#MH8] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
-[33m[tester::#MH8] [client-1] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#MH8] [client-1] [0m[92m✔︎ Received "OK"[0m
-[33m[tester::#MH8] [client-1] [0m[94m> SET banana 48[0m
+[33m[tester::#MH8] [client-1] [0m[36mConnected (port 44970 -> port 6379)[0m
+[33m[tester::#MH8] [client-2] [0m[36mConnected (port 44976 -> port 6379)[0m
+[33m[tester::#MH8] [client-1] [0m[94m$ redis-cli SET banana 48[0m
 [33m[tester::#MH8] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$6\r\nbanana\r\n$2\r\n48\r\n"[0m
 [33m[tester::#MH8] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#MH8] [client-1] [0m[36mReceived RESP simple string: "OK"[0m
 [33m[tester::#MH8] [client-1] [0m[92m✔︎ Received "OK"[0m
-[33m[tester::#MH8] [client-1] [0m[94m> WATCH blueberry[0m
-[33m[tester::#MH8] [client-1] [0m[36mSent bytes: "*2\r\n$5\r\nWATCH\r\n$9\r\nblueberry\r\n"[0m
+[33m[tester::#MH8] [client-1] [0m[94m> SET raspberry 44[0m
+[33m[tester::#MH8] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nraspberry\r\n$2\r\n44\r\n"[0m
+[33m[tester::#MH8] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
+[33m[tester::#MH8] [client-1] [0m[36mReceived RESP simple string: "OK"[0m
+[33m[tester::#MH8] [client-1] [0m[92m✔︎ Received "OK"[0m
+[33m[tester::#MH8] [client-1] [0m[94m> WATCH banana[0m
+[33m[tester::#MH8] [client-1] [0m[36mSent bytes: "*2\r\n$5\r\nWATCH\r\n$6\r\nbanana\r\n"[0m
 [33m[tester::#MH8] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#MH8] [client-1] [0m[36mReceived RESP simple string: "OK"[0m
 [33m[tester::#MH8] [client-1] [0m[92m✔︎ Received "OK"[0m
@@ -97,13 +97,13 @@ Debug = true
 [33m[tester::#MH8] [client-1] [0m[36mReceived RESP simple string: "OK"[0m
 [33m[tester::#MH8] [client-1] [0m[92m✔︎ Received "OK"[0m
 [33m[tester::#MH8] [0m[36mSending command: 1/1[0m
-[33m[tester::#MH8] [client-1] [0m[94m> SET banana 520[0m
-[33m[tester::#MH8] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$6\r\nbanana\r\n$3\r\n520\r\n"[0m
+[33m[tester::#MH8] [client-1] [0m[94m> SET raspberry 789[0m
+[33m[tester::#MH8] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nraspberry\r\n$3\r\n789\r\n"[0m
 [33m[tester::#MH8] [client-1] [0m[36mReceived bytes: "+QUEUED\r\n"[0m
 [33m[tester::#MH8] [client-1] [0m[36mReceived RESP simple string: "QUEUED"[0m
 [33m[tester::#MH8] [client-1] [0m[92m✔︎ Received "QUEUED"[0m
-[33m[tester::#MH8] [client-2] [0m[94m$ redis-cli SET banana 520[0m
-[33m[tester::#MH8] [client-2] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$6\r\nbanana\r\n$3\r\n520\r\n"[0m
+[33m[tester::#MH8] [client-2] [0m[94m$ redis-cli SET raspberry 956[0m
+[33m[tester::#MH8] [client-2] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nraspberry\r\n$3\r\n956\r\n"[0m
 [33m[tester::#MH8] [client-2] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#MH8] [client-2] [0m[36mReceived RESP simple string: "OK"[0m
 [33m[tester::#MH8] [client-2] [0m[92m✔︎ Received "OK"[0m
@@ -112,11 +112,11 @@ Debug = true
 [33m[tester::#MH8] [client-1] [0m[36mReceived bytes: "*1\r\n+OK\r\n"[0m
 [33m[tester::#MH8] [client-1] [0m[36mReceived RESP array: ["OK"][0m
 [33m[tester::#MH8] [client-1] [0m[92m✔︎ Received ["OK"][0m
-[33m[tester::#MH8] [client-1] [0m[94m> GET banana[0m
-[33m[tester::#MH8] [client-1] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$6\r\nbanana\r\n"[0m
-[33m[tester::#MH8] [client-1] [0m[36mReceived bytes: "$3\r\n520\r\n"[0m
-[33m[tester::#MH8] [client-1] [0m[36mReceived RESP bulk string: "520"[0m
-[33m[tester::#MH8] [client-1] [0m[92m✔︎ Received "520"[0m
+[33m[tester::#MH8] [client-1] [0m[94m> GET raspberry[0m
+[33m[tester::#MH8] [client-1] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$9\r\nraspberry\r\n"[0m
+[33m[tester::#MH8] [client-1] [0m[36mReceived bytes: "$3\r\n789\r\n"[0m
+[33m[tester::#MH8] [client-1] [0m[36mReceived RESP bulk string: "789"[0m
+[33m[tester::#MH8] [client-1] [0m[92m✔︎ Received "789"[0m
 [33m[tester::#MH8] [0m[92mTest passed.[0m
 [33m[tester::#MH8] [0m[36mTerminating program[0m
 [33m[tester::#MH8] [0m[36mProgram terminated successfully[0m
@@ -125,20 +125,20 @@ Debug = true
 
 [33m[tester::#FP0] [0m[94mRunning tests for Stage #FP0 (fp0)[0m
 [33m[tester::#FP0] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[tester::#FP0] [client-1] [0m[36mConnected (port 60056 -> port 6379)[0m
-[33m[tester::#FP0] [client-2] [0m[36mConnected (port 60060 -> port 6379)[0m
-[33m[tester::#FP0] [client-1] [0m[94m$ redis-cli SET orange 82[0m
-[33m[tester::#FP0] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$6\r\norange\r\n$2\r\n82\r\n"[0m
+[33m[tester::#FP0] [client-1] [0m[36mConnected (port 45002 -> port 6379)[0m
+[33m[tester::#FP0] [client-2] [0m[36mConnected (port 45018 -> port 6379)[0m
+[33m[tester::#FP0] [client-1] [0m[94m$ redis-cli SET raspberry 25[0m
+[33m[tester::#FP0] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nraspberry\r\n$2\r\n25\r\n"[0m
 [33m[tester::#FP0] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#FP0] [client-1] [0m[36mReceived RESP simple string: "OK"[0m
 [33m[tester::#FP0] [client-1] [0m[92m✔︎ Received "OK"[0m
-[33m[tester::#FP0] [client-1] [0m[94m> SET blueberry 78[0m
-[33m[tester::#FP0] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nblueberry\r\n$2\r\n78\r\n"[0m
+[33m[tester::#FP0] [client-1] [0m[94m> SET orange 2[0m
+[33m[tester::#FP0] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$6\r\norange\r\n$1\r\n2\r\n"[0m
 [33m[tester::#FP0] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#FP0] [client-1] [0m[36mReceived RESP simple string: "OK"[0m
 [33m[tester::#FP0] [client-1] [0m[92m✔︎ Received "OK"[0m
-[33m[tester::#FP0] [client-1] [0m[94m> WATCH orange blueberry[0m
-[33m[tester::#FP0] [client-1] [0m[36mSent bytes: "*3\r\n$5\r\nWATCH\r\n$6\r\norange\r\n$9\r\nblueberry\r\n"[0m
+[33m[tester::#FP0] [client-1] [0m[94m> WATCH raspberry orange[0m
+[33m[tester::#FP0] [client-1] [0m[36mSent bytes: "*3\r\n$5\r\nWATCH\r\n$9\r\nraspberry\r\n$6\r\norange\r\n"[0m
 [33m[tester::#FP0] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#FP0] [client-1] [0m[36mReceived RESP simple string: "OK"[0m
 [33m[tester::#FP0] [client-1] [0m[92m✔︎ Received "OK"[0m
@@ -148,13 +148,13 @@ Debug = true
 [33m[tester::#FP0] [client-1] [0m[36mReceived RESP simple string: "OK"[0m
 [33m[tester::#FP0] [client-1] [0m[92m✔︎ Received "OK"[0m
 [33m[tester::#FP0] [0m[36mSending command: 1/1[0m
-[33m[tester::#FP0] [client-1] [0m[94m> SET blueberry 550[0m
-[33m[tester::#FP0] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nblueberry\r\n$3\r\n550\r\n"[0m
+[33m[tester::#FP0] [client-1] [0m[94m> SET orange 879[0m
+[33m[tester::#FP0] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$6\r\norange\r\n$3\r\n879\r\n"[0m
 [33m[tester::#FP0] [client-1] [0m[36mReceived bytes: "+QUEUED\r\n"[0m
 [33m[tester::#FP0] [client-1] [0m[36mReceived RESP simple string: "QUEUED"[0m
 [33m[tester::#FP0] [client-1] [0m[92m✔︎ Received "QUEUED"[0m
-[33m[tester::#FP0] [client-2] [0m[94m$ redis-cli SET orange 722[0m
-[33m[tester::#FP0] [client-2] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$6\r\norange\r\n$3\r\n722\r\n"[0m
+[33m[tester::#FP0] [client-2] [0m[94m$ redis-cli SET raspberry 985[0m
+[33m[tester::#FP0] [client-2] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nraspberry\r\n$3\r\n985\r\n"[0m
 [33m[tester::#FP0] [client-2] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#FP0] [client-2] [0m[36mReceived RESP simple string: "OK"[0m
 [33m[tester::#FP0] [client-2] [0m[92m✔︎ Received "OK"[0m
@@ -163,11 +163,11 @@ Debug = true
 [33m[tester::#FP0] [client-1] [0m[36mReceived bytes: "*-1\r\n"[0m
 [33m[tester::#FP0] [client-1] [0m[36mReceived RESP null array: "*-1\r\n"[0m
 [33m[tester::#FP0] [client-1] [0m[92m✔︎ Received "*-1\r\n"[0m
-[33m[tester::#FP0] [client-2] [0m[94m> GET blueberry[0m
-[33m[tester::#FP0] [client-2] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$9\r\nblueberry\r\n"[0m
-[33m[tester::#FP0] [client-2] [0m[36mReceived bytes: "$2\r\n78\r\n"[0m
-[33m[tester::#FP0] [client-2] [0m[36mReceived RESP bulk string: "78"[0m
-[33m[tester::#FP0] [client-2] [0m[92m✔︎ Received "78"[0m
+[33m[tester::#FP0] [client-2] [0m[94m> GET orange[0m
+[33m[tester::#FP0] [client-2] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$6\r\norange\r\n"[0m
+[33m[tester::#FP0] [client-2] [0m[36mReceived bytes: "$1\r\n2\r\n"[0m
+[33m[tester::#FP0] [client-2] [0m[36mReceived RESP bulk string: "2"[0m
+[33m[tester::#FP0] [client-2] [0m[92m✔︎ Received "2"[0m
 [33m[tester::#FP0] [0m[92mTest passed.[0m
 [33m[tester::#FP0] [0m[36mTerminating program[0m
 [33m[tester::#FP0] [0m[36mProgram terminated successfully[0m
