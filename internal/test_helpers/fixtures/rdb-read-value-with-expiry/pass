@@ -1,286 +1,168 @@
 Debug = true
 
-[33m[tester::#SM4] [0m[94mRunning tests for Stage #SM4 (sm4)[0m
-[33m[tester::#SM4] [0m[94mCreated RDB file with 4 key-value pairs: {"blueberry": "pear", "mango": "raspberry", "grape": "grape", "pear": "orange"}[0m
-[33m[tester::#SM4] [0m[36mHexdump of RDB file contents: [0m
-[33m[tester::#SM4] [0m[36mIdx  | Hex                                             | ASCII[0m
-[33m[tester::#SM4] [0m[36m-----+-------------------------------------------------+-----------------[0m
-[33m[tester::#SM4] [0m[36m0000 | 52 45 44 49 53 30 30 31 31 fa 0a 72 65 64 69 73 | REDIS0011..redis[0m
-[33m[tester::#SM4] [0m[36m0010 | 2d 62 69 74 73 c0 40 fa 09 72 65 64 69 73 2d 76 | -bits.@..redis-v[0m
-[33m[tester::#SM4] [0m[36m0020 | 65 72 05 37 2e 32 2e 30 fe 00 fb 04 04 fc 00 0c | er.7.2.0........[0m
-[33m[tester::#SM4] [0m[36m0030 | 28 8a c7 01 00 00 00 09 62 6c 75 65 62 65 72 72 | (.......blueberr[0m
-[33m[tester::#SM4] [0m[36m0040 | 79 04 70 65 61 72 fc 00 0c 28 8a c7 01 00 00 00 | y.pear...(......[0m
-[33m[tester::#SM4] [0m[36m0050 | 05 6d 61 6e 67 6f 09 72 61 73 70 62 65 72 72 79 | .mango.raspberry[0m
-[33m[tester::#SM4] [0m[36m0060 | fc 00 9c ef 12 7e 01 00 00 00 05 67 72 61 70 65 | .....~.....grape[0m
-[33m[tester::#SM4] [0m[36m0070 | 05 67 72 61 70 65 fc 00 0c 28 8a c7 01 00 00 00 | .grape...(......[0m
-[33m[tester::#SM4] [0m[36m0080 | 04 70 65 61 72 06 6f 72 61 6e 67 65 ff 78 2a 69 | .pear.orange.x*i[0m
-[33m[tester::#SM4] [0m[36m0090 | d0 d8 5f a4 28                                  | .._.([0m
-[33m[tester::#SM4] [0m[36m[0m
-[33m[tester::#SM4] [0m[94m$ ./spawn_redis_server.sh --dir /private/tmp/rdb-6623 --dbfilename orange.rdb[0m
-[33m[tester::#SM4] [client] [0m[94m$ redis-cli GET blueberry[0m
-[33m[tester::#SM4] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$9\r\nblueberry\r\n"[0m
-[33m[tester::#SM4] [client] [0m[36mReceived bytes: "$4\r\npear\r\n"[0m
-[33m[tester::#SM4] [client] [0m[36mReceived RESP bulk string: "pear"[0m
-[33m[tester::#SM4] [client] [0m[92m✔︎ Received "pear"[0m
-[33m[tester::#SM4] [client] [0m[94m> GET mango[0m
-[33m[tester::#SM4] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$5\r\nmango\r\n"[0m
-[33m[tester::#SM4] [client] [0m[36mReceived bytes: "$9\r\nraspberry\r\n"[0m
-[33m[tester::#SM4] [client] [0m[36mReceived RESP bulk string: "raspberry"[0m
-[33m[tester::#SM4] [client] [0m[92m✔︎ Received "raspberry"[0m
-[33m[tester::#SM4] [client] [0m[94m> GET grape[0m
-[33m[tester::#SM4] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$5\r\ngrape\r\n"[0m
-[33m[tester::#SM4] [client] [0m[36mReceived bytes: "$-1\r\n"[0m
-[33m[tester::#SM4] [client] [0m[36mReceived RESP null bulk string: "$-1\r\n"[0m
-[33m[tester::#SM4] [client] [0m[92m✔︎ Received "$-1\r\n"[0m
-[33m[tester::#SM4] [client] [0m[94m> GET pear[0m
-[33m[tester::#SM4] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$4\r\npear\r\n"[0m
-[33m[tester::#SM4] [client] [0m[36mReceived bytes: "$6\r\norange\r\n"[0m
-[33m[tester::#SM4] [client] [0m[36mReceived RESP bulk string: "orange"[0m
-[33m[tester::#SM4] [client] [0m[92m✔︎ Received "orange"[0m
-[33m[tester::#SM4] [0m[92mTest passed.[0m
-[33m[tester::#SM4] [0m[36mTerminating program[0m
-[33m[tester::#SM4] [0m[36mProgram terminated successfully[0m
+[33m[tester::#ZG5] [0m[94mRunning tests for Stage #ZG5 (zg5)[0m
+[33m[tester::#ZG5] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdb-6623 --dbfilename orange.rdb[0m
+[33m[tester::#ZG5] [client] [0m[94m$ redis-cli CONFIG GET dir[0m
+[33m[tester::#ZG5] [client] [0m[36mSent bytes: "*3\r\n$6\r\nCONFIG\r\n$3\r\nGET\r\n$3\r\ndir\r\n"[0m
+[33m[tester::#ZG5] [client] [0m[36mReceived bytes: "*2\r\n$3\r\ndir\r\n$13\r\n/tmp/rdb-6623\r\n"[0m
+[33m[tester::#ZG5] [client] [0m[36mReceived RESP array: ["dir", "/tmp/rdb-6623"][0m
+[33m[tester::#ZG5] [client] [0m[92m✔︎ Received ["dir", "/tmp/rdb-6623"][0m
+[33m[tester::#ZG5] [0m[92mTest passed.[0m
+[33m[tester::#ZG5] [0m[36mTerminating program[0m
+[33m[tester::#ZG5] [0m[36mProgram terminated successfully[0m
 
-[33m[tester::#DQ3] [0m[94mRunning tests for Stage #DQ3 (dq3)[0m
-[33m[tester::#DQ3] [0m[94mCreated RDB file with 3 key-value pairs: {"apple": "mango", "grape": "orange", "pineapple": "pear"}[0m
-[33m[tester::#DQ3] [0m[36mHexdump of RDB file contents: [0m
-[33m[tester::#DQ3] [0m[36mIdx  | Hex                                             | ASCII[0m
-[33m[tester::#DQ3] [0m[36m-----+-------------------------------------------------+-----------------[0m
-[33m[tester::#DQ3] [0m[36m0000 | 52 45 44 49 53 30 30 31 31 fa 09 72 65 64 69 73 | REDIS0011..redis[0m
-[33m[tester::#DQ3] [0m[36m0010 | 2d 76 65 72 05 37 2e 32 2e 30 fa 0a 72 65 64 69 | -ver.7.2.0..redi[0m
-[33m[tester::#DQ3] [0m[36m0020 | 73 2d 62 69 74 73 c0 40 fe 00 fb 03 00 00 05 61 | s-bits.@.......a[0m
-[33m[tester::#DQ3] [0m[36m0030 | 70 70 6c 65 05 6d 61 6e 67 6f 00 05 67 72 61 70 | pple.mango..grap[0m
-[33m[tester::#DQ3] [0m[36m0040 | 65 06 6f 72 61 6e 67 65 00 09 70 69 6e 65 61 70 | e.orange..pineap[0m
-[33m[tester::#DQ3] [0m[36m0050 | 70 6c 65 04 70 65 61 72 ff ec 0e 82 6d 87 2b 51 | ple.pear....m.+Q[0m
-[33m[tester::#DQ3] [0m[36m0060 | 91                                              | .[0m
-[33m[tester::#DQ3] [0m[36m[0m
-[33m[tester::#DQ3] [0m[94m$ ./spawn_redis_server.sh --dir /private/tmp/rdb-2020 --dbfilename apple.rdb[0m
-[33m[tester::#DQ3] [client] [0m[94m$ redis-cli GET apple[0m
-[33m[tester::#DQ3] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$5\r\napple\r\n"[0m
-[33m[tester::#DQ3] [client] [0m[36mReceived bytes: "$5\r\nmango\r\n"[0m
-[33m[tester::#DQ3] [client] [0m[36mReceived RESP bulk string: "mango"[0m
-[33m[tester::#DQ3] [client] [0m[92m✔︎ Received "mango"[0m
-[33m[tester::#DQ3] [client] [0m[94m> GET grape[0m
-[33m[tester::#DQ3] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$5\r\ngrape\r\n"[0m
-[33m[tester::#DQ3] [client] [0m[36mReceived bytes: "$6\r\norange\r\n"[0m
-[33m[tester::#DQ3] [client] [0m[36mReceived RESP bulk string: "orange"[0m
-[33m[tester::#DQ3] [client] [0m[92m✔︎ Received "orange"[0m
-[33m[tester::#DQ3] [client] [0m[94m> GET pineapple[0m
-[33m[tester::#DQ3] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$9\r\npineapple\r\n"[0m
-[33m[tester::#DQ3] [client] [0m[36mReceived bytes: "$4\r\npear\r\n"[0m
-[33m[tester::#DQ3] [client] [0m[36mReceived RESP bulk string: "pear"[0m
-[33m[tester::#DQ3] [client] [0m[92m✔︎ Received "pear"[0m
-[33m[tester::#DQ3] [0m[92mTest passed.[0m
-[33m[tester::#DQ3] [0m[36mTerminating program[0m
-[33m[tester::#DQ3] [0m[36mProgram terminated successfully[0m
-
-[33m[tester::#JW4] [0m[94mRunning tests for Stage #JW4 (jw4)[0m
-[33m[tester::#JW4] [0m[94mCreated RDB file with 3 keys: ["blueberry", "apple", "mango"][0m
-[33m[tester::#JW4] [0m[36mHexdump of RDB file contents: [0m
-[33m[tester::#JW4] [0m[36mIdx  | Hex                                             | ASCII[0m
-[33m[tester::#JW4] [0m[36m-----+-------------------------------------------------+-----------------[0m
-[33m[tester::#JW4] [0m[36m0000 | 52 45 44 49 53 30 30 31 31 fa 09 72 65 64 69 73 | REDIS0011..redis[0m
-[33m[tester::#JW4] [0m[36m0010 | 2d 76 65 72 05 37 2e 32 2e 30 fa 0a 72 65 64 69 | -ver.7.2.0..redi[0m
-[33m[tester::#JW4] [0m[36m0020 | 73 2d 62 69 74 73 c0 40 fe 00 fb 03 00 00 09 62 | s-bits.@.......b[0m
-[33m[tester::#JW4] [0m[36m0030 | 6c 75 65 62 65 72 72 79 06 62 61 6e 61 6e 61 00 | lueberry.banana.[0m
-[33m[tester::#JW4] [0m[36m0040 | 05 61 70 70 6c 65 09 70 69 6e 65 61 70 70 6c 65 | .apple.pineapple[0m
-[33m[tester::#JW4] [0m[36m0050 | 00 05 6d 61 6e 67 6f 09 62 6c 75 65 62 65 72 72 | ..mango.blueberr[0m
-[33m[tester::#JW4] [0m[36m0060 | 79 ff 68 0f 5f 46 25 26 d0 08                   | y.h._F%&..[0m
-[33m[tester::#JW4] [0m[36m[0m
-[33m[tester::#JW4] [0m[94m$ ./spawn_redis_server.sh --dir /private/tmp/rdb-7468 --dbfilename banana.rdb[0m
-[33m[tester::#JW4] [client] [0m[94m$ redis-cli KEYS *[0m
-[33m[tester::#JW4] [client] [0m[36mSent bytes: "*2\r\n$4\r\nKEYS\r\n$1\r\n*\r\n"[0m
-[33m[tester::#JW4] [client] [0m[36mReceived bytes: "*3\r\n$5\r\nmango\r\n$5\r\napple\r\n$9\r\nblueberry\r\n"[0m
-[33m[tester::#JW4] [client] [0m[36mReceived RESP array: ["mango", "apple", "blueberry"][0m
-[33m[tester::#JW4] [client] [0m[92m✔︎ Received ["mango", "apple", "blueberry"][0m
-[33m[tester::#JW4] [0m[92mTest passed.[0m
-[33m[tester::#JW4] [0m[36mTerminating program[0m
-[33m[tester::#JW4] [0m[36mProgram terminated successfully[0m
+[33m[tester::#JZ6] [0m[94mRunning tests for Stage #JZ6 (jz6)[0m
+[33m[tester::#JZ6] [0m[94mCreated RDB file with a single key: ["blueberry"][0m
+[33m[tester::#JZ6] [0m[36mHexdump of RDB file contents: [0m
+[33m[tester::#JZ6] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#JZ6] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#JZ6] [0m[36m0000 | 52 45 44 49 53 30 30 31 31 fa 09 72 65 64 69 73 | REDIS0011..redis[0m
+[33m[tester::#JZ6] [0m[36m0010 | 2d 76 65 72 05 37 2e 32 2e 30 fa 0a 72 65 64 69 | -ver.7.2.0..redi[0m
+[33m[tester::#JZ6] [0m[36m0020 | 73 2d 62 69 74 73 c0 40 fe 00 fb 01 00 00 09 62 | s-bits.@.......b[0m
+[33m[tester::#JZ6] [0m[36m0030 | 6c 75 65 62 65 72 72 79 05 61 70 70 6c 65 ff 84 | lueberry.apple..[0m
+[33m[tester::#JZ6] [0m[36m0040 | a4 eb 00 47 28 33 93                            | ...G(3.[0m
+[33m[tester::#JZ6] [0m[36m[0m
+[33m[tester::#JZ6] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdb-698 --dbfilename mango.rdb[0m
+[33m[tester::#JZ6] [client] [0m[94m$ redis-cli KEYS *[0m
+[33m[tester::#JZ6] [client] [0m[36mSent bytes: "*2\r\n$4\r\nKEYS\r\n$1\r\n*\r\n"[0m
+[33m[tester::#JZ6] [client] [0m[36mReceived bytes: "*1\r\n$9\r\nblueberry\r\n"[0m
+[33m[tester::#JZ6] [client] [0m[36mReceived RESP array: ["blueberry"][0m
+[33m[tester::#JZ6] [client] [0m[92m✔︎ Received ["blueberry"][0m
+[33m[tester::#JZ6] [0m[92mTest passed.[0m
+[33m[tester::#JZ6] [0m[36mTerminating program[0m
+[33m[tester::#JZ6] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#GC6] [0m[94mRunning tests for Stage #GC6 (gc6)[0m
-[33m[tester::#GC6] [0m[94mCreated RDB file with a single key-value pair: {"raspberry": "pineapple"}[0m
+[33m[tester::#GC6] [0m[94mCreated RDB file with a single key-value pair: {"blueberry": "banana"}[0m
 [33m[tester::#GC6] [0m[36mHexdump of RDB file contents: [0m
 [33m[tester::#GC6] [0m[36mIdx  | Hex                                             | ASCII[0m
 [33m[tester::#GC6] [0m[36m-----+-------------------------------------------------+-----------------[0m
 [33m[tester::#GC6] [0m[36m0000 | 52 45 44 49 53 30 30 31 31 fa 09 72 65 64 69 73 | REDIS0011..redis[0m
 [33m[tester::#GC6] [0m[36m0010 | 2d 76 65 72 05 37 2e 32 2e 30 fa 0a 72 65 64 69 | -ver.7.2.0..redi[0m
-[33m[tester::#GC6] [0m[36m0020 | 73 2d 62 69 74 73 c0 40 fe 00 fb 01 00 00 09 72 | s-bits.@.......r[0m
-[33m[tester::#GC6] [0m[36m0030 | 61 73 70 62 65 72 72 79 09 70 69 6e 65 61 70 70 | aspberry.pineapp[0m
-[33m[tester::#GC6] [0m[36m0040 | 6c 65 ff 6c 09 59 cc 38 db e8 71                | le.l.Y.8..q[0m
+[33m[tester::#GC6] [0m[36m0020 | 73 2d 62 69 74 73 c0 40 fe 00 fb 01 00 00 09 62 | s-bits.@.......b[0m
+[33m[tester::#GC6] [0m[36m0030 | 6c 75 65 62 65 72 72 79 06 62 61 6e 61 6e 61 ff | lueberry.banana.[0m
+[33m[tester::#GC6] [0m[36m0040 | 2a b3 bf 52 a2 00 13 5b                         | *..R...[[0m
 [33m[tester::#GC6] [0m[36m[0m
-[33m[tester::#GC6] [0m[94m$ ./spawn_redis_server.sh --dir /private/tmp/rdb-1000 --dbfilename banana.rdb[0m
-[33m[tester::#GC6] [client] [0m[94m$ redis-cli GET raspberry[0m
-[33m[tester::#GC6] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$9\r\nraspberry\r\n"[0m
-[33m[tester::#GC6] [client] [0m[36mReceived bytes: "$9\r\npineapple\r\n"[0m
-[33m[tester::#GC6] [client] [0m[36mReceived RESP bulk string: "pineapple"[0m
-[33m[tester::#GC6] [client] [0m[92m✔︎ Received "pineapple"[0m
+[33m[tester::#GC6] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdb-8842 --dbfilename mango.rdb[0m
+[33m[tester::#GC6] [client] [0m[94m$ redis-cli GET blueberry[0m
+[33m[tester::#GC6] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$9\r\nblueberry\r\n"[0m
+[33m[tester::#GC6] [client] [0m[36mReceived bytes: "$6\r\nbanana\r\n"[0m
+[33m[tester::#GC6] [client] [0m[36mReceived RESP bulk string: "banana"[0m
+[33m[tester::#GC6] [client] [0m[92m✔︎ Received "banana"[0m
 [33m[tester::#GC6] [0m[92mTest passed.[0m
 [33m[tester::#GC6] [0m[36mTerminating program[0m
 [33m[tester::#GC6] [0m[36mProgram terminated successfully[0m
 
-[33m[tester::#JZ6] [0m[94mRunning tests for Stage #JZ6 (jz6)[0m
-[33m[tester::#JZ6] [0m[94mCreated RDB file with a single key: ["banana"][0m
-[33m[tester::#JZ6] [0m[36mHexdump of RDB file contents: [0m
-[33m[tester::#JZ6] [0m[36mIdx  | Hex                                             | ASCII[0m
-[33m[tester::#JZ6] [0m[36m-----+-------------------------------------------------+-----------------[0m
-[33m[tester::#JZ6] [0m[36m0000 | 52 45 44 49 53 30 30 31 31 fa 0a 72 65 64 69 73 | REDIS0011..redis[0m
-[33m[tester::#JZ6] [0m[36m0010 | 2d 62 69 74 73 c0 40 fa 09 72 65 64 69 73 2d 76 | -bits.@..redis-v[0m
-[33m[tester::#JZ6] [0m[36m0020 | 65 72 05 37 2e 32 2e 30 fe 00 fb 01 00 00 06 62 | er.7.2.0.......b[0m
-[33m[tester::#JZ6] [0m[36m0030 | 61 6e 61 6e 61 09 72 61 73 70 62 65 72 72 79 ff | anana.raspberry.[0m
-[33m[tester::#JZ6] [0m[36m0040 | e7 5b ba ce 60 e3 1e 39                         | .[..`..9[0m
-[33m[tester::#JZ6] [0m[36m[0m
-[33m[tester::#JZ6] [0m[94m$ ./spawn_redis_server.sh --dir /private/tmp/rdb-816 --dbfilename banana.rdb[0m
-[33m[tester::#JZ6] [client] [0m[94m$ redis-cli KEYS *[0m
-[33m[tester::#JZ6] [client] [0m[36mSent bytes: "*2\r\n$4\r\nKEYS\r\n$1\r\n*\r\n"[0m
-[33m[tester::#JZ6] [client] [0m[36mReceived bytes: "*1\r\n$6\r\nbanana\r\n"[0m
-[33m[tester::#JZ6] [client] [0m[36mReceived RESP array: ["banana"][0m
-[33m[tester::#JZ6] [client] [0m[92m✔︎ Received ["banana"][0m
-[33m[tester::#JZ6] [0m[92mTest passed.[0m
-[33m[tester::#JZ6] [0m[36mTerminating program[0m
-[33m[tester::#JZ6] [0m[36mProgram terminated successfully[0m
+[33m[tester::#JW4] [0m[94mRunning tests for Stage #JW4 (jw4)[0m
+[33m[tester::#JW4] [0m[94mCreated RDB file with 4 keys: ["apple", "orange", "mango", "pineapple"][0m
+[33m[tester::#JW4] [0m[36mHexdump of RDB file contents: [0m
+[33m[tester::#JW4] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#JW4] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#JW4] [0m[36m0000 | 52 45 44 49 53 30 30 31 31 fa 09 72 65 64 69 73 | REDIS0011..redis[0m
+[33m[tester::#JW4] [0m[36m0010 | 2d 76 65 72 05 37 2e 32 2e 30 fa 0a 72 65 64 69 | -ver.7.2.0..redi[0m
+[33m[tester::#JW4] [0m[36m0020 | 73 2d 62 69 74 73 c0 40 fe 00 fb 04 00 00 05 61 | s-bits.@.......a[0m
+[33m[tester::#JW4] [0m[36m0030 | 70 70 6c 65 09 72 61 73 70 62 65 72 72 79 00 06 | pple.raspberry..[0m
+[33m[tester::#JW4] [0m[36m0040 | 6f 72 61 6e 67 65 05 6d 61 6e 67 6f 00 05 6d 61 | orange.mango..ma[0m
+[33m[tester::#JW4] [0m[36m0050 | 6e 67 6f 09 62 6c 75 65 62 65 72 72 79 00 09 70 | ngo.blueberry..p[0m
+[33m[tester::#JW4] [0m[36m0060 | 69 6e 65 61 70 70 6c 65 06 62 61 6e 61 6e 61 ff | ineapple.banana.[0m
+[33m[tester::#JW4] [0m[36m0070 | 11 d1 7f a9 0a 0a 03 29                         | .......)[0m
+[33m[tester::#JW4] [0m[36m[0m
+[33m[tester::#JW4] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdb-4166 --dbfilename banana.rdb[0m
+[33m[tester::#JW4] [client] [0m[94m$ redis-cli KEYS *[0m
+[33m[tester::#JW4] [client] [0m[36mSent bytes: "*2\r\n$4\r\nKEYS\r\n$1\r\n*\r\n"[0m
+[33m[tester::#JW4] [client] [0m[36mReceived bytes: "*4\r\n$9\r\npineapple\r\n$6\r\norange\r\n$5\r\nmango\r\n$5\r\napple\r\n"[0m
+[33m[tester::#JW4] [client] [0m[36mReceived RESP array: [[0m
+[33m[tester::#JW4] [client] [0m[36m  "pineapple",[0m
+[33m[tester::#JW4] [client] [0m[36m  "orange",[0m
+[33m[tester::#JW4] [client] [0m[36m  "mango",[0m
+[33m[tester::#JW4] [client] [0m[36m  "apple"[0m
+[33m[tester::#JW4] [client] [0m[36m][0m
+[33m[tester::#JW4] [client] [0m[92m✔︎ Received [[0m
+[33m[tester::#JW4] [client] [0m[92m  "pineapple",[0m
+[33m[tester::#JW4] [client] [0m[92m  "orange",[0m
+[33m[tester::#JW4] [client] [0m[92m  "mango",[0m
+[33m[tester::#JW4] [client] [0m[92m  "apple"[0m
+[33m[tester::#JW4] [client] [0m[92m][0m
+[33m[tester::#JW4] [0m[92mTest passed.[0m
+[33m[tester::#JW4] [0m[36mTerminating program[0m
+[33m[tester::#JW4] [0m[36mProgram terminated successfully[0m
 
-[33m[tester::#ZG5] [0m[94mRunning tests for Stage #ZG5 (zg5)[0m
-[33m[tester::#ZG5] [0m[94m$ ./spawn_redis_server.sh --dir /private/tmp/rdb-5582 --dbfilename blueberry.rdb[0m
-[33m[tester::#ZG5] [client] [0m[94m$ redis-cli CONFIG GET dir[0m
-[33m[tester::#ZG5] [client] [0m[36mSent bytes: "*3\r\n$6\r\nCONFIG\r\n$3\r\nGET\r\n$3\r\ndir\r\n"[0m
-[33m[tester::#ZG5] [client] [0m[36mReceived bytes: "*2\r\n$3\r\ndir\r\n$21\r\n/private/tmp/rdb-5582\r\n"[0m
-[33m[tester::#ZG5] [client] [0m[36mReceived RESP array: ["dir", "/private/tmp/rdb-5582"][0m
-[33m[tester::#ZG5] [client] [0m[92m✔︎ Received ["dir", "/private/tmp/rdb-5582"][0m
-[33m[tester::#ZG5] [0m[92mTest passed.[0m
-[33m[tester::#ZG5] [0m[36mTerminating program[0m
-[33m[tester::#ZG5] [0m[36mProgram terminated successfully[0m
+[33m[tester::#DQ3] [0m[94mRunning tests for Stage #DQ3 (dq3)[0m
+[33m[tester::#DQ3] [0m[94mCreated RDB file with 4 key-value pairs: {"orange": "grape", "mango": "pear", "grape": "blueberry", "pear": "pineapple"}[0m
+[33m[tester::#DQ3] [0m[36mHexdump of RDB file contents: [0m
+[33m[tester::#DQ3] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#DQ3] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#DQ3] [0m[36m0000 | 52 45 44 49 53 30 30 31 31 fa 0a 72 65 64 69 73 | REDIS0011..redis[0m
+[33m[tester::#DQ3] [0m[36m0010 | 2d 62 69 74 73 c0 40 fa 09 72 65 64 69 73 2d 76 | -bits.@..redis-v[0m
+[33m[tester::#DQ3] [0m[36m0020 | 65 72 05 37 2e 32 2e 30 fe 00 fb 04 00 00 06 6f | er.7.2.0.......o[0m
+[33m[tester::#DQ3] [0m[36m0030 | 72 61 6e 67 65 05 67 72 61 70 65 00 05 6d 61 6e | range.grape..man[0m
+[33m[tester::#DQ3] [0m[36m0040 | 67 6f 04 70 65 61 72 00 05 67 72 61 70 65 09 62 | go.pear..grape.b[0m
+[33m[tester::#DQ3] [0m[36m0050 | 6c 75 65 62 65 72 72 79 00 04 70 65 61 72 09 70 | lueberry..pear.p[0m
+[33m[tester::#DQ3] [0m[36m0060 | 69 6e 65 61 70 70 6c 65 ff 7b 41 0b 4b 5a 5d 00 | ineapple.{A.KZ].[0m
+[33m[tester::#DQ3] [0m[36m0070 | 7c                                              | |[0m
+[33m[tester::#DQ3] [0m[36m[0m
+[33m[tester::#DQ3] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdb-7589 --dbfilename apple.rdb[0m
+[33m[tester::#DQ3] [client] [0m[94m$ redis-cli GET orange[0m
+[33m[tester::#DQ3] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$6\r\norange\r\n"[0m
+[33m[tester::#DQ3] [client] [0m[36mReceived bytes: "$5\r\ngrape\r\n"[0m
+[33m[tester::#DQ3] [client] [0m[36mReceived RESP bulk string: "grape"[0m
+[33m[tester::#DQ3] [client] [0m[92m✔︎ Received "grape"[0m
+[33m[tester::#DQ3] [client] [0m[94m> GET mango[0m
+[33m[tester::#DQ3] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$5\r\nmango\r\n"[0m
+[33m[tester::#DQ3] [client] [0m[36mReceived bytes: "$4\r\npear\r\n"[0m
+[33m[tester::#DQ3] [client] [0m[36mReceived RESP bulk string: "pear"[0m
+[33m[tester::#DQ3] [client] [0m[92m✔︎ Received "pear"[0m
+[33m[tester::#DQ3] [client] [0m[94m> GET grape[0m
+[33m[tester::#DQ3] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$5\r\ngrape\r\n"[0m
+[33m[tester::#DQ3] [client] [0m[36mReceived bytes: "$9\r\nblueberry\r\n"[0m
+[33m[tester::#DQ3] [client] [0m[36mReceived RESP bulk string: "blueberry"[0m
+[33m[tester::#DQ3] [client] [0m[92m✔︎ Received "blueberry"[0m
+[33m[tester::#DQ3] [client] [0m[94m> GET pear[0m
+[33m[tester::#DQ3] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$4\r\npear\r\n"[0m
+[33m[tester::#DQ3] [client] [0m[36mReceived bytes: "$9\r\npineapple\r\n"[0m
+[33m[tester::#DQ3] [client] [0m[36mReceived RESP bulk string: "pineapple"[0m
+[33m[tester::#DQ3] [client] [0m[92m✔︎ Received "pineapple"[0m
+[33m[tester::#DQ3] [0m[92mTest passed.[0m
+[33m[tester::#DQ3] [0m[36mTerminating program[0m
+[33m[tester::#DQ3] [0m[36mProgram terminated successfully[0m
 
-[33m[tester::#YZ1] [0m[94mRunning tests for Stage #YZ1 (yz1)[0m
-[33m[tester::#YZ1] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[tester::#YZ1] [client] [0m[94m$ redis-cli SET orange apple PX 100[0m
-[33m[tester::#YZ1] [client] [0m[36mSent bytes: "*5\r\n$3\r\nSET\r\n$6\r\norange\r\n$5\r\napple\r\n$2\r\nPX\r\n$3\r\n100\r\n"[0m
-[33m[tester::#YZ1] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
-[33m[tester::#YZ1] [client] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#YZ1] [client] [0m[92m✔︎ Received "OK"[0m
-[33m[tester::#YZ1] [0m[92mReceived OK at 21:22:51.623[0m
-[33m[tester::#YZ1] [0m[94mFetching key "orange" at 21:22:51.623 (should not be expired)[0m
-[33m[tester::#YZ1] [client] [0m[94m> GET orange[0m
-[33m[tester::#YZ1] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$6\r\norange\r\n"[0m
-[33m[tester::#YZ1] [client] [0m[36mReceived bytes: "$5\r\napple\r\n"[0m
-[33m[tester::#YZ1] [client] [0m[36mReceived RESP bulk string: "apple"[0m
-[33m[tester::#YZ1] [client] [0m[92m✔︎ Received "apple"[0m
-[33m[tester::#YZ1] [0m[36mSleeping for 101ms[0m
-[33m[tester::#YZ1] [0m[94mFetching key "orange" at 21:22:51.726 (should be expired)[0m
-[33m[tester::#YZ1] [client] [0m[94m> GET orange[0m
-[33m[tester::#YZ1] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$6\r\norange\r\n"[0m
-[33m[tester::#YZ1] [client] [0m[36mReceived bytes: "$-1\r\n"[0m
-[33m[tester::#YZ1] [client] [0m[36mReceived RESP null bulk string: "$-1\r\n"[0m
-[33m[tester::#YZ1] [client] [0m[92m✔︎ Received "$-1\r\n"[0m
-[33m[tester::#YZ1] [0m[92mTest passed.[0m
-[33m[tester::#YZ1] [0m[36mTerminating program[0m
-[33m[tester::#YZ1] [0m[36mProgram terminated successfully[0m
-
-[33m[tester::#LA7] [0m[94mRunning tests for Stage #LA7 (la7)[0m
-[33m[tester::#LA7] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[tester::#LA7] [0m[36mSetting key apple to grape[0m
-[33m[tester::#LA7] [client] [0m[94m$ redis-cli SET apple grape[0m
-[33m[tester::#LA7] [client] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$5\r\napple\r\n$5\r\ngrape\r\n"[0m
-[33m[tester::#LA7] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
-[33m[tester::#LA7] [client] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#LA7] [client] [0m[92m✔︎ Received "OK"[0m
-[33m[tester::#LA7] [0m[36mGetting key apple[0m
-[33m[tester::#LA7] [client] [0m[94m> GET apple[0m
-[33m[tester::#LA7] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$5\r\napple\r\n"[0m
-[33m[tester::#LA7] [client] [0m[36mReceived bytes: "$5\r\ngrape\r\n"[0m
-[33m[tester::#LA7] [client] [0m[36mReceived RESP bulk string: "grape"[0m
-[33m[tester::#LA7] [client] [0m[92m✔︎ Received "grape"[0m
-[33m[tester::#LA7] [0m[92mTest passed.[0m
-[33m[tester::#LA7] [0m[36mTerminating program[0m
-[33m[tester::#LA7] [0m[36mProgram terminated successfully[0m
-
-[33m[tester::#QQ0] [0m[94mRunning tests for Stage #QQ0 (qq0)[0m
-[33m[tester::#QQ0] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[tester::#QQ0] [client] [0m[94m$ redis-cli ECHO orange[0m
-[33m[tester::#QQ0] [client] [0m[36mSent bytes: "*2\r\n$4\r\nECHO\r\n$6\r\norange\r\n"[0m
-[33m[tester::#QQ0] [client] [0m[36mReceived bytes: "$6\r\norange\r\n"[0m
-[33m[tester::#QQ0] [client] [0m[36mReceived RESP bulk string: "orange"[0m
-[33m[tester::#QQ0] [client] [0m[92m✔︎ Received "orange"[0m
-[33m[tester::#QQ0] [0m[92mTest passed.[0m
-[33m[tester::#QQ0] [0m[36mTerminating program[0m
-[33m[tester::#QQ0] [0m[36mProgram terminated successfully[0m
-
-[33m[tester::#ZU2] [0m[94mRunning tests for Stage #ZU2 (zu2)[0m
-[33m[tester::#ZU2] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[tester::#ZU2] [client-1] [0m[94m$ redis-cli PING[0m
-[33m[tester::#ZU2] [client-1] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
-[33m[tester::#ZU2] [client-1] [0m[36mReceived bytes: "+PONG\r\n"[0m
-[33m[tester::#ZU2] [client-1] [0m[36mReceived RESP simple string: "PONG"[0m
-[33m[tester::#ZU2] [client-1] [0m[92m✔︎ Received "PONG"[0m
-[33m[tester::#ZU2] [client-2] [0m[94m$ redis-cli PING[0m
-[33m[tester::#ZU2] [client-2] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
-[33m[tester::#ZU2] [client-2] [0m[36mReceived bytes: "+PONG\r\n"[0m
-[33m[tester::#ZU2] [client-2] [0m[36mReceived RESP simple string: "PONG"[0m
-[33m[tester::#ZU2] [client-2] [0m[92m✔︎ Received "PONG"[0m
-[33m[tester::#ZU2] [client-1] [0m[94m> PING[0m
-[33m[tester::#ZU2] [client-1] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
-[33m[tester::#ZU2] [client-1] [0m[36mReceived bytes: "+PONG\r\n"[0m
-[33m[tester::#ZU2] [client-1] [0m[36mReceived RESP simple string: "PONG"[0m
-[33m[tester::#ZU2] [client-1] [0m[92m✔︎ Received "PONG"[0m
-[33m[tester::#ZU2] [client-1] [0m[94m> PING[0m
-[33m[tester::#ZU2] [client-1] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
-[33m[tester::#ZU2] [client-1] [0m[36mReceived bytes: "+PONG\r\n"[0m
-[33m[tester::#ZU2] [client-1] [0m[36mReceived RESP simple string: "PONG"[0m
-[33m[tester::#ZU2] [client-1] [0m[92m✔︎ Received "PONG"[0m
-[33m[tester::#ZU2] [client-2] [0m[94m> PING[0m
-[33m[tester::#ZU2] [client-2] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
-[33m[tester::#ZU2] [client-2] [0m[36mReceived bytes: "+PONG\r\n"[0m
-[33m[tester::#ZU2] [client-2] [0m[36mReceived RESP simple string: "PONG"[0m
-[33m[tester::#ZU2] [client-2] [0m[92m✔︎ Received "PONG"[0m
-[33m[tester::#ZU2] [client-1] [0m[36mSuccess, closing connection...[0m
-[33m[tester::#ZU2] [client-3] [0m[94m$ redis-cli PING[0m
-[33m[tester::#ZU2] [client-3] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
-[33m[tester::#ZU2] [client-3] [0m[36mReceived bytes: "+PONG\r\n"[0m
-[33m[tester::#ZU2] [client-3] [0m[36mReceived RESP simple string: "PONG"[0m
-[33m[tester::#ZU2] [client-3] [0m[92m✔︎ Received "PONG"[0m
-[33m[tester::#ZU2] [client-2] [0m[36mSuccess, closing connection...[0m
-[33m[tester::#ZU2] [client-3] [0m[36mSuccess, closing connection...[0m
-[33m[tester::#ZU2] [0m[92mTest passed.[0m
-[33m[tester::#ZU2] [0m[36mTerminating program[0m
-[33m[tester::#ZU2] [0m[36mProgram terminated successfully[0m
-
-[33m[tester::#WY1] [0m[94mRunning tests for Stage #WY1 (wy1)[0m
-[33m[tester::#WY1] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[tester::#WY1] [client-1] [0m[94m$ redis-cli PING[0m
-[33m[tester::#WY1] [client-1] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
-[33m[tester::#WY1] [client-1] [0m[36mReceived bytes: "+PONG\r\n"[0m
-[33m[tester::#WY1] [client-1] [0m[36mReceived RESP simple string: "PONG"[0m
-[33m[tester::#WY1] [client-1] [0m[92m✔︎ Received "PONG"[0m
-[33m[tester::#WY1] [client-1] [0m[94m> PING[0m
-[33m[tester::#WY1] [client-1] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
-[33m[tester::#WY1] [client-1] [0m[36mReceived bytes: "+PONG\r\n"[0m
-[33m[tester::#WY1] [client-1] [0m[36mReceived RESP simple string: "PONG"[0m
-[33m[tester::#WY1] [client-1] [0m[92m✔︎ Received "PONG"[0m
-[33m[tester::#WY1] [client-1] [0m[94m> PING[0m
-[33m[tester::#WY1] [client-1] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
-[33m[tester::#WY1] [client-1] [0m[36mReceived bytes: "+PONG\r\n"[0m
-[33m[tester::#WY1] [client-1] [0m[36mReceived RESP simple string: "PONG"[0m
-[33m[tester::#WY1] [client-1] [0m[92m✔︎ Received "PONG"[0m
-[33m[tester::#WY1] [client-1] [0m[36mSuccess, closing connection...[0m
-[33m[tester::#WY1] [0m[92mTest passed.[0m
-[33m[tester::#WY1] [0m[36mTerminating program[0m
-[33m[tester::#WY1] [0m[36mProgram terminated successfully[0m
-
-[33m[tester::#RG2] [0m[94mRunning tests for Stage #RG2 (rg2)[0m
-[33m[tester::#RG2] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[tester::#RG2] [0m[36mConnection established, sending ping command...[0m
-[33m[tester::#RG2] [client] [0m[94m$ redis-cli PING[0m
-[33m[tester::#RG2] [client] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
-[33m[tester::#RG2] [client] [0m[36mReceived bytes: "+PONG\r\n"[0m
-[33m[tester::#RG2] [client] [0m[36mReceived RESP simple string: "PONG"[0m
-[33m[tester::#RG2] [client] [0m[92m✔︎ Received "PONG"[0m
-[33m[tester::#RG2] [0m[92mTest passed.[0m
-[33m[tester::#RG2] [0m[36mTerminating program[0m
-[33m[tester::#RG2] [0m[36mProgram terminated successfully[0m
-
-[33m[tester::#JM1] [0m[94mRunning tests for Stage #JM1 (jm1)[0m
-[33m[tester::#JM1] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[tester::#JM1] [0m[94mConnecting to port 6379...[0m
-[33m[tester::#JM1] [0m[36mConnection successful[0m
-[33m[tester::#JM1] [0m[92mTest passed.[0m
-[33m[tester::#JM1] [0m[36mTerminating program[0m
-[33m[tester::#JM1] [0m[36mProgram terminated successfully[0m
+[33m[tester::#SM4] [0m[94mRunning tests for Stage #SM4 (sm4)[0m
+[33m[tester::#SM4] [0m[94mCreated RDB file with 4 key-value pairs: {"strawberry": "raspberry", "pear": "mango", "apple": "blueberry", "blueberry": "banana"}[0m
+[33m[tester::#SM4] [0m[36mHexdump of RDB file contents: [0m
+[33m[tester::#SM4] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#SM4] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#SM4] [0m[36m0000 | 52 45 44 49 53 30 30 31 31 fa 09 72 65 64 69 73 | REDIS0011..redis[0m
+[33m[tester::#SM4] [0m[36m0010 | 2d 76 65 72 05 37 2e 32 2e 30 fa 0a 72 65 64 69 | -ver.7.2.0..redi[0m
+[33m[tester::#SM4] [0m[36m0020 | 73 2d 62 69 74 73 c0 40 fe 00 fb 04 04 fc 00 0c | s-bits.@........[0m
+[33m[tester::#SM4] [0m[36m0030 | 28 8a c7 01 00 00 00 0a 73 74 72 61 77 62 65 72 | (.......strawber[0m
+[33m[tester::#SM4] [0m[36m0040 | 72 79 09 72 61 73 70 62 65 72 72 79 fc 00 0c 28 | ry.raspberry...([0m
+[33m[tester::#SM4] [0m[36m0050 | 8a c7 01 00 00 00 04 70 65 61 72 05 6d 61 6e 67 | .......pear.mang[0m
+[33m[tester::#SM4] [0m[36m0060 | 6f fc 00 9c ef 12 7e 01 00 00 00 05 61 70 70 6c | o.....~.....appl[0m
+[33m[tester::#SM4] [0m[36m0070 | 65 09 62 6c 75 65 62 65 72 72 79 fc 00 0c 28 8a | e.blueberry...(.[0m
+[33m[tester::#SM4] [0m[36m0080 | c7 01 00 00 00 09 62 6c 75 65 62 65 72 72 79 06 | ......blueberry.[0m
+[33m[tester::#SM4] [0m[36m0090 | 62 61 6e 61 6e 61 ff 00 4d f8 78 e7 ed 37 cc    | banana..M.x..7.[0m
+[33m[tester::#SM4] [0m[36m[0m
+[33m[tester::#SM4] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdb-1320 --dbfilename blueberry.rdb[0m
+[33m[tester::#SM4] [client] [0m[94m$ redis-cli GET strawberry[0m
+[33m[tester::#SM4] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$10\r\nstrawberry\r\n"[0m
+[33m[tester::#SM4] [client] [0m[36mReceived bytes: "$9\r\nraspberry\r\n"[0m
+[33m[tester::#SM4] [client] [0m[36mReceived RESP bulk string: "raspberry"[0m
+[33m[tester::#SM4] [client] [0m[92m✔︎ Received "raspberry"[0m
+[33m[tester::#SM4] [client] [0m[94m> GET pear[0m
+[33m[tester::#SM4] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$4\r\npear\r\n"[0m
+[33m[tester::#SM4] [client] [0m[36mReceived bytes: "$5\r\nmango\r\n"[0m
+[33m[tester::#SM4] [client] [0m[36mReceived RESP bulk string: "mango"[0m
+[33m[tester::#SM4] [client] [0m[92m✔︎ Received "mango"[0m
+[33m[tester::#SM4] [client] [0m[94m> GET apple[0m
+[33m[tester::#SM4] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$5\r\napple\r\n"[0m
+[33m[tester::#SM4] [client] [0m[36mReceived bytes: "$-1\r\n"[0m
+[33m[tester::#SM4] [client] [0m[36mReceived RESP null bulk string: "$-1\r\n"[0m
+[33m[tester::#SM4] [client] [0m[92m✔︎ Received "$-1\r\n"[0m
+[33m[tester::#SM4] [client] [0m[94m> GET blueberry[0m
+[33m[tester::#SM4] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$9\r\nblueberry\r\n"[0m
+[33m[tester::#SM4] [client] [0m[36mReceived bytes: "$6\r\nbanana\r\n"[0m
+[33m[tester::#SM4] [client] [0m[36mReceived RESP bulk string: "banana"[0m
+[33m[tester::#SM4] [client] [0m[92m✔︎ Received "banana"[0m
+[33m[tester::#SM4] [0m[92mTest passed.[0m
+[33m[tester::#SM4] [0m[36mTerminating program[0m
+[33m[tester::#SM4] [0m[36mProgram terminated successfully[0m
