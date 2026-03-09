@@ -11,12 +11,13 @@ import (
 )
 
 func testOptimisticLockingTrackingKeyModification(stageHarness *test_case_harness.TestCaseHarness) error {
+	stageHarness.Logger.Infof("Testing transaction by modifying the watched variable")
+
 	if err := testOptimisticLockingScenario(stageHarness, true); err != nil {
 		return err
 	}
 
-	stageHarness.Logger.Infof("Tearing down Redis executable and clients")
-
+	stageHarness.Logger.Infof("Testing transaction by keeping watched variable same")
 	return testOptimisticLockingScenario(stageHarness, false)
 }
 
