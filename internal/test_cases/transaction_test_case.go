@@ -79,10 +79,23 @@ func (t TransactionTestCase) RunQueueAll(client *instrumented_resp_connection.In
 }
 
 func (t TransactionTestCase) RunExec(client *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
+	var assertion resp_assertions.RESPAssertion
+
+	// Expect a nil array if t.ExpectedResponseArray is nil
+	// TODO: I'll remove this comment after PR review
+	// The reasoning here was that Go allows us to distinguish between empty array / nil array (just like redis distinguishes these two)
+	// using its own language construct (empty slice / nil slice)
+	// So, I decided to implement it this way
+	if t.ExpectedResponseArray == nil {
+		assertion = resp_assertions.NewNilArrayAssertion()
+	} else {
+		assertion = resp_assertions.NewOrderedArrayAssertion(t.ExpectedResponseArray)
+	}
+
 	setCommandTestCase := SendCommandTestCase{
 		Command:   "EXEC",
 		Args:      []string{},
-		Assertion: resp_assertions.NewOrderedArrayAssertion(t.ExpectedResponseArray),
+		Assertion: assertion,
 	}
 
 	return setCommandTestCase.Run(client, logger)
