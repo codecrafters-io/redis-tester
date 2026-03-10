@@ -28,67 +28,75 @@ func testOptimisticLockingUnwatch(stageHarness *test_case_harness.TestCaseHarnes
 
 	keys := testerutils_random.RandomWords(2)
 	initialValues := testerutils_random.RandomInts(1, 100, 2)
-	newValues := testerutils_random.RandomInts(200, 500, 3)
 
 	key1, key2 := keys[0], keys[1]
-	newValue1, newValue2, newValue3 := newValues[0], newValues[1], newValues[2]
+	key1InitialValue, key2InitialValue := initialValues[0], initialValues[1]
 
 	// Client 1: Set initial values for both keys
-	if err := (&test_cases.MultiCommandTestCase{
+	setKeysTestCase := test_cases.MultiCommandTestCase{
 		CommandWithAssertions: []test_cases.CommandWithAssertion{
 			{
-				Command:   []string{"SET", key1, strconv.Itoa(initialValues[0])},
+				Command:   []string{"SET", key1, strconv.Itoa(key1InitialValue)},
 				Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
 			},
 			{
-				Command:   []string{"SET", key2, strconv.Itoa(initialValues[1])},
+				Command:   []string{"SET", key2, strconv.Itoa(key2InitialValue)},
 				Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
 			},
 		},
-	}).RunAll(clients[0], logger); err != nil {
+	}
+	if err := setKeysTestCase.RunAll(clients[0], logger); err != nil {
 		return err
 	}
 
 	// Client 1: Watch both keys
-	if err := (test_cases.WatchTestCase{Keys: []string{key1, key2}}).Run(clients[0], logger); err != nil {
+	watchTestCase := test_cases.WatchTestCase{Keys: []string{key1, key2}}
+
+	if err := watchTestCase.Run(clients[0], logger); err != nil {
 		return err
 	}
 
 	// Client 2: Modify key1 (a watched key)
-	if err := (&test_cases.SendCommandTestCase{
+	key1ValueSetByClient2 := testerutils_random.RandomInt(200, 400)
+
+	modifyWatchedKeyTestCase := test_cases.SendCommandTestCase{
 		Command:   "SET",
-		Args:      []string{key1, strconv.Itoa(newValue1)},
+		Args:      []string{key1, strconv.Itoa(key1ValueSetByClient2)},
 		Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
-	}).Run(clients[1], logger); err != nil {
+	}
+
+	if err := modifyWatchedKeyTestCase.Run(clients[1], logger); err != nil {
 		return err
 	}
 
 	// Client 1: UNWATCH to clear all watched keys
-	if err := (&test_cases.SendCommandTestCase{
+	unwatchTestCase := test_cases.SendCommandTestCase{
 		Command:   "UNWATCH",
 		Args:      []string{},
 		Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
-	}).Run(clients[0], logger); err != nil {
+	}
+
+	if err := unwatchTestCase.Run(clients[0], logger); err != nil {
 		return err
 	}
 
-	// Client 1: Queue a transaction updating both keys
+	// Client 1: Run a transaction updating both keys
+	key1ValueSetByClient1InTransaction := testerutils_random.RandomInt(500, 700)
+	key2ValueSetByClient1InTransaction := testerutils_random.RandomInt(700, 1000)
+
 	transactionTestCase := test_cases.TransactionTestCase{
 		CommandQueue: [][]string{
-			{"SET", key1, strconv.Itoa(newValue3)},
-			{"SET", key2, strconv.Itoa(newValue2)},
+			{"SET", key1, strconv.Itoa(key1ValueSetByClient1InTransaction)},
+			{"SET", key2, strconv.Itoa(key2ValueSetByClient1InTransaction)},
 		},
-		// Transaction should succeed since UNWATCH was issued from client 0 before
+		// Transaction should succeed since UNWATCH cleared the watched keys
 		ExpectedResponseArray: []resp_assertions.RESPAssertion{
 			resp_assertions.NewSimpleStringAssertion("OK"),
 			resp_assertions.NewSimpleStringAssertion("OK"),
 		},
 	}
-	if err := transactionTestCase.RunWithoutExec(clients[0], logger); err != nil {
-		return err
-	}
 
-	if err := transactionTestCase.RunExec(clients[0], logger); err != nil {
+	if err := transactionTestCase.RunAll(clients[0], logger); err != nil {
 		return err
 	}
 
@@ -97,11 +105,11 @@ func testOptimisticLockingUnwatch(stageHarness *test_case_harness.TestCaseHarnes
 		CommandWithAssertions: []test_cases.CommandWithAssertion{
 			{
 				Command:   []string{"GET", key1},
-				Assertion: resp_assertions.NewBulkStringAssertion(strconv.Itoa(newValue3)),
+				Assertion: resp_assertions.NewBulkStringAssertion(strconv.Itoa(key1ValueSetByClient1InTransaction)),
 			},
 			{
 				Command:   []string{"GET", key2},
-				Assertion: resp_assertions.NewBulkStringAssertion(strconv.Itoa(newValue2)),
+				Assertion: resp_assertions.NewBulkStringAssertion(strconv.Itoa(key2ValueSetByClient1InTransaction)),
 			},
 		},
 	}).RunAll(clients[1], logger)

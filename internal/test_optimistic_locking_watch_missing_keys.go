@@ -27,29 +27,35 @@ func testOptimisticLockingWatchMissingKeys(stageHarness *test_case_harness.TestC
 	}
 
 	key := testerutils_random.RandomWords(1)[0]
-	newValue1 := testerutils_random.RandomInt(1, 100)
-	newValue2 := testerutils_random.RandomInt(500, 1000)
+	intermediateValue := testerutils_random.RandomInt(1, 100)
+	finalValue := testerutils_random.RandomInt(500, 1000)
 
 	// Client 1: Watch a key that doesn't exist yet
-	if err := (test_cases.WatchTestCase{Keys: []string{key}}).Run(clients[0], logger); err != nil {
+	watchTestCase := test_cases.WatchTestCase{Keys: []string{key}}
+
+	if err := watchTestCase.Run(clients[0], logger); err != nil {
 		return err
 	}
 
 	// Client 1: Queue a transaction that updates the watched key
 	transactionTestCase := test_cases.TransactionTestCase{
-		CommandQueue:          [][]string{{"SET", key, strconv.Itoa(newValue2)}},
-		ExpectedResponseArray: nil, // Expect nil array since the watched key was modified
+		CommandQueue: [][]string{{"SET", key, strconv.Itoa(finalValue)}},
+		// Expect nil array since the watched key was will be modified below by client-2
+		ExpectedResponseArray: nil,
 	}
+
 	if err := transactionTestCase.RunWithoutExec(clients[0], logger); err != nil {
 		return err
 	}
 
 	// Client 2: Set the watched key (creating it): This should fail the transaction
-	if err := (&test_cases.SendCommandTestCase{
+	modifyWatchedKeyTestCase := test_cases.SendCommandTestCase{
 		Command:   "SET",
-		Args:      []string{key, strconv.Itoa(newValue1)},
+		Args:      []string{key, strconv.Itoa(intermediateValue)},
 		Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
-	}).Run(clients[1], logger); err != nil {
+	}
+
+	if err := modifyWatchedKeyTestCase.Run(clients[1], logger); err != nil {
 		return err
 	}
 
@@ -58,10 +64,10 @@ func testOptimisticLockingWatchMissingKeys(stageHarness *test_case_harness.TestC
 		return err
 	}
 
-	// Client 1: Verify that the transaction was aborted
+	// Client 1: Verify that the transaction was aborted by checking the value of the key
 	return (&test_cases.SendCommandTestCase{
 		Command:   "GET",
 		Args:      []string{key},
-		Assertion: resp_assertions.NewBulkStringAssertion(strconv.Itoa(newValue1)),
+		Assertion: resp_assertions.NewBulkStringAssertion(strconv.Itoa(intermediateValue)),
 	}).Run(clients[0], logger)
 }
