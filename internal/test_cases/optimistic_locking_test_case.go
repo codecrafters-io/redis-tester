@@ -163,7 +163,13 @@ func (t *OptimisticLockingTestCase) RunValueCheckOfKeyModifiedInTransaction(logg
 	} else if t.KeyToBeModifiedByModifierClient == t.KeyToBeModifiedByWatcherClientInTransaction {
 		expectedValue = t.valueSetByModifierClient
 	} else {
-		expectedValue = t.initialValues[slices.Index(t.InitialKeys, t.KeyToBeModifiedByWatcherClientInTransaction)]
+		expectedValueIdx := slices.Index(t.InitialKeys, t.KeyToBeModifiedByWatcherClientInTransaction)
+
+		if expectedValueIdx == -1 {
+			panic("Codecrafters Internal Error - t.KeyToBeModifiedByWatcherClientInTransaction not present inside t.InitialKeys")
+		}
+
+		expectedValue = t.initialValues[expectedValueIdx]
 	}
 
 	return (&SendCommandTestCase{
