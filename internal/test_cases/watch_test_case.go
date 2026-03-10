@@ -15,13 +15,8 @@ func (t WatchTestCase) Run(client *instrumented_resp_connection.InstrumentedResp
 	assertion := resp_assertions.NewSimpleStringAssertion("OK")
 
 	// Must assert error inside a transaction
-	// TODO: Will remove this after PR review
-	// We'd wanna be lenient enough as we have been in case of errors previously. Eg.
-	// See testPubSubSubscribe3 and others.
-	// But, unlike other error cases, this error is worded as more 'english-like' so its hard to
-	// expect a pattern. So, I left it like this.
 	if t.IsInsideTransaction {
-		assertion = resp_assertions.NewErrorAssertion("ERR WATCH inside MULTI is not allowed")
+		assertion = resp_assertions.NewRegexErrorAssertion("(?i)not allowed")
 	}
 
 	sendCommandTestCase := SendCommandTestCase{
