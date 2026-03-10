@@ -30,9 +30,5 @@ func (t WatchTestCase) Run(client *instrumented_resp_connection.InstrumentedResp
 		Assertion: assertion,
 	}
 
-	if err := sendCommandTestCase.Run(client, logger); err != nil {
-		return err
-	}
-
-	return nil
+	return sendCommandTestCase.Run(client, logger)
 }
