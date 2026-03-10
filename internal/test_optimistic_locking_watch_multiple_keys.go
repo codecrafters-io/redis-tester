@@ -4,7 +4,6 @@ import (
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	"github.com/codecrafters-io/tester-utils/random"
-	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
@@ -24,7 +23,7 @@ func testOptimisticLockingWatchMultipleKeys(stageHarness *test_case_harness.Test
 		defer c.Close()
 	}
 
-	keys := testerutils_random.RandomWords(2)
+	keys := random.RandomWords(2)
 
 	optimisticLockingTestCase := test_cases.OptimisticLockingTestCase{
 		WatcherClient:  clients[0],
