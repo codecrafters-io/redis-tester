@@ -21,6 +21,10 @@ func testOptimisticLockingTrackingKeyModification(stageHarness *test_case_harnes
 		return err
 	}
 
+	for _, c := range clients {
+		defer c.Close()
+	}
+
 	keys := testerutils_random.RandomWords(4)
 	watchedKey, unwatchedKey := keys[0], keys[1]
 
@@ -49,7 +53,7 @@ func testOptimisticLockingTrackingKeyModification(stageHarness *test_case_harnes
 		ModifierClient:                              clients[3],
 		InitialKeys:                                 []string{watchedKey, unwatchedKey},
 		KeysWatchedByWatcherClient:                  []string{watchedKey},
-		KeyToBeModifiedByModifierClient:             watchedKey,
+		KeyToBeModifiedByModifierClient:             unwatchedKey,
 		KeyToBeModifiedByWatcherClientInTransaction: unwatchedKey,
 	}
 
