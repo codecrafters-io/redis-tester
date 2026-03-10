@@ -31,58 +31,65 @@ func testOptimisticLockingWatchMultipleKeys(stageHarness *test_case_harness.Test
 	newValues := testerutils_random.RandomInts(500, 1000, 2)
 
 	key1, key2 := keys[0], keys[1]
-	initialValue2 := initialValues[1]
-	newValue1, newValue2 := newValues[0], newValues[1]
+	key1InitialValue, key2InitialValue := initialValues[0], initialValues[1]
+	key1NewValue, key2NewValue := newValues[0], newValues[1]
 
 	// Client 1: Set initial values for both keys
-	if err := (&test_cases.MultiCommandTestCase{
+	setKeysTestCase := test_cases.MultiCommandTestCase{
 		CommandWithAssertions: []test_cases.CommandWithAssertion{
 			{
-				Command:   []string{"SET", key1, strconv.Itoa(initialValues[0])},
+				Command:   []string{"SET", key1, strconv.Itoa(key1InitialValue)},
 				Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
 			},
 			{
-				Command:   []string{"SET", key2, strconv.Itoa(initialValues[1])},
+				Command:   []string{"SET", key2, strconv.Itoa(key2InitialValue)},
 				Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
 			},
 		},
-	}).RunAll(clients[0], logger); err != nil {
+	}
+
+	if err := setKeysTestCase.RunAll(clients[0], logger); err != nil {
 		return err
 	}
 
 	// Client 1: Watch both keys
-	if err := (test_cases.WatchTestCase{Keys: []string{key1, key2}}).Run(clients[0], logger); err != nil {
+	watchTestCase := test_cases.WatchTestCase{Keys: []string{key1, key2}}
+
+	if err := watchTestCase.Run(clients[0], logger); err != nil {
 		return err
 	}
 
 	// Client 1: Queue a transaction that updates key2
 	transactionTestCase := test_cases.TransactionTestCase{
-		CommandQueue: [][]string{{"SET", key2, strconv.Itoa(newValue2)}},
-		// Expect abort since a watched key will be modified
+		CommandQueue: [][]string{{"SET", key2, strconv.Itoa(key2NewValue)}},
+		// Expect nil since a watched key will be modified below
 		ExpectedResponseArray: nil,
 	}
+
 	if err := transactionTestCase.RunWithoutExec(clients[0], logger); err != nil {
 		return err
 	}
 
-	// Client 2: Modify key1 (one of the watched keys) — this should abort the transaction
-	if err := (&test_cases.SendCommandTestCase{
+	// Client 2: Modify key1 (one of the watched keys): This should error out the following transaction
+	modifyKeyTestCase := test_cases.SendCommandTestCase{
 		Command:   "SET",
-		Args:      []string{key1, strconv.Itoa(newValue1)},
+		Args:      []string{key1, strconv.Itoa(key1NewValue)},
 		Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
-	}).Run(clients[1], logger); err != nil {
+	}
+
+	if err := modifyKeyTestCase.Run(clients[1], logger); err != nil {
 		return err
 	}
 
-	// Client 1: EXEC — should return nil array since a watched key was modified
+	// Client 1: EXEC should return nil array since a watched key was modified
 	if err := transactionTestCase.RunExec(clients[0], logger); err != nil {
 		return err
 	}
 
-	// Client 2: Verify key2 still holds its initial value (transaction was aborted)
+	// Client 2: Verify key2 still holds its initial value (because transaction returns nil)
 	return (&test_cases.SendCommandTestCase{
 		Command:   "GET",
 		Args:      []string{key2},
-		Assertion: resp_assertions.NewBulkStringAssertion(strconv.Itoa(initialValue2)),
+		Assertion: resp_assertions.NewBulkStringAssertion(strconv.Itoa(key2InitialValue)),
 	}).Run(clients[1], logger)
 }
