@@ -82,10 +82,6 @@ func (t TransactionTestCase) RunExec(client *instrumented_resp_connection.Instru
 	var assertion resp_assertions.RESPAssertion
 
 	// Expect a nil array if t.ExpectedResponseArray is nil
-	// TODO: I'll remove this comment after PR review
-	// The reasoning here was that Go allows us to distinguish between empty array / nil array (just like redis distinguishes these two)
-	// using its own language construct (empty slice / nil slice)
-	// So, I decided to implement it this way
 	if t.ExpectedResponseArray == nil {
 		assertion = resp_assertions.NewNilArrayAssertion()
 	} else {
