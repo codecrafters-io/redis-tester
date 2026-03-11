@@ -39,7 +39,6 @@ type OptimisticLockingTestCase struct {
 	valueSetInTransaction    int
 	valueSetByModifierClient int
 	transactionTestCase      *TransactionTestCase
-	doesTransactionFail      bool
 }
 
 func (t *OptimisticLockingTestCase) Run(logger *logger.Logger) error {
@@ -101,10 +100,9 @@ func (t *OptimisticLockingTestCase) RunWatchKeys(logger *logger.Logger) error {
 // the watcher client without exec
 func (t *OptimisticLockingTestCase) RunTransactionWithoutExec(logger *logger.Logger) error {
 	valueUsedInTransaction := random.RandomInt(50, 100)
-	t.doesTransactionFail = slices.Contains(t.KeysWatchedByWatcherClient, t.KeyToBeModifiedByModifierClient)
 	var responsesArray []resp_assertions.RESPAssertion
 
-	if !t.doesTransactionFail {
+	if !t.doesTransactionFail() {
 		responsesArray = []resp_assertions.RESPAssertion{resp_assertions.NewSimpleStringAssertion("OK")}
 	}
 
@@ -145,12 +143,11 @@ func (t *OptimisticLockingTestCase) RunSetKeyUsingModifierClient(logger *logger.
 }
 
 func (t *OptimisticLockingTestCase) RunExec(logger *logger.Logger) error {
-	// Reset the watched keys on exec
 	return t.transactionTestCase.RunExec(t.WatcherClient, logger)
 }
 
 func (t *OptimisticLockingTestCase) RunValueCheckOfKeyModifiedInTransaction(logger *logger.Logger) error {
-	if t.doesTransactionFail {
+	if t.doesTransactionFail() {
 		logger.Infof("Checking if the transaction failed")
 	} else {
 		logger.Infof("Checking if the transaction succeeded")
@@ -158,7 +155,7 @@ func (t *OptimisticLockingTestCase) RunValueCheckOfKeyModifiedInTransaction(logg
 
 	var expectedValue int
 
-	if !t.doesTransactionFail {
+	if !t.doesTransactionFail() {
 		expectedValue = t.valueSetInTransaction
 	} else if t.KeyToBeModifiedByModifierClient == t.KeyToBeModifiedByWatcherClientInTransaction {
 		expectedValue = t.valueSetByModifierClient
@@ -177,4 +174,9 @@ func (t *OptimisticLockingTestCase) RunValueCheckOfKeyModifiedInTransaction(logg
 		Args:      []string{t.KeyToBeModifiedByWatcherClientInTransaction},
 		Assertion: resp_assertions.NewBulkStringAssertion(strconv.Itoa(expectedValue)),
 	}).Run(t.WatcherClient, logger)
+}
+
+func (t *OptimisticLockingTestCase) doesTransactionFail() bool {
+	// Transaction fails if modifier client modifies any of the watched keys
+	return slices.Contains(t.KeysWatchedByWatcherClient, t.KeyToBeModifiedByModifierClient)
 }
