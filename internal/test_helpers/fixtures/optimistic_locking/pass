@@ -29,10 +29,10 @@ Debug = true
 
 [33m[tester::#MH8] [0m[94mRunning tests for Stage #MH8 (mh8)[0m
 [33m[tester::#MH8] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[tester::#MH8] [client-1] [0m[36mConnected (port 37296 -> port 6379)[0m
-[33m[tester::#MH8] [client-2] [0m[36mConnected (port 37300 -> port 6379)[0m
-[33m[tester::#MH8] [client-3] [0m[36mConnected (port 37310 -> port 6379)[0m
-[33m[tester::#MH8] [client-4] [0m[36mConnected (port 37314 -> port 6379)[0m
+[33m[tester::#MH8] [client-1] [0m[36mConnected (port 39060 -> port 6379)[0m
+[33m[tester::#MH8] [client-2] [0m[36mConnected (port 39062 -> port 6379)[0m
+[33m[tester::#MH8] [client-3] [0m[36mConnected (port 39074 -> port 6379)[0m
+[33m[tester::#MH8] [client-4] [0m[36mConnected (port 39084 -> port 6379)[0m
 [33m[tester::#MH8] [0m[94mTesting optimistic locking when watched key is modified[0m
 [33m[tester::#MH8] [client-1] [0m[94m$ redis-cli SET orange 20[0m
 [33m[tester::#MH8] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$6\r\norange\r\n$2\r\n20\r\n"[0m
@@ -127,8 +127,8 @@ Debug = true
 
 [33m[tester::#FP0] [0m[94mRunning tests for Stage #FP0 (fp0)[0m
 [33m[tester::#FP0] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[tester::#FP0] [client-1] [0m[36mConnected (port 37332 -> port 6379)[0m
-[33m[tester::#FP0] [client-2] [0m[36mConnected (port 37348 -> port 6379)[0m
+[33m[tester::#FP0] [client-1] [0m[36mConnected (port 39108 -> port 6379)[0m
+[33m[tester::#FP0] [client-2] [0m[36mConnected (port 39120 -> port 6379)[0m
 [33m[tester::#FP0] [client-1] [0m[94m$ redis-cli SET blueberry 12[0m
 [33m[tester::#FP0] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nblueberry\r\n$2\r\n12\r\n"[0m
 [33m[tester::#FP0] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
@@ -178,8 +178,8 @@ Debug = true
 
 [33m[tester::#UO9] [0m[94mRunning tests for Stage #UO9 (uo9)[0m
 [33m[tester::#UO9] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[tester::#UO9] [client-1] [0m[36mConnected (port 42026 -> port 6379)[0m
-[33m[tester::#UO9] [client-2] [0m[36mConnected (port 42032 -> port 6379)[0m
+[33m[tester::#UO9] [client-1] [0m[36mConnected (port 39136 -> port 6379)[0m
+[33m[tester::#UO9] [client-2] [0m[36mConnected (port 39150 -> port 6379)[0m
 [33m[tester::#UO9] [client-1] [0m[94m$ redis-cli WATCH blueberry[0m
 [33m[tester::#UO9] [client-1] [0m[36mSent bytes: "*2\r\n$5\r\nWATCH\r\n$9\r\nblueberry\r\n"[0m
 [33m[tester::#UO9] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
@@ -219,8 +219,8 @@ Debug = true
 
 [33m[tester::#BN1] [0m[94mRunning tests for Stage #BN1 (bn1)[0m
 [33m[tester::#BN1] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[tester::#BN1] [client-1] [0m[36mConnected (port 42048 -> port 6379)[0m
-[33m[tester::#BN1] [client-2] [0m[36mConnected (port 42050 -> port 6379)[0m
+[33m[tester::#BN1] [client-1] [0m[36mConnected (port 39170 -> port 6379)[0m
+[33m[tester::#BN1] [client-2] [0m[36mConnected (port 39180 -> port 6379)[0m
 [33m[tester::#BN1] [client-1] [0m[94m$ redis-cli SET blueberry 6[0m
 [33m[tester::#BN1] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nblueberry\r\n$1\r\n6\r\n"[0m
 [33m[tester::#BN1] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
@@ -276,91 +276,88 @@ Debug = true
 
 [33m[tester::#FN4] [0m[94mRunning tests for Stage #FN4 (fn4)[0m
 [33m[tester::#FN4] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[tester::#FN4] [client-1] [0m[36mConnected (port 42080 -> port 6379)[0m
-[33m[tester::#FN4] [client-2] [0m[36mConnected (port 42094 -> port 6379)[0m
-[33m[tester::#FN4] [client-1] [0m[94m$ redis-cli SET raspberry 2[0m
-[33m[tester::#FN4] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nraspberry\r\n$1\r\n2\r\n"[0m
+[33m[tester::#FN4] [client-1] [0m[36mConnected (port 39198 -> port 6379)[0m
+[33m[tester::#FN4] [client-2] [0m[36mConnected (port 39208 -> port 6379)[0m
+[33m[tester::#FN4] [client-1] [0m[94m$ redis-cli SET raspberry 38[0m
+[33m[tester::#FN4] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nraspberry\r\n$2\r\n38\r\n"[0m
 [33m[tester::#FN4] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#FN4] [client-1] [0m[36mReceived RESP simple string: "OK"[0m
 [33m[tester::#FN4] [client-1] [0m[92m✔︎ Received "OK"[0m
-[33m[tester::#FN4] [client-1] [0m[94m> SET blueberry 41[0m
-[33m[tester::#FN4] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nblueberry\r\n$2\r\n41\r\n"[0m
+[33m[tester::#FN4] [client-1] [0m[94m> SET blueberry 48[0m
+[33m[tester::#FN4] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nblueberry\r\n$2\r\n48\r\n"[0m
 [33m[tester::#FN4] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#FN4] [client-1] [0m[36mReceived RESP simple string: "OK"[0m
 [33m[tester::#FN4] [client-1] [0m[92m✔︎ Received "OK"[0m
-[33m[tester::#FN4] [client-1] [0m[94m> WATCH raspberry blueberry[0m
-[33m[tester::#FN4] [client-1] [0m[36mSent bytes: "*3\r\n$5\r\nWATCH\r\n$9\r\nraspberry\r\n$9\r\nblueberry\r\n"[0m
+[33m[tester::#FN4] [client-1] [0m[94m> WATCH raspberry[0m
+[33m[tester::#FN4] [client-1] [0m[36mSent bytes: "*2\r\n$5\r\nWATCH\r\n$9\r\nraspberry\r\n"[0m
 [33m[tester::#FN4] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#FN4] [client-1] [0m[36mReceived RESP simple string: "OK"[0m
 [33m[tester::#FN4] [client-1] [0m[92m✔︎ Received "OK"[0m
-[33m[tester::#FN4] [client-2] [0m[94m$ redis-cli SET raspberry 281[0m
-[33m[tester::#FN4] [client-2] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nraspberry\r\n$3\r\n281\r\n"[0m
-[33m[tester::#FN4] [client-2] [0m[36mReceived bytes: "+OK\r\n"[0m
-[33m[tester::#FN4] [client-2] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#FN4] [client-2] [0m[92m✔︎ Received "OK"[0m
 [33m[tester::#FN4] [client-1] [0m[94m> MULTI[0m
 [33m[tester::#FN4] [client-1] [0m[36mSent bytes: "*1\r\n$5\r\nMULTI\r\n"[0m
 [33m[tester::#FN4] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#FN4] [client-1] [0m[36mReceived RESP simple string: "OK"[0m
 [33m[tester::#FN4] [client-1] [0m[92m✔︎ Received "OK"[0m
 [33m[tester::#FN4] [0m[36mSending command: 1/1[0m
-[33m[tester::#FN4] [client-1] [0m[94m> SET blueberry 1242[0m
-[33m[tester::#FN4] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nblueberry\r\n$4\r\n1242\r\n"[0m
+[33m[tester::#FN4] [client-1] [0m[94m> SET blueberry 81[0m
+[33m[tester::#FN4] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nblueberry\r\n$2\r\n81\r\n"[0m
 [33m[tester::#FN4] [client-1] [0m[36mReceived bytes: "+QUEUED\r\n"[0m
 [33m[tester::#FN4] [client-1] [0m[36mReceived RESP simple string: "QUEUED"[0m
 [33m[tester::#FN4] [client-1] [0m[92m✔︎ Received "QUEUED"[0m
+[33m[tester::#FN4] [0m[94mModifying the value of raspberry (watched key)[0m
+[33m[tester::#FN4] [client-2] [0m[94m$ redis-cli SET raspberry 162[0m
+[33m[tester::#FN4] [client-2] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nraspberry\r\n$3\r\n162\r\n"[0m
+[33m[tester::#FN4] [client-2] [0m[36mReceived bytes: "+OK\r\n"[0m
+[33m[tester::#FN4] [client-2] [0m[36mReceived RESP simple string: "OK"[0m
+[33m[tester::#FN4] [client-2] [0m[92m✔︎ Received "OK"[0m
 [33m[tester::#FN4] [client-1] [0m[94m> EXEC[0m
 [33m[tester::#FN4] [client-1] [0m[36mSent bytes: "*1\r\n$4\r\nEXEC\r\n"[0m
 [33m[tester::#FN4] [client-1] [0m[36mReceived bytes: "*-1\r\n"[0m
 [33m[tester::#FN4] [client-1] [0m[36mReceived RESP null array: "*-1\r\n"[0m
 [33m[tester::#FN4] [client-1] [0m[92m✔︎ Received "*-1\r\n"[0m
+[33m[tester::#FN4] [0m[94mChecking if the transaction failed[0m
+[33m[tester::#FN4] [client-1] [0m[94m> GET blueberry[0m
+[33m[tester::#FN4] [client-1] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$9\r\nblueberry\r\n"[0m
+[33m[tester::#FN4] [client-1] [0m[36mReceived bytes: "$2\r\n48\r\n"[0m
+[33m[tester::#FN4] [client-1] [0m[36mReceived RESP bulk string: "48"[0m
+[33m[tester::#FN4] [client-1] [0m[92m✔︎ Received "48"[0m
 [33m[tester::#FN4] [client-1] [0m[94m> MULTI[0m
 [33m[tester::#FN4] [client-1] [0m[36mSent bytes: "*1\r\n$5\r\nMULTI\r\n"[0m
 [33m[tester::#FN4] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#FN4] [client-1] [0m[36mReceived RESP simple string: "OK"[0m
 [33m[tester::#FN4] [client-1] [0m[92m✔︎ Received "OK"[0m
-[33m[tester::#FN4] [0m[36mSending command: 1/2[0m
-[33m[tester::#FN4] [client-1] [0m[94m> SET raspberry 1662[0m
-[33m[tester::#FN4] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nraspberry\r\n$4\r\n1662\r\n"[0m
-[33m[tester::#FN4] [client-1] [0m[36mReceived bytes: "+QUEUED\r\n"[0m
-[33m[tester::#FN4] [client-1] [0m[36mReceived RESP simple string: "QUEUED"[0m
-[33m[tester::#FN4] [client-1] [0m[92m✔︎ Received "QUEUED"[0m
-[33m[tester::#FN4] [0m[36mSending command: 2/2[0m
-[33m[tester::#FN4] [client-1] [0m[94m> SET blueberry 1242[0m
-[33m[tester::#FN4] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nblueberry\r\n$4\r\n1242\r\n"[0m
+[33m[tester::#FN4] [0m[36mSending command: 1/1[0m
+[33m[tester::#FN4] [client-1] [0m[94m> SET blueberry 92[0m
+[33m[tester::#FN4] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nblueberry\r\n$2\r\n92\r\n"[0m
 [33m[tester::#FN4] [client-1] [0m[36mReceived bytes: "+QUEUED\r\n"[0m
 [33m[tester::#FN4] [client-1] [0m[36mReceived RESP simple string: "QUEUED"[0m
 [33m[tester::#FN4] [client-1] [0m[92m✔︎ Received "QUEUED"[0m
 [33m[tester::#FN4] [client-1] [0m[94m> EXEC[0m
 [33m[tester::#FN4] [client-1] [0m[36mSent bytes: "*1\r\n$4\r\nEXEC\r\n"[0m
-[33m[tester::#FN4] [client-1] [0m[36mReceived bytes: "*2\r\n+OK\r\n+OK\r\n"[0m
-[33m[tester::#FN4] [client-1] [0m[36mReceived RESP array: ["OK", "OK"][0m
-[33m[tester::#FN4] [client-1] [0m[92m✔︎ Received ["OK", "OK"][0m
-[33m[tester::#FN4] [client-2] [0m[94m> GET raspberry[0m
-[33m[tester::#FN4] [client-2] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$9\r\nraspberry\r\n"[0m
-[33m[tester::#FN4] [client-2] [0m[36mReceived bytes: "$4\r\n1662\r\n"[0m
-[33m[tester::#FN4] [client-2] [0m[36mReceived RESP bulk string: "1662"[0m
-[33m[tester::#FN4] [client-2] [0m[92m✔︎ Received "1662"[0m
-[33m[tester::#FN4] [client-2] [0m[94m> GET blueberry[0m
-[33m[tester::#FN4] [client-2] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$9\r\nblueberry\r\n"[0m
-[33m[tester::#FN4] [client-2] [0m[36mReceived bytes: "$4\r\n1242\r\n"[0m
-[33m[tester::#FN4] [client-2] [0m[36mReceived RESP bulk string: "1242"[0m
-[33m[tester::#FN4] [client-2] [0m[92m✔︎ Received "1242"[0m
+[33m[tester::#FN4] [client-1] [0m[36mReceived bytes: "*1\r\n+OK\r\n"[0m
+[33m[tester::#FN4] [client-1] [0m[36mReceived RESP array: ["OK"][0m
+[33m[tester::#FN4] [client-1] [0m[92m✔︎ Received ["OK"][0m
+[33m[tester::#FN4] [0m[94mChecking if the transaction succeeded[0m
+[33m[tester::#FN4] [client-1] [0m[94m> GET blueberry[0m
+[33m[tester::#FN4] [client-1] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$9\r\nblueberry\r\n"[0m
+[33m[tester::#FN4] [client-1] [0m[36mReceived bytes: "$2\r\n92\r\n"[0m
+[33m[tester::#FN4] [client-1] [0m[36mReceived RESP bulk string: "92"[0m
+[33m[tester::#FN4] [client-1] [0m[92m✔︎ Received "92"[0m
 [33m[tester::#FN4] [0m[92mTest passed.[0m
 [33m[tester::#FN4] [0m[36mTerminating program[0m
 [33m[tester::#FN4] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#HQ1] [0m[94mRunning tests for Stage #HQ1 (hq1)[0m
 [33m[tester::#HQ1] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[tester::#HQ1] [client-1] [0m[36mConnected (port 42106 -> port 6379)[0m
-[33m[tester::#HQ1] [client-2] [0m[36mConnected (port 42122 -> port 6379)[0m
-[33m[tester::#HQ1] [client-1] [0m[94m$ redis-cli SET orange 55[0m
-[33m[tester::#HQ1] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$6\r\norange\r\n$2\r\n55\r\n"[0m
+[33m[tester::#HQ1] [client-1] [0m[36mConnected (port 39228 -> port 6379)[0m
+[33m[tester::#HQ1] [client-2] [0m[36mConnected (port 39236 -> port 6379)[0m
+[33m[tester::#HQ1] [client-1] [0m[94m$ redis-cli SET orange 49[0m
+[33m[tester::#HQ1] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$6\r\norange\r\n$2\r\n49\r\n"[0m
 [33m[tester::#HQ1] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#HQ1] [client-1] [0m[36mReceived RESP simple string: "OK"[0m
 [33m[tester::#HQ1] [client-1] [0m[92m✔︎ Received "OK"[0m
-[33m[tester::#HQ1] [client-1] [0m[94m> SET raspberry 23[0m
-[33m[tester::#HQ1] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nraspberry\r\n$2\r\n23\r\n"[0m
+[33m[tester::#HQ1] [client-1] [0m[94m> SET raspberry 11[0m
+[33m[tester::#HQ1] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nraspberry\r\n$2\r\n11\r\n"[0m
 [33m[tester::#HQ1] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#HQ1] [client-1] [0m[36mReceived RESP simple string: "OK"[0m
 [33m[tester::#HQ1] [client-1] [0m[92m✔︎ Received "OK"[0m
@@ -369,16 +366,24 @@ Debug = true
 [33m[tester::#HQ1] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#HQ1] [client-1] [0m[36mReceived RESP simple string: "OK"[0m
 [33m[tester::#HQ1] [client-1] [0m[92m✔︎ Received "OK"[0m
-[33m[tester::#HQ1] [client-2] [0m[94m$ redis-cli SET orange 216[0m
-[33m[tester::#HQ1] [client-2] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$6\r\norange\r\n$3\r\n216\r\n"[0m
-[33m[tester::#HQ1] [client-2] [0m[36mReceived bytes: "+OK\r\n"[0m
-[33m[tester::#HQ1] [client-2] [0m[36mReceived RESP simple string: "OK"[0m
-[33m[tester::#HQ1] [client-2] [0m[92m✔︎ Received "OK"[0m
 [33m[tester::#HQ1] [client-1] [0m[94m> MULTI[0m
 [33m[tester::#HQ1] [client-1] [0m[36mSent bytes: "*1\r\n$5\r\nMULTI\r\n"[0m
 [33m[tester::#HQ1] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#HQ1] [client-1] [0m[36mReceived RESP simple string: "OK"[0m
 [33m[tester::#HQ1] [client-1] [0m[92m✔︎ Received "OK"[0m
+[33m[tester::#HQ1] [0m[36mSending command: 1/1[0m
+[33m[tester::#HQ1] [client-1] [0m[94m> SET raspberry 66[0m
+[33m[tester::#HQ1] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nraspberry\r\n$2\r\n66\r\n"[0m
+[33m[tester::#HQ1] [client-1] [0m[36mReceived bytes: "+QUEUED\r\n"[0m
+[33m[tester::#HQ1] [client-1] [0m[36mReceived RESP simple string: "QUEUED"[0m
+[33m[tester::#HQ1] [client-1] [0m[92m✔︎ Received "QUEUED"[0m
+[33m[tester::#HQ1] [0m[94mModifying the value of orange (watched key)[0m
+[33m[tester::#HQ1] [client-2] [0m[94m$ redis-cli SET orange 102[0m
+[33m[tester::#HQ1] [client-2] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$6\r\norange\r\n$3\r\n102\r\n"[0m
+[33m[tester::#HQ1] [client-2] [0m[36mReceived bytes: "+OK\r\n"[0m
+[33m[tester::#HQ1] [client-2] [0m[36mReceived RESP simple string: "OK"[0m
+[33m[tester::#HQ1] [client-2] [0m[92m✔︎ Received "OK"[0m
+[33m[tester::#HQ1] [0m[94mClearing all watched keys using DISCARD[0m
 [33m[tester::#HQ1] [client-1] [0m[94m> DISCARD[0m
 [33m[tester::#HQ1] [client-1] [0m[36mSent bytes: "*1\r\n$7\r\nDISCARD\r\n"[0m
 [33m[tester::#HQ1] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
@@ -389,33 +394,23 @@ Debug = true
 [33m[tester::#HQ1] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#HQ1] [client-1] [0m[36mReceived RESP simple string: "OK"[0m
 [33m[tester::#HQ1] [client-1] [0m[92m✔︎ Received "OK"[0m
-[33m[tester::#HQ1] [0m[36mSending command: 1/2[0m
-[33m[tester::#HQ1] [client-1] [0m[94m> SET orange 1702[0m
-[33m[tester::#HQ1] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$6\r\norange\r\n$4\r\n1702\r\n"[0m
-[33m[tester::#HQ1] [client-1] [0m[36mReceived bytes: "+QUEUED\r\n"[0m
-[33m[tester::#HQ1] [client-1] [0m[36mReceived RESP simple string: "QUEUED"[0m
-[33m[tester::#HQ1] [client-1] [0m[92m✔︎ Received "QUEUED"[0m
-[33m[tester::#HQ1] [0m[36mSending command: 2/2[0m
-[33m[tester::#HQ1] [client-1] [0m[94m> SET raspberry 1953[0m
-[33m[tester::#HQ1] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nraspberry\r\n$4\r\n1953\r\n"[0m
+[33m[tester::#HQ1] [0m[36mSending command: 1/1[0m
+[33m[tester::#HQ1] [client-1] [0m[94m> SET raspberry 53[0m
+[33m[tester::#HQ1] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nraspberry\r\n$2\r\n53\r\n"[0m
 [33m[tester::#HQ1] [client-1] [0m[36mReceived bytes: "+QUEUED\r\n"[0m
 [33m[tester::#HQ1] [client-1] [0m[36mReceived RESP simple string: "QUEUED"[0m
 [33m[tester::#HQ1] [client-1] [0m[92m✔︎ Received "QUEUED"[0m
 [33m[tester::#HQ1] [client-1] [0m[94m> EXEC[0m
 [33m[tester::#HQ1] [client-1] [0m[36mSent bytes: "*1\r\n$4\r\nEXEC\r\n"[0m
-[33m[tester::#HQ1] [client-1] [0m[36mReceived bytes: "*2\r\n+OK\r\n+OK\r\n"[0m
-[33m[tester::#HQ1] [client-1] [0m[36mReceived RESP array: ["OK", "OK"][0m
-[33m[tester::#HQ1] [client-1] [0m[92m✔︎ Received ["OK", "OK"][0m
-[33m[tester::#HQ1] [client-2] [0m[94m> GET orange[0m
-[33m[tester::#HQ1] [client-2] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$6\r\norange\r\n"[0m
-[33m[tester::#HQ1] [client-2] [0m[36mReceived bytes: "$4\r\n1702\r\n"[0m
-[33m[tester::#HQ1] [client-2] [0m[36mReceived RESP bulk string: "1702"[0m
-[33m[tester::#HQ1] [client-2] [0m[92m✔︎ Received "1702"[0m
-[33m[tester::#HQ1] [client-2] [0m[94m> GET raspberry[0m
-[33m[tester::#HQ1] [client-2] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$9\r\nraspberry\r\n"[0m
-[33m[tester::#HQ1] [client-2] [0m[36mReceived bytes: "$4\r\n1953\r\n"[0m
-[33m[tester::#HQ1] [client-2] [0m[36mReceived RESP bulk string: "1953"[0m
-[33m[tester::#HQ1] [client-2] [0m[92m✔︎ Received "1953"[0m
+[33m[tester::#HQ1] [client-1] [0m[36mReceived bytes: "*1\r\n+OK\r\n"[0m
+[33m[tester::#HQ1] [client-1] [0m[36mReceived RESP array: ["OK"][0m
+[33m[tester::#HQ1] [client-1] [0m[92m✔︎ Received ["OK"][0m
+[33m[tester::#HQ1] [0m[94mChecking if the transaction succeeded[0m
+[33m[tester::#HQ1] [client-1] [0m[94m> GET raspberry[0m
+[33m[tester::#HQ1] [client-1] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$9\r\nraspberry\r\n"[0m
+[33m[tester::#HQ1] [client-1] [0m[36mReceived bytes: "$2\r\n53\r\n"[0m
+[33m[tester::#HQ1] [client-1] [0m[36mReceived RESP bulk string: "53"[0m
+[33m[tester::#HQ1] [client-1] [0m[92m✔︎ Received "53"[0m
 [33m[tester::#HQ1] [0m[92mTest passed.[0m
 [33m[tester::#HQ1] [0m[36mTerminating program[0m
 [33m[tester::#HQ1] [0m[36mProgram terminated successfully[0m

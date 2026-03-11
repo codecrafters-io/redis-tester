@@ -1,10 +1,7 @@
 package internal
 
 import (
-	"strconv"
-
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
-	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	testerutils_random "github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
@@ -26,80 +23,33 @@ func testOptimisticLockingUnwatchOnExec(stageHarness *test_case_harness.TestCase
 		defer c.Close()
 	}
 
+	watcherClient, modifierClient := clients[0], clients[1]
+
 	keys := testerutils_random.RandomWords(2)
-	initialValues := testerutils_random.RandomInts(1, 100, 2)
-	newValues := testerutils_random.RandomInts(200, 500, 1)
-	finalValues := testerutils_random.RandomInts(1000, 2000, 2)
-
 	key1, key2 := keys[0], keys[1]
-	newValue1 := newValues[0]
-	finalValue1, finalValue2 := finalValues[0], finalValues[1]
 
-	// Client 1: Set initial values for both keys
-	if err := (&test_cases.MultiCommandTestCase{
-		CommandWithAssertions: []test_cases.CommandWithAssertion{
-			{
-				Command:   []string{"SET", key1, strconv.Itoa(initialValues[0])},
-				Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
-			},
-			{
-				Command:   []string{"SET", key2, strconv.Itoa(initialValues[1])},
-				Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
-			},
-		},
-	}).RunAll(clients[0], logger); err != nil {
+	optimisticLockingTestCase := test_cases.OptimisticLockingTestCase{
+		WatcherClient:                               watcherClient,
+		ModifierClient:                              modifierClient,
+		InitialKeys:                                 keys,
+		KeysWatchedByWatcherClient:                  []string{key1},
+		KeyToBeModifiedByModifierClient:             key1,
+		KeyToBeModifiedByWatcherClientInTransaction: key2,
+	}
+
+	// First run: modifier client modifies a watched key, transaction fails
+	if err := optimisticLockingTestCase.Run(logger); err != nil {
 		return err
 	}
 
-	// Client 1: Watch both keys
-	if err := (test_cases.WatchTestCase{Keys: []string{key1, key2}}).Run(clients[0], logger); err != nil {
+	// Reset watched keys becuse the test case's transaction EXEC will clear the watched keys
+	optimisticLockingTestCase.ResetWatchedKeys()
+
+	// Retry the same transaction: Should pass -> Because previous transaction's EXEC clears watched keys
+	if err := optimisticLockingTestCase.RunTransaction(logger); err != nil {
 		return err
 	}
 
-	// Client 2: Modify key1 (a watched key)
-	if err := (&test_cases.SendCommandTestCase{
-		Command:   "SET",
-		Args:      []string{key1, strconv.Itoa(newValue1)},
-		Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
-	}).Run(clients[1], logger); err != nil {
-		return err
-	}
-
-	// Client 1: First transaction: This will fail because the watched key was modified
-	abortedTxn := test_cases.TransactionTestCase{
-		CommandQueue:          [][]string{{"SET", key2, strconv.Itoa(finalValue2)}},
-		ExpectedResponseArray: nil,
-	}
-	if err := abortedTxn.RunAll(clients[0], logger); err != nil {
-		return err
-	}
-
-	// Client 1: Second transaction: This will succeed because the previous exec will have cleared the watched keys
-	successTxn := test_cases.TransactionTestCase{
-		CommandQueue: [][]string{
-			{"SET", key1, strconv.Itoa(finalValue1)},
-			{"SET", key2, strconv.Itoa(finalValue2)},
-		},
-		ExpectedResponseArray: []resp_assertions.RESPAssertion{
-			resp_assertions.NewSimpleStringAssertion("OK"),
-			resp_assertions.NewSimpleStringAssertion("OK"),
-		},
-	}
-	if err := successTxn.RunAll(clients[0], logger); err != nil {
-		return err
-	}
-
-	// Client 2: Verify the previous transaction suceeded
-	return (&test_cases.MultiCommandTestCase{
-		CommandWithAssertions: []test_cases.CommandWithAssertion{
-			{
-				Command:   []string{"GET", key1},
-				Assertion: resp_assertions.NewBulkStringAssertion(strconv.Itoa(finalValue1)),
-			},
-			{
-				Command:   []string{"GET", key2},
-				Assertion: resp_assertions.NewBulkStringAssertion(strconv.Itoa(finalValue2)),
-			},
-		},
-	}).RunAll(clients[1], logger)
+	// Check if the new value (set by the transaction persists)
+	return optimisticLockingTestCase.RunValueCheckOfKeyModifiedInTransaction(logger)
 }

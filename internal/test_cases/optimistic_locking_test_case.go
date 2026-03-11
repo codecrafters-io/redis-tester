@@ -169,6 +169,17 @@ func (t *OptimisticLockingTestCase) RunUnwatch(logger *logger.Logger) error {
 	return unwatchTestCase.Run(t.WatcherClient, logger)
 }
 
+func (t *OptimisticLockingTestCase) RunDiscardTransaction(logger *logger.Logger) error {
+	logger.Infof("Clearing all watched keys using DISCARD")
+
+	discardTestCase := SendCommandTestCase{
+		Command:   "DISCARD",
+		Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
+	}
+
+	return discardTestCase.Run(t.WatcherClient, logger)
+}
+
 func (t *OptimisticLockingTestCase) RunValueCheckOfKeyModifiedInTransaction(logger *logger.Logger) error {
 	if t.doesTransactionFail() {
 		logger.Infof("Checking if the transaction failed")
