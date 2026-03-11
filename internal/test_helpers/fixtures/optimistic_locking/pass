@@ -29,10 +29,10 @@ Debug = true
 
 [33m[tester::#MH8] [0m[94mRunning tests for Stage #MH8 (mh8)[0m
 [33m[tester::#MH8] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[tester::#MH8] [client-1] [0m[36mConnected (port 41934 -> port 6379)[0m
-[33m[tester::#MH8] [client-2] [0m[36mConnected (port 41938 -> port 6379)[0m
-[33m[tester::#MH8] [client-3] [0m[36mConnected (port 41954 -> port 6379)[0m
-[33m[tester::#MH8] [client-4] [0m[36mConnected (port 41962 -> port 6379)[0m
+[33m[tester::#MH8] [client-1] [0m[36mConnected (port 60708 -> port 6379)[0m
+[33m[tester::#MH8] [client-2] [0m[36mConnected (port 60720 -> port 6379)[0m
+[33m[tester::#MH8] [client-3] [0m[36mConnected (port 60726 -> port 6379)[0m
+[33m[tester::#MH8] [client-4] [0m[36mConnected (port 60738 -> port 6379)[0m
 [33m[tester::#MH8] [0m[94mTesting optimistic locking when watched key is modified[0m
 [33m[tester::#MH8] [client-1] [0m[94m$ redis-cli SET orange 20[0m
 [33m[tester::#MH8] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$6\r\norange\r\n$2\r\n20\r\n"[0m
@@ -127,8 +127,8 @@ Debug = true
 
 [33m[tester::#FP0] [0m[94mRunning tests for Stage #FP0 (fp0)[0m
 [33m[tester::#FP0] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[tester::#FP0] [client-1] [0m[36mConnected (port 41976 -> port 6379)[0m
-[33m[tester::#FP0] [client-2] [0m[36mConnected (port 41992 -> port 6379)[0m
+[33m[tester::#FP0] [client-1] [0m[36mConnected (port 60758 -> port 6379)[0m
+[33m[tester::#FP0] [client-2] [0m[36mConnected (port 60772 -> port 6379)[0m
 [33m[tester::#FP0] [client-1] [0m[94m$ redis-cli SET blueberry 12[0m
 [33m[tester::#FP0] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nblueberry\r\n$2\r\n12\r\n"[0m
 [33m[tester::#FP0] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
@@ -178,10 +178,10 @@ Debug = true
 
 [33m[tester::#UO9] [0m[94mRunning tests for Stage #UO9 (uo9)[0m
 [33m[tester::#UO9] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[tester::#UO9] [client-1] [0m[36mConnected (port 42020 -> port 6379)[0m
-[33m[tester::#UO9] [client-2] [0m[36mConnected (port 42028 -> port 6379)[0m
-[33m[tester::#UO9] [client-1] [0m[94m$ redis-cli WATCH raspberry[0m
-[33m[tester::#UO9] [client-1] [0m[36mSent bytes: "*2\r\n$5\r\nWATCH\r\n$9\r\nraspberry\r\n"[0m
+[33m[tester::#UO9] [client-1] [0m[36mConnected (port 60798 -> port 6379)[0m
+[33m[tester::#UO9] [client-2] [0m[36mConnected (port 60812 -> port 6379)[0m
+[33m[tester::#UO9] [client-1] [0m[94m$ redis-cli WATCH blueberry[0m
+[33m[tester::#UO9] [client-1] [0m[36mSent bytes: "*2\r\n$5\r\nWATCH\r\n$9\r\nblueberry\r\n"[0m
 [33m[tester::#UO9] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#UO9] [client-1] [0m[36mReceived RESP simple string: "OK"[0m
 [33m[tester::#UO9] [client-1] [0m[92m✔︎ Received "OK"[0m
@@ -191,13 +191,14 @@ Debug = true
 [33m[tester::#UO9] [client-1] [0m[36mReceived RESP simple string: "OK"[0m
 [33m[tester::#UO9] [client-1] [0m[92m✔︎ Received "OK"[0m
 [33m[tester::#UO9] [0m[36mSending command: 1/1[0m
-[33m[tester::#UO9] [client-1] [0m[94m> SET raspberry 589[0m
-[33m[tester::#UO9] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nraspberry\r\n$3\r\n589\r\n"[0m
+[33m[tester::#UO9] [client-1] [0m[94m> SET blueberry 81[0m
+[33m[tester::#UO9] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nblueberry\r\n$2\r\n81\r\n"[0m
 [33m[tester::#UO9] [client-1] [0m[36mReceived bytes: "+QUEUED\r\n"[0m
 [33m[tester::#UO9] [client-1] [0m[36mReceived RESP simple string: "QUEUED"[0m
 [33m[tester::#UO9] [client-1] [0m[92m✔︎ Received "QUEUED"[0m
-[33m[tester::#UO9] [client-2] [0m[94m$ redis-cli SET raspberry 68[0m
-[33m[tester::#UO9] [client-2] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nraspberry\r\n$2\r\n68\r\n"[0m
+[33m[tester::#UO9] [0m[94mModifying the value of blueberry (watched key)[0m
+[33m[tester::#UO9] [client-2] [0m[94m$ redis-cli SET blueberry 170[0m
+[33m[tester::#UO9] [client-2] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nblueberry\r\n$3\r\n170\r\n"[0m
 [33m[tester::#UO9] [client-2] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#UO9] [client-2] [0m[36mReceived RESP simple string: "OK"[0m
 [33m[tester::#UO9] [client-2] [0m[92m✔︎ Received "OK"[0m
@@ -206,39 +207,42 @@ Debug = true
 [33m[tester::#UO9] [client-1] [0m[36mReceived bytes: "*-1\r\n"[0m
 [33m[tester::#UO9] [client-1] [0m[36mReceived RESP null array: "*-1\r\n"[0m
 [33m[tester::#UO9] [client-1] [0m[92m✔︎ Received "*-1\r\n"[0m
-[33m[tester::#UO9] [client-1] [0m[94m> GET raspberry[0m
-[33m[tester::#UO9] [client-1] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$9\r\nraspberry\r\n"[0m
-[33m[tester::#UO9] [client-1] [0m[36mReceived bytes: "$2\r\n68\r\n"[0m
-[33m[tester::#UO9] [client-1] [0m[36mReceived RESP bulk string: "68"[0m
-[33m[tester::#UO9] [client-1] [0m[92m✔︎ Received "68"[0m
+[33m[tester::#UO9] [0m[94mChecking if the transaction failed[0m
+[33m[tester::#UO9] [client-1] [0m[94m> GET blueberry[0m
+[33m[tester::#UO9] [client-1] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$9\r\nblueberry\r\n"[0m
+[33m[tester::#UO9] [client-1] [0m[36mReceived bytes: "$3\r\n170\r\n"[0m
+[33m[tester::#UO9] [client-1] [0m[36mReceived RESP bulk string: "170"[0m
+[33m[tester::#UO9] [client-1] [0m[92m✔︎ Received "170"[0m
 [33m[tester::#UO9] [0m[92mTest passed.[0m
 [33m[tester::#UO9] [0m[36mTerminating program[0m
 [33m[tester::#UO9] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#BN1] [0m[94mRunning tests for Stage #BN1 (bn1)[0m
 [33m[tester::#BN1] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[tester::#BN1] [client-1] [0m[36mConnected (port 42048 -> port 6379)[0m
-[33m[tester::#BN1] [client-2] [0m[36mConnected (port 42050 -> port 6379)[0m
-[33m[tester::#BN1] [client-1] [0m[94m$ redis-cli SET blueberry 80[0m
-[33m[tester::#BN1] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nblueberry\r\n$2\r\n80\r\n"[0m
+[33m[tester::#BN1] [client-1] [0m[36mConnected (port 60838 -> port 6379)[0m
+[33m[tester::#BN1] [client-2] [0m[36mConnected (port 60846 -> port 6379)[0m
+[33m[tester::#BN1] [client-1] [0m[94m$ redis-cli SET blueberry 6[0m
+[33m[tester::#BN1] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nblueberry\r\n$1\r\n6\r\n"[0m
 [33m[tester::#BN1] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#BN1] [client-1] [0m[36mReceived RESP simple string: "OK"[0m
 [33m[tester::#BN1] [client-1] [0m[92m✔︎ Received "OK"[0m
-[33m[tester::#BN1] [client-1] [0m[94m> SET apple 10[0m
-[33m[tester::#BN1] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$5\r\napple\r\n$2\r\n10\r\n"[0m
+[33m[tester::#BN1] [client-1] [0m[94m> SET pear 34[0m
+[33m[tester::#BN1] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$4\r\npear\r\n$2\r\n34\r\n"[0m
 [33m[tester::#BN1] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#BN1] [client-1] [0m[36mReceived RESP simple string: "OK"[0m
 [33m[tester::#BN1] [client-1] [0m[92m✔︎ Received "OK"[0m
-[33m[tester::#BN1] [client-1] [0m[94m> WATCH blueberry apple[0m
-[33m[tester::#BN1] [client-1] [0m[36mSent bytes: "*3\r\n$5\r\nWATCH\r\n$9\r\nblueberry\r\n$5\r\napple\r\n"[0m
+[33m[tester::#BN1] [client-1] [0m[94m> WATCH blueberry pear[0m
+[33m[tester::#BN1] [client-1] [0m[36mSent bytes: "*3\r\n$5\r\nWATCH\r\n$9\r\nblueberry\r\n$4\r\npear\r\n"[0m
 [33m[tester::#BN1] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#BN1] [client-1] [0m[36mReceived RESP simple string: "OK"[0m
 [33m[tester::#BN1] [client-1] [0m[92m✔︎ Received "OK"[0m
-[33m[tester::#BN1] [client-2] [0m[94m$ redis-cli SET blueberry 292[0m
-[33m[tester::#BN1] [client-2] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nblueberry\r\n$3\r\n292\r\n"[0m
+[33m[tester::#BN1] [0m[94mModifying the value of blueberry (watched key)[0m
+[33m[tester::#BN1] [client-2] [0m[94m$ redis-cli SET blueberry 114[0m
+[33m[tester::#BN1] [client-2] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nblueberry\r\n$3\r\n114\r\n"[0m
 [33m[tester::#BN1] [client-2] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#BN1] [client-2] [0m[36mReceived RESP simple string: "OK"[0m
 [33m[tester::#BN1] [client-2] [0m[92m✔︎ Received "OK"[0m
+[33m[tester::#BN1] [0m[94mClearing all watched keys using UNWATCH[0m
 [33m[tester::#BN1] [client-1] [0m[94m> UNWATCH[0m
 [33m[tester::#BN1] [client-1] [0m[36mSent bytes: "*1\r\n$7\r\nUNWATCH\r\n"[0m
 [33m[tester::#BN1] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
@@ -249,33 +253,23 @@ Debug = true
 [33m[tester::#BN1] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#BN1] [client-1] [0m[36mReceived RESP simple string: "OK"[0m
 [33m[tester::#BN1] [client-1] [0m[92m✔︎ Received "OK"[0m
-[33m[tester::#BN1] [0m[36mSending command: 1/2[0m
-[33m[tester::#BN1] [client-1] [0m[94m> SET blueberry 609[0m
-[33m[tester::#BN1] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nblueberry\r\n$3\r\n609\r\n"[0m
-[33m[tester::#BN1] [client-1] [0m[36mReceived bytes: "+QUEUED\r\n"[0m
-[33m[tester::#BN1] [client-1] [0m[36mReceived RESP simple string: "QUEUED"[0m
-[33m[tester::#BN1] [client-1] [0m[92m✔︎ Received "QUEUED"[0m
-[33m[tester::#BN1] [0m[36mSending command: 2/2[0m
-[33m[tester::#BN1] [client-1] [0m[94m> SET apple 771[0m
-[33m[tester::#BN1] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$5\r\napple\r\n$3\r\n771\r\n"[0m
+[33m[tester::#BN1] [0m[36mSending command: 1/1[0m
+[33m[tester::#BN1] [client-1] [0m[94m> SET blueberry 87[0m
+[33m[tester::#BN1] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nblueberry\r\n$2\r\n87\r\n"[0m
 [33m[tester::#BN1] [client-1] [0m[36mReceived bytes: "+QUEUED\r\n"[0m
 [33m[tester::#BN1] [client-1] [0m[36mReceived RESP simple string: "QUEUED"[0m
 [33m[tester::#BN1] [client-1] [0m[92m✔︎ Received "QUEUED"[0m
 [33m[tester::#BN1] [client-1] [0m[94m> EXEC[0m
 [33m[tester::#BN1] [client-1] [0m[36mSent bytes: "*1\r\n$4\r\nEXEC\r\n"[0m
-[33m[tester::#BN1] [client-1] [0m[36mReceived bytes: "*2\r\n+OK\r\n+OK\r\n"[0m
-[33m[tester::#BN1] [client-1] [0m[36mReceived RESP array: ["OK", "OK"][0m
-[33m[tester::#BN1] [client-1] [0m[92m✔︎ Received ["OK", "OK"][0m
-[33m[tester::#BN1] [client-2] [0m[94m> GET blueberry[0m
-[33m[tester::#BN1] [client-2] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$9\r\nblueberry\r\n"[0m
-[33m[tester::#BN1] [client-2] [0m[36mReceived bytes: "$3\r\n609\r\n"[0m
-[33m[tester::#BN1] [client-2] [0m[36mReceived RESP bulk string: "609"[0m
-[33m[tester::#BN1] [client-2] [0m[92m✔︎ Received "609"[0m
-[33m[tester::#BN1] [client-2] [0m[94m> GET apple[0m
-[33m[tester::#BN1] [client-2] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$5\r\napple\r\n"[0m
-[33m[tester::#BN1] [client-2] [0m[36mReceived bytes: "$3\r\n771\r\n"[0m
-[33m[tester::#BN1] [client-2] [0m[36mReceived RESP bulk string: "771"[0m
-[33m[tester::#BN1] [client-2] [0m[92m✔︎ Received "771"[0m
+[33m[tester::#BN1] [client-1] [0m[36mReceived bytes: "*1\r\n+OK\r\n"[0m
+[33m[tester::#BN1] [client-1] [0m[36mReceived RESP array: ["OK"][0m
+[33m[tester::#BN1] [client-1] [0m[92m✔︎ Received ["OK"][0m
+[33m[tester::#BN1] [0m[94mChecking if the transaction succeeded[0m
+[33m[tester::#BN1] [client-1] [0m[94m> GET blueberry[0m
+[33m[tester::#BN1] [client-1] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$9\r\nblueberry\r\n"[0m
+[33m[tester::#BN1] [client-1] [0m[36mReceived bytes: "$2\r\n87\r\n"[0m
+[33m[tester::#BN1] [client-1] [0m[36mReceived RESP bulk string: "87"[0m
+[33m[tester::#BN1] [client-1] [0m[92m✔︎ Received "87"[0m
 [33m[tester::#BN1] [0m[92mTest passed.[0m
 [33m[tester::#BN1] [0m[36mTerminating program[0m
 [33m[tester::#BN1] [0m[36mProgram terminated successfully[0m
