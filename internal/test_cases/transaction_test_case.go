@@ -79,10 +79,19 @@ func (t TransactionTestCase) RunQueueAll(client *instrumented_resp_connection.In
 }
 
 func (t TransactionTestCase) RunExec(client *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
+	var assertion resp_assertions.RESPAssertion
+
+	// Expect a nil array if t.ExpectedResponseArray is nil
+	if t.ExpectedResponseArray == nil {
+		assertion = resp_assertions.NewNilArrayAssertion()
+	} else {
+		assertion = resp_assertions.NewOrderedArrayAssertion(t.ExpectedResponseArray)
+	}
+
 	setCommandTestCase := SendCommandTestCase{
 		Command:   "EXEC",
 		Args:      []string{},
-		Assertion: resp_assertions.NewOrderedArrayAssertion(t.ExpectedResponseArray),
+		Assertion: assertion,
 	}
 
 	return setCommandTestCase.Run(client, logger)
