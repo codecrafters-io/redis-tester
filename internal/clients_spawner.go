@@ -10,7 +10,8 @@ import (
 )
 
 // ClientsSpawner automatically takes care of logging friendly error and registering
-// client.Close() as a teardown function
+// client.Close() as a teardown function while spawning multiple clients
+// It spawns n client on each SpawnClients() call with prefix "clients-n" style prefix
 type ClientsSpawner struct {
 	Addr         string
 	StageHarness *test_case_harness.TestCaseHarness
