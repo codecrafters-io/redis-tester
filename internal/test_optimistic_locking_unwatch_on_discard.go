@@ -15,12 +15,14 @@ func testOptimisticLockingUnwatchOnDiscard(stageHarness *test_case_harness.TestC
 
 	logger := stageHarness.Logger
 
-	clients, err := SpawnClients(2, "localhost:6379", stageHarness, logger)
+	clientsSpawner := ClientsSpawner{
+		Addr:         "localhost:6379",
+		StageHarness: stageHarness,
+		Logger:       logger,
+	}
+	clients, err := clientsSpawner.SpawnClients(2)
 	if err != nil {
 		return err
-	}
-	for _, c := range clients {
-		defer c.Close()
 	}
 
 	watcherClient, modifierClient := clients[0], clients[1]
