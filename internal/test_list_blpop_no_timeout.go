@@ -16,12 +16,15 @@ func testListBlpopNoTimeout(stageHarness *test_case_harness.TestCaseHarness) err
 
 	logger := stageHarness.Logger
 
-	clients, err := SpawnClients(3, "localhost:6379", stageHarness, logger)
+	clientsSpawner := ClientsSpawner{
+		Addr:         "localhost:6379",
+		StageHarness: stageHarness,
+		Logger:       logger,
+	}
+	clients, err := clientsSpawner.SpawnClients(3)
+
 	if err != nil {
 		return err
-	}
-	for _, c := range clients {
-		defer c.Close()
 	}
 
 	listKey := testerutils_random.RandomWord()
