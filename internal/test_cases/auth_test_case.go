@@ -2,6 +2,7 @@ package test_cases
 
 import (
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
+	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/tester-utils/logger"
 )
@@ -18,7 +19,13 @@ func (t AuthTestCase) Run(client *instrumented_resp_connection.InstrumentedRespC
 	if t.ExpectedSuccess {
 		assertion = resp_assertions.NewSimpleStringAssertion("OK")
 	} else {
-		assertion = resp_assertions.NewRegexErrorAssertion("^WRONGPASS.*")
+		assertion = resp_assertions.PatternedBytesAssertion{
+			ExpectedType: resp_value.ERROR,
+			PrefixCondition: &resp_assertions.PatternedBytesBeginsWithCondition{
+				Prefix:        "WRONGPASS",
+				CaseSensitive: true,
+			},
+		}
 	}
 
 	sendCommandTestCase := SendCommandTestCase{

@@ -3,6 +3,7 @@ package internal
 import (
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	"github.com/codecrafters-io/tester-utils/random"
@@ -38,19 +39,40 @@ func testPubSubSubscribe3(stageHarness *test_case_harness.TestCaseHarness) error
 	/* SET */
 	keyAndValue := random.RandomWords(2)
 	setTestCase := test_cases.SendCommandTestCase{
-		Command:   "SET",
-		Args:      keyAndValue,
-		Assertion: resp_assertions.NewRegexErrorAssertion("^ERR (?i:Can't execute 'set').*"),
+		Command: "SET",
+		Args:    keyAndValue,
+		Assertion: resp_assertions.PatternedBytesAssertion{
+			ExpectedType: resp_value.ERROR,
+			PrefixCondition: &resp_assertions.PatternedBytesBeginsWithCondition{
+				Prefix:        "ERR ",
+				CaseSensitive: true,
+			},
+			SubstringConditions: []resp_assertions.PatternedBytesContainsCondition{{
+				Substring:     "can't execute 'set'",
+				CaseSensitive: false,
+			}},
+		},
 	}
+
 	if err := setTestCase.Run(client, logger); err != nil {
 		return err
 	}
 
 	/* GET */
 	getTestCase := test_cases.SendCommandTestCase{
-		Command:   "GET",
-		Args:      keyAndValue[1:],
-		Assertion: resp_assertions.NewRegexErrorAssertion("^ERR (?i:Can't execute 'get').*"),
+		Command: "GET",
+		Args:    keyAndValue[1:],
+		Assertion: resp_assertions.PatternedBytesAssertion{
+			ExpectedType: resp_value.ERROR,
+			PrefixCondition: &resp_assertions.PatternedBytesBeginsWithCondition{
+				Prefix:        "ERR ",
+				CaseSensitive: true,
+			},
+			SubstringConditions: []resp_assertions.PatternedBytesContainsCondition{{
+				Substring:     "can't execute 'get'",
+				CaseSensitive: false,
+			}},
+		},
 	}
 	if err := getTestCase.Run(client, logger); err != nil {
 		return err
@@ -58,9 +80,19 @@ func testPubSubSubscribe3(stageHarness *test_case_harness.TestCaseHarness) error
 
 	/* ECHO */
 	echoTestCase := test_cases.SendCommandTestCase{
-		Command:   "ECHO",
-		Args:      keyAndValue[1:],
-		Assertion: resp_assertions.NewRegexErrorAssertion("^ERR (?i:Can't execute 'echo').*"),
+		Command: "ECHO",
+		Args:    keyAndValue[1:],
+		Assertion: resp_assertions.PatternedBytesAssertion{
+			ExpectedType: resp_value.ERROR,
+			PrefixCondition: &resp_assertions.PatternedBytesBeginsWithCondition{
+				Prefix:        "ERR ",
+				CaseSensitive: true,
+			},
+			SubstringConditions: []resp_assertions.PatternedBytesContainsCondition{{
+				Substring:     "can't execute 'echo'",
+				CaseSensitive: false,
+			}},
+		},
 	}
 	if err := echoTestCase.Run(client, logger); err != nil {
 		return err

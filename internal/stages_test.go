@@ -180,6 +180,13 @@ func TestStages(t *testing.T) {
 			StdoutFixturePath:   "./test_helpers/fixtures/auth/auth_mistake_sha256",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
+		"auth_default_user_authentication_wrong_error_pattern": {
+			StageSlugs:          []string{"nm2"},
+			CodePath:            "./test_helpers/scenarios/auth_acl_whoami_wrong_error_pattern",
+			ExpectedExitCode:    1,
+			StdoutFixturePath:   "./test_helpers/fixtures/auth/auth_acl_whoami_wrong_error_pattern",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
 	}
 
 	tester_utils_testing.TestTesterOutput(t, testerDefinition, testCases)

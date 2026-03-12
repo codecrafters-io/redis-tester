@@ -5,6 +5,7 @@ import (
 
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
@@ -30,9 +31,14 @@ func antiCheatTest(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	// All the answers for MEMORY DOCTOR include the string "sam" in them.
 	commandTestCase := test_cases.SendCommandTestCase{
-		Command:                   "MEMORY",
-		Args:                      []string{"DOCTOR"},
-		Assertion:                 resp_assertions.NewRegexBulkStringAssertion("[sS]am"),
+		Command: "MEMORY",
+		Args:    []string{"DOCTOR"},
+		Assertion: resp_assertions.PatternedBytesAssertion{
+			ExpectedType: resp_value.BULK_STRING,
+			SubstringConditions: []resp_assertions.PatternedBytesContainsCondition{{
+				Substring: "Sam",
+			}},
+		},
 		ShouldSkipUnreadDataCheck: true,
 	}
 	err = commandTestCase.Run(client, logger)

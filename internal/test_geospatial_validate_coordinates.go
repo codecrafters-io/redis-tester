@@ -28,8 +28,6 @@ func testGeospatialValidateCoordinates(stageHarness *test_case_harness.TestCaseH
 	validLocation := location_ds.GenerateRandomLocationSet(1).GetLocations()[0]
 	validLatitude := validLocation.GetLatitude()
 	validLongitude := validLocation.GetLongitude()
-	errorPatternWrongLatitude := `^ERR.*(?i:latitude)`
-	errorPatternWrongLongitude := `^ERR.*(?i:longitude)`
 
 	// Invalid latitude, valid longitude
 	// Latitude greater than max boundary
@@ -42,9 +40,10 @@ func testGeospatialValidateCoordinates(stageHarness *test_case_harness.TestCaseH
 	}
 
 	positiveInvalidLatitudeTestCase := test_cases.InvalidGeoAddTestCase{
-		Key:                  locationKey,
-		Location:             locationWithPositiveInvalidLatitude,
-		ExpectedErrorPattern: errorPatternWrongLatitude,
+		Key:                     locationKey,
+		Location:                locationWithPositiveInvalidLatitude,
+		ExpectedErrorBeginsWith: "ERR",
+		ExpectedErrorContains:   "latitude",
 	}
 
 	if err := positiveInvalidLatitudeTestCase.Run(client, logger); err != nil {
@@ -61,9 +60,10 @@ func testGeospatialValidateCoordinates(stageHarness *test_case_harness.TestCaseH
 	}
 
 	negativeInvalidLatitudeTestCase := test_cases.InvalidGeoAddTestCase{
-		Key:                  locationKey,
-		Location:             locationWithNegativeInvalidLatitude,
-		ExpectedErrorPattern: errorPatternWrongLatitude,
+		Key:                     locationKey,
+		Location:                locationWithNegativeInvalidLatitude,
+		ExpectedErrorBeginsWith: "ERR",
+		ExpectedErrorContains:   "latitude",
 	}
 
 	if err := negativeInvalidLatitudeTestCase.Run(client, logger); err != nil {
@@ -81,9 +81,10 @@ func testGeospatialValidateCoordinates(stageHarness *test_case_harness.TestCaseH
 	}
 
 	positiveInvalidLongitudeTestCase := test_cases.InvalidGeoAddTestCase{
-		Key:                  locationKey,
-		Location:             locationWithPositiveInvalidLongitude,
-		ExpectedErrorPattern: errorPatternWrongLongitude,
+		Key:                     locationKey,
+		Location:                locationWithPositiveInvalidLongitude,
+		ExpectedErrorBeginsWith: "ERR",
+		ExpectedErrorContains:   "longitude",
 	}
 
 	if err := positiveInvalidLongitudeTestCase.Run(client, logger); err != nil {
@@ -100,9 +101,10 @@ func testGeospatialValidateCoordinates(stageHarness *test_case_harness.TestCaseH
 	}
 
 	negativeInvalidLongitudeTestCase := test_cases.InvalidGeoAddTestCase{
-		Key:                  locationKey,
-		Location:             locationWithNegativeInvalidLongitude,
-		ExpectedErrorPattern: errorPatternWrongLongitude,
+		Key:                     locationKey,
+		Location:                locationWithNegativeInvalidLongitude,
+		ExpectedErrorBeginsWith: "ERR",
+		ExpectedErrorContains:   "longitude",
 	}
 
 	return negativeInvalidLongitudeTestCase.Run(client, logger)
