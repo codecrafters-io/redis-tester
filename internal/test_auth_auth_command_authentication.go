@@ -20,14 +20,17 @@ func testAuthCommandAuthentication(stageHarness *test_case_harness.TestCaseHarne
 	}
 
 	logger := stageHarness.Logger
-	firstClient, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client-1")
 
+	clientsSpawner := ClientsSpawner{
+		Addr:         "localhost:6379",
+		StageHarness: stageHarness,
+		Logger:       logger,
+	}
+	firstClientList, err := clientsSpawner.SpawnClients(1)
 	if err != nil {
-		logFriendlyError(logger, err)
 		return err
 	}
-
-	defer firstClient.Close()
+	firstClient := firstClientList[0]
 
 	// Set default user password
 	password := fmt.Sprintf("%s-%d", random.RandomWord(), random.RandomInt(1, 1000))
@@ -51,15 +54,11 @@ func testAuthCommandAuthentication(stageHarness *test_case_harness.TestCaseHarne
 		return err
 	}
 
-	// Spawn a new client
-	secondClient, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client-2")
-
+	secondClientList, err := clientsSpawner.SpawnClients(1)
 	if err != nil {
-		logFriendlyError(logger, err)
 		return err
 	}
-
-	defer secondClient.Close()
+	secondClient := secondClientList[0]
 
 	// Run ACL WHOAMI without authentication
 	whoamiNoauthTestCase := test_cases.AclWhoamiErrorTestCase{

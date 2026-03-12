@@ -19,12 +19,17 @@ func testStreamsXreadBlockNoTimeout(stageHarness *test_case_harness.TestCaseHarn
 	}
 
 	logger := stageHarness.Logger
-	client1, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client-1")
+
+	clientsSpawner := ClientsSpawner{
+		Addr:         "localhost:6379",
+		StageHarness: stageHarness,
+		Logger:       logger,
+	}
+	client1List, err := clientsSpawner.SpawnClients(1)
 	if err != nil {
-		logFriendlyError(logger, err)
 		return err
 	}
-	defer client1.Close()
+	client1 := client1List[0]
 
 	streamKey := testerutils_random.RandomWord()
 	entryValue := testerutils_random.RandomInt(1, 100)
@@ -58,13 +63,11 @@ func testStreamsXreadBlockNoTimeout(stageHarness *test_case_harness.TestCaseHarn
 
 	xReadTestCase.SendBlockingCommands()
 
-	// send xadd from another client
-	client2, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client-2")
+	client2List, err := clientsSpawner.SpawnClients(1)
 	if err != nil {
-		logFriendlyError(logger, err)
 		return err
 	}
-	defer client2.Close()
+	client2 := client2List[0]
 
 	xaddCommandTestCase = &test_cases.SendCommandTestCase{
 		Command:                   "XADD",
