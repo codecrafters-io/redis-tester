@@ -62,7 +62,6 @@ func testReplCmdProcessing(stageHarness *test_case_harness.TestCaseHarness) erro
 	clientsSpawner := ClientsSpawner{
 		Addr:         "localhost:6380",
 		StageHarness: stageHarness,
-		Logger:       logger,
 	}
 	replicaClient, err := clientsSpawner.SpawnClientWithPrefix("client")
 	if err != nil {

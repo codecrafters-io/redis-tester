@@ -19,7 +19,6 @@ func testOptimisticLockingTrackingKeyModification(stageHarness *test_case_harnes
 	clientsSpawner := ClientsSpawner{
 		Addr:         "localhost:6379",
 		StageHarness: stageHarness,
-		Logger:       logger,
 	}
 
 	clients, err := clientsSpawner.SpawnClients(2)

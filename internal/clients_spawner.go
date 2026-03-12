@@ -5,7 +5,6 @@ import (
 	"net"
 
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
-	"github.com/codecrafters-io/tester-utils/logger"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
@@ -16,7 +15,6 @@ import (
 type ClientsSpawner struct {
 	Addr         string
 	StageHarness *test_case_harness.TestCaseHarness
-	Logger       *logger.Logger
 
 	// internal state to keep track of how many clients have been spawned so far
 	clientsSpawned int
@@ -57,10 +55,10 @@ func (s *ClientsSpawner) getNextClientId() string {
 }
 
 func (s *ClientsSpawner) spawnClient(clientId string) (*instrumented_resp_connection.InstrumentedRespConnection, error) {
-	client, err := instrumented_resp_connection.NewFromAddr(s.Logger, s.Addr, clientId)
+	client, err := instrumented_resp_connection.NewFromAddr(s.StageHarness.Logger, s.Addr, clientId)
 
 	if err != nil {
-		logFriendlyError(s.Logger, err)
+		logFriendlyError(s.StageHarness.Logger, err)
 		return nil, err
 	}
 

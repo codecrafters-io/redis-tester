@@ -22,7 +22,6 @@ func testStreamsType(stageHarness *test_case_harness.TestCaseHarness) error {
 	clientsSpawner := ClientsSpawner{
 		Addr:         "localhost:6379",
 		StageHarness: stageHarness,
-		Logger:       logger,
 	}
 	client, err := clientsSpawner.SpawnClientWithPrefix("client")
 	if err != nil {

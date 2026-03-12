@@ -18,7 +18,6 @@ func testOptimisticLockingWatchMultipleKeys(stageHarness *test_case_harness.Test
 	clientsSpawner := ClientsSpawner{
 		Addr:         "localhost:6379",
 		StageHarness: stageHarness,
-		Logger:       logger,
 	}
 	clients, err := clientsSpawner.SpawnClients(2)
 	if err != nil {

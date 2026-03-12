@@ -21,7 +21,6 @@ func testdefaultUserAuthentication(stageHarness *test_case_harness.TestCaseHarne
 	clientsSpawner := ClientsSpawner{
 		Addr:         "localhost:6379",
 		StageHarness: stageHarness,
-		Logger:       logger,
 	}
 	firstClient, err := clientsSpawner.SpawnNextClient()
 	if err != nil {

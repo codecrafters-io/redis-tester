@@ -24,7 +24,6 @@ func testStreamsXreadBlockMaxID(stageHarness *test_case_harness.TestCaseHarness)
 	clientsSpawner := ClientsSpawner{
 		Addr:         "localhost:6379",
 		StageHarness: stageHarness,
-		Logger:       logger,
 	}
 	client1, err := clientsSpawner.SpawnNextClient()
 	if err != nil {

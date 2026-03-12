@@ -20,7 +20,6 @@ func testPingPongOnce(stageHarness *test_case_harness.TestCaseHarness) error {
 	clientsSpawner := ClientsSpawner{
 		Addr:         "localhost:6379",
 		StageHarness: stageHarness,
-		Logger:       logger,
 	}
 	client, err := clientsSpawner.SpawnClientWithPrefix("client")
 	if err != nil {
@@ -54,7 +53,6 @@ func testPingPongMultiple(stageHarness *test_case_harness.TestCaseHarness) error
 	clientsSpawner := ClientsSpawner{
 		Addr:         "localhost:6379",
 		StageHarness: stageHarness,
-		Logger:       logger,
 	}
 	client, err := clientsSpawner.SpawnClientWithPrefix("client-1")
 	if err != nil {
@@ -83,7 +81,6 @@ func testPingPongConcurrent(stageHarness *test_case_harness.TestCaseHarness) err
 	clientsSpawner := ClientsSpawner{
 		Addr:         "localhost:6379",
 		StageHarness: stageHarness,
-		Logger:       logger,
 	}
 	client1, err := clientsSpawner.SpawnNextClient()
 	if err != nil {

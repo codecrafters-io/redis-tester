@@ -24,7 +24,6 @@ func testStreamsXreadBlock(stageHarness *test_case_harness.TestCaseHarness) erro
 	clientsSpawner := ClientsSpawner{
 		Addr:         "localhost:6379",
 		StageHarness: stageHarness,
-		Logger:       logger,
 	}
 	client1, err := clientsSpawner.SpawnNextClient()
 	if err != nil {

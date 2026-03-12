@@ -18,7 +18,6 @@ func testOptimisticLockingUnwatchOnExec(stageHarness *test_case_harness.TestCase
 	clientsSpawner := ClientsSpawner{
 		Addr:         "localhost:6379",
 		StageHarness: stageHarness,
-		Logger:       logger,
 	}
 	clients, err := clientsSpawner.SpawnClients(2)
 	if err != nil {

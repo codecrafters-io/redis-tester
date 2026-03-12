@@ -19,7 +19,6 @@ func testListBlpopNoTimeout(stageHarness *test_case_harness.TestCaseHarness) err
 	clientsSpawner := ClientsSpawner{
 		Addr:         "localhost:6379",
 		StageHarness: stageHarness,
-		Logger:       logger,
 	}
 	clients, err := clientsSpawner.SpawnClients(3)
 
