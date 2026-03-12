@@ -9,12 +9,14 @@ import (
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
+// ClientsSpawner automatically takes care of logging friendly error and registering
+// client.Close() as a teardown function
 type ClientsSpawner struct {
 	Addr         string
 	StageHarness *test_case_harness.TestCaseHarness
 	Logger       *logger.Logger
 
-	// keep track of how many clients have been spawned so far
+	// internal state to keep track of how many clients have been spawned so far
 	clientsSpawned int
 }
 
@@ -45,4 +47,15 @@ func (s *ClientsSpawner) SpawnClients(clientsCount int) ([]*instrumented_resp_co
 	}
 
 	return clients, nil
+}
+
+// SpawnClient returns one client at a time. Use this to avoid array indexing in the caller block
+func (s *ClientsSpawner) SpawnClient() (*instrumented_resp_connection.InstrumentedRespConnection, error) {
+	clients, err := s.SpawnClients(1)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return clients[0], nil
 }

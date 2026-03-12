@@ -24,7 +24,6 @@ func testPubSubPublish1(stageHarness *test_case_harness.TestCaseHarness) error {
 	clients, err := clientsSpawner.SpawnClients(4)
 
 	if err != nil {
-		logFriendlyError(logger, err)
 		return err
 	}
 
