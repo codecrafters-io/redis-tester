@@ -20,9 +20,10 @@ func testPubSubSubscribe2(stageHarness *test_case_harness.TestCaseHarness) error
 		StageHarness: stageHarness,
 		Logger:       logger,
 	}
+
 	clients, err := clientsSpawner.SpawnClients(2)
+
 	if err != nil {
-		logFriendlyError(logger, err)
 		return err
 	}
 
