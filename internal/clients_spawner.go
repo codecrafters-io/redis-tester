@@ -48,14 +48,3 @@ func (s *ClientsSpawner) SpawnClients(clientsCount int) ([]*instrumented_resp_co
 
 	return clients, nil
 }
-
-// SpawnClient returns one client at a time. Use this to avoid array indexing in the caller block
-func (s *ClientsSpawner) SpawnClient() (*instrumented_resp_connection.InstrumentedRespConnection, error) {
-	clients, err := s.SpawnClients(1)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return clients[0], nil
-}
