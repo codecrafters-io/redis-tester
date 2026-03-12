@@ -2,6 +2,7 @@ Debug = true
 
 [33m[tester::#ZG5] [0m[94mRunning tests for Stage #ZG5 (zg5)[0m
 [33m[tester::#ZG5] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdb-6623 --dbfilename orange.rdb[0m
+[33m[tester::#ZG5] [client] [0m[36mConnected (port 43452 -> port 6379)[0m
 [33m[tester::#ZG5] [client] [0m[94m$ redis-cli CONFIG GET dir[0m
 [33m[tester::#ZG5] [client] [0m[36mSent bytes: "*3\r\n$6\r\nCONFIG\r\n$3\r\nGET\r\n$3\r\ndir\r\n"[0m
 [33m[tester::#ZG5] [client] [0m[36mReceived bytes: "*2\r\n$3\r\ndir\r\n$13\r\n/tmp/rdb-6623\r\n"[0m
@@ -16,13 +17,14 @@ Debug = true
 [33m[tester::#JZ6] [0m[36mHexdump of RDB file contents: [0m
 [33m[tester::#JZ6] [0m[36mIdx  | Hex                                             | ASCII[0m
 [33m[tester::#JZ6] [0m[36m-----+-------------------------------------------------+-----------------[0m
-[33m[tester::#JZ6] [0m[36m0000 | 52 45 44 49 53 30 30 31 31 fa 09 72 65 64 69 73 | REDIS0011..redis[0m
-[33m[tester::#JZ6] [0m[36m0010 | 2d 76 65 72 05 37 2e 32 2e 30 fa 0a 72 65 64 69 | -ver.7.2.0..redi[0m
-[33m[tester::#JZ6] [0m[36m0020 | 73 2d 62 69 74 73 c0 40 fe 00 fb 01 00 00 09 62 | s-bits.@.......b[0m
-[33m[tester::#JZ6] [0m[36m0030 | 6c 75 65 62 65 72 72 79 05 61 70 70 6c 65 ff 84 | lueberry.apple..[0m
-[33m[tester::#JZ6] [0m[36m0040 | a4 eb 00 47 28 33 93                            | ...G(3.[0m
+[33m[tester::#JZ6] [0m[36m0000 | 52 45 44 49 53 30 30 31 31 fa 0a 72 65 64 69 73 | REDIS0011..redis[0m
+[33m[tester::#JZ6] [0m[36m0010 | 2d 62 69 74 73 c0 40 fa 09 72 65 64 69 73 2d 76 | -bits.@..redis-v[0m
+[33m[tester::#JZ6] [0m[36m0020 | 65 72 05 37 2e 32 2e 30 fe 00 fb 01 00 00 09 62 | er.7.2.0.......b[0m
+[33m[tester::#JZ6] [0m[36m0030 | 6c 75 65 62 65 72 72 79 05 61 70 70 6c 65 ff fe | lueberry.apple..[0m
+[33m[tester::#JZ6] [0m[36m0040 | ed e0 83 a3 4f 85 7d                            | ....O.}[0m
 [33m[tester::#JZ6] [0m[36m[0m
 [33m[tester::#JZ6] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdb-698 --dbfilename mango.rdb[0m
+[33m[tester::#JZ6] [client] [0m[36mConnected (port 43464 -> port 6379)[0m
 [33m[tester::#JZ6] [client] [0m[94m$ redis-cli KEYS *[0m
 [33m[tester::#JZ6] [client] [0m[36mSent bytes: "*2\r\n$4\r\nKEYS\r\n$1\r\n*\r\n"[0m
 [33m[tester::#JZ6] [client] [0m[36mReceived bytes: "*1\r\n$9\r\nblueberry\r\n"[0m
@@ -44,6 +46,7 @@ Debug = true
 [33m[tester::#GC6] [0m[36m0040 | 2a b3 bf 52 a2 00 13 5b                         | *..R...[[0m
 [33m[tester::#GC6] [0m[36m[0m
 [33m[tester::#GC6] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdb-8842 --dbfilename mango.rdb[0m
+[33m[tester::#GC6] [client] [0m[36mConnected (port 43476 -> port 6379)[0m
 [33m[tester::#GC6] [client] [0m[94m$ redis-cli GET blueberry[0m
 [33m[tester::#GC6] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$9\r\nblueberry\r\n"[0m
 [33m[tester::#GC6] [client] [0m[36mReceived bytes: "$6\r\nbanana\r\n"[0m
@@ -68,19 +71,20 @@ Debug = true
 [33m[tester::#JW4] [0m[36m0070 | 11 d1 7f a9 0a 0a 03 29                         | .......)[0m
 [33m[tester::#JW4] [0m[36m[0m
 [33m[tester::#JW4] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdb-4166 --dbfilename banana.rdb[0m
+[33m[tester::#JW4] [client] [0m[36mConnected (port 43498 -> port 6379)[0m
 [33m[tester::#JW4] [client] [0m[94m$ redis-cli KEYS *[0m
 [33m[tester::#JW4] [client] [0m[36mSent bytes: "*2\r\n$4\r\nKEYS\r\n$1\r\n*\r\n"[0m
-[33m[tester::#JW4] [client] [0m[36mReceived bytes: "*4\r\n$9\r\npineapple\r\n$6\r\norange\r\n$5\r\nmango\r\n$5\r\napple\r\n"[0m
+[33m[tester::#JW4] [client] [0m[36mReceived bytes: "*4\r\n$5\r\nmango\r\n$6\r\norange\r\n$9\r\npineapple\r\n$5\r\napple\r\n"[0m
 [33m[tester::#JW4] [client] [0m[36mReceived RESP array: [[0m
-[33m[tester::#JW4] [client] [0m[36m  "pineapple",[0m
-[33m[tester::#JW4] [client] [0m[36m  "orange",[0m
 [33m[tester::#JW4] [client] [0m[36m  "mango",[0m
+[33m[tester::#JW4] [client] [0m[36m  "orange",[0m
+[33m[tester::#JW4] [client] [0m[36m  "pineapple",[0m
 [33m[tester::#JW4] [client] [0m[36m  "apple"[0m
 [33m[tester::#JW4] [client] [0m[36m][0m
 [33m[tester::#JW4] [client] [0m[92m✔︎ Received [[0m
-[33m[tester::#JW4] [client] [0m[92m  "pineapple",[0m
-[33m[tester::#JW4] [client] [0m[92m  "orange",[0m
 [33m[tester::#JW4] [client] [0m[92m  "mango",[0m
+[33m[tester::#JW4] [client] [0m[92m  "orange",[0m
+[33m[tester::#JW4] [client] [0m[92m  "pineapple",[0m
 [33m[tester::#JW4] [client] [0m[92m  "apple"[0m
 [33m[tester::#JW4] [client] [0m[92m][0m
 [33m[tester::#JW4] [0m[92mTest passed.[0m
@@ -92,16 +96,17 @@ Debug = true
 [33m[tester::#DQ3] [0m[36mHexdump of RDB file contents: [0m
 [33m[tester::#DQ3] [0m[36mIdx  | Hex                                             | ASCII[0m
 [33m[tester::#DQ3] [0m[36m-----+-------------------------------------------------+-----------------[0m
-[33m[tester::#DQ3] [0m[36m0000 | 52 45 44 49 53 30 30 31 31 fa 0a 72 65 64 69 73 | REDIS0011..redis[0m
-[33m[tester::#DQ3] [0m[36m0010 | 2d 62 69 74 73 c0 40 fa 09 72 65 64 69 73 2d 76 | -bits.@..redis-v[0m
-[33m[tester::#DQ3] [0m[36m0020 | 65 72 05 37 2e 32 2e 30 fe 00 fb 04 00 00 06 6f | er.7.2.0.......o[0m
+[33m[tester::#DQ3] [0m[36m0000 | 52 45 44 49 53 30 30 31 31 fa 09 72 65 64 69 73 | REDIS0011..redis[0m
+[33m[tester::#DQ3] [0m[36m0010 | 2d 76 65 72 05 37 2e 32 2e 30 fa 0a 72 65 64 69 | -ver.7.2.0..redi[0m
+[33m[tester::#DQ3] [0m[36m0020 | 73 2d 62 69 74 73 c0 40 fe 00 fb 04 00 00 06 6f | s-bits.@.......o[0m
 [33m[tester::#DQ3] [0m[36m0030 | 72 61 6e 67 65 05 67 72 61 70 65 00 05 6d 61 6e | range.grape..man[0m
 [33m[tester::#DQ3] [0m[36m0040 | 67 6f 04 70 65 61 72 00 05 67 72 61 70 65 09 62 | go.pear..grape.b[0m
 [33m[tester::#DQ3] [0m[36m0050 | 6c 75 65 62 65 72 72 79 00 04 70 65 61 72 09 70 | lueberry..pear.p[0m
-[33m[tester::#DQ3] [0m[36m0060 | 69 6e 65 61 70 70 6c 65 ff 7b 41 0b 4b 5a 5d 00 | ineapple.{A.KZ].[0m
-[33m[tester::#DQ3] [0m[36m0070 | 7c                                              | |[0m
+[33m[tester::#DQ3] [0m[36m0060 | 69 6e 65 61 70 70 6c 65 ff f7 03 63 23 77 80 c4 | ineapple...c#w..[0m
+[33m[tester::#DQ3] [0m[36m0070 | b8                                              | .[0m
 [33m[tester::#DQ3] [0m[36m[0m
 [33m[tester::#DQ3] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdb-7589 --dbfilename apple.rdb[0m
+[33m[tester::#DQ3] [client] [0m[36mConnected (port 43528 -> port 6379)[0m
 [33m[tester::#DQ3] [client] [0m[94m$ redis-cli GET orange[0m
 [33m[tester::#DQ3] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$6\r\norange\r\n"[0m
 [33m[tester::#DQ3] [client] [0m[36mReceived bytes: "$5\r\ngrape\r\n"[0m
@@ -131,18 +136,19 @@ Debug = true
 [33m[tester::#SM4] [0m[36mHexdump of RDB file contents: [0m
 [33m[tester::#SM4] [0m[36mIdx  | Hex                                             | ASCII[0m
 [33m[tester::#SM4] [0m[36m-----+-------------------------------------------------+-----------------[0m
-[33m[tester::#SM4] [0m[36m0000 | 52 45 44 49 53 30 30 31 31 fa 09 72 65 64 69 73 | REDIS0011..redis[0m
-[33m[tester::#SM4] [0m[36m0010 | 2d 76 65 72 05 37 2e 32 2e 30 fa 0a 72 65 64 69 | -ver.7.2.0..redi[0m
-[33m[tester::#SM4] [0m[36m0020 | 73 2d 62 69 74 73 c0 40 fe 00 fb 04 04 fc 00 0c | s-bits.@........[0m
+[33m[tester::#SM4] [0m[36m0000 | 52 45 44 49 53 30 30 31 31 fa 0a 72 65 64 69 73 | REDIS0011..redis[0m
+[33m[tester::#SM4] [0m[36m0010 | 2d 62 69 74 73 c0 40 fa 09 72 65 64 69 73 2d 76 | -bits.@..redis-v[0m
+[33m[tester::#SM4] [0m[36m0020 | 65 72 05 37 2e 32 2e 30 fe 00 fb 04 04 fc 00 0c | er.7.2.0........[0m
 [33m[tester::#SM4] [0m[36m0030 | 28 8a c7 01 00 00 00 0a 73 74 72 61 77 62 65 72 | (.......strawber[0m
 [33m[tester::#SM4] [0m[36m0040 | 72 79 09 72 61 73 70 62 65 72 72 79 fc 00 0c 28 | ry.raspberry...([0m
 [33m[tester::#SM4] [0m[36m0050 | 8a c7 01 00 00 00 04 70 65 61 72 05 6d 61 6e 67 | .......pear.mang[0m
 [33m[tester::#SM4] [0m[36m0060 | 6f fc 00 9c ef 12 7e 01 00 00 00 05 61 70 70 6c | o.....~.....appl[0m
 [33m[tester::#SM4] [0m[36m0070 | 65 09 62 6c 75 65 62 65 72 72 79 fc 00 0c 28 8a | e.blueberry...(.[0m
 [33m[tester::#SM4] [0m[36m0080 | c7 01 00 00 00 09 62 6c 75 65 62 65 72 72 79 06 | ......blueberry.[0m
-[33m[tester::#SM4] [0m[36m0090 | 62 61 6e 61 6e 61 ff 00 4d f8 78 e7 ed 37 cc    | banana..M.x..7.[0m
+[33m[tester::#SM4] [0m[36m0090 | 62 61 6e 61 6e 61 ff 9d 75 ec 64 2a d8 a1 14    | banana..u.d*...[0m
 [33m[tester::#SM4] [0m[36m[0m
 [33m[tester::#SM4] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/rdb-1320 --dbfilename blueberry.rdb[0m
+[33m[tester::#SM4] [client] [0m[36mConnected (port 43544 -> port 6379)[0m
 [33m[tester::#SM4] [client] [0m[94m$ redis-cli GET strawberry[0m
 [33m[tester::#SM4] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$10\r\nstrawberry\r\n"[0m
 [33m[tester::#SM4] [client] [0m[36mReceived bytes: "$9\r\nraspberry\r\n"[0m

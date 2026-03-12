@@ -3,7 +3,6 @@ package internal
 import (
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 
-	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
@@ -23,21 +22,19 @@ func testReplMasterCmdProp(stageHarness *test_case_harness.TestCaseHarness) erro
 
 	logger.UpdateLastSecondaryPrefix("handshake")
 
-	// We use one client to send commands to the master
-	client, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client")
+	clientsSpawner := ClientsSpawner{
+		Addr:         "localhost:6379",
+		StageHarness: stageHarness,
+		Logger:       logger,
+	}
+	client, err := clientsSpawner.SpawnClientWithPrefix("client")
 	if err != nil {
-		logFriendlyError(logger, err)
 		return err
 	}
-	defer client.Close()
-
-	// We use another client to assert whether sent commands are replicated from the master (user's code)
-	replicaClient, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "replica")
+	replicaClient, err := clientsSpawner.SpawnClientWithPrefix("replica")
 	if err != nil {
-		logFriendlyError(logger, err)
 		return err
 	}
-	defer replicaClient.Close()
 
 	client.UpdateBaseLogger(logger)
 	replicaClient.UpdateBaseLogger(logger)

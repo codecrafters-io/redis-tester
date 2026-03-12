@@ -23,11 +23,10 @@ func testdefaultUserAuthentication(stageHarness *test_case_harness.TestCaseHarne
 		StageHarness: stageHarness,
 		Logger:       logger,
 	}
-	firstClients, err := clientsSpawner.SpawnClients(1)
+	firstClient, err := clientsSpawner.SpawnNextClient()
 	if err != nil {
 		return err
 	}
-	firstClient := firstClients[0]
 
 	// Set default user password
 	password := fmt.Sprintf("%s-%d", random.RandomWord(), random.RandomInt(1, 1000))
@@ -50,11 +49,10 @@ func testdefaultUserAuthentication(stageHarness *test_case_harness.TestCaseHarne
 		return err
 	}
 
-	secondClients, err := clientsSpawner.SpawnClients(1)
+	secondClient, err := clientsSpawner.SpawnNextClient()
 	if err != nil {
 		return err
 	}
-	secondClient := secondClients[0]
 
 	whoamiNoauthTestCase := test_cases.AclWhoamiErrorTestCase{
 		ExpectedErrorPattern: "^NOAUTH.*",

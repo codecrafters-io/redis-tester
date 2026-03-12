@@ -56,12 +56,15 @@ func testReplInfoReplica(stageHarness *test_case_harness.TestCaseHarness) error 
 		return nil
 	}(listener)
 
-	client, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6380", "client")
+	clientsSpawner := ClientsSpawner{
+		Addr:         "localhost:6380",
+		StageHarness: stageHarness,
+		Logger:       logger,
+	}
+	client, err := clientsSpawner.SpawnClientWithPrefix("client")
 	if err != nil {
-		logFriendlyError(logger, err)
 		return err
 	}
-	defer client.Close()
 
 	commandTestCase := test_cases.SendCommandTestCase{
 		Command:                   "INFO",

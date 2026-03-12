@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
@@ -61,11 +60,15 @@ func testRdbReadValueWithExpiry(stageHarness *test_case_harness.TestCaseHarness)
 		return err
 	}
 
-	client, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client")
+	clientsSpawner := ClientsSpawner{
+		Addr:         "localhost:6379",
+		StageHarness: stageHarness,
+		Logger:       logger,
+	}
+	client, err := clientsSpawner.SpawnClientWithPrefix("client")
 	if err != nil {
 		return err
 	}
-	defer client.Close()
 
 	for keyIndex, key := range keys {
 		if keyIndex == expiringKeyIndex {

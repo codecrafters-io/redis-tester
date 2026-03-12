@@ -25,11 +25,10 @@ func testStreamsXreadBlockNoTimeout(stageHarness *test_case_harness.TestCaseHarn
 		StageHarness: stageHarness,
 		Logger:       logger,
 	}
-	client1List, err := clientsSpawner.SpawnClients(1)
+	client1, err := clientsSpawner.SpawnNextClient()
 	if err != nil {
 		return err
 	}
-	client1 := client1List[0]
 
 	streamKey := testerutils_random.RandomWord()
 	entryValue := testerutils_random.RandomInt(1, 100)
@@ -63,11 +62,10 @@ func testStreamsXreadBlockNoTimeout(stageHarness *test_case_harness.TestCaseHarn
 
 	xReadTestCase.SendBlockingCommands()
 
-	client2List, err := clientsSpawner.SpawnClients(1)
+	client2, err := clientsSpawner.SpawnNextClient()
 	if err != nil {
 		return err
 	}
-	client2 := client2List[0]
 
 	xaddCommandTestCase = &test_cases.SendCommandTestCase{
 		Command:                   "XADD",
