@@ -65,6 +65,10 @@ func (t *OptimisticLockingTestCase) Run(logger *logger.Logger) error {
 	return t.RunValueCheckOfKeyModifiedInTransaction(logger)
 }
 
+func (t *OptimisticLockingTestCase) ResetWatchedKeys() {
+	t.KeysWatchedByWatcherClient = nil
+}
+
 // RunSetInitialKeys will set the initial values of keys using the modifier client
 func (t *OptimisticLockingTestCase) RunSetInitialKeys(logger *logger.Logger) error {
 	initialValues := random.RandomInts(1, 50, len(t.InitialKeys))
@@ -144,6 +148,36 @@ func (t *OptimisticLockingTestCase) RunSetKeyUsingModifierClient(logger *logger.
 
 func (t *OptimisticLockingTestCase) RunExec(logger *logger.Logger) error {
 	return t.transactionTestCase.RunExec(t.WatcherClient, logger)
+}
+
+func (t *OptimisticLockingTestCase) RunTransaction(logger *logger.Logger) error {
+	if err := t.RunTransactionWithoutExec(logger); err != nil {
+		return err
+	}
+
+	return t.RunExec(logger)
+}
+
+func (t *OptimisticLockingTestCase) RunUnwatch(logger *logger.Logger) error {
+	logger.Infof("Clearing all watched keys using UNWATCH")
+
+	unwatchTestCase := SendCommandTestCase{
+		Command:   "UNWATCH",
+		Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
+	}
+
+	return unwatchTestCase.Run(t.WatcherClient, logger)
+}
+
+func (t *OptimisticLockingTestCase) RunDiscardTransaction(logger *logger.Logger) error {
+	logger.Infof("Clearing all watched keys using DISCARD")
+
+	discardTestCase := SendCommandTestCase{
+		Command:   "DISCARD",
+		Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
+	}
+
+	return discardTestCase.Run(t.WatcherClient, logger)
 }
 
 func (t *OptimisticLockingTestCase) RunValueCheckOfKeyModifiedInTransaction(logger *logger.Logger) error {

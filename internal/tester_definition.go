@@ -434,7 +434,7 @@ var testerDefinition = tester_definition.TesterDefinition{
 		},
 		{
 			Slug:     "uo9",
-			TestFunc: testOptimisticLockingWatchMissingKeys,
+			TestFunc: testOptimisticLockingWatchMissingKey,
 		},
 		{
 			Slug:     "bn1",
