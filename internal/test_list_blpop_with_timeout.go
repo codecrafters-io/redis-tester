@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
@@ -25,12 +24,14 @@ func testListBlpopWithTimeout(stageHarness *test_case_harness.TestCaseHarness) e
 
 func testOnlyTimeout(stageHarness *test_case_harness.TestCaseHarness) error {
 	logger := stageHarness.Logger
-	client, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client")
+	clientsSpawner := ClientsSpawner{
+		Addr:         "localhost:6379",
+		StageHarness: stageHarness,
+	}
+	client, err := clientsSpawner.SpawnClientWithPrefix("client")
 	if err != nil {
-		logFriendlyError(logger, err)
 		return err
 	}
-	defer client.Close()
 
 	randomListKey := testerutils_random.RandomWord()
 	timeoutMS := testerutils_random.RandomInt(1, 5) * 100
@@ -62,12 +63,16 @@ func testOnlyTimeout(stageHarness *test_case_harness.TestCaseHarness) error {
 
 func testPushBeforeTimeout(stageHarness *test_case_harness.TestCaseHarness) error {
 	logger := stageHarness.Logger
-	clients, err := SpawnClients(2, "localhost:6379", stageHarness, logger)
+
+	clientsSpawner := ClientsSpawner{
+		Addr:         "localhost:6379",
+		StageHarness: stageHarness,
+	}
+
+	clients, err := clientsSpawner.SpawnClients(2)
+
 	if err != nil {
 		return err
-	}
-	for _, c := range clients {
-		defer c.Close()
 	}
 
 	listKey := testerutils_random.RandomWord()

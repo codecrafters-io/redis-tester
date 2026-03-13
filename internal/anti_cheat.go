@@ -3,7 +3,6 @@ package internal
 import (
 	"fmt"
 
-	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
@@ -22,12 +21,15 @@ func antiCheatTest(stageHarness *test_case_harness.TestCaseHarness) error {
 		return fmt.Errorf("anti-cheat (ac1) failed")
 	}
 
-	client, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "replica")
+	clientsSpawner := ClientsSpawner{
+		Addr:         "localhost:6379",
+		StageHarness: stageHarness,
+	}
+	client, err := clientsSpawner.SpawnClientWithPrefix("replica")
 	// If we are unable to connect to the redis server, it is okay to skip anti-cheat in that case, their server must not be working.
 	if err != nil {
 		return nil
 	}
-	defer client.Close()
 
 	// All the answers for MEMORY DOCTOR include the string "sam" in them.
 	commandTestCase := test_cases.SendCommandTestCase{

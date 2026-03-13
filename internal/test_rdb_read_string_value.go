@@ -3,7 +3,6 @@ package internal
 import (
 	"fmt"
 
-	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
@@ -38,11 +37,14 @@ func testRdbReadStringValue(stageHarness *test_case_harness.TestCaseHarness) err
 		return err
 	}
 
-	client, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client")
+	clientsSpawner := ClientsSpawner{
+		Addr:         "localhost:6379",
+		StageHarness: stageHarness,
+	}
+	client, err := clientsSpawner.SpawnClientWithPrefix("client")
 	if err != nil {
 		return err
 	}
-	defer client.Close()
 
 	commandTestCase := test_cases.SendCommandTestCase{
 		Command:                   "GET",

@@ -187,6 +187,13 @@ func TestStages(t *testing.T) {
 			StdoutFixturePath:   "./test_helpers/fixtures/auth/auth_acl_whoami_wrong_error_pattern",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
+		"optimistic_locking_pass": {
+			StageSlugs:          []string{"jb7", "jq9", "mh8", "fp0", "uo9", "bn1", "fn4", "hq1"},
+			CodePath:            "./test_helpers/pass_all",
+			ExpectedExitCode:    0,
+			StdoutFixturePath:   "./test_helpers/fixtures/optimistic_locking/pass",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
 	}
 
 	tester_utils_testing.TestTesterOutput(t, testerDefinition, testCases)

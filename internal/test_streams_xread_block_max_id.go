@@ -21,12 +21,14 @@ func testStreamsXreadBlockMaxID(stageHarness *test_case_harness.TestCaseHarness)
 
 	logger := stageHarness.Logger
 
-	client1, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client-1")
+	clientsSpawner := ClientsSpawner{
+		Addr:         "localhost:6379",
+		StageHarness: stageHarness,
+	}
+	client1, err := clientsSpawner.SpawnNextClient()
 	if err != nil {
-		logFriendlyError(logger, err)
 		return err
 	}
-	defer client1.Close()
 
 	streamKey := testerutils_random.RandomWord()
 	entryValue := testerutils_random.RandomInt(1, 100)
@@ -67,12 +69,10 @@ func testStreamsXreadBlockMaxID(stageHarness *test_case_harness.TestCaseHarness)
 
 	time.Sleep(1000 * time.Millisecond)
 
-	client2, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client-2")
+	client2, err := clientsSpawner.SpawnNextClient()
 	if err != nil {
-		logFriendlyError(logger, err)
 		return err
 	}
-	defer client2.Close()
 
 	xaddCommandTestCase = &test_cases.SendCommandTestCase{
 		Command:                   "XADD",
