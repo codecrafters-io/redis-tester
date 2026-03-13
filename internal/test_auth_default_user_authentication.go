@@ -54,7 +54,7 @@ func testdefaultUserAuthentication(stageHarness *test_case_harness.TestCaseHarne
 	}
 
 	whoamiNoauthTestCase := test_cases.AclWhoamiErrorTestCase{
-		ExpectedErrorPattern: "^NOAUTH.*",
+		ExpectedErrorBeginsWith: "NOAUTH ",
 	}
 
 	return whoamiNoauthTestCase.Run(secondClient, logger)
