@@ -14,13 +14,14 @@ func testPubSubPublish2(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 
 	logger := stageHarness.Logger
-	clients, err := SpawnClients(4, "localhost:6379", stageHarness, logger)
-	if err != nil {
-		logFriendlyError(logger, err)
-		return err
+
+	clientsSpawner := ClientsSpawner{
+		Addr:         "localhost:6379",
+		StageHarness: stageHarness,
 	}
-	for _, c := range clients {
-		defer c.Close()
+	clients, err := clientsSpawner.SpawnClients(4)
+	if err != nil {
+		return err
 	}
 
 	/*

@@ -15,25 +15,28 @@ func testOptimisticLockingTrackingKeyModification(stageHarness *test_case_harnes
 	}
 
 	logger := stageHarness.Logger
-	clients, err := SpawnClients(4, "localhost:6379", stageHarness, logger)
+
+	clientsSpawner := ClientsSpawner{
+		Addr:         "localhost:6379",
+		StageHarness: stageHarness,
+	}
+
+	clients, err := clientsSpawner.SpawnClients(2)
 
 	if err != nil {
 		return err
 	}
 
-	for _, c := range clients {
-		defer c.Close()
-	}
-
 	keys := testerutils_random.RandomWords(4)
 	watchedKey, unwatchedKey := keys[0], keys[1]
+	watcherClient, modifierClient := clients[0], clients[1]
 
 	logger.Infof("Testing optimistic locking when watched key is modified")
 
 	// Transaction failing case
 	optimisticLockingTestCase := test_cases.OptimisticLockingTestCase{
-		WatcherClient:              clients[0],
-		ModifierClient:             clients[1],
+		WatcherClient:              watcherClient,
+		ModifierClient:             modifierClient,
 		InitialKeys:                []string{watchedKey, unwatchedKey},
 		KeysWatchedByWatcherClient: []string{watchedKey},
 		KeyToBeModifiedByWatcherClientInTransaction: unwatchedKey,
@@ -47,10 +50,17 @@ func testOptimisticLockingTrackingKeyModification(stageHarness *test_case_harnes
 	logger.Infof("Testing optimistic locking when watched key is not modified")
 
 	// Transaction succeeding case
+	newClients, err := clientsSpawner.SpawnClients(2)
+
+	if err != nil {
+		return err
+	}
+
+	watcherClient, modifierClient = newClients[0], newClients[1]
 	watchedKey, unwatchedKey = keys[2], keys[3]
 	optimisticLockingTestCase2 := test_cases.OptimisticLockingTestCase{
-		WatcherClient:                               clients[2],
-		ModifierClient:                              clients[3],
+		WatcherClient:                               watcherClient,
+		ModifierClient:                              modifierClient,
 		InitialKeys:                                 []string{watchedKey, unwatchedKey},
 		KeysWatchedByWatcherClient:                  []string{watchedKey},
 		KeyToBeModifiedByModifierClient:             unwatchedKey,

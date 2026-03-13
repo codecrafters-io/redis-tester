@@ -3,6 +3,7 @@ package resp_value
 import (
 	"encoding/json"
 	"fmt"
+	"slices"
 
 	"github.com/codecrafters-io/redis-tester/internal/resp/formatter"
 )
@@ -108,6 +109,11 @@ func (v *Value) Error() string {
 		return string(v.String())
 	}
 	return ""
+}
+
+// IsValueOfDataTypeStoredAsByteSlice returns true if the actual value is stored in byte slice
+func IsValueOfDataTypeStoredAsByteSlice(dataType string) bool {
+	return slices.Contains([]string{SIMPLE_STRING, BULK_STRING, ERROR}, dataType)
 }
 
 func (v *Value) FormattedString() string {
