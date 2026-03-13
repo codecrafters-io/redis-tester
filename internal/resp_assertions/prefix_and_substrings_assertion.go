@@ -13,9 +13,9 @@ import (
 // 3. Both
 // For complex patterns, use RegexAssertion
 type PrefixAndSubstringsAssertion struct {
-	ExpectedType            string
-	PrefixPredicate         *PrefixPredicate
-	HasaSubstringPredicates []HasSubstringPredicate
+	ExpectedType           string
+	PrefixPredicate        *PrefixPredicate
+	HasSubstringPredicates []HasSubstringPredicate
 }
 
 func (a PrefixAndSubstringsAssertion) Run(value resp_value.Value) error {
@@ -40,7 +40,7 @@ func (a PrefixAndSubstringsAssertion) Run(value resp_value.Value) error {
 	}
 
 	// Check for the specified substrings
-	for _, hasSubstringCondition := range a.HasaSubstringPredicates {
+	for _, hasSubstringCondition := range a.HasSubstringPredicates {
 		if !hasSubstringCondition.Check(valueString) {
 			return fmt.Errorf("Expected %s to contain %q, got %q", value.Type, hasSubstringCondition.Substring, valueString)
 		}

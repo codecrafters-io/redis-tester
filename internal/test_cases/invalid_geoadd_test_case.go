@@ -27,7 +27,7 @@ func (t *InvalidGeoAddTestCase) Run(client *instrumented_resp_connection.Instrum
 				Prefix:        t.ExpectedErrorBeginsWith,
 				CaseSensitive: true,
 			},
-			HasaSubstringPredicates: []resp_assertions.HasSubstringPredicate{{
+			HasSubstringPredicates: []resp_assertions.HasSubstringPredicate{{
 				Substring: t.ExpectedErrorContains,
 			}},
 		},

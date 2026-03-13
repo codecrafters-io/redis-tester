@@ -48,7 +48,7 @@ func testPubSubSubscribe3(stageHarness *test_case_harness.TestCaseHarness) error
 				Prefix:        "ERR ",
 				CaseSensitive: true,
 			},
-			HasaSubstringPredicates: []resp_assertions.HasSubstringPredicate{{
+			HasSubstringPredicates: []resp_assertions.HasSubstringPredicate{{
 				Substring:     "can't execute 'set'",
 				CaseSensitive: false,
 			}},
@@ -69,7 +69,7 @@ func testPubSubSubscribe3(stageHarness *test_case_harness.TestCaseHarness) error
 				Prefix:        "ERR ",
 				CaseSensitive: true,
 			},
-			HasaSubstringPredicates: []resp_assertions.HasSubstringPredicate{{
+			HasSubstringPredicates: []resp_assertions.HasSubstringPredicate{{
 				Substring:     "can't execute 'get'",
 				CaseSensitive: false,
 			}},
@@ -89,7 +89,7 @@ func testPubSubSubscribe3(stageHarness *test_case_harness.TestCaseHarness) error
 				Prefix:        "ERR ",
 				CaseSensitive: true,
 			},
-			HasaSubstringPredicates: []resp_assertions.HasSubstringPredicate{{
+			HasSubstringPredicates: []resp_assertions.HasSubstringPredicate{{
 				Substring:     "can't execute 'echo'",
 				CaseSensitive: false,
 			}},

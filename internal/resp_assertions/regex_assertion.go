@@ -9,7 +9,7 @@ import (
 )
 
 // RegexAssertion should be used if the expected value must match a given
-// regex pattern. For simple use cases, use PatternedBytesAssertion
+// regex pattern. For simple use cases, use PrefixAndSubstringsAssertion
 type RegexAssertion struct {
 	ExpectedType    string
 	ExpectedPattern *regexp.Regexp
