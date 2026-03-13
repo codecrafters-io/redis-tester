@@ -43,6 +43,7 @@ func testPubSubSubscribe3(stageHarness *test_case_harness.TestCaseHarness) error
 		Command: "SET",
 		Args:    keyAndValue,
 		Assertion: resp_assertions.PrefixAndSubstringsAssertion{
+			Logger:       logger,
 			ExpectedType: resp_value.ERROR,
 			PrefixPredicate: &resp_assertions.PrefixPredicate{
 				Prefix:        "ERR ",
@@ -63,6 +64,7 @@ func testPubSubSubscribe3(stageHarness *test_case_harness.TestCaseHarness) error
 		Command: "GET",
 		Args:    keyAndValue[1:],
 		Assertion: resp_assertions.PrefixAndSubstringsAssertion{
+			Logger:       logger,
 			ExpectedType: resp_value.ERROR,
 			PrefixPredicate: &resp_assertions.PrefixPredicate{
 				Prefix:        "ERR ",
@@ -82,6 +84,7 @@ func testPubSubSubscribe3(stageHarness *test_case_harness.TestCaseHarness) error
 		Command: "ECHO",
 		Args:    keyAndValue[1:],
 		Assertion: resp_assertions.PrefixAndSubstringsAssertion{
+			Logger:       logger,
 			ExpectedType: resp_value.ERROR,
 			PrefixPredicate: &resp_assertions.PrefixPredicate{
 				Prefix:        "ERR ",

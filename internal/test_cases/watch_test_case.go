@@ -2,6 +2,7 @@ package test_cases
 
 import (
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
+	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/tester-utils/logger"
 )
@@ -15,13 +16,26 @@ func (t WatchTestCase) Run(client *instrumented_resp_connection.InstrumentedResp
 	assertion := resp_assertions.NewSimpleStringAssertion("OK")
 
 	// Must assert error inside a transaction
-	// TODO: Will remove this after PR review
-	// We'd wanna be lenient enough as we have been in case of errors previously. Eg.
-	// See testPubSubSubscribe3 and others.
-	// But, unlike other error cases, this error is worded as more 'english-like' so its hard to
-	// expect a pattern. So, I left it like this.
 	if t.IsInsideTransaction {
-		assertion = resp_assertions.NewErrorAssertion("ERR WATCH inside MULTI is not allowed")
+		assertion = resp_assertions.PrefixAndSubstringsAssertion{
+			Logger:       logger,
+			ExpectedType: resp_value.ERROR,
+			PrefixPredicate: &resp_assertions.PrefixPredicate{
+				Prefix:        "ERR",
+				CaseSensitive: true,
+			},
+			HasSubstringPredicates: []resp_assertions.HasSubstringPredicate{
+				{
+					Substring: "watch",
+				},
+				{
+					Substring: "inside multi",
+				},
+				{
+					Substring: "not allowed",
+				},
+			},
+		}
 	}
 
 	sendCommandTestCase := SendCommandTestCase{

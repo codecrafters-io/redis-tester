@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
+	"github.com/codecrafters-io/tester-utils/logger"
 )
 
 // PrefixAndSubstringsAssertion should be used where we expect the value to either
@@ -15,6 +16,7 @@ import (
 type PrefixAndSubstringsAssertion struct {
 	ExpectedType           string
 	PrefixPredicate        *PrefixPredicate
+	Logger                 *logger.Logger
 	HasSubstringPredicates []HasSubstringPredicate
 }
 
@@ -22,6 +24,10 @@ func (a PrefixAndSubstringsAssertion) Run(value resp_value.Value) error {
 	// This assertion is only valid for data types which is storable as byte slice
 	if !resp_value.IsValueOfDataTypeStoredAsByteSlice(a.ExpectedType) {
 		panic(fmt.Sprintf("Codecrafters Internal Error - PrefixAndSubstringsAssertion is not applicable for %s", a.ExpectedType))
+	}
+
+	if a.Logger == nil {
+		panic("Codecrafters Internal Error - Logger must be specified on PrefixAndSubstringsAssertion")
 	}
 
 	respErrorTypeAssertion := DataTypeAssertion{ExpectedType: a.ExpectedType}
@@ -49,11 +55,20 @@ func (a PrefixAndSubstringsAssertion) Run(value resp_value.Value) error {
 		)
 	}
 
+	substringsPresent := []string{}
+
 	// Check for the specified substrings
 	for _, hasSubstringCondition := range a.HasSubstringPredicates {
 		if !hasSubstringCondition.Check(valueString) {
+			// Print all the substrings that are present
+			for _, substring := range substringsPresent {
+				a.Logger.Infof("✔︎ Expected %s contains %q", value.Type, substring)
+			}
+
+			// Return error
 			return fmt.Errorf("Expected %s to contain %q, got %q", value.Type, hasSubstringCondition.Substring, valueString)
 		}
+		substringsPresent = append(substringsPresent, hasSubstringCondition.Substring)
 	}
 
 	return nil
