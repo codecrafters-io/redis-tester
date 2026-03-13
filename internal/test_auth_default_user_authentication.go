@@ -3,7 +3,6 @@ package internal
 import (
 	"fmt"
 
-	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 	"github.com/codecrafters-io/tester-utils/random"
@@ -18,14 +17,15 @@ func testdefaultUserAuthentication(stageHarness *test_case_harness.TestCaseHarne
 	}
 
 	logger := stageHarness.Logger
-	firstClient, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client-1")
 
+	clientsSpawner := ClientsSpawner{
+		Addr:         "localhost:6379",
+		StageHarness: stageHarness,
+	}
+	firstClient, err := clientsSpawner.SpawnNextClient()
 	if err != nil {
-		logFriendlyError(logger, err)
 		return err
 	}
-
-	defer firstClient.Close()
 
 	// Set default user password
 	password := fmt.Sprintf("%s-%d", random.RandomWord(), random.RandomInt(1, 1000))
@@ -48,18 +48,13 @@ func testdefaultUserAuthentication(stageHarness *test_case_harness.TestCaseHarne
 		return err
 	}
 
-	// Spawn a new client
-	secondClient, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6379", "client-2")
-
+	secondClient, err := clientsSpawner.SpawnNextClient()
 	if err != nil {
-		logFriendlyError(logger, err)
 		return err
 	}
 
-	defer secondClient.Close()
-
 	whoamiNoauthTestCase := test_cases.AclWhoamiErrorTestCase{
-		ExpectedErrorPattern: "^NOAUTH.*",
+		ExpectedErrorBeginsWith: "NOAUTH ",
 	}
 
 	return whoamiNoauthTestCase.Run(secondClient, logger)

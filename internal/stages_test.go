@@ -96,6 +96,13 @@ func TestStages(t *testing.T) {
 			StdoutFixturePath:   "./test_helpers/fixtures/repl-wait/repl_propagation_retry",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
+		"repl_fullresync_wrong_pattern": {
+			StageSlugs:          []string{"vm3"},
+			CodePath:            "./test_helpers/scenarios/repl_fullresync_wrong_pattern",
+			ExpectedExitCode:    1,
+			StdoutFixturePath:   "./test_helpers/fixtures/repl-wait/repl_fullresync_wrong_pattern",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
 		"repl_pass": {
 			StageSlugs:          []string{"bw1", "ye5", "hc6", "xc1", "gl7", "eh4", "ju6", "fj0", "vm3", "cf8", "zn8", "hd5", "yg4", "xv6", "yd3", "my8", "tu8", "na2"},
 			CodePath:            "./test_helpers/pass_all",
@@ -178,6 +185,20 @@ func TestStages(t *testing.T) {
 			CodePath:            "./test_helpers/scenarios/auth_mistake_sha256",
 			ExpectedExitCode:    1,
 			StdoutFixturePath:   "./test_helpers/fixtures/auth/auth_mistake_sha256",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
+		"auth_default_user_authentication_wrong_error_pattern": {
+			StageSlugs:          []string{"nm2"},
+			CodePath:            "./test_helpers/scenarios/auth_acl_whoami_wrong_error_pattern",
+			ExpectedExitCode:    1,
+			StdoutFixturePath:   "./test_helpers/fixtures/auth/auth_acl_whoami_wrong_error_pattern",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
+		"optimistic_locking_pass": {
+			StageSlugs:          []string{"jb7", "jq9", "mh8", "fp0", "uo9", "bn1", "fn4", "hq1"},
+			CodePath:            "./test_helpers/pass_all",
+			ExpectedExitCode:    0,
+			StdoutFixturePath:   "./test_helpers/fixtures/optimistic_locking/pass",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 	}

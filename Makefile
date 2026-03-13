@@ -90,6 +90,11 @@ test_auth_with_redis: build
 	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\":\"jn4\",\"tester_log_prefix\":\"stage-901\",\"title\":\"Stage #901: WHOAMI\"},{\"slug\":\"gx8\",\"tester_log_prefix\":\"stage-902\",\"title\":\"Stage #902: ACL GETUSER-1\"},{\"slug\":\"ql6\",\"tester_log_prefix\":\"stage-903\",\"title\":\"Stage #903: ACL GETUSER-2\"},{\"slug\":\"pl7\",\"tester_log_prefix\":\"stage-904\",\"title\":\"Stage #904: ACL GETUSER-3\"},{\"slug\":\"uv9\",\"tester_log_prefix\":\"stage-905\",\"title\":\"Stage #905: SET USER PASSWORD\"},{\"slug\":\"hz3\",\"tester_log_prefix\":\"stage-906\",\"title\":\"Stage #906: THE AUTH COMMAND\"},{\"slug\":\"nm2\",\"tester_log_prefix\":\"stage-907\",\"title\":\"Stage #907: ENFORCE AUTHENTICATION\"},{\"slug\":\"ws7\",\"tester_log_prefix\":\"stage-908\",\"title\":\"Stage #908: AUTHENTICATE USING AUTH\"}]" \
 	dist/main.out
 
+test_optimistic_locking_with_redis: build
+	CODECRAFTERS_REPOSITORY_DIR=./internal/test_helpers/pass_all \
+	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\": \"jb7\", \"tester_log_prefix\": \"stage-1001\", \"title\": \"The WATCH command\"},{\"slug\": \"jq9\", \"tester_log_prefix\": \"stage-1002\", \"title\": \"WATCH inside transaction\"},{\"slug\": \"mh8\", \"tester_log_prefix\": \"stage-1003\", \"title\": \"Tracking key modifications\"},{\"slug\": \"fp0\", \"tester_log_prefix\": \"stage-1004\", \"title\": \"Watching multiple keys\"},{\"slug\": \"uo9\", \"tester_log_prefix\": \"stage-1005\", \"title\": \"Watching missing keys\"},{\"slug\": \"bn1\", \"tester_log_prefix\": \"stage-1006\", \"title\": \"The UNWATCH command\"},{\"slug\": \"fn4\", \"tester_log_prefix\": \"stage-1007\", \"title\": \"Unwatch on EXEC\"},{\"slug\": \"hq1\", \"tester_log_prefix\": \"stage-1008\", \"title\": \"Unwatch on DISCARD\"}]" \
+	dist/main.out
+
 test_all_with_redis:
 	make test_base_with_redis || true
 	make test_repl_with_redis || true
@@ -101,6 +106,7 @@ test_all_with_redis:
 	make test_zset_with_redis || true
 	make test_geospatial_with_redis || true
 	make test_auth_with_redis || true
+	make test_optimistic_locking_with_redis || true
 
 setup:
 	echo "Setting up redis-tester prerequisites for Linux"

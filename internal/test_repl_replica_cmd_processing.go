@@ -59,12 +59,14 @@ func testReplCmdProcessing(stageHarness *test_case_harness.TestCaseHarness) erro
 	logger.UpdateLastSecondaryPrefix("propagation")
 	master.UpdateBaseLogger(logger)
 
-	replicaClient, err := instrumented_resp_connection.NewFromAddr(logger, "localhost:6380", "client")
+	clientsSpawner := ClientsSpawner{
+		Addr:         "localhost:6380",
+		StageHarness: stageHarness,
+	}
+	replicaClient, err := clientsSpawner.SpawnClientWithPrefix("client")
 	if err != nil {
-		logFriendlyError(logger, err)
 		return err
 	}
-	defer replicaClient.Close()
 
 	kvMap := map[int][]string{
 		1: {"foo", "123"},

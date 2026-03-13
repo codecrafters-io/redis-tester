@@ -2,7 +2,6 @@ package internal
 
 import (
 	"fmt"
-	"net"
 	"os"
 	"path/filepath"
 	"strings"
@@ -70,30 +69,6 @@ func SpawnReplicas(replicaCount int, stageHarness *test_case_harness.TestCaseHar
 		replicas = append(replicas, replica)
 	}
 	return replicas, nil
-}
-
-// SpawnClients creates `clientCount` clients connected to the given address.
-// The clients are created using the `instrumented_resp_connection.NewFromAddr` function.
-// Clients are supposed to be closed after use.
-func SpawnClients(clientCount int, addr string, stageHarness *test_case_harness.TestCaseHarness, logger *logger.Logger) ([]*instrumented_resp_connection.InstrumentedRespConnection, error) {
-	var clients []*instrumented_resp_connection.InstrumentedRespConnection
-
-	for i := 0; i < clientCount; i++ {
-		client, err := instrumented_resp_connection.NewFromAddr(logger, addr, fmt.Sprintf("client-%d", i+1))
-		if err != nil {
-			logFriendlyError(logger, err)
-			return nil, err
-		}
-
-		clientLogger := client.GetLogger()
-		clientPort := client.Conn.LocalAddr().(*net.TCPAddr).Port
-		serverPort := client.Conn.RemoteAddr().(*net.TCPAddr).Port
-		clientLogger.Debugf("Connected (port %d -> port %d)", clientPort, serverPort)
-
-		clients = append(clients, client)
-	}
-
-	return clients, nil
 }
 
 func GetFormattedHexdump(data []byte) string {

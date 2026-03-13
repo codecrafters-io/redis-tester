@@ -19,12 +19,13 @@ func testTxMultiTx(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	logger := stageHarness.Logger
 
-	clients, err := SpawnClients(3, "localhost:6379", stageHarness, logger)
+	clientsSpawner := ClientsSpawner{
+		Addr:         "localhost:6379",
+		StageHarness: stageHarness,
+	}
+	clients, err := clientsSpawner.SpawnClients(3)
 	if err != nil {
 		return err
-	}
-	for _, client := range clients {
-		defer client.Close()
 	}
 
 	uniqueKeys := random.RandomWords(2)
