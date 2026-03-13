@@ -15,8 +15,8 @@ import (
 // For complex patterns, use RegexAssertion
 type PrefixAndSubstringsAssertion struct {
 	ExpectedType           string
-	PrefixPredicate        *PrefixPredicate
 	Logger                 *logger.Logger
+	HasPrefixPredicate     *PrefixPredicate
 	HasSubstringPredicates []HasSubstringPredicate
 }
 
@@ -30,48 +30,65 @@ func (a PrefixAndSubstringsAssertion) Run(value resp_value.Value) error {
 		panic("Codecrafters Internal Error - Logger must be specified on PrefixAndSubstringsAssertion")
 	}
 
-	respErrorTypeAssertion := DataTypeAssertion{ExpectedType: a.ExpectedType}
+	dataTypeAssertion := DataTypeAssertion{ExpectedType: a.ExpectedType}
 
-	if err := respErrorTypeAssertion.Run(value); err != nil {
+	if err := dataTypeAssertion.Run(value); err != nil {
 		return err
 	}
 
 	valueString := value.String()
 
 	// Check the prefix pattern
-	if a.PrefixPredicate != nil && !a.PrefixPredicate.Check(valueString) {
-		hasTrailingSpace := ""
+	if a.HasPrefixPredicate != nil && !a.HasPrefixPredicate.Check(valueString) {
+		prefixDescription := ""
 
-		if strings.HasSuffix(a.PrefixPredicate.Prefix, " ") {
-			hasTrailingSpace = " (trailing space)"
+		// If the prefix has a trailing space but the value begins with the
+		// prefix without the trailing space, notify
+		if before, ok := strings.CutSuffix(a.HasPrefixPredicate.Prefix, " "); ok {
+			prefixWithoutTrailingSpace := before
+
+			prefixPredicateWithoutTrailingSpace := PrefixPredicate{
+				Prefix:        prefixWithoutTrailingSpace,
+				CaseSensitive: a.HasPrefixPredicate.CaseSensitive,
+			}
+
+			if prefixPredicateWithoutTrailingSpace.Check(valueString) {
+				prefixDescription = " (trailing space)"
+			}
 		}
 
 		return fmt.Errorf(
 			"Expected %s to begin with %q%s, got %q",
 			value.Type,
-			a.PrefixPredicate.Prefix,
-			hasTrailingSpace,
+			a.HasPrefixPredicate.Prefix,
+			prefixDescription,
 			valueString,
 		)
 	}
 
-	substringsPresent := []string{}
+	presentSubstrings := []string{}
+	hasMissingSubstring := false
+	firstMissingSubstring := ""
 
 	// Check for the specified substrings
-	for _, hasSubstringCondition := range a.HasSubstringPredicates {
-		if !hasSubstringCondition.Check(valueString) {
-			// Print all the substrings that are present
-			for _, substring := range substringsPresent {
-				a.Logger.Infof("✔︎ Expected %s contains %q", value.Type, substring)
-			}
-
-			// Return error
-			return fmt.Errorf("Expected %s to contain %q, got %q", value.Type, hasSubstringCondition.Substring, valueString)
+	for _, hasSubstringPredicate := range a.HasSubstringPredicates {
+		if !hasSubstringPredicate.Check(valueString) && !hasMissingSubstring {
+			hasMissingSubstring = true
+			firstMissingSubstring = hasSubstringPredicate.Substring
 		}
-		substringsPresent = append(substringsPresent, hasSubstringCondition.Substring)
+		presentSubstrings = append(presentSubstrings, hasSubstringPredicate.Substring)
 	}
 
-	return nil
+	if !hasMissingSubstring {
+		return nil
+	}
+
+	// Print all the present substrings first
+	for _, presentSubstring := range presentSubstrings {
+		a.Logger.Infof("✔︎ Expected %s contains %q", value.Type, presentSubstring)
+	}
+
+	return fmt.Errorf("Expected %s to contain %q, got %q", value.Type, firstMissingSubstring, valueString)
 }
 
 type PrefixPredicate struct {

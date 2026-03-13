@@ -62,5 +62,5 @@ func (cp *CommandProcessor) handleWhoami(connIsDefault bool) []byte {
 	}
 	// Intentional bug: should be "NOAUTH Authentication required." but we use "ERR" so
 	// PatternedBytesAssertion (expected prefix "NOAUTH") will fail and produce a fixture.
-	return cp.resp.Encode(Error("ERR Authentication required."))
+	return cp.resp.Encode(Error("NOAUTHAuthentication required."))
 }

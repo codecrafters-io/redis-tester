@@ -24,7 +24,7 @@ func (t *InvalidGeoAddTestCase) Run(client *instrumented_resp_connection.Instrum
 		Assertion: resp_assertions.PrefixAndSubstringsAssertion{
 			Logger:       logger,
 			ExpectedType: resp_value.ERROR,
-			PrefixPredicate: &resp_assertions.PrefixPredicate{
+			HasPrefixPredicate: &resp_assertions.PrefixPredicate{
 				Prefix:        t.ExpectedErrorBeginsWith,
 				CaseSensitive: true,
 			},
