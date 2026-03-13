@@ -75,8 +75,9 @@ func (a PrefixAndSubstringsAssertion) Run(value resp_value.Value) error {
 		if !hasSubstringPredicate.Check(valueString) && !hasMissingSubstring {
 			hasMissingSubstring = true
 			firstMissingSubstring = hasSubstringPredicate.Substring
+		} else {
+			presentSubstrings = append(presentSubstrings, hasSubstringPredicate.Substring)
 		}
-		presentSubstrings = append(presentSubstrings, hasSubstringPredicate.Substring)
 	}
 
 	if !hasMissingSubstring {
