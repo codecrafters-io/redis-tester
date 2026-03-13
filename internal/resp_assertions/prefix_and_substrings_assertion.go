@@ -33,10 +33,20 @@ func (a PrefixAndSubstringsAssertion) Run(value resp_value.Value) error {
 	valueString := value.String()
 
 	// Check the prefix pattern
-	if a.PrefixPredicate != nil {
-		if !a.PrefixPredicate.Check(valueString) {
-			return fmt.Errorf("Expected %s to begin with %q, got %q", value.Type, a.PrefixPredicate.Prefix, valueString)
+	if a.PrefixPredicate != nil && !a.PrefixPredicate.Check(valueString) {
+		hasTrailingSpace := ""
+
+		if strings.HasSuffix(a.PrefixPredicate.Prefix, " ") {
+			hasTrailingSpace = " (trailing space)"
 		}
+
+		return fmt.Errorf(
+			"Expected %s to begin with %q%s, got %q",
+			value.Type,
+			a.PrefixPredicate.Prefix,
+			hasTrailingSpace,
+			valueString,
+		)
 	}
 
 	// Check for the specified substrings

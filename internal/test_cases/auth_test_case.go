@@ -22,7 +22,7 @@ func (t AuthTestCase) Run(client *instrumented_resp_connection.InstrumentedRespC
 		assertion = resp_assertions.PrefixAndSubstringsAssertion{
 			ExpectedType: resp_value.ERROR,
 			PrefixPredicate: &resp_assertions.PrefixPredicate{
-				Prefix:        "WRONGPASS",
+				Prefix:        "WRONGPASS ",
 				CaseSensitive: true,
 			},
 		}

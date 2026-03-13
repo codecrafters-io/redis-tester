@@ -43,7 +43,7 @@ func testGeospatialValidateCoordinates(stageHarness *test_case_harness.TestCaseH
 	positiveInvalidLatitudeTestCase := test_cases.InvalidGeoAddTestCase{
 		Key:                     locationKey,
 		Location:                locationWithPositiveInvalidLatitude,
-		ExpectedErrorBeginsWith: "ERR",
+		ExpectedErrorBeginsWith: "ERR ",
 		ExpectedErrorContains:   "latitude",
 	}
 
@@ -63,7 +63,7 @@ func testGeospatialValidateCoordinates(stageHarness *test_case_harness.TestCaseH
 	negativeInvalidLatitudeTestCase := test_cases.InvalidGeoAddTestCase{
 		Key:                     locationKey,
 		Location:                locationWithNegativeInvalidLatitude,
-		ExpectedErrorBeginsWith: "ERR",
+		ExpectedErrorBeginsWith: "ERR ",
 		ExpectedErrorContains:   "latitude",
 	}
 
@@ -84,7 +84,7 @@ func testGeospatialValidateCoordinates(stageHarness *test_case_harness.TestCaseH
 	positiveInvalidLongitudeTestCase := test_cases.InvalidGeoAddTestCase{
 		Key:                     locationKey,
 		Location:                locationWithPositiveInvalidLongitude,
-		ExpectedErrorBeginsWith: "ERR",
+		ExpectedErrorBeginsWith: "ERR ",
 		ExpectedErrorContains:   "longitude",
 	}
 
@@ -104,7 +104,7 @@ func testGeospatialValidateCoordinates(stageHarness *test_case_harness.TestCaseH
 	negativeInvalidLongitudeTestCase := test_cases.InvalidGeoAddTestCase{
 		Key:                     locationKey,
 		Location:                locationWithNegativeInvalidLongitude,
-		ExpectedErrorBeginsWith: "ERR",
+		ExpectedErrorBeginsWith: "ERR ",
 		ExpectedErrorContains:   "longitude",
 	}
 
