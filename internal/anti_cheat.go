@@ -37,6 +37,7 @@ func antiCheatTest(stageHarness *test_case_harness.TestCaseHarness) error {
 		Args:    []string{"DOCTOR"},
 		Assertion: resp_assertions.PrefixAndSubstringsAssertion{
 			ExpectedType: resp_value.BULK_STRING,
+			Logger:       logger,
 			HasSubstringPredicates: []resp_assertions.HasSubstringPredicate{{
 				Substring: "Sam",
 			}},
