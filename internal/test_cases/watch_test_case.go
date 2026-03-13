@@ -21,7 +21,7 @@ func (t WatchTestCase) Run(client *instrumented_resp_connection.InstrumentedResp
 			Logger:       logger,
 			ExpectedType: resp_value.ERROR,
 			PrefixPredicate: &resp_assertions.PrefixPredicate{
-				Prefix:        "ERR",
+				Prefix:        "ERR ",
 				CaseSensitive: true,
 			},
 			HasSubstringPredicates: []resp_assertions.HasSubstringPredicate{
