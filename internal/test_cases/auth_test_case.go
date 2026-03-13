@@ -19,9 +19,9 @@ func (t AuthTestCase) Run(client *instrumented_resp_connection.InstrumentedRespC
 	if t.ExpectedSuccess {
 		assertion = resp_assertions.NewSimpleStringAssertion("OK")
 	} else {
-		assertion = resp_assertions.PatternedBytesAssertion{
+		assertion = resp_assertions.PrefixAndSubstringsAssertion{
 			ExpectedType: resp_value.ERROR,
-			PrefixCondition: &resp_assertions.PatternedBytesBeginsWithCondition{
+			PrefixPredicate: &resp_assertions.PrefixPredicate{
 				Prefix:        "WRONGPASS",
 				CaseSensitive: true,
 			},

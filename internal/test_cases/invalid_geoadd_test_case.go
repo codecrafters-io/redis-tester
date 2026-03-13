@@ -21,13 +21,13 @@ func (t *InvalidGeoAddTestCase) Run(client *instrumented_resp_connection.Instrum
 	sendCommandTestCase := SendCommandTestCase{
 		Command: "GEOADD",
 		Args:    args,
-		Assertion: resp_assertions.PatternedBytesAssertion{
+		Assertion: resp_assertions.PrefixAndSubstringsAssertion{
 			ExpectedType: resp_value.ERROR,
-			PrefixCondition: &resp_assertions.PatternedBytesBeginsWithCondition{
+			PrefixPredicate: &resp_assertions.PrefixPredicate{
 				Prefix:        t.ExpectedErrorBeginsWith,
 				CaseSensitive: true,
 			},
-			SubstringConditions: []resp_assertions.PatternedBytesContainsCondition{{
+			HasaSubstringPredicates: []resp_assertions.HasSubstringPredicate{{
 				Substring: t.ExpectedErrorContains,
 			}},
 		},

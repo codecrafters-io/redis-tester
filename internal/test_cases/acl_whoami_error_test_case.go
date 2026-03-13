@@ -15,9 +15,9 @@ func (t AclWhoamiErrorTestCase) Run(client *instrumented_resp_connection.Instrum
 	sendCommandTestCase := SendCommandTestCase{
 		Command: "ACL",
 		Args:    []string{"WHOAMI"},
-		Assertion: resp_assertions.PatternedBytesAssertion{
+		Assertion: resp_assertions.PrefixAndSubstringsAssertion{
 			ExpectedType: resp_value.ERROR,
-			PrefixCondition: &resp_assertions.PatternedBytesBeginsWithCondition{
+			PrefixPredicate: &resp_assertions.PrefixPredicate{
 				Prefix:        t.ExpectedErrorBeginsWith,
 				CaseSensitive: true,
 			},

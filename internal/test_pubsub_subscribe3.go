@@ -42,13 +42,13 @@ func testPubSubSubscribe3(stageHarness *test_case_harness.TestCaseHarness) error
 	setTestCase := test_cases.SendCommandTestCase{
 		Command: "SET",
 		Args:    keyAndValue,
-		Assertion: resp_assertions.PatternedBytesAssertion{
+		Assertion: resp_assertions.PrefixAndSubstringsAssertion{
 			ExpectedType: resp_value.ERROR,
-			PrefixCondition: &resp_assertions.PatternedBytesBeginsWithCondition{
+			PrefixPredicate: &resp_assertions.PrefixPredicate{
 				Prefix:        "ERR ",
 				CaseSensitive: true,
 			},
-			SubstringConditions: []resp_assertions.PatternedBytesContainsCondition{{
+			HasaSubstringPredicates: []resp_assertions.HasSubstringPredicate{{
 				Substring:     "can't execute 'set'",
 				CaseSensitive: false,
 			}},
@@ -63,13 +63,13 @@ func testPubSubSubscribe3(stageHarness *test_case_harness.TestCaseHarness) error
 	getTestCase := test_cases.SendCommandTestCase{
 		Command: "GET",
 		Args:    keyAndValue[1:],
-		Assertion: resp_assertions.PatternedBytesAssertion{
+		Assertion: resp_assertions.PrefixAndSubstringsAssertion{
 			ExpectedType: resp_value.ERROR,
-			PrefixCondition: &resp_assertions.PatternedBytesBeginsWithCondition{
+			PrefixPredicate: &resp_assertions.PrefixPredicate{
 				Prefix:        "ERR ",
 				CaseSensitive: true,
 			},
-			SubstringConditions: []resp_assertions.PatternedBytesContainsCondition{{
+			HasaSubstringPredicates: []resp_assertions.HasSubstringPredicate{{
 				Substring:     "can't execute 'get'",
 				CaseSensitive: false,
 			}},
@@ -83,13 +83,13 @@ func testPubSubSubscribe3(stageHarness *test_case_harness.TestCaseHarness) error
 	echoTestCase := test_cases.SendCommandTestCase{
 		Command: "ECHO",
 		Args:    keyAndValue[1:],
-		Assertion: resp_assertions.PatternedBytesAssertion{
+		Assertion: resp_assertions.PrefixAndSubstringsAssertion{
 			ExpectedType: resp_value.ERROR,
-			PrefixCondition: &resp_assertions.PatternedBytesBeginsWithCondition{
+			PrefixPredicate: &resp_assertions.PrefixPredicate{
 				Prefix:        "ERR ",
 				CaseSensitive: true,
 			},
-			SubstringConditions: []resp_assertions.PatternedBytesContainsCondition{{
+			HasaSubstringPredicates: []resp_assertions.HasSubstringPredicate{{
 				Substring:     "can't execute 'echo'",
 				CaseSensitive: false,
 			}},

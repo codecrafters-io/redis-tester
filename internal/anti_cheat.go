@@ -35,9 +35,9 @@ func antiCheatTest(stageHarness *test_case_harness.TestCaseHarness) error {
 	commandTestCase := test_cases.SendCommandTestCase{
 		Command: "MEMORY",
 		Args:    []string{"DOCTOR"},
-		Assertion: resp_assertions.PatternedBytesAssertion{
+		Assertion: resp_assertions.PrefixAndSubstringsAssertion{
 			ExpectedType: resp_value.BULK_STRING,
-			SubstringConditions: []resp_assertions.PatternedBytesContainsCondition{{
+			HasaSubstringPredicates: []resp_assertions.HasSubstringPredicate{{
 				Substring: "Sam",
 			}},
 		},

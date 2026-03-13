@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/codecrafters-io/redis-tester/internal/instrumented_resp_connection"
+	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/tester-utils/logger"
 	rdb_parser "github.com/hdt3213/rdb/parser"
@@ -69,9 +70,14 @@ func (t SendReplicationHandshakeTestCase) RunReplconfStep(client *instrumented_r
 
 func (t SendReplicationHandshakeTestCase) RunPsyncStep(client *instrumented_resp_connection.InstrumentedRespConnection, logger *logger.Logger) error {
 	commandTest := SendCommandTestCase{
-		Command:                   "PSYNC",
-		Args:                      []string{"?", "-1"},
-		Assertion:                 resp_assertions.NewRegexSimpleStringAssertion("FULLRESYNC \\w+ 0"),
+		Command: "PSYNC",
+		Args:    []string{"?", "-1"},
+		Assertion: resp_assertions.NewRegexAssertion(
+			resp_value.SIMPLE_STRING,
+			// Use the correct regex (40 character long alphanumeric string)
+			"FULLRESYNC [A-Za-z0-9]{40} 0",
+			"FULLRESYNC 8371b4fb1155b71f4a04d3e1bc3e18c4a990aeeb 0",
+		),
 		ShouldSkipUnreadDataCheck: true, // We're expecting the RDB file to be sent next
 	}
 
