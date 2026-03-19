@@ -14,6 +14,7 @@ require (
 )
 
 require (
+	al.essio.dev/pkg/shellescape v1.6.0 // indirect
 	github.com/creack/pty v1.1.24 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fatih/color v1.18.0 // indirect

@@ -11,7 +11,6 @@ import (
 )
 
 func testAofConfigDefaults(stageHarness *test_case_harness.TestCaseHarness) error {
-	// On MacOS, the tmpDir is a symlink to a directory in /var/folders/...
 	b := redis_executable.NewRedisExecutable(stageHarness)
 	if err := b.Run(); err != nil {
 		return err

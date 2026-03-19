@@ -951,43 +951,6 @@ stages:
       When a key hasn't expired, the expected response is a RESP bulk string with the value corresponding to the key.
     marketing_md: |
       In this stage, you'll add support for reading values that have an expiry set.
-    
-  # AOF Persistence
-
-  - slug: "uj3"
-    primary_extension_slug: "persistence-aof"
-    name: "AOF config defaults"
-    difficulty: easy
-    marketing_md: |
-      In this stage, you'll implement the default values for AOF-related options.
-
-  - slug: "vd9"
-    primary_extension_slug: "persistence-aof"
-    name: "AOF config from flags"
-    difficulty: easy
-    marketing_md: |
-      In this stage, you'll accept the values of AOF configuration options from the command line flags.
-
-  - slug: "fm0"
-    primary_extension_slug: "persistence-aof"
-    name: "Create AOF directory"
-    difficulty: easy
-    marketing_md: |
-      In this stage, you'll add support for creating append-only directory when append-only mode is enabled.
-
-  - slug: "dw4"
-    primary_extension_slug: "persistence-aof"
-    name: "Create append-only file"
-    difficulty: easy
-    marketing_md: |
-      In this stage, you'll add support for creating the append-only file when append-only mode is enabled.
-
-  - slug: "pb9"
-    primary_extension_slug: "persistence-aof"
-    name: "Create AOF manifest"
-    difficulty: easy
-    marketing_md: |
-      In this stage, you'll add support for creating the metadata file when append-only mode is enabled.
 
   # Replication
 
@@ -1914,6 +1877,43 @@ stages:
       - The returned number of replicas might be lesser than or greater than the expected number of replicas specified in the `WAIT` command.
     marketing_md: |
       In this stage, you'll finish implementing the WAIT command on your master.
+
+  # AOF Persistence
+
+  - slug: "uj3"
+    primary_extension_slug: "persistence-aof"
+    name: "AOF config defaults"
+    difficulty: easy
+    marketing_md: |
+      In this stage, you'll implement the default values for AOF-related options.
+
+  - slug: "vd9"
+    primary_extension_slug: "persistence-aof"
+    name: "AOF config from flags"
+    difficulty: easy
+    marketing_md: |
+      In this stage, you'll accept the values of AOF configuration options from the command line flags.
+
+  - slug: "fm0"
+    primary_extension_slug: "persistence-aof"
+    name: "Create AOF directory"
+    difficulty: easy
+    marketing_md: |
+      In this stage, you'll add support for creating append-only directory when append-only mode is enabled.
+
+  - slug: "dw4"
+    primary_extension_slug: "persistence-aof"
+    name: "Create append-only file"
+    difficulty: easy
+    marketing_md: |
+      In this stage, you'll add support for creating the append-only file when append-only mode is enabled.
+
+  - slug: "pb9"
+    primary_extension_slug: "persistence-aof"
+    name: "Create AOF manifest"
+    difficulty: easy
+    marketing_md: |
+      In this stage, you'll add support for creating the metadata file when append-only mode is enabled.
 
   # Streams
 

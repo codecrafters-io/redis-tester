@@ -22,10 +22,8 @@ func testAofConfigFromFlags(stageHarness *test_case_harness.TestCaseHarness) err
 	baseNames := testerutils_random.RandomWords(2)
 	appendDirName := baseNames[0]
 	appendFileName := fmt.Sprintf("%s.aof", baseNames[1])
-
 	b := redis_executable.NewRedisExecutable(stageHarness)
-
-	// Ensures that the temporary working directory is deleted AFTER the executable is killed
+	// Keeping this here to ensures that the temporary working directory is deleted AFTER the executable is killed
 	stageHarness.RegisterTeardownFunc(func() { os.RemoveAll(workingDirectory) })
 
 	if err := b.Run(
@@ -38,7 +36,6 @@ func testAofConfigFromFlags(stageHarness *test_case_harness.TestCaseHarness) err
 	}
 
 	logger := stageHarness.Logger
-
 	client, err := (&ClientsSpawner{Addr: "localhost:6379", StageHarness: stageHarness}).SpawnClientWithPrefix("client")
 
 	if err != nil {

@@ -144,6 +144,27 @@ var testerDefinition = tester_definition.TesterDefinition{
 			Slug:     "na2",
 			TestFunc: testWait,
 		},
+		// AOF Persistence
+		{
+			Slug:     "uj3",
+			TestFunc: testAofConfigDefaults,
+		},
+		{
+			Slug:     "vd9",
+			TestFunc: testAofConfigFromFlags,
+		},
+		{
+			Slug:     "fm0",
+			TestFunc: testAofCreateAofDirectory,
+		},
+		{
+			Slug:     "dw4",
+			TestFunc: testAofCreateAppendOnlyFile,
+		},
+		{
+			Slug:     "pb9",
+			TestFunc: testAofCreateAofManifest,
+		},
 		// Streams
 		{
 			Slug:     "cc3",
@@ -447,28 +468,6 @@ var testerDefinition = tester_definition.TesterDefinition{
 		{
 			Slug:     "hq1",
 			TestFunc: testOptimisticLockingUnwatchOnDiscard,
-		},
-		// AOF Persistence
-		{
-			Slug:     "uj3",
-			TestFunc: testAofConfigDefaults,
-		},
-		{
-			Slug:     "vd9",
-			TestFunc: testAofConfigFromFlags,
-			Timeout:  time.Hour,
-		},
-		{
-			Slug:     "fm0",
-			TestFunc: testAofCreateAofDirectory,
-		},
-		{
-			Slug:     "dw4",
-			TestFunc: testAofCreateAppendOnlyFile,
-		},
-		{
-			Slug:     "pb9",
-			TestFunc: testAofCreateAofManifest,
 		},
 	},
 }
