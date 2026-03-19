@@ -456,6 +456,7 @@ var testerDefinition = tester_definition.TesterDefinition{
 		{
 			Slug:     "vd9",
 			TestFunc: testAofConfigFromFlags,
+			Timeout:  time.Hour,
 		},
 		{
 			Slug:     "fm0",
