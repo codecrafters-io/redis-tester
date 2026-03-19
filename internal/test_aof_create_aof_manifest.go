@@ -3,7 +3,6 @@ package internal
 import (
 	"fmt"
 	"os"
-	"path"
 	"path/filepath"
 
 	"github.com/codecrafters-io/redis-tester/internal/filesystem_assertion"
@@ -46,12 +45,12 @@ func testAofCreateAofManifest(stageHarness *test_case_harness.TestCaseHarness) e
 		},
 		// append-only file should contain no commands
 		filesystem_assertion.AofAppendOnlyFileAssertion{
-			AbsolutePath:     path.Join(workingDirectory, appendDirName, appendOnlyFileBaseName),
+			AbsolutePath:     filepath.Join(workingDirectory, appendDirName, appendOnlyFileBaseName),
 			ExpectedCommands: []string{},
 		},
 		// The manifest must contain entry for append-only (incr) file
 		filesystem_assertion.AofManifestFileAssertion{
-			AbsolutePath:           path.Join(workingDirectory, appendDirName, manifestFileBaseName),
+			AbsolutePath:           filepath.Join(workingDirectory, appendDirName, manifestFileBaseName),
 			AppendOnlyFileBasename: appendOnlyFileBaseName,
 		},
 	})
