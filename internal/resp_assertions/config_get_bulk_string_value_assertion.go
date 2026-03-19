@@ -45,7 +45,8 @@ func (a ConfigGetBulkStringValueAssertion) Run(value resp_value.Value) error {
 	if secondElement.Type != resp_value.BULK_STRING {
 		return fmt.Errorf("Expected element #2 to be a bulk string, got %s", secondElement.Type)
 	}
-	if secondElement.String() != a.ExpectedValue && secondElement.String() != a.ExpectedValue+"/" {
+
+	if secondElement.String() != a.ExpectedValue {
 		return fmt.Errorf("Expected element #2 to be %q, got %q", a.ExpectedValue, secondElement.String())
 	}
 

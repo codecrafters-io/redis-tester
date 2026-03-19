@@ -13,12 +13,12 @@ case "$1" in
   test)
     echo "🧪 Running tests using Docker container"
     docker_build
-    docker run --rm -it -v "$(pwd)":/app -w /app redis-tester make test
+    docker run --rm -it -v "$(pwd)":/home/runner/work/redis-tester/redis-tester -w /home/runner/work/redis-tester/redis-tester redis-tester make test
     ;;
   record_fixtures)
     echo "📝 Recording fixtures using Docker container"
     docker_build
-    docker run --rm -it -e CODECRAFTERS_RECORD_FIXTURES=true -v "$(pwd)":/app -w /app redis-tester make test
+    docker run --rm -it -e CODECRAFTERS_RECORD_FIXTURES=true -v "$(pwd)":/home/runner/work/redis-tester/redis-tester -w /home/runner/work/redis-tester/redis-tester redis-tester make test
     ;;
   *)
     echo "Usage:"
