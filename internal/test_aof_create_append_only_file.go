@@ -3,7 +3,6 @@ package internal
 import (
 	"fmt"
 	"os"
-	"path"
 	"path/filepath"
 
 	"github.com/codecrafters-io/redis-tester/internal/filesystem_assertion"
@@ -44,7 +43,7 @@ func testAofCreateAppendOnlyFile(stageHarness *test_case_harness.TestCaseHarness
 			AbsolutePath: filepath.Join(workingDirectory, appendDirName),
 		},
 		filesystem_assertion.AofAppendOnlyFileAssertion{
-			AbsolutePath: path.Join(workingDirectory, appendDirName, appendOnlyFileBaseName),
+			AbsolutePath: filepath.Join(workingDirectory, appendDirName, appendOnlyFileBaseName),
 			// Expect no commands to be present in the append-only file
 			ExpectedCommands: []string{},
 		},
