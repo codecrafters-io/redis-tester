@@ -95,6 +95,11 @@ test_optimistic_locking_with_redis: build
 	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\": \"jb7\", \"tester_log_prefix\": \"stage-1001\", \"title\": \"The WATCH command\"},{\"slug\": \"jq9\", \"tester_log_prefix\": \"stage-1002\", \"title\": \"WATCH inside transaction\"},{\"slug\": \"mh8\", \"tester_log_prefix\": \"stage-1003\", \"title\": \"Tracking key modifications\"},{\"slug\": \"fp0\", \"tester_log_prefix\": \"stage-1004\", \"title\": \"Watching multiple keys\"},{\"slug\": \"uo9\", \"tester_log_prefix\": \"stage-1005\", \"title\": \"Watching missing keys\"},{\"slug\": \"bn1\", \"tester_log_prefix\": \"stage-1006\", \"title\": \"The UNWATCH command\"},{\"slug\": \"fn4\", \"tester_log_prefix\": \"stage-1007\", \"title\": \"Unwatch on EXEC\"},{\"slug\": \"hq1\", \"tester_log_prefix\": \"stage-1008\", \"title\": \"Unwatch on DISCARD\"}]" \
 	dist/main.out
 
+test_aof_with_redis: build
+	CODECRAFTERS_REPOSITORY_DIR=./internal/test_helpers/pass_all \
+	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\":\"uj3\",\"tester_log_prefix\":\"stage-1101\",\"title\":\"AOF config defaults\"},{\"slug\":\"vd9\",\"tester_log_prefix\":\"stage-1102\",\"title\":\"AOF config from flags\"},{\"slug\":\"fm0\",\"tester_log_prefix\":\"stage-1103\",\"title\":\"Create AOF directory\"},{\"slug\":\"dw4\",\"tester_log_prefix\":\"stage-1104\",\"title\":\"Create append-only file\"},{\"slug\":\"pb9\",\"tester_log_prefix\":\"stage-1105\",\"title\":\"Create AOF manifest\"}]" \
+	dist/main.out
+
 test_all_with_redis:
 	make test_base_with_redis || true
 	make test_repl_with_redis || true
@@ -107,6 +112,7 @@ test_all_with_redis:
 	make test_geospatial_with_redis || true
 	make test_auth_with_redis || true
 	make test_optimistic_locking_with_redis || true
+	make test_aof_with_redis || true
 
 setup:
 	echo "Setting up redis-tester prerequisites for Linux"

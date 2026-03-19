@@ -201,6 +201,13 @@ func TestStages(t *testing.T) {
 			StdoutFixturePath:   "./test_helpers/fixtures/optimistic_locking/pass",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
+		"aof_pass": {
+			StageSlugs:          []string{"uj3", "vd9", "fm0", "dw4", "pb9"},
+			CodePath:            "./test_helpers/pass_all",
+			ExpectedExitCode:    0,
+			StdoutFixturePath:   "./test_helpers/fixtures/aof/pass",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
 	}
 
 	tester_utils_testing.TestTesterOutput(t, testerDefinition, testCases)
