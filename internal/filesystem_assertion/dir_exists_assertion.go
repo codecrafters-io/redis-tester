@@ -20,6 +20,11 @@ func (a DirExistsAssertion) Run() FileSystemAssertionResult {
 	escapedPath := shellescape.Quote(a.AbsolutePath)
 
 	if err == nil {
+		if !info.IsDir() {
+			return FileSystemAssertionResult{
+				Err: fmt.Errorf("Expected %s exists, but is not a directory", escapedPath),
+			}
+		}
 		return FileSystemAssertionResult{
 			SuccessLog: fmt.Sprintf("✔ Directory %s exists", escapedPath),
 		}
@@ -29,13 +34,6 @@ func (a DirExistsAssertion) Run() FileSystemAssertionResult {
 	if os.IsNotExist(err) {
 		return FileSystemAssertionResult{
 			Err: fmt.Errorf("Expected directory %q does not exist", escapedPath),
-		}
-	}
-
-	// Exists but is not a directory (Possible error)
-	if !info.IsDir() {
-		return FileSystemAssertionResult{
-			Err: fmt.Errorf("Expected %s exists, but is not a directory", escapedPath),
 		}
 	}
 
