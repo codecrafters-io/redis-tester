@@ -39,7 +39,7 @@ func (a AofManifestFileAssertion) Run() FileSystemAssertionResult {
 
 	if err := scanner.Err(); err != nil {
 		return FileSystemAssertionResult{
-			Err: fmt.Errorf("Error reading lines from the manifest file %q: %w", quotedPath, err),
+			Err: fmt.Errorf("Error reading lines from the manifest file %s: %w", quotedPath, err),
 		}
 	}
 
