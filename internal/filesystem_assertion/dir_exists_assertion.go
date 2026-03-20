@@ -33,7 +33,7 @@ func (a DirExistsAssertion) Run() FileSystemAssertionResult {
 	// Does not exist
 	if os.IsNotExist(err) {
 		return FileSystemAssertionResult{
-			Err: fmt.Errorf("Expected directory %q does not exist", escapedPath),
+			Err: fmt.Errorf("Expected directory %q to exist, does not exist", escapedPath),
 		}
 	}
 

@@ -16,7 +16,7 @@ type AofManifestFileAssertion struct {
 
 func (a AofManifestFileAssertion) Run() FileSystemAssertionResult {
 	if a.AbsolutePath == "" || a.AppendOnlyFileBasename == "" {
-		panic("Codecrafters Internal Error - AbsolutePath in FileContentAssertion cannot be empty")
+		panic("Codecrafters Internal Error - AbsolutePath in AofManifestFileAssertion cannot be empty")
 	}
 
 	f, err := os.Open(a.AbsolutePath)
