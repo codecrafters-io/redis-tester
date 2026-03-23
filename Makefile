@@ -97,7 +97,7 @@ test_optimistic_locking_with_redis: build
 
 test_aof_with_redis: build
 	CODECRAFTERS_REPOSITORY_DIR=./internal/test_helpers/pass_all \
-	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\":\"uj3\",\"tester_log_prefix\":\"stage-1101\",\"title\":\"AOF config defaults\"},{\"slug\":\"vd9\",\"tester_log_prefix\":\"stage-1102\",\"title\":\"AOF config from flags\"},{\"slug\":\"fm0\",\"tester_log_prefix\":\"stage-1103\",\"title\":\"Create AOF directory\"},{\"slug\":\"dw4\",\"tester_log_prefix\":\"stage-1104\",\"title\":\"Create append-only file\"},{\"slug\":\"pb9\",\"tester_log_prefix\":\"stage-1105\",\"title\":\"Create AOF manifest\"}]" \
+	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\":\"uj3\",\"tester_log_prefix\":\"stage-1101\",\"title\":\"AOF config defaults\"},{\"slug\":\"vd9\",\"tester_log_prefix\":\"stage-1102\",\"title\":\"AOF config from flags\"},{\"slug\":\"fm0\",\"tester_log_prefix\":\"stage-1103\",\"title\":\"Create AOF directory\"},{\"slug\":\"dw4\",\"tester_log_prefix\":\"stage-1104\",\"title\":\"Create append-only file\"},{\"slug\":\"pb9\",\"tester_log_prefix\":\"stage-1105\",\"title\":\"Create AOF manifest\"},{\"slug\":\"dc8\",\"tester_log_prefix\":\"stage-1106\",\"title\":\"Replay a single command\"},{\"slug\":\"fi1\",\"tester_log_prefix\":\"stage-1107\",\"title\":\"Replay multiple commands\"}]" \
 	dist/main.out
 
 test_all_with_redis:
