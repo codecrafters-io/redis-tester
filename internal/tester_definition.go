@@ -173,6 +173,14 @@ var testerDefinition = tester_definition.TesterDefinition{
 			Slug:     "fi1",
 			TestFunc: testAofReplayMultipleCommands,
 		},
+		{
+			Slug:     "ep6",
+			TestFunc: testAofAppendfsyncDefault,
+		},
+		{
+			Slug:     "xz2",
+			TestFunc: testAofAppendfsyncFromFlags,
+		},
 		// Streams
 		{
 			Slug:     "cc3",

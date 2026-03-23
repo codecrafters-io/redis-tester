@@ -2,7 +2,7 @@ Debug = true
 
 [33m[tester::#UJ3] [0m[94mRunning tests for Stage #UJ3 (uj3)[0m
 [33m[tester::#UJ3] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[tester::#UJ3] [client] [0m[36mConnected (port 57238 -> port 6379)[0m
+[33m[tester::#UJ3] [client] [0m[36mConnected (port 56826 -> port 6379)[0m
 [33m[tester::#UJ3] [client] [0m[94m$ redis-cli CONFIG GET dir[0m
 [33m[tester::#UJ3] [client] [0m[36mSent bytes: "*3\r\n$6\r\nCONFIG\r\n$3\r\nGET\r\n$3\r\ndir\r\n"[0m
 [33m[tester::#UJ3] [client] [0m[36mReceived bytes: "*2\r\n$3\r\ndir\r\n$52\r\n/home/runner/work/redis-tester/redis-tester/internal\r\n"[0m
@@ -47,7 +47,7 @@ Debug = true
 
 [33m[tester::#VD9] [0m[94mRunning tests for Stage #VD9 (vd9)[0m
 [33m[tester::#VD9] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/aof-6623 --appendonly yes --appenddirname orange --appendfilename pear.aof[0m
-[33m[tester::#VD9] [client] [0m[36mConnected (port 57252 -> port 6379)[0m
+[33m[tester::#VD9] [client] [0m[36mConnected (port 56856 -> port 6379)[0m
 [33m[tester::#VD9] [client] [0m[94m$ redis-cli CONFIG GET dir[0m
 [33m[tester::#VD9] [client] [0m[36mSent bytes: "*3\r\n$6\r\nCONFIG\r\n$3\r\nGET\r\n$3\r\ndir\r\n"[0m
 [33m[tester::#VD9] [client] [0m[36mReceived bytes: "*2\r\n$3\r\ndir\r\n$13\r\n/tmp/aof-6623\r\n"[0m
@@ -105,7 +105,7 @@ Debug = true
 [33m[tester::#DC8] [0m[94mWriting the following commands to append-only file strawberry.aof.1.incr.aof[0m
 [33m[tester::#DC8] [strawberry.aof.1.incr.aof] [0m[94mSET banana 447[0m
 [33m[tester::#DC8] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/aof-2485 --appendonly yes --appenddirname pear --appendfilename apple.aof[0m
-[33m[tester::#DC8] [client] [0m[36mConnected (port 57270 -> port 6379)[0m
+[33m[tester::#DC8] [client] [0m[36mConnected (port 56874 -> port 6379)[0m
 [33m[tester::#DC8] [0m[94mChecking if the command in append-only file was replayed[0m
 [33m[tester::#DC8] [client] [0m[94m$ redis-cli GET banana[0m
 [33m[tester::#DC8] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$6\r\nbanana\r\n"[0m
@@ -127,7 +127,7 @@ Debug = true
 [33m[tester::#FI1] [pear.aof.1.incr.aof] [0m[94mSET grape 362[0m
 [33m[tester::#FI1] [pear.aof.1.incr.aof] [0m[94mSET mango 142[0m
 [33m[tester::#FI1] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/aof-602 --appendonly yes --appenddirname pineapple --appendfilename raspberry.aof[0m
-[33m[tester::#FI1] [client] [0m[36mConnected (port 57298 -> port 6379)[0m
+[33m[tester::#FI1] [client] [0m[36mConnected (port 56896 -> port 6379)[0m
 [33m[tester::#FI1] [0m[94mChecking if commands in append-only file were replayed[0m
 [33m[tester::#FI1] [client] [0m[94m$ redis-cli GET mango[0m
 [33m[tester::#FI1] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$5\r\nmango\r\n"[0m
@@ -142,3 +142,27 @@ Debug = true
 [33m[tester::#FI1] [0m[92mTest passed.[0m
 [33m[tester::#FI1] [0m[36mTerminating program[0m
 [33m[tester::#FI1] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#EP6] [0m[94mRunning tests for Stage #EP6 (ep6)[0m
+[33m[tester::#EP6] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#EP6] [client] [0m[36mConnected (port 56906 -> port 6379)[0m
+[33m[tester::#EP6] [client] [0m[94m$ redis-cli CONFIG GET appendfsync[0m
+[33m[tester::#EP6] [client] [0m[36mSent bytes: "*3\r\n$6\r\nCONFIG\r\n$3\r\nGET\r\n$11\r\nappendfsync\r\n"[0m
+[33m[tester::#EP6] [client] [0m[36mReceived bytes: "*2\r\n$11\r\nappendfsync\r\n$8\r\neverysec\r\n"[0m
+[33m[tester::#EP6] [client] [0m[36mReceived RESP array: ["appendfsync", "everysec"][0m
+[33m[tester::#EP6] [client] [0m[92m✔︎ Received ["appendfsync", "everysec"][0m
+[33m[tester::#EP6] [0m[92mTest passed.[0m
+[33m[tester::#EP6] [0m[36mTerminating program[0m
+[33m[tester::#EP6] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#XZ2] [0m[94mRunning tests for Stage #XZ2 (xz2)[0m
+[33m[tester::#XZ2] [0m[94m$ ./spawn_redis_server.sh --appendfsync always[0m
+[33m[tester::#XZ2] [client] [0m[36mConnected (port 56926 -> port 6379)[0m
+[33m[tester::#XZ2] [client] [0m[94m$ redis-cli CONFIG GET appendfsync[0m
+[33m[tester::#XZ2] [client] [0m[36mSent bytes: "*3\r\n$6\r\nCONFIG\r\n$3\r\nGET\r\n$11\r\nappendfsync\r\n"[0m
+[33m[tester::#XZ2] [client] [0m[36mReceived bytes: "*2\r\n$11\r\nappendfsync\r\n$6\r\nalways\r\n"[0m
+[33m[tester::#XZ2] [client] [0m[36mReceived RESP array: ["appendfsync", "always"][0m
+[33m[tester::#XZ2] [client] [0m[92m✔︎ Received ["appendfsync", "always"][0m
+[33m[tester::#XZ2] [0m[92mTest passed.[0m
+[33m[tester::#XZ2] [0m[36mTerminating program[0m
+[33m[tester::#XZ2] [0m[36mProgram terminated successfully[0m

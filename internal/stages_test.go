@@ -202,7 +202,7 @@ func TestStages(t *testing.T) {
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 		"aof_pass": {
-			StageSlugs:          []string{"uj3", "vd9", "fm0", "dw4", "pb9", "dc8", "fi1"},
+			StageSlugs:          []string{"uj3", "vd9", "fm0", "dw4", "pb9", "dc8", "fi1", "ep6", "xz2"},
 			CodePath:            "./test_helpers/pass_all",
 			ExpectedExitCode:    0,
 			StdoutFixturePath:   "./test_helpers/fixtures/aof/pass",
