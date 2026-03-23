@@ -165,6 +165,14 @@ var testerDefinition = tester_definition.TesterDefinition{
 			Slug:     "pb9",
 			TestFunc: testAofCreateAofManifest,
 		},
+		{
+			Slug:     "dc8",
+			TestFunc: testAofReplaySingleCommand,
+		},
+		{
+			Slug:     "fi1",
+			TestFunc: testAofReplayMultipleCommands,
+		},
 		// Streams
 		{
 			Slug:     "cc3",
