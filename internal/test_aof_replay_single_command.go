@@ -2,6 +2,7 @@ package internal
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
@@ -42,9 +43,7 @@ func testAofReplaySingleCommand(stageHarness *test_case_harness.TestCaseHarness)
 
 	b := redis_executable.NewRedisExecutable(stageHarness)
 
-	stageHarness.RegisterTeardownFunc(func() {
-		aofDirectoryCreator.Cleanup(stageHarness)
-	})
+	stageHarness.RegisterTeardownFunc(func() { os.RemoveAll(workingDirectory) })
 
 	if err := b.Run(
 		"--dir", workingDirectory,
