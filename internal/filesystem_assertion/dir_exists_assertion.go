@@ -26,7 +26,9 @@ func (a DirExistsAssertion) Run() FileSystemAssertionResult {
 			}
 		}
 		return FileSystemAssertionResult{
-			SuccessLog: fmt.Sprintf("✔ Directory %s exists", escapedPath),
+			Logs: []FileSystemAssertionLog{
+				NewFileSystemAssertionResultLog(_SUCCESS, fmt.Sprintf("✔ Directory %s exists", escapedPath)),
+			},
 		}
 	}
 

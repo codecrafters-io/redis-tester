@@ -32,7 +32,7 @@ func (a *FileSystemAsserter) RunAssertions(logger *logger.Logger) error {
 
 	deadline := time.Now().Add(a.Timeout)
 	outcomes := runAssertionsConcurrently(a.assertions, deadline)
-	logAssertionSuccessMessagesInOrder(logger, outcomes)
+	logAssertionResultLogs(logger, outcomes)
 	return firstAssertionErrorInOrder(outcomes)
 }
 
@@ -74,12 +74,22 @@ func runAssertionUntilSuccessOrDeadline(assertion FilesystemAssertion, deadline 
 	}
 }
 
-// logAssertionSuccessMessagesInOrder logs non-empty success messages in slice order.
-func logAssertionSuccessMessagesInOrder(logger *logger.Logger, outcomes []FileSystemAssertionResult) {
+// logAssertionResultLogs logs non-empty success messages in slice order.
+func logAssertionResultLogs(logger *logger.Logger, outcomes []FileSystemAssertionResult) {
 	for _, outcome := range outcomes {
 		// If error is nil, log the success log of that outcome
 		if outcome.Err == nil {
-			logger.Successf("%s", outcome.SuccessLog)
+			for _, log := range outcome.Logs {
+				log.LogMessageUsingLogger(logger)
+			}
+		}
+	}
+
+	for _, outcome := range outcomes {
+		if outcome.Err != nil {
+			for _, log := range outcome.Logs {
+				log.LogMessageUsingLogger(logger)
+			}
 		}
 	}
 }

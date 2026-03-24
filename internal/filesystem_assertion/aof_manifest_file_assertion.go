@@ -48,7 +48,12 @@ func (a AofManifestFileAssertion) Run() FileSystemAssertionResult {
 		// to keep track of where the INCR file begins and ends in terms of replication
 		if strings.Contains(foundLine, fmt.Sprintf("file %s seq 1 type i", a.AppendOnlyFileBasename)) {
 			return FileSystemAssertionResult{
-				SuccessLog: fmt.Sprintf("✔ Manifest file contains 'file %s seq 1 type i'", a.AppendOnlyFileBasename),
+				Logs: []FileSystemAssertionLog{
+					NewFileSystemAssertionResultLog(
+						_SUCCESS,
+						fmt.Sprintf("✔ Manifest file contains 'file %s seq 1 type i'", a.AppendOnlyFileBasename),
+					),
+				},
 			}
 		}
 	}

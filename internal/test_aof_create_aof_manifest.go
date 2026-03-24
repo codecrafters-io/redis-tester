@@ -45,7 +45,8 @@ func testAofCreateAofManifest(stageHarness *test_case_harness.TestCaseHarness) e
 		},
 		// append-only file should contain no commands
 		filesystem_assertion.AofAppendOnlyFileAssertion{
-			AbsolutePath:     filepath.Join(workingDirectory, appendDirName, appendOnlyFileBaseName),
+			AbsolutePath: filepath.Join(workingDirectory, appendDirName, appendOnlyFileBaseName),
+			// No commands expected in append-only file
 			ExpectedCommands: []string{},
 		},
 		// The manifest must contain entry for append-only (incr) file

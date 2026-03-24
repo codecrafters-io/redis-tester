@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"al.essio.dev/pkg/shellescape"
+	resp_decoder "github.com/codecrafters-io/redis-tester/internal/resp/decoder"
 )
 
 type AofAppendOnlyFileAssertion struct {
@@ -27,19 +28,59 @@ func (a AofAppendOnlyFileAssertion) Run() FileSystemAssertionResult {
 		}
 	}
 
-	// TODO: This assertion will suppport multiple commands in later PRs
-	// Keeping this here for defensive programming
-	if len(a.ExpectedCommands) != 0 {
-		panic("Codecrafters Internal Error - AofAppendOnlyFileAssertion does not support commands yet!")
+	foundCommands, err := resp_decoder.DecodeCommandsFromAppendOnlyFile(fileContents)
+
+	if err != nil {
+		// Construct info logs from all the found commands
+		var infoLogs []FileSystemAssertionLog
+
+		for _, foundCommand := range foundCommands {
+			infoLogs = append(
+				infoLogs,
+				NewFileSystemAssertionResultLog(
+					_INFO,
+					fmt.Sprintf("Found command: %q", foundCommand),
+				),
+			)
+		}
+
+		return FileSystemAssertionResult{
+			Logs: infoLogs,
+			Err:  err,
+		}
 	}
 
-	if len(fileContents) > 0 {
+	if len(foundCommands) != len(a.ExpectedCommands) {
 		return FileSystemAssertionResult{
-			Err: fmt.Errorf("Expected append-only file %s to be empty, is not empty", quotedPath),
+			Err: fmt.Errorf(
+				"Expected %d commands to be present in the append-only file, found %d",
+				len(a.ExpectedCommands),
+				len(foundCommands),
+			),
+		}
+	}
+
+	var successLogs []FileSystemAssertionLog
+
+	for i, foundCommand := range foundCommands {
+		expectedCommand := a.ExpectedCommands[i]
+
+		if expectedCommand != foundCommand {
+			return FileSystemAssertionResult{
+				Logs: successLogs,
+				Err: fmt.Errorf(
+					"Expected command #%d to be %q, got %q", i+1, expectedCommand, foundCommand,
+				),
+			}
+		} else {
+			successLogs = append(successLogs, NewFileSystemAssertionResultLog(
+				_SUCCESS,
+				fmt.Sprintf("✔ Found command: %q", foundCommand),
+			))
 		}
 	}
 
 	return FileSystemAssertionResult{
-		SuccessLog: fmt.Sprintf("✔ Append-only file %s is empty", quotedPath),
+		Logs: successLogs,
 	}
 }

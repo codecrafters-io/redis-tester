@@ -50,23 +50,27 @@ func (a *AofDirectoryCreator) Create(logger *logger.Logger) error {
 		return fmt.Errorf("Failed to create manifest file %s: %w", manifestFilePath, err)
 	}
 
-	logger.Infof("Creating append-only directory %s:", a.AppendDirName)
+	logger.Infof("Creating append-only directory %q:", a.AppendDirName)
 	logger.WithAdditionalSecondaryPrefix(a.AppendDirName, func() {
 		logger.Infof("  - %s", manifestFileName)
 		logger.Infof("  - %s", actualAppendFileName)
 	})
 
-	logger.Infof("Creating manifest file %s", manifestFileName)
+	logger.Infof("Creating manifest file %q", manifestFileName)
 	logger.WithAdditionalSecondaryPrefix(manifestFileName, func() {
 		logger.Infof("%s", manifestFileEntry)
 	})
 
-	logger.Infof("Writing the following commands to append-only file %s", actualAppendFileName)
-	logger.WithAdditionalSecondaryPrefix(actualAppendFileName, func() {
-		for _, cmd := range a.CommandsInsideAppendOnlyFile {
-			logger.Infof("%s", strings.Join(cmd, " "))
-		}
-	})
+	if len(a.CommandsInsideAppendOnlyFile) > 0 {
+		logger.Infof("Writing the following commands to append-only file %q", actualAppendFileName)
+		logger.WithAdditionalSecondaryPrefix(actualAppendFileName, func() {
+			for _, cmd := range a.CommandsInsideAppendOnlyFile {
+				logger.Infof("%s", strings.Join(cmd, " "))
+			}
+		})
+	} else {
+		logger.Infof("Creating empty append-only file %s", actualAppendFileName)
+	}
 
 	return nil
 }
@@ -90,10 +94,6 @@ func (a *AofDirectoryCreator) verifyMemberValues() {
 
 	if a.AppendOnlyFilenameInManifest == "" {
 		panic("Codecrafters Internal Error - AppendOnlyFileNameInManifest cannot be empty in AofDirectoryCreator")
-	}
-
-	if len(a.CommandsInsideAppendOnlyFile) == 0 {
-		panic("Codecrafters Internal Error - CommandsInsideAppendOnlyFile cannot be nil or empty in AofDirectoryCreator")
 	}
 
 	for i, cmd := range a.CommandsInsideAppendOnlyFile {

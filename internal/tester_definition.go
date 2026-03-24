@@ -181,6 +181,14 @@ var testerDefinition = tester_definition.TesterDefinition{
 			Slug:     "xz2",
 			TestFunc: testAofAppendfsyncFromFlags,
 		},
+		{
+			Slug:     "kn2",
+			TestFunc: testAofWriteSingleCommand,
+		},
+		{
+			Slug:     "oc8",
+			TestFunc: testAofWriteMultipleCommands,
+		},
 		// Streams
 		{
 			Slug:     "cc3",
