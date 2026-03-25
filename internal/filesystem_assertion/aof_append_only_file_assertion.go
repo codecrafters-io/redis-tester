@@ -137,7 +137,7 @@ func (a *AofAppendOnlyFileAssertion) assertCommandsPosition(decoded [][]string) 
 		expectedCommandStr := shellquote.Join(expectedCommand...)
 		foundCommandStr := shellquote.Join(foundCommand...)
 
-		if slices.Equal(foundCommand, expectedCommand) {
+		if !slices.Equal(foundCommand, expectedCommand) {
 			return fmt.Errorf(
 				"Expected command #%d to be %q, got %q",
 				i+1,
