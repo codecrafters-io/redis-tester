@@ -90,7 +90,7 @@ var testerDefinition = tester_definition.TesterDefinition{
 		},
 		{
 			Slug:     "pb9",
-			TestFunc: testAofCreateManifestFile,
+			TestFunc: testAofCreateAofManifestFile,
 		},
 		{
 			Slug:     "dc8",

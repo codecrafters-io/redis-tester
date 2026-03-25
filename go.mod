@@ -5,6 +5,7 @@ go 1.24.0
 toolchain go1.24.2
 
 require (
+	al.essio.dev/pkg/shellescape v1.6.0
 	github.com/codecrafters-io/tester-utils v0.4.15
 	github.com/dustin/go-humanize v1.0.1
 	github.com/fatih/color v1.18.0

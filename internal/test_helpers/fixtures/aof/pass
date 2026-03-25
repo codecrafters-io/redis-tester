@@ -2,7 +2,7 @@ Debug = true
 
 [33m[tester::#UJ3] [0m[94mRunning tests for Stage #UJ3 (uj3)[0m
 [33m[tester::#UJ3] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[tester::#UJ3] [client] [0m[36mConnected (port 53302 -> port 6379)[0m
+[33m[tester::#UJ3] [client] [0m[36mConnected (port 40432 -> port 6379)[0m
 [33m[tester::#UJ3] [client] [0m[94m$ redis-cli CONFIG GET dir[0m
 [33m[tester::#UJ3] [client] [0m[36mSent bytes: "*3\r\n$6\r\nCONFIG\r\n$3\r\nGET\r\n$3\r\ndir\r\n"[0m
 [33m[tester::#UJ3] [client] [0m[36mReceived bytes: "*2\r\n$3\r\ndir\r\n$52\r\n/home/runner/work/redis-tester/redis-tester/internal\r\n"[0m
@@ -47,7 +47,7 @@ Debug = true
 
 [33m[tester::#VD9] [0m[94mRunning tests for Stage #VD9 (vd9)[0m
 [33m[tester::#VD9] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/aof-6623 --appendonly yes --appenddirname orange --appendfilename pear.aof[0m
-[33m[tester::#VD9] [client] [0m[36mConnected (port 53316 -> port 6379)[0m
+[33m[tester::#VD9] [client] [0m[36mConnected (port 40458 -> port 6379)[0m
 [33m[tester::#VD9] [client] [0m[94m$ redis-cli CONFIG GET dir[0m
 [33m[tester::#VD9] [client] [0m[36mSent bytes: "*3\r\n$6\r\nCONFIG\r\n$3\r\nGET\r\n$3\r\ndir\r\n"[0m
 [33m[tester::#VD9] [client] [0m[36mReceived bytes: "*2\r\n$3\r\ndir\r\n$13\r\n/tmp/aof-6623\r\n"[0m
@@ -73,13 +73,28 @@ Debug = true
 [33m[tester::#VD9] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#FM0] [0m[94mRunning tests for Stage #FM0 (fm0)[0m
+[33m[tester::#FM0] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/aof-3114 --appendonly yes --appenddirname strawberry --appendfilename apple.aof[0m
+[33m[tester::#FM0] [0m[92m✔ Directory /tmp/aof-3114/strawberry exists[0m
 [33m[tester::#FM0] [0m[92mTest passed.[0m
+[33m[tester::#FM0] [0m[36mTerminating program[0m
+[33m[tester::#FM0] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#DW4] [0m[94mRunning tests for Stage #DW4 (dw4)[0m
+[33m[tester::#DW4] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/aof-8275 --appendonly yes --appenddirname orange --appendfilename strawberry.aof[0m
+[33m[tester::#DW4] [0m[92m✔ Directory /tmp/aof-8275/orange exists[0m
+[33m[tester::#DW4] [0m[92m✔ Found no commands in append-only file[0m
 [33m[tester::#DW4] [0m[92mTest passed.[0m
+[33m[tester::#DW4] [0m[36mTerminating program[0m
+[33m[tester::#DW4] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#PB9] [0m[94mRunning tests for Stage #PB9 (pb9)[0m
+[33m[tester::#PB9] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/aof-9943 --appendonly yes --appenddirname blueberry --appendfilename orange.aof[0m
+[33m[tester::#PB9] [0m[92m✔ Directory /tmp/aof-9943/blueberry exists[0m
+[33m[tester::#PB9] [0m[92m✔ Found no commands in append-only file[0m
+[33m[tester::#PB9] [0m[92m✔ Manifest file contains 'file orange.aof.1.incr.aof seq 1 type i'[0m
 [33m[tester::#PB9] [0m[92mTest passed.[0m
+[33m[tester::#PB9] [0m[36mTerminating program[0m
+[33m[tester::#PB9] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#DC8] [0m[94mRunning tests for Stage #DC8 (dc8)[0m
 [33m[tester::#DC8] [0m[92mTest passed.[0m

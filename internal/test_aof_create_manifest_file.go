@@ -1,7 +1,61 @@
 package internal
 
-import "github.com/codecrafters-io/tester-utils/test_case_harness"
+import (
+	"fmt"
+	"os"
+	"path/filepath"
 
-func testAofCreateManifestFile(_ *test_case_harness.TestCaseHarness) error {
-	return nil
+	"github.com/codecrafters-io/redis-tester/internal/filesystem_asserter"
+	"github.com/codecrafters-io/redis-tester/internal/filesystem_assertion"
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	testerutils_random "github.com/codecrafters-io/tester-utils/random"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
+)
+
+func testAofCreateAofManifestFile(stageHarness *test_case_harness.TestCaseHarness) error {
+	workingDirectory, err := MkdirTemp("aof")
+
+	if err != nil {
+		return err
+	}
+
+	logger := stageHarness.Logger
+	baseNames := testerutils_random.RandomWords(2)
+	appendDirNameFlag := baseNames[0]
+	appendFileNameFlag := fmt.Sprintf("%s.aof", baseNames[1])
+	b := redis_executable.NewRedisExecutable(stageHarness)
+	// Ensures that the temporary working directory is deleted AFTER the executable is killed
+	stageHarness.RegisterTeardownFunc(func() { os.RemoveAll(workingDirectory) })
+
+	if err := b.Run(
+		"--dir", workingDirectory,
+		"--appendonly", "yes",
+		"--appenddirname", appendDirNameFlag,
+		"--appendfilename", appendFileNameFlag,
+	); err != nil {
+		return err
+	}
+
+	appendOnlyFileBaseName := fmt.Sprintf("%s.1.incr.aof", appendFileNameFlag)
+	manifestFileBaseName := fmt.Sprintf("%s.manifest", appendFileNameFlag)
+
+	fsAsserter := filesystem_asserter.NewFilesystemAsserter([]filesystem_assertion.FilesystemAssertion{
+		// The append-only directory should exist
+		filesystem_assertion.DirExistsAssertion{
+			AbsolutePath: filepath.Join(workingDirectory, appendDirNameFlag),
+		},
+		filesystem_assertion.AofAppendOnlyFileAssertion{
+			AbsolutePath: filepath.Join(workingDirectory, appendDirNameFlag, appendOnlyFileBaseName),
+			// No commands expected in append-only file
+			ExpectedCommands: [][]string{},
+		},
+		// The manifest must contain entry for append-only (incr) file
+		filesystem_assertion.AofManifestFileAssertion{
+			AbsolutePath:           filepath.Join(workingDirectory, appendDirNameFlag, manifestFileBaseName),
+			AppendOnlyFileBasename: appendOnlyFileBaseName,
+		},
+	})
+
+	return fsAsserter.RunAssertions(logger)
+
 }

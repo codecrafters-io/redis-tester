@@ -208,6 +208,27 @@ func TestStages(t *testing.T) {
 			StdoutFixturePath:   "./test_helpers/fixtures/aof/pass",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
+		"aof_directory_creation_fail": {
+			StageSlugs:          []string{"fm0"},
+			CodePath:            "./test_helpers/scenarios/aof_directory_creation_fail",
+			ExpectedExitCode:    1,
+			StdoutFixturePath:   "./test_helpers/fixtures/aof/directory_creation_fail",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
+		"aof_non_empty_append_only_file": {
+			StageSlugs:          []string{"dw4"},
+			CodePath:            "./test_helpers/scenarios/aof_non_empty_append_only_file",
+			ExpectedExitCode:    1,
+			StdoutFixturePath:   "./test_helpers/fixtures/aof/aof_non_empty_append_only_file",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
+		"aof_manifest_file_empty": {
+			StageSlugs:          []string{"pb9"},
+			CodePath:            "./test_helpers/scenarios/aof_manifest_file_empty",
+			ExpectedExitCode:    1,
+			StdoutFixturePath:   "./test_helpers/fixtures/aof/manifest_file_empty",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
 	}
 
 	tester_utils_testing.TestTesterOutput(t, testerDefinition, testCases)
