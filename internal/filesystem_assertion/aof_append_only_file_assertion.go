@@ -9,6 +9,7 @@ import (
 
 	"al.essio.dev/pkg/shellescape"
 	resp_decoder "github.com/codecrafters-io/redis-tester/internal/resp/decoder"
+	"github.com/dustin/go-humanize/english"
 	"github.com/kballard/go-shellquote"
 )
 
@@ -45,6 +46,8 @@ func (a *AofAppendOnlyFileAssertion) Run() FilesystemAssertionResult {
 		}
 	}
 
+	a.registerLog(NewFilesystemAssertionLog(_INFO, fmt.Sprintf("Reading commands from append-only file %s", quotedPath)))
+
 	decodedCommands, err := a.decodeCommandsFromAppendOnlyFile(fileContents)
 
 	if err != nil {
@@ -53,6 +56,8 @@ func (a *AofAppendOnlyFileAssertion) Run() FilesystemAssertionResult {
 			Err:  err,
 		}
 	}
+
+	decodedCommands = a.removeSelectCommandFromDecodedCommands(decodedCommands)
 
 	if err := a.assertCommandsArrayLength(decodedCommands); err != nil {
 		return FilesystemAssertionResult{
@@ -94,8 +99,6 @@ func (a *AofAppendOnlyFileAssertion) decodeCommandsFromAppendOnlyFile(fileConten
 		return decodedCommands, nil
 	}
 
-	a.registerLog(NewFilesystemAssertionLog(_INFO, "Reading commands from append-only file"))
-
 	for _, foundCommand := range decodedCommands {
 		a.registerLog(
 			NewFilesystemAssertionLog(_INFO, fmt.Sprintf("Decoded command: %q", foundCommand)),
@@ -110,21 +113,21 @@ func (a *AofAppendOnlyFileAssertion) assertCommandsArrayLength(decoded [][]strin
 		return nil
 	}
 
-	a.registerLog(NewFilesystemAssertionLog(_SUCCESS, "Expected commands"))
+	a.registerLog(NewFilesystemAssertionLog(_SUCCESS, "Expected commands:"))
 
-	for _, cmd := range a.ExpectedCommands {
-		a.registerLog(NewFilesystemAssertionLog(_SUCCESS, strings.Join(cmd, " ")))
+	for i, cmd := range a.ExpectedCommands {
+		a.registerLog(NewFilesystemAssertionLog(_SUCCESS, fmt.Sprintf("%d. %s", i+1, strings.Join(cmd, " "))))
 	}
 
 	a.registerLog(NewFilesystemAssertionLog(_ERROR, "Found commands:"))
 
-	for _, cmd := range decoded {
-		a.registerLog(NewFilesystemAssertionLog(_ERROR, strings.Join(cmd, " ")))
+	for i, cmd := range decoded {
+		a.registerLog(NewFilesystemAssertionLog(_ERROR, fmt.Sprintf("%d. %s", i+1, strings.Join(cmd, " "))))
 	}
 
 	return fmt.Errorf(
-		"Expected %d commands to be present in the append-only file, found %d",
-		len(a.ExpectedCommands),
+		"Expected %s to be present in the append-only file, found %d",
+		english.Plural(len(a.ExpectedCommands), "command", "commands"),
 		len(decoded),
 	)
 }
@@ -148,7 +151,7 @@ func (a *AofAppendOnlyFileAssertion) assertCommandsPosition(decoded [][]string) 
 
 		a.registerLog(NewFilesystemAssertionLog(
 			_SUCCESS,
-			fmt.Sprintf("✔ Found command: %q", foundCommand),
+			fmt.Sprintf("✔ Found command: %q", foundCommandStr),
 		))
 	}
 
@@ -157,4 +160,11 @@ func (a *AofAppendOnlyFileAssertion) assertCommandsPosition(decoded [][]string) 
 
 func (a *AofAppendOnlyFileAssertion) registerLog(log FilesystemAssertionLog) {
 	a.accumulatedLogs = append(a.accumulatedLogs, log)
+}
+
+func (a *AofAppendOnlyFileAssertion) removeSelectCommandFromDecodedCommands(decodedCommands [][]string) [][]string {
+	if len(decodedCommands) != 0 && slices.Equal(decodedCommands[0], []string{"SELECT", "0"}) {
+		decodedCommands = decodedCommands[1:]
+	}
+	return decodedCommands
 }

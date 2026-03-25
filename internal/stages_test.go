@@ -229,6 +229,20 @@ func TestStages(t *testing.T) {
 			StdoutFixturePath:   "./test_helpers/fixtures/aof/manifest_file_empty",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
+		"aof_write_incomplete": {
+			StageSlugs:          []string{"dc8"},
+			CodePath:            "./test_helpers/scenarios/aof_write_incomplete",
+			ExpectedExitCode:    1,
+			StdoutFixturePath:   "./test_helpers/fixtures/aof/aof_write_incomplete",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
+		"aof_write_no_filter": {
+			StageSlugs:          []string{"ep6"},
+			CodePath:            "./test_helpers/scenarios/aof_write_no_filter",
+			ExpectedExitCode:    1,
+			StdoutFixturePath:   "./test_helpers/fixtures/aof/aof_write_no_filter",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
 	}
 
 	tester_utils_testing.TestTesterOutput(t, testerDefinition, testCases)

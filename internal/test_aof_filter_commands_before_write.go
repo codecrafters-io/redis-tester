@@ -1,7 +1,88 @@
 package internal
 
-import "github.com/codecrafters-io/tester-utils/test_case_harness"
+import (
+	"fmt"
+	"os"
+	"path/filepath"
 
-func testAofFilterCommandsBeforeWrite(_ *test_case_harness.TestCaseHarness) error {
-	return nil
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
+	"github.com/codecrafters-io/tester-utils/random"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
+)
+
+func testAofFilterCommandsBeforeWrite(stageHarness *test_case_harness.TestCaseHarness) error {
+	workingDirectory, err := MkdirTemp("aof")
+
+	if err != nil {
+		return err
+	}
+
+	logger := stageHarness.Logger
+	names := random.RandomWords(7)
+	appendDirNameFlag := names[0]
+	appendFileNameFlag := fmt.Sprintf("%s.aof", names[1])
+	appendFileBaseName := fmt.Sprintf("%s.1.incr.aof", appendFileNameFlag)
+	key1, value1 := names[2], names[3]
+	echoArg := names[4]
+	key2, value2 := names[5], names[6]
+
+	b := redis_executable.NewRedisExecutable(stageHarness)
+
+	stageHarness.RegisterTeardownFunc(func() {
+		os.RemoveAll(workingDirectory)
+	})
+
+	if err := b.Run(
+		"--dir", workingDirectory,
+		"--appendonly", "yes",
+		"--appenddirname", appendDirNameFlag,
+		"--appendfilename", appendFileNameFlag,
+		"--appendfsync", "always",
+	); err != nil {
+		return err
+	}
+
+	client, err := (&ClientsSpawner{
+		Addr:         "localhost:6379",
+		StageHarness: stageHarness,
+	}).SpawnClientWithPrefix("client")
+
+	if err != nil {
+		return err
+	}
+
+	setFirstCommand := []string{"SET", key1, value1}
+	getCommand := []string{"GET", key1}
+	echoCommand := []string{"ECHO", echoArg}
+	setSecondCommand := []string{"SET", key2, value2}
+
+	aofWriteTestCase := test_cases.AofWriteTestCase{
+		AppendOnlyFileAbsolutePath: filepath.Join(workingDirectory, appendDirNameFlag, appendFileBaseName),
+		CommandWithAssertions: []test_cases.CommandWithAssertion{
+			{
+				Command:   setFirstCommand,
+				Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
+			},
+			{
+				Command:   getCommand,
+				Assertion: resp_assertions.NewBulkStringAssertion(value1),
+			},
+			{
+				Command:   echoCommand,
+				Assertion: resp_assertions.NewBulkStringAssertion(echoArg),
+			},
+			{
+				Command:   setSecondCommand,
+				Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
+			},
+		},
+		ExpectedCommandsInAppendOnlyFile: [][]string{
+			setFirstCommand,
+			setSecondCommand,
+		},
+	}
+
+	return aofWriteTestCase.Run(client, logger)
 }
