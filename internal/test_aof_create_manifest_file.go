@@ -8,7 +8,7 @@ import (
 	"github.com/codecrafters-io/redis-tester/internal/filesystem_asserter"
 	"github.com/codecrafters-io/redis-tester/internal/filesystem_assertion"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
-	testerutils_random "github.com/codecrafters-io/tester-utils/random"
+	"github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
@@ -20,7 +20,7 @@ func testAofCreateAofManifestFile(stageHarness *test_case_harness.TestCaseHarnes
 	}
 
 	logger := stageHarness.Logger
-	baseNames := testerutils_random.RandomWords(2)
+	baseNames := random.RandomWords(2)
 	appendDirNameFlag := baseNames[0]
 	appendFileNameFlag := fmt.Sprintf("%s.aof", baseNames[1])
 	b := redis_executable.NewRedisExecutable(stageHarness)

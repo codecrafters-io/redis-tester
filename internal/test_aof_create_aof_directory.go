@@ -8,7 +8,7 @@ import (
 	"github.com/codecrafters-io/redis-tester/internal/filesystem_asserter"
 	"github.com/codecrafters-io/redis-tester/internal/filesystem_assertion"
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
-	testerutils_random "github.com/codecrafters-io/tester-utils/random"
+	"github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
@@ -19,7 +19,7 @@ func testAofCreateAofDirectory(stageHarness *test_case_harness.TestCaseHarness) 
 		return err
 	}
 
-	baseNames := testerutils_random.RandomWords(2)
+	baseNames := random.RandomWords(2)
 	appendDirNameFlag := baseNames[0]
 	appendFileNameFlag := fmt.Sprintf("%s.aof", baseNames[1])
 
