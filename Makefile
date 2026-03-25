@@ -55,11 +55,6 @@ test_rdb_with_redis: build
 	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\":\"zg5\",\"tester_log_prefix\":\"stage-201\",\"title\":\"Stage #1: RDB Config\"}, {\"slug\":\"jz6\",\"tester_log_prefix\":\"stage-202\",\"title\":\"Stage #2: RDB Read Key\"}, {\"slug\":\"gc6\",\"tester_log_prefix\":\"stage-203\",\"title\":\"Stage #3: RDB String Value\"}, {\"slug\":\"jw4\",\"tester_log_prefix\":\"stage-204\",\"title\":\"Stage #4: RDB Read Multiple Keys\"}, {\"slug\":\"dq3\",\"tester_log_prefix\":\"stage-205\",\"title\":\"Stage #5: RDB Read Multiple String Values\"}, {\"slug\":\"sm4\",\"tester_log_prefix\":\"stage-206\",\"title\":\"Stage #6: RDB Read Value With Expiry\"}]" \
 	dist/main.out
 
-test_aof_write_with_redis: build
-	CODECRAFTERS_REPOSITORY_DIR=./internal/test_helpers/pass_all \
-	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\":\"uj3\",\"tester_log_prefix\":\"stage-207\",\"title\":\"Stage #7: Default AOF options\"},{\"slug\":\"vd9\",\"tester_log_prefix\":\"stage-208\",\"title\":\"Stage #8: AOF options from flags\"},{\"slug\":\"fm0\",\"tester_log_prefix\":\"stage-209\",\"title\":\"Stage #9: Create append-only directory\"},{\"slug\":\"dw4\",\"tester_log_prefix\":\"stage-210\",\"title\":\"Stage #10: Create append-only file\"},{\"slug\":\"pb9\",\"tester_log_prefix\":\"stage-211\",\"title\":\"Stage #11: Create AOF manifest file\"},{\"slug\":\"dc8\",\"tester_log_prefix\":\"stage-212\",\"title\":\"Stage #12: Write single command\"},{\"slug\":\"fi1\",\"tester_log_prefix\":\"stage-213\",\"title\":\"Stage #13: Write multiple commands\"},{\"slug\":\"ep6\",\"tester_log_prefix\":\"stage-214\",\"title\":\"Stage #14: Filter commands to write\"}]" \
-	dist/main.out
-
 test_streams_with_redis: build
 	CODECRAFTERS_REPOSITORY_DIR=./internal/test_helpers/pass_all \
 	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\": \"cc3\", \"tester_log_prefix\": \"stage-301\", \"title\": \"stage #01: StreamsType\"},{\"slug\": \"cf6\", \"tester_log_prefix\": \"stage-302\", \"title\": \"stage #02: StreamsXadd\"},{\"slug\": \"hq8\", \"tester_log_prefix\": \"stage-303\", \"title\": \"stage #03: StreamsXaddValidateID\"},{\"slug\": \"yh3\", \"tester_log_prefix\": \"stage-304\", \"title\": \"stage #04: StreamsXaddPartialAutoid\"},{\"slug\": \"xu6\", \"tester_log_prefix\": \"stage-305\", \"title\": \"stage #05: StreamsXaddFullAutoid\"},{\"slug\": \"zx1\", \"tester_log_prefix\": \"stage-306\", \"title\": \"stage #06: StreamsXrange\"},{\"slug\": \"yp1\", \"tester_log_prefix\": \"stage-307\", \"title\": \"stage #07: StreamsXrangeMinID\"},{\"slug\": \"fs1\", \"tester_log_prefix\": \"stage-308\", \"title\": \"stage #08: StreamsXrangeMaxID\"},{\"slug\": \"um0\", \"tester_log_prefix\": \"stage-309\", \"title\": \"stage #09: StreamsXread\"},{\"slug\": \"ru9\", \"tester_log_prefix\": \"stage-310\", \"title\": \"stage #10: StreamsXreadMultiple\"},{\"slug\": \"bs1\", \"tester_log_prefix\": \"stage-311\", \"title\": \"stage #11: StreamsXreadBlock\"},{\"slug\": \"hw1\", \"tester_log_prefix\": \"stage-312\", \"title\": \"stage #12: StreamsXreadBlockNoTimeout\"},{\"slug\": \"xu1\", \"tester_log_prefix\": \"stage-313\", \"title\": \"stage #13: StreamsXreadBlockMaxID\"}]"  \
@@ -100,6 +95,11 @@ test_optimistic_locking_with_redis: build
 	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\": \"jb7\", \"tester_log_prefix\": \"stage-1001\", \"title\": \"The WATCH command\"},{\"slug\": \"jq9\", \"tester_log_prefix\": \"stage-1002\", \"title\": \"WATCH inside transaction\"},{\"slug\": \"mh8\", \"tester_log_prefix\": \"stage-1003\", \"title\": \"Tracking key modifications\"},{\"slug\": \"fp0\", \"tester_log_prefix\": \"stage-1004\", \"title\": \"Watching multiple keys\"},{\"slug\": \"uo9\", \"tester_log_prefix\": \"stage-1005\", \"title\": \"Watching missing keys\"},{\"slug\": \"bn1\", \"tester_log_prefix\": \"stage-1006\", \"title\": \"The UNWATCH command\"},{\"slug\": \"fn4\", \"tester_log_prefix\": \"stage-1007\", \"title\": \"Unwatch on EXEC\"},{\"slug\": \"hq1\", \"tester_log_prefix\": \"stage-1008\", \"title\": \"Unwatch on DISCARD\"}]" \
 	dist/main.out
 
+test_aof_with_redis: build
+	CODECRAFTERS_REPOSITORY_DIR=./internal/test_helpers/pass_all \
+	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\":\"uj3\",\"tester_log_prefix\":\"stage-1101\",\"title\":\"Default AOF options\"},{\"slug\":\"vd9\",\"tester_log_prefix\":\"stage-1102\",\"title\":\"AOF options from flags\"},{\"slug\":\"fm0\",\"tester_log_prefix\":\"stage-1103\",\"title\":\"Create append-only directory\"},{\"slug\":\"dw4\",\"tester_log_prefix\":\"stage-1104\",\"title\":\"Create append-only file\"},{\"slug\":\"pb9\",\"tester_log_prefix\":\"stage-1105\",\"title\":\"Create AOF manifest file\"},{\"slug\":\"dc8\",\"tester_log_prefix\":\"stage-1106\",\"title\":\"Write single command\"},{\"slug\":\"fi1\",\"tester_log_prefix\":\"stage-1107\",\"title\":\"Write multiple commands\"},{\"slug\":\"ep6\",\"tester_log_prefix\":\"stage-1108\",\"title\":\"Filter commands to write\"},{\"slug\":\"xz2\",\"tester_log_prefix\":\"stage-1109\",\"title\":\"Replay a single command\"},{\"slug\":\"kn2\",\"tester_log_prefix\":\"stage-1110\",\"title\":\"Replay multiple commands\"}]" \
+	dist/main.out
+
 test_all_with_redis:
 	make test_base_with_redis || true
 	make test_repl_with_redis || true
@@ -112,7 +112,7 @@ test_all_with_redis:
 	make test_geospatial_with_redis || true
 	make test_auth_with_redis || true
 	make test_optimistic_locking_with_redis || true
-	make test_aof_write_with_redis || true
+	make test_aof_with_redis || true
 
 
 setup:

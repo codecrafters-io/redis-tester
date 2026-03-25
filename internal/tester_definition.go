@@ -104,6 +104,14 @@ var testerDefinition = tester_definition.TesterDefinition{
 			Slug:     "ep6",
 			TestFunc: testAofFilterCommandsBeforeWrite,
 		},
+		{
+			Slug:     "xz2",
+			TestFunc: testAofReplaySingleCommand,
+		},
+		{
+			Slug:     "kn2",
+			TestFunc: testAofReplayMultipleCommands,
+		},
 		// Replication
 		{
 			Slug:     "bw1",
