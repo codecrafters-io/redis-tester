@@ -20,7 +20,7 @@ func testAofWriteMultipleCommands(stageHarness *test_case_harness.TestCaseHarnes
 	}
 
 	logger := stageHarness.Logger
-	names := random.RandomWords(5)
+	names := random.RandomWords(4)
 	appendDirNameFlag := names[0]
 	appendFileNameFlag := fmt.Sprintf("%s.aof", names[1])
 	appendFileBaseName := fmt.Sprintf("%s.1.incr.aof", appendFileNameFlag)
@@ -51,8 +51,8 @@ func testAofWriteMultipleCommands(stageHarness *test_case_harness.TestCaseHarnes
 		return err
 	}
 
-	listKey := names[3]
-	listElement := names[4]
+	listKey := names[2]
+	listElement := names[3]
 
 	lPushCmd := []string{"LPUSH", listKey, listElement}
 	blpopCmd := []string{"BLPOP", listKey, "0"}
