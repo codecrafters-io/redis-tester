@@ -8,7 +8,7 @@ import (
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
 	"github.com/codecrafters-io/redis-tester/internal/test_cases"
 
-	testerutils_random "github.com/codecrafters-io/tester-utils/random"
+	"github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
@@ -19,7 +19,7 @@ func testAofConfigFromFlags(stageHarness *test_case_harness.TestCaseHarness) err
 		return err
 	}
 
-	baseNames := testerutils_random.RandomWords(2)
+	baseNames := random.RandomWords(2)
 	appendDirName := baseNames[0]
 	appendFileName := fmt.Sprintf("%s.aof", baseNames[1])
 
