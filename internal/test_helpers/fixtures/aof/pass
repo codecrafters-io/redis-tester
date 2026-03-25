@@ -1,0 +1,91 @@
+Debug = true
+
+[33m[tester::#UJ3] [0m[94mRunning tests for Stage #UJ3 (uj3)[0m
+[33m[tester::#UJ3] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#UJ3] [client] [0m[36mConnected (port 59388 -> port 6379)[0m
+[33m[tester::#UJ3] [client] [0m[94m$ redis-cli CONFIG GET dir[0m
+[33m[tester::#UJ3] [client] [0m[36mSent bytes: "*3\r\n$6\r\nCONFIG\r\n$3\r\nGET\r\n$3\r\ndir\r\n"[0m
+[33m[tester::#UJ3] [client] [0m[36mReceived bytes: "*2\r\n$3\r\ndir\r\n$52\r\n/home/runner/work/redis-tester/redis-tester/internal\r\n"[0m
+[33m[tester::#UJ3] [client] [0m[36mReceived RESP array: [[0m
+[33m[tester::#UJ3] [client] [0m[36m  "dir",[0m
+[33m[tester::#UJ3] [client] [0m[36m  "/home/runner/work/redis-tester/redis-tester/internal"[0m
+[33m[tester::#UJ3] [client] [0m[36m][0m
+[33m[tester::#UJ3] [client] [0m[92m✔︎ Received [[0m
+[33m[tester::#UJ3] [client] [0m[92m  "dir",[0m
+[33m[tester::#UJ3] [client] [0m[92m  "/home/runner/work/redis-tester/redis-tester/internal"[0m
+[33m[tester::#UJ3] [client] [0m[92m][0m
+[33m[tester::#UJ3] [client] [0m[94m> CONFIG GET appendonly[0m
+[33m[tester::#UJ3] [client] [0m[36mSent bytes: "*3\r\n$6\r\nCONFIG\r\n$3\r\nGET\r\n$10\r\nappendonly\r\n"[0m
+[33m[tester::#UJ3] [client] [0m[36mReceived bytes: "*2\r\n$10\r\nappendonly\r\n$2\r\nno\r\n"[0m
+[33m[tester::#UJ3] [client] [0m[36mReceived RESP array: ["appendonly", "no"][0m
+[33m[tester::#UJ3] [client] [0m[92m✔︎ Received ["appendonly", "no"][0m
+[33m[tester::#UJ3] [client] [0m[94m> CONFIG GET appenddirname[0m
+[33m[tester::#UJ3] [client] [0m[36mSent bytes: "*3\r\n$6\r\nCONFIG\r\n$3\r\nGET\r\n$13\r\nappenddirname\r\n"[0m
+[33m[tester::#UJ3] [client] [0m[36mReceived bytes: "*2\r\n$13\r\nappenddirname\r\n$13\r\nappendonlydir\r\n"[0m
+[33m[tester::#UJ3] [client] [0m[36mReceived RESP array: [[0m
+[33m[tester::#UJ3] [client] [0m[36m  "appenddirname",[0m
+[33m[tester::#UJ3] [client] [0m[36m  "appendonlydir"[0m
+[33m[tester::#UJ3] [client] [0m[36m][0m
+[33m[tester::#UJ3] [client] [0m[92m✔︎ Received [[0m
+[33m[tester::#UJ3] [client] [0m[92m  "appenddirname",[0m
+[33m[tester::#UJ3] [client] [0m[92m  "appendonlydir"[0m
+[33m[tester::#UJ3] [client] [0m[92m][0m
+[33m[tester::#UJ3] [client] [0m[94m> CONFIG GET appendfilename[0m
+[33m[tester::#UJ3] [client] [0m[36mSent bytes: "*3\r\n$6\r\nCONFIG\r\n$3\r\nGET\r\n$14\r\nappendfilename\r\n"[0m
+[33m[tester::#UJ3] [client] [0m[36mReceived bytes: "*2\r\n$14\r\nappendfilename\r\n$14\r\nappendonly.aof\r\n"[0m
+[33m[tester::#UJ3] [client] [0m[36mReceived RESP array: [[0m
+[33m[tester::#UJ3] [client] [0m[36m  "appendfilename",[0m
+[33m[tester::#UJ3] [client] [0m[36m  "appendonly.aof"[0m
+[33m[tester::#UJ3] [client] [0m[36m][0m
+[33m[tester::#UJ3] [client] [0m[92m✔︎ Received [[0m
+[33m[tester::#UJ3] [client] [0m[92m  "appendfilename",[0m
+[33m[tester::#UJ3] [client] [0m[92m  "appendonly.aof"[0m
+[33m[tester::#UJ3] [client] [0m[92m][0m
+[33m[tester::#UJ3] [0m[92mTest passed.[0m
+[33m[tester::#UJ3] [0m[36mTerminating program[0m
+[33m[tester::#UJ3] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#VD9] [0m[94mRunning tests for Stage #VD9 (vd9)[0m
+[33m[tester::#VD9] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/aof-6623 --appendonly yes --appenddirname orange --appendfilename pear.aof[0m
+[33m[tester::#VD9] [client] [0m[36mConnected (port 59410 -> port 6379)[0m
+[33m[tester::#VD9] [client] [0m[94m$ redis-cli CONFIG GET dir[0m
+[33m[tester::#VD9] [client] [0m[36mSent bytes: "*3\r\n$6\r\nCONFIG\r\n$3\r\nGET\r\n$3\r\ndir\r\n"[0m
+[33m[tester::#VD9] [client] [0m[36mReceived bytes: "*2\r\n$3\r\ndir\r\n$13\r\n/tmp/aof-6623\r\n"[0m
+[33m[tester::#VD9] [client] [0m[36mReceived RESP array: ["dir", "/tmp/aof-6623"][0m
+[33m[tester::#VD9] [client] [0m[92m✔︎ Received ["dir", "/tmp/aof-6623"][0m
+[33m[tester::#VD9] [client] [0m[94m> CONFIG GET appendonly[0m
+[33m[tester::#VD9] [client] [0m[36mSent bytes: "*3\r\n$6\r\nCONFIG\r\n$3\r\nGET\r\n$10\r\nappendonly\r\n"[0m
+[33m[tester::#VD9] [client] [0m[36mReceived bytes: "*2\r\n$10\r\nappendonly\r\n$3\r\nyes\r\n"[0m
+[33m[tester::#VD9] [client] [0m[36mReceived RESP array: ["appendonly", "yes"][0m
+[33m[tester::#VD9] [client] [0m[92m✔︎ Received ["appendonly", "yes"][0m
+[33m[tester::#VD9] [client] [0m[94m> CONFIG GET appenddirname[0m
+[33m[tester::#VD9] [client] [0m[36mSent bytes: "*3\r\n$6\r\nCONFIG\r\n$3\r\nGET\r\n$13\r\nappenddirname\r\n"[0m
+[33m[tester::#VD9] [client] [0m[36mReceived bytes: "*2\r\n$13\r\nappenddirname\r\n$6\r\norange\r\n"[0m
+[33m[tester::#VD9] [client] [0m[36mReceived RESP array: ["appenddirname", "orange"][0m
+[33m[tester::#VD9] [client] [0m[92m✔︎ Received ["appenddirname", "orange"][0m
+[33m[tester::#VD9] [client] [0m[94m> CONFIG GET appendfilename[0m
+[33m[tester::#VD9] [client] [0m[36mSent bytes: "*3\r\n$6\r\nCONFIG\r\n$3\r\nGET\r\n$14\r\nappendfilename\r\n"[0m
+[33m[tester::#VD9] [client] [0m[36mReceived bytes: "*2\r\n$14\r\nappendfilename\r\n$8\r\npear.aof\r\n"[0m
+[33m[tester::#VD9] [client] [0m[36mReceived RESP array: ["appendfilename", "pear.aof"][0m
+[33m[tester::#VD9] [client] [0m[92m✔︎ Received ["appendfilename", "pear.aof"][0m
+[33m[tester::#VD9] [0m[92mTest passed.[0m
+[33m[tester::#VD9] [0m[36mTerminating program[0m
+[33m[tester::#VD9] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#FM0] [0m[94mRunning tests for Stage #FM0 (fm0)[0m
+[33m[tester::#FM0] [0m[92mTest passed.[0m
+
+[33m[tester::#DW4] [0m[94mRunning tests for Stage #DW4 (dw4)[0m
+[33m[tester::#DW4] [0m[92mTest passed.[0m
+
+[33m[tester::#PB9] [0m[94mRunning tests for Stage #PB9 (pb9)[0m
+[33m[tester::#PB9] [0m[92mTest passed.[0m
+
+[33m[tester::#DC8] [0m[94mRunning tests for Stage #DC8 (dc8)[0m
+[33m[tester::#DC8] [0m[92mTest passed.[0m
+
+[33m[tester::#FI1] [0m[94mRunning tests for Stage #FI1 (fi1)[0m
+[33m[tester::#FI1] [0m[92mTest passed.[0m
+
+[33m[tester::#EP6] [0m[94mRunning tests for Stage #EP6 (ep6)[0m
+[33m[tester::#EP6] [0m[92mTest passed.[0m
