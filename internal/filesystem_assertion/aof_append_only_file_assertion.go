@@ -4,10 +4,12 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"slices"
 	"strings"
 
 	"al.essio.dev/pkg/shellescape"
 	resp_decoder "github.com/codecrafters-io/redis-tester/internal/resp/decoder"
+	"github.com/kballard/go-shellquote"
 )
 
 type AofAppendOnlyFileAssertion struct {
@@ -130,13 +132,17 @@ func (a *AofAppendOnlyFileAssertion) assertCommandsArrayLength(decoded [][]strin
 func (a *AofAppendOnlyFileAssertion) assertCommandsPosition(decoded [][]string) error {
 
 	for i, foundCommand := range decoded {
-		foundCommandStr := strings.Join(foundCommand, " ")
 		expectedCommand := a.ExpectedCommands[i]
-		expectedCommandStr := strings.Join(expectedCommand, " ")
 
-		if expectedCommandStr != foundCommandStr {
+		expectedCommandStr := shellquote.Join(expectedCommand...)
+		foundCommandStr := shellquote.Join(foundCommand...)
+
+		if slices.Equal(foundCommand, expectedCommand) {
 			return fmt.Errorf(
-				"Expected command #%d to be %q, got %q", i+1, expectedCommandStr, foundCommandStr,
+				"Expected command #%d to be %q, got %q",
+				i+1,
+				expectedCommandStr,
+				foundCommandStr,
 			)
 		}
 
