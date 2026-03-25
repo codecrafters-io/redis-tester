@@ -40,7 +40,7 @@ func testAofCreateAofDirectory(stageHarness *test_case_harness.TestCaseHarness) 
 	logger := stageHarness.Logger
 
 	fsAsserter := filesystem_asserter.NewFilesystemAsserter([]filesystem_assertion.FilesystemAssertion{
-		filesystem_assertion.DirExistsAssertion{
+		&filesystem_assertion.DirExistsAssertion{
 			AbsolutePath: filepath.Join(workingDirectory, appendDirNameFlag),
 		}},
 	)

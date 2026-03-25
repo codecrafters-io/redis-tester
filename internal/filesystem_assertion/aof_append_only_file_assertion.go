@@ -13,15 +13,19 @@ import (
 type AofAppendOnlyFileAssertion struct {
 	AbsolutePath     string
 	ExpectedCommands [][]string
+
+	accumulatedLogs []FilesystemAssertionLog
 }
 
-func (a AofAppendOnlyFileAssertion) Run() FilesystemAssertionResult {
+func (a *AofAppendOnlyFileAssertion) Run() FilesystemAssertionResult {
 	if a.AbsolutePath == "" {
 		panic("Codecrafters Internal Error - AofAppendOnlyFileAssertion: AbsolutePath cannot be empty")
 	}
 
-	quotedPath := shellescape.Quote(a.AbsolutePath)
+	// Reset the accumulated logs
+	a.accumulatedLogs = []FilesystemAssertionLog{}
 
+	quotedPath := shellescape.Quote(a.AbsolutePath)
 	fileContents, err := os.ReadFile(a.AbsolutePath)
 
 	if err != nil {
@@ -32,105 +36,98 @@ func (a AofAppendOnlyFileAssertion) Run() FilesystemAssertionResult {
 
 	// Assert the empty case first separatly, we need not decode commands here
 	// Checking file contents is enough
-	if result, done := a.assertEmptyAofFileCase(fileContents); done {
-		return result
-	}
-
-	var assertionLogs []FilesystemAssertionLog
-	// Decode all the commands in the file
-	// Notify if any error is encountered while decoding commands
-	res, decodedCommands := a.decodeCommandsFromAppendOnlyFile(fileContents, assertionLogs)
-
-	if res.Err != nil {
-		return res
-	}
-
-	if res := a.assertCommandsArrayLength(decodedCommands, assertionLogs); res.Err != nil {
-		return res
-	}
-
-	return a.assertCommandsPosition(decodedCommands, assertionLogs)
-}
-
-func (a AofAppendOnlyFileAssertion) assertEmptyAofFileCase(fileContents []byte) (FilesystemAssertionResult, bool) {
-	if len(a.ExpectedCommands) != 0 {
-		return FilesystemAssertionResult{}, false
-	}
-
-	if len(fileContents) > 0 {
+	if err, done := a.assertEmptyAofFileCase(fileContents); done {
 		return FilesystemAssertionResult{
-			Err: errors.New("Expected append-only file to be empty, is not empty"),
-		}, true
+			Logs: a.accumulatedLogs,
+			Err:  err,
+		}
+	}
+
+	decodedCommands, err := a.decodeCommandsFromAppendOnlyFile(fileContents)
+
+	if err != nil {
+		return FilesystemAssertionResult{
+			Logs: a.accumulatedLogs,
+			Err:  err,
+		}
+	}
+
+	if err := a.assertCommandsArrayLength(decodedCommands); err != nil {
+		return FilesystemAssertionResult{
+			Logs: a.accumulatedLogs,
+			Err:  err,
+		}
+	}
+
+	if err := a.assertCommandsPosition(decodedCommands); err != nil {
+		return FilesystemAssertionResult{
+			Logs: a.accumulatedLogs,
+			Err:  err,
+		}
 	}
 
 	return FilesystemAssertionResult{
-		Logs: []FilesystemAssertionLog{NewFilesystemAssertionLog(
-			_SUCCESS,
-			"✔ Found no commands in append-only file",
-		),
-		},
-	}, true
+		Logs: a.accumulatedLogs,
+		Err:  nil,
+	}
 }
 
-func (a AofAppendOnlyFileAssertion) decodeCommandsFromAppendOnlyFile(fileContents []byte, previousLogs []FilesystemAssertionLog) (FilesystemAssertionResult, [][]string) {
+func (a *AofAppendOnlyFileAssertion) assertEmptyAofFileCase(fileContents []byte) (error, bool) {
+	if len(a.ExpectedCommands) != 0 {
+		return nil, false
+	}
+
+	if len(fileContents) > 0 {
+		return errors.New("Expected append-only file to be empty, is not empty"), true
+	}
+
+	a.registerLog(NewFilesystemAssertionLog(_SUCCESS, "✔ Found no commands in append-only file"))
+	return nil, true
+}
+
+func (a *AofAppendOnlyFileAssertion) decodeCommandsFromAppendOnlyFile(fileContents []byte) ([][]string, error) {
 	decodedCommands, err := resp_decoder.DecodeCommandsFromAppendOnlyFile(fileContents)
 
 	if err == nil {
-		return FilesystemAssertionResult{
-			Logs: previousLogs,
-		}, decodedCommands
+		return decodedCommands, nil
 	}
 
-	allLogs := append(
-		previousLogs,
-		[]FilesystemAssertionLog{
-			NewFilesystemAssertionLog(_INFO, "Reading commands from append-only file"),
-		}...,
-	)
+	a.registerLog(NewFilesystemAssertionLog(_INFO, "Reading commands from append-only file"))
 
 	for _, foundCommand := range decodedCommands {
-		allLogs = append(
-			allLogs,
+		a.registerLog(
 			NewFilesystemAssertionLog(_INFO, fmt.Sprintf("Decoded command: %q", foundCommand)),
 		)
 	}
 
-	return FilesystemAssertionResult{
-		Logs: allLogs,
-		Err:  err,
-	}, decodedCommands
+	return decodedCommands, err
 }
 
-func (a AofAppendOnlyFileAssertion) assertCommandsArrayLength(decoded [][]string, previousLogs []FilesystemAssertionLog) FilesystemAssertionResult {
+func (a *AofAppendOnlyFileAssertion) assertCommandsArrayLength(decoded [][]string) error {
 	if len(decoded) == len(a.ExpectedCommands) {
-		return FilesystemAssertionResult{}
+		return nil
 	}
 
-	allLogs := previousLogs
-	allLogs = append(allLogs, NewFilesystemAssertionLog(_SUCCESS, "Expected commands"))
+	a.registerLog(NewFilesystemAssertionLog(_SUCCESS, "Expected commands"))
 
 	for _, cmd := range a.ExpectedCommands {
-		allLogs = append(allLogs, NewFilesystemAssertionLog(_SUCCESS, strings.Join(cmd, " ")))
+		a.registerLog(NewFilesystemAssertionLog(_SUCCESS, strings.Join(cmd, " ")))
 	}
 
-	allLogs = append(allLogs, NewFilesystemAssertionLog(_ERROR, "Found commands:"))
+	a.registerLog(NewFilesystemAssertionLog(_ERROR, "Found commands:"))
 
 	for _, cmd := range decoded {
-		allLogs = append(allLogs, NewFilesystemAssertionLog(_ERROR, strings.Join(cmd, " ")))
+		a.registerLog(NewFilesystemAssertionLog(_ERROR, strings.Join(cmd, " ")))
 	}
 
-	return FilesystemAssertionResult{
-		Logs: allLogs,
-		Err: fmt.Errorf(
-			"Expected %d commands to be present in the append-only file, found %d",
-			len(a.ExpectedCommands),
-			len(decoded),
-		),
-	}
+	return fmt.Errorf(
+		"Expected %d commands to be present in the append-only file, found %d",
+		len(a.ExpectedCommands),
+		len(decoded),
+	)
 }
 
-func (a AofAppendOnlyFileAssertion) assertCommandsPosition(decoded [][]string, previousLogs []FilesystemAssertionLog) FilesystemAssertionResult {
-	allLogs := previousLogs
+func (a *AofAppendOnlyFileAssertion) assertCommandsPosition(decoded [][]string) error {
 
 	for i, foundCommand := range decoded {
 		foundCommandStr := strings.Join(foundCommand, " ")
@@ -138,21 +135,20 @@ func (a AofAppendOnlyFileAssertion) assertCommandsPosition(decoded [][]string, p
 		expectedCommandStr := strings.Join(expectedCommand, " ")
 
 		if expectedCommandStr != foundCommandStr {
-			return FilesystemAssertionResult{
-				Logs: allLogs,
-				Err: fmt.Errorf(
-					"Expected command #%d to be %q, got %q", i+1, expectedCommandStr, foundCommandStr,
-				),
-			}
+			return fmt.Errorf(
+				"Expected command #%d to be %q, got %q", i+1, expectedCommandStr, foundCommandStr,
+			)
 		}
 
-		allLogs = append(allLogs, NewFilesystemAssertionLog(
+		a.registerLog(NewFilesystemAssertionLog(
 			_SUCCESS,
 			fmt.Sprintf("✔ Found command: %q", foundCommand),
 		))
 	}
 
-	return FilesystemAssertionResult{
-		Logs: allLogs,
-	}
+	return nil
+}
+
+func (a *AofAppendOnlyFileAssertion) registerLog(log FilesystemAssertionLog) {
+	a.accumulatedLogs = append(a.accumulatedLogs, log)
 }

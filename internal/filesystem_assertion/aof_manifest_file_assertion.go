@@ -14,7 +14,7 @@ type AofManifestFileAssertion struct {
 	AppendOnlyFileBasename string
 }
 
-func (a AofManifestFileAssertion) Run() FilesystemAssertionResult {
+func (a *AofManifestFileAssertion) Run() FilesystemAssertionResult {
 	if a.AbsolutePath == "" || a.AppendOnlyFileBasename == "" {
 		panic("Codecrafters Internal Error - AbsolutePath and AppendOnlyFileBaseName in AofManifestFileAssertion cannot be empty")
 	}

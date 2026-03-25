@@ -41,16 +41,16 @@ func testAofCreateAofManifestFile(stageHarness *test_case_harness.TestCaseHarnes
 
 	fsAsserter := filesystem_asserter.NewFilesystemAsserter([]filesystem_assertion.FilesystemAssertion{
 		// The append-only directory should exist
-		filesystem_assertion.DirExistsAssertion{
+		&filesystem_assertion.DirExistsAssertion{
 			AbsolutePath: filepath.Join(workingDirectory, appendDirNameFlag),
 		},
-		filesystem_assertion.AofAppendOnlyFileAssertion{
+		&filesystem_assertion.AofAppendOnlyFileAssertion{
 			AbsolutePath: filepath.Join(workingDirectory, appendDirNameFlag, appendOnlyFileBaseName),
 			// No commands expected in append-only file
 			ExpectedCommands: [][]string{},
 		},
 		// The manifest must contain entry for append-only (incr) file
-		filesystem_assertion.AofManifestFileAssertion{
+		&filesystem_assertion.AofManifestFileAssertion{
 			AbsolutePath:           filepath.Join(workingDirectory, appendDirNameFlag, manifestFileBaseName),
 			AppendOnlyFileBasename: appendOnlyFileBaseName,
 		},

@@ -40,10 +40,10 @@ func testAofCreateAppendOnlyFile(stageHarness *test_case_harness.TestCaseHarness
 	appendOnlyFileBaseName := fmt.Sprintf("%s.1.incr.aof", appendFileNameFlag)
 
 	fsAsserter := filesystem_asserter.NewFilesystemAsserter([]filesystem_assertion.FilesystemAssertion{
-		filesystem_assertion.DirExistsAssertion{
+		&filesystem_assertion.DirExistsAssertion{
 			AbsolutePath: filepath.Join(workingDirectory, appendDirNameFlag),
 		},
-		filesystem_assertion.AofAppendOnlyFileAssertion{
+		&filesystem_assertion.AofAppendOnlyFileAssertion{
 			AbsolutePath: filepath.Join(workingDirectory, appendDirNameFlag, appendOnlyFileBaseName),
 			// Expect no commands to be present in the append-only file
 			ExpectedCommands: [][]string{},

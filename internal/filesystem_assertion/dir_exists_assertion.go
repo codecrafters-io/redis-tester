@@ -11,7 +11,7 @@ type DirExistsAssertion struct {
 	AbsolutePath string
 }
 
-func (a DirExistsAssertion) Run() FilesystemAssertionResult {
+func (a *DirExistsAssertion) Run() FilesystemAssertionResult {
 	if a.AbsolutePath == "" {
 		panic("Codecrafters Internal Error - AbsolutePath in DirExistsAssertion cannot be empty")
 	}
