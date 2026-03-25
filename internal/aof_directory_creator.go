@@ -39,13 +39,8 @@ func (a *AofDirectoryCreator) Create(logger *logger.Logger) error {
 		return fmt.Errorf("Failed to create append-only directory %s: %w", appendDirPath, err)
 	}
 
-	var commandBytes []byte
-
-	for _, cmd := range a.CommandsInsideAppendOnlyFile {
-		commandBytes = append(commandBytes, resp_encoder.Encode(resp_value.NewStringArrayValue(cmd))...)
-	}
-
-	if err := os.WriteFile(actualAppendFilePath, commandBytes, 0o644); err != nil {
+	appendBody := a.encodeCommandAsRESP(a.CommandsInsideAppendOnlyFile)
+	if err := os.WriteFile(actualAppendFilePath, appendBody, 0o644); err != nil {
 		return fmt.Errorf("Failed to create append-only file %s: %w", actualAppendFilePath, err)
 	}
 
@@ -106,4 +101,15 @@ func (a *AofDirectoryCreator) verifyMemberValues() {
 			)
 		}
 	}
+}
+
+// encodeCommandAsRESP encodes commands as RESP bytes to be written to the append-only file
+func (a *AofDirectoryCreator) encodeCommandAsRESP(commands [][]string) []byte {
+	var out []byte
+
+	for _, cmd := range commands {
+		out = append(out, resp_encoder.Encode(resp_value.NewStringArrayValue(cmd))...)
+	}
+
+	return out
 }
