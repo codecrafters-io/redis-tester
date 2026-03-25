@@ -9,7 +9,6 @@ import (
 	resp_encoder "github.com/codecrafters-io/redis-tester/internal/resp/encoder"
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/tester-utils/logger"
-	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
 // AofDirectoryCreator is used to create an append-only directory
@@ -73,10 +72,6 @@ func (a *AofDirectoryCreator) Create(logger *logger.Logger) error {
 	}
 
 	return nil
-}
-
-func (a *AofDirectoryCreator) Cleanup(stageHarness *test_case_harness.TestCaseHarness) error {
-	return os.RemoveAll(filepath.Join(a.WorkingDirectory, a.AppendDirName))
 }
 
 func (a *AofDirectoryCreator) verifyMemberValues() {
