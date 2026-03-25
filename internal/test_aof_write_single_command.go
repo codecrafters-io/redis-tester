@@ -26,7 +26,7 @@ func testAofWriteSingleCommand(stageHarness *test_case_harness.TestCaseHarness) 
 	appendFileNameFlag := fmt.Sprintf("%s.aof", names[1])
 	appendFileBaseName := fmt.Sprintf("%s.1.incr.aof", appendFileNameFlag)
 
-	key := random.RandomWord()
+	key := names[2]
 	value := strconv.Itoa(random.RandomInt(100, 500))
 
 	b := redis_executable.NewRedisExecutable(stageHarness)

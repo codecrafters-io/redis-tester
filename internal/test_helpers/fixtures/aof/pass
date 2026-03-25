@@ -2,7 +2,7 @@ Debug = true
 
 [33m[tester::#UJ3] [0m[94mRunning tests for Stage #UJ3 (uj3)[0m
 [33m[tester::#UJ3] [0m[94m$ ./spawn_redis_server.sh[0m
-[33m[tester::#UJ3] [client] [0m[36mConnected (port 33962 -> port 6379)[0m
+[33m[tester::#UJ3] [client] [0m[36mConnected (port 52286 -> port 6379)[0m
 [33m[tester::#UJ3] [client] [0m[94m$ redis-cli CONFIG GET dir[0m
 [33m[tester::#UJ3] [client] [0m[36mSent bytes: "*3\r\n$6\r\nCONFIG\r\n$3\r\nGET\r\n$3\r\ndir\r\n"[0m
 [33m[tester::#UJ3] [client] [0m[36mReceived bytes: "*2\r\n$3\r\ndir\r\n$52\r\n/home/runner/work/redis-tester/redis-tester/internal\r\n"[0m
@@ -47,7 +47,7 @@ Debug = true
 
 [33m[tester::#VD9] [0m[94mRunning tests for Stage #VD9 (vd9)[0m
 [33m[tester::#VD9] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/aof-6623 --appendonly yes --appenddirname orange --appendfilename pear.aof[0m
-[33m[tester::#VD9] [client] [0m[36mConnected (port 33984 -> port 6379)[0m
+[33m[tester::#VD9] [client] [0m[36mConnected (port 52310 -> port 6379)[0m
 [33m[tester::#VD9] [client] [0m[94m$ redis-cli CONFIG GET dir[0m
 [33m[tester::#VD9] [client] [0m[36mSent bytes: "*3\r\n$6\r\nCONFIG\r\n$3\r\nGET\r\n$3\r\ndir\r\n"[0m
 [33m[tester::#VD9] [client] [0m[36mReceived bytes: "*2\r\n$3\r\ndir\r\n$13\r\n/tmp/aof-6623\r\n"[0m
@@ -98,111 +98,111 @@ Debug = true
 
 [33m[tester::#DC8] [0m[94mRunning tests for Stage #DC8 (dc8)[0m
 [33m[tester::#DC8] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/aof-2485 --appendonly yes --appenddirname pear --appendfilename apple.aof --appendfsync always[0m
-[33m[tester::#DC8] [client] [0m[36mConnected (port 34004 -> port 6379)[0m
-[33m[tester::#DC8] [client] [0m[94m$ redis-cli SET strawberry 302[0m
-[33m[tester::#DC8] [client] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$10\r\nstrawberry\r\n$3\r\n302\r\n"[0m
+[33m[tester::#DC8] [client] [0m[36mConnected (port 52316 -> port 6379)[0m
+[33m[tester::#DC8] [client] [0m[94m$ redis-cli SET strawberry 447[0m
+[33m[tester::#DC8] [client] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$10\r\nstrawberry\r\n$3\r\n447\r\n"[0m
 [33m[tester::#DC8] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#DC8] [client] [0m[36mReceived RESP simple string: "OK"[0m
 [33m[tester::#DC8] [client] [0m[92m✔︎ Received "OK"[0m
 [33m[tester::#DC8] [0m[94mReading commands from append-only file /tmp/aof-2485/pear/apple.aof.1.incr.aof[0m
-[33m[tester::#DC8] [0m[92m✔ Found command: "SET strawberry 302"[0m
+[33m[tester::#DC8] [0m[92m✔ Found command: "SET strawberry 447"[0m
 [33m[tester::#DC8] [0m[92mTest passed.[0m
 [33m[tester::#DC8] [0m[36mTerminating program[0m
 [33m[tester::#DC8] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#FI1] [0m[94mRunning tests for Stage #FI1 (fi1)[0m
-[33m[tester::#FI1] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/aof-1763 --appendonly yes --appenddirname orange --appendfilename blueberry.aof --appendfsync always[0m
-[33m[tester::#FI1] [client] [0m[36mConnected (port 34024 -> port 6379)[0m
-[33m[tester::#FI1] [client] [0m[94m$ redis-cli LPUSH pineapple raspberry[0m
-[33m[tester::#FI1] [client] [0m[36mSent bytes: "*3\r\n$5\r\nLPUSH\r\n$9\r\npineapple\r\n$9\r\nraspberry\r\n"[0m
+[33m[tester::#FI1] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/aof-602 --appendonly yes --appenddirname pineapple --appendfilename raspberry.aof --appendfsync always[0m
+[33m[tester::#FI1] [client] [0m[36mConnected (port 52328 -> port 6379)[0m
+[33m[tester::#FI1] [client] [0m[94m$ redis-cli LPUSH pear mango[0m
+[33m[tester::#FI1] [client] [0m[36mSent bytes: "*3\r\n$5\r\nLPUSH\r\n$4\r\npear\r\n$5\r\nmango\r\n"[0m
 [33m[tester::#FI1] [client] [0m[36mReceived bytes: ":1\r\n"[0m
 [33m[tester::#FI1] [client] [0m[36mReceived RESP integer: 1[0m
 [33m[tester::#FI1] [client] [0m[92m✔︎ Received 1[0m
-[33m[tester::#FI1] [client] [0m[94m> BLPOP pineapple 0[0m
-[33m[tester::#FI1] [client] [0m[36mSent bytes: "*3\r\n$5\r\nBLPOP\r\n$9\r\npineapple\r\n$1\r\n0\r\n"[0m
-[33m[tester::#FI1] [client] [0m[36mReceived bytes: "*2\r\n$9\r\npineapple\r\n$9\r\nraspberry\r\n"[0m
-[33m[tester::#FI1] [client] [0m[36mReceived RESP array: ["pineapple", "raspberry"][0m
-[33m[tester::#FI1] [client] [0m[92m✔︎ Received ["pineapple", "raspberry"][0m
-[33m[tester::#FI1] [0m[94mReading commands from append-only file /tmp/aof-1763/orange/blueberry.aof.1.incr.aof[0m
-[33m[tester::#FI1] [0m[92m✔ Found command: "LPUSH pineapple raspberry"[0m
-[33m[tester::#FI1] [0m[92m✔ Found command: "LPOP pineapple"[0m
+[33m[tester::#FI1] [client] [0m[94m> BLPOP pear 0[0m
+[33m[tester::#FI1] [client] [0m[36mSent bytes: "*3\r\n$5\r\nBLPOP\r\n$4\r\npear\r\n$1\r\n0\r\n"[0m
+[33m[tester::#FI1] [client] [0m[36mReceived bytes: "*2\r\n$4\r\npear\r\n$5\r\nmango\r\n"[0m
+[33m[tester::#FI1] [client] [0m[36mReceived RESP array: ["pear", "mango"][0m
+[33m[tester::#FI1] [client] [0m[92m✔︎ Received ["pear", "mango"][0m
+[33m[tester::#FI1] [0m[94mReading commands from append-only file /tmp/aof-602/pineapple/raspberry.aof.1.incr.aof[0m
+[33m[tester::#FI1] [0m[92m✔ Found command: "LPUSH pear mango"[0m
+[33m[tester::#FI1] [0m[92m✔ Found command: "LPOP pear"[0m
 [33m[tester::#FI1] [0m[92mTest passed.[0m
 [33m[tester::#FI1] [0m[36mTerminating program[0m
 [33m[tester::#FI1] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#EP6] [0m[94mRunning tests for Stage #EP6 (ep6)[0m
-[33m[tester::#EP6] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/aof-662 --appendonly yes --appenddirname pear --appendfilename raspberry.aof --appendfsync always[0m
-[33m[tester::#EP6] [client] [0m[36mConnected (port 34042 -> port 6379)[0m
-[33m[tester::#EP6] [client] [0m[94m$ redis-cli SET strawberry blueberry[0m
-[33m[tester::#EP6] [client] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$10\r\nstrawberry\r\n$9\r\nblueberry\r\n"[0m
+[33m[tester::#EP6] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/aof-581 --appendonly yes --appenddirname grape --appendfilename pineapple.aof --appendfsync always[0m
+[33m[tester::#EP6] [client] [0m[36mConnected (port 52350 -> port 6379)[0m
+[33m[tester::#EP6] [client] [0m[94m$ redis-cli SET mango strawberry[0m
+[33m[tester::#EP6] [client] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$5\r\nmango\r\n$10\r\nstrawberry\r\n"[0m
 [33m[tester::#EP6] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#EP6] [client] [0m[36mReceived RESP simple string: "OK"[0m
 [33m[tester::#EP6] [client] [0m[92m✔︎ Received "OK"[0m
-[33m[tester::#EP6] [client] [0m[94m> GET strawberry[0m
-[33m[tester::#EP6] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$10\r\nstrawberry\r\n"[0m
-[33m[tester::#EP6] [client] [0m[36mReceived bytes: "$9\r\nblueberry\r\n"[0m
-[33m[tester::#EP6] [client] [0m[36mReceived RESP bulk string: "blueberry"[0m
-[33m[tester::#EP6] [client] [0m[92m✔︎ Received "blueberry"[0m
-[33m[tester::#EP6] [client] [0m[94m> ECHO grape[0m
-[33m[tester::#EP6] [client] [0m[36mSent bytes: "*2\r\n$4\r\nECHO\r\n$5\r\ngrape\r\n"[0m
-[33m[tester::#EP6] [client] [0m[36mReceived bytes: "$5\r\ngrape\r\n"[0m
-[33m[tester::#EP6] [client] [0m[36mReceived RESP bulk string: "grape"[0m
-[33m[tester::#EP6] [client] [0m[92m✔︎ Received "grape"[0m
-[33m[tester::#EP6] [client] [0m[94m> SET apple banana[0m
-[33m[tester::#EP6] [client] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$5\r\napple\r\n$6\r\nbanana\r\n"[0m
+[33m[tester::#EP6] [client] [0m[94m> GET mango[0m
+[33m[tester::#EP6] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$5\r\nmango\r\n"[0m
+[33m[tester::#EP6] [client] [0m[36mReceived bytes: "$10\r\nstrawberry\r\n"[0m
+[33m[tester::#EP6] [client] [0m[36mReceived RESP bulk string: "strawberry"[0m
+[33m[tester::#EP6] [client] [0m[92m✔︎ Received "strawberry"[0m
+[33m[tester::#EP6] [client] [0m[94m> ECHO orange[0m
+[33m[tester::#EP6] [client] [0m[36mSent bytes: "*2\r\n$4\r\nECHO\r\n$6\r\norange\r\n"[0m
+[33m[tester::#EP6] [client] [0m[36mReceived bytes: "$6\r\norange\r\n"[0m
+[33m[tester::#EP6] [client] [0m[36mReceived RESP bulk string: "orange"[0m
+[33m[tester::#EP6] [client] [0m[92m✔︎ Received "orange"[0m
+[33m[tester::#EP6] [client] [0m[94m> SET apple pear[0m
+[33m[tester::#EP6] [client] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$5\r\napple\r\n$4\r\npear\r\n"[0m
 [33m[tester::#EP6] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
 [33m[tester::#EP6] [client] [0m[36mReceived RESP simple string: "OK"[0m
 [33m[tester::#EP6] [client] [0m[92m✔︎ Received "OK"[0m
-[33m[tester::#EP6] [0m[94mReading commands from append-only file /tmp/aof-662/pear/raspberry.aof.1.incr.aof[0m
-[33m[tester::#EP6] [0m[92m✔ Found command: "SET strawberry blueberry"[0m
-[33m[tester::#EP6] [0m[92m✔ Found command: "SET apple banana"[0m
+[33m[tester::#EP6] [0m[94mReading commands from append-only file /tmp/aof-581/grape/pineapple.aof.1.incr.aof[0m
+[33m[tester::#EP6] [0m[92m✔ Found command: "SET mango strawberry"[0m
+[33m[tester::#EP6] [0m[92m✔ Found command: "SET apple pear"[0m
 [33m[tester::#EP6] [0m[92mTest passed.[0m
 [33m[tester::#EP6] [0m[36mTerminating program[0m
 [33m[tester::#EP6] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#XZ2] [0m[94mRunning tests for Stage #XZ2 (xz2)[0m
-[33m[tester::#XZ2] [0m[94mCreating append-only directory "apple":[0m
-[33m[tester::#XZ2] [apple] [0m[94m  - banana.aof.manifest[0m
-[33m[tester::#XZ2] [apple] [0m[94m  - pineapple.aof.1.incr.aof[0m
-[33m[tester::#XZ2] [0m[94mCreating manifest file "banana.aof.manifest"[0m
-[33m[tester::#XZ2] [banana.aof.manifest] [0m[94mfile pineapple.aof.1.incr.aof seq 1 type i[0m
-[33m[tester::#XZ2] [0m[94mWriting the following commands to append-only file "pineapple.aof.1.incr.aof"[0m
-[33m[tester::#XZ2] [pineapple.aof.1.incr.aof] [0m[94mSET grape 281[0m
-[33m[tester::#XZ2] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/aof-7368 --appendonly yes --appenddirname apple --appendfilename banana.aof[0m
-[33m[tester::#XZ2] [client] [0m[36mConnected (port 34050 -> port 6379)[0m
+[33m[tester::#XZ2] [0m[94mCreating append-only directory "mango":[0m
+[33m[tester::#XZ2] [mango] [0m[94m  - pineapple.aof.manifest[0m
+[33m[tester::#XZ2] [mango] [0m[94m  - blueberry.aof.1.incr.aof[0m
+[33m[tester::#XZ2] [0m[94mCreating manifest file "pineapple.aof.manifest"[0m
+[33m[tester::#XZ2] [pineapple.aof.manifest] [0m[94mfile blueberry.aof.1.incr.aof seq 1 type i[0m
+[33m[tester::#XZ2] [0m[94mWriting the following commands to append-only file "blueberry.aof.1.incr.aof"[0m
+[33m[tester::#XZ2] [blueberry.aof.1.incr.aof] [0m[94mSET apple 389[0m
+[33m[tester::#XZ2] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/aof-1473 --appendonly yes --appenddirname mango --appendfilename pineapple.aof[0m
+[33m[tester::#XZ2] [client] [0m[36mConnected (port 52364 -> port 6379)[0m
 [33m[tester::#XZ2] [0m[94mChecking if the command in append-only file was replayed[0m
-[33m[tester::#XZ2] [client] [0m[94m$ redis-cli GET grape[0m
-[33m[tester::#XZ2] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$5\r\ngrape\r\n"[0m
-[33m[tester::#XZ2] [client] [0m[36mReceived bytes: "$3\r\n281\r\n"[0m
-[33m[tester::#XZ2] [client] [0m[36mReceived RESP bulk string: "281"[0m
-[33m[tester::#XZ2] [client] [0m[92m✔︎ Received "281"[0m
+[33m[tester::#XZ2] [client] [0m[94m$ redis-cli GET apple[0m
+[33m[tester::#XZ2] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$5\r\napple\r\n"[0m
+[33m[tester::#XZ2] [client] [0m[36mReceived bytes: "$3\r\n389\r\n"[0m
+[33m[tester::#XZ2] [client] [0m[36mReceived RESP bulk string: "389"[0m
+[33m[tester::#XZ2] [client] [0m[92m✔︎ Received "389"[0m
 [33m[tester::#XZ2] [0m[92mTest passed.[0m
 [33m[tester::#XZ2] [0m[36mTerminating program[0m
 [33m[tester::#XZ2] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#KN2] [0m[94mRunning tests for Stage #KN2 (kn2)[0m
-[33m[tester::#KN2] [0m[94mCreating append-only directory "apple":[0m
-[33m[tester::#KN2] [apple] [0m[94m  - orange.aof.manifest[0m
-[33m[tester::#KN2] [apple] [0m[94m  - banana.aof.1.incr.aof[0m
-[33m[tester::#KN2] [0m[94mCreating manifest file "orange.aof.manifest"[0m
-[33m[tester::#KN2] [orange.aof.manifest] [0m[94mfile banana.aof.1.incr.aof seq 1 type i[0m
-[33m[tester::#KN2] [0m[94mWriting the following commands to append-only file "banana.aof.1.incr.aof"[0m
-[33m[tester::#KN2] [banana.aof.1.incr.aof] [0m[94mSET strawberry 145[0m
-[33m[tester::#KN2] [banana.aof.1.incr.aof] [0m[94mSET blueberry 359[0m
-[33m[tester::#KN2] [banana.aof.1.incr.aof] [0m[94mSET strawberry 275[0m
-[33m[tester::#KN2] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/aof-9030 --appendonly yes --appenddirname apple --appendfilename orange.aof[0m
-[33m[tester::#KN2] [client] [0m[36mConnected (port 34066 -> port 6379)[0m
+[33m[tester::#KN2] [0m[94mCreating append-only directory "pineapple":[0m
+[33m[tester::#KN2] [pineapple] [0m[94m  - apple.aof.manifest[0m
+[33m[tester::#KN2] [pineapple] [0m[94m  - pear.aof.1.incr.aof[0m
+[33m[tester::#KN2] [0m[94mCreating manifest file "apple.aof.manifest"[0m
+[33m[tester::#KN2] [apple.aof.manifest] [0m[94mfile pear.aof.1.incr.aof seq 1 type i[0m
+[33m[tester::#KN2] [0m[94mWriting the following commands to append-only file "pear.aof.1.incr.aof"[0m
+[33m[tester::#KN2] [pear.aof.1.incr.aof] [0m[94mSET raspberry 364[0m
+[33m[tester::#KN2] [pear.aof.1.incr.aof] [0m[94mSET blueberry 145[0m
+[33m[tester::#KN2] [pear.aof.1.incr.aof] [0m[94mSET raspberry 359[0m
+[33m[tester::#KN2] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/aof-181 --appendonly yes --appenddirname pineapple --appendfilename apple.aof[0m
+[33m[tester::#KN2] [client] [0m[36mConnected (port 52390 -> port 6379)[0m
 [33m[tester::#KN2] [0m[94mChecking if commands in append-only file were replayed[0m
-[33m[tester::#KN2] [client] [0m[94m$ redis-cli GET strawberry[0m
-[33m[tester::#KN2] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$10\r\nstrawberry\r\n"[0m
-[33m[tester::#KN2] [client] [0m[36mReceived bytes: "$3\r\n275\r\n"[0m
-[33m[tester::#KN2] [client] [0m[36mReceived RESP bulk string: "275"[0m
-[33m[tester::#KN2] [client] [0m[92m✔︎ Received "275"[0m
-[33m[tester::#KN2] [client] [0m[94m> GET blueberry[0m
-[33m[tester::#KN2] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$9\r\nblueberry\r\n"[0m
+[33m[tester::#KN2] [client] [0m[94m$ redis-cli GET raspberry[0m
+[33m[tester::#KN2] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$9\r\nraspberry\r\n"[0m
 [33m[tester::#KN2] [client] [0m[36mReceived bytes: "$3\r\n359\r\n"[0m
 [33m[tester::#KN2] [client] [0m[36mReceived RESP bulk string: "359"[0m
 [33m[tester::#KN2] [client] [0m[92m✔︎ Received "359"[0m
+[33m[tester::#KN2] [client] [0m[94m> GET blueberry[0m
+[33m[tester::#KN2] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$9\r\nblueberry\r\n"[0m
+[33m[tester::#KN2] [client] [0m[36mReceived bytes: "$3\r\n145\r\n"[0m
+[33m[tester::#KN2] [client] [0m[36mReceived RESP bulk string: "145"[0m
+[33m[tester::#KN2] [client] [0m[92m✔︎ Received "145"[0m
 [33m[tester::#KN2] [0m[92mTest passed.[0m
 [33m[tester::#KN2] [0m[36mTerminating program[0m
 [33m[tester::#KN2] [0m[36mProgram terminated successfully[0m
