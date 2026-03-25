@@ -65,7 +65,7 @@ func (a AofAppendOnlyFileAssertion) assertEmptyAofFileCase(fileContents []byte, 
 		Logs: []FilesystemAssertionLog{
 			NewFilesystemAssertionLog(
 				_SUCCESS,
-				fmt.Sprintf("%s", "✔ Found no commands in append-only file"),
+				"✔ Found no commands in append-only file",
 			),
 		},
 	}
