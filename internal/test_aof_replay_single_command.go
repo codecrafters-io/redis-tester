@@ -31,7 +31,7 @@ func testAofReplaySingleCommand(stageHarness *test_case_harness.TestCaseHarness)
 		WorkingDirectory:             workingDirectory,
 		AppendDirName:                appendDirName,
 		AppendFileNameinFlag:         appendFileName,
-		AppendOnlyFilenameInManifest: actualAppendFileName,
+		AppendOnlyFileNameInManifest: actualAppendFileName,
 		CommandsInsideAppendOnlyFile: [][]string{
 			{"SET", key, value},
 		},

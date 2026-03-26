@@ -6,9 +6,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	resp_encoder "github.com/codecrafters-io/redis-tester/internal/resp/encoder"
-	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
+	encoder "github.com/codecrafters-io/redis-tester/internal/resp/encoder"
+	value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/tester-utils/logger"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
 // AofDirectoryCreator is used to create an append-only directory
@@ -21,7 +22,7 @@ type AofDirectoryCreator struct {
 	WorkingDirectory             string     // directory inside which Aof directory is created
 	AppendDirName                string     // Value of appendonlydir flag
 	AppendFileNameinFlag         string     // Value of appendfilename (Used for manifest file name)
-	AppendOnlyFilenameInManifest string     // Value appendfilename to be used inside manifest
+	AppendOnlyFileNameInManifest string     // Value appendfilename to be used inside manifest
 	CommandsInsideAppendOnlyFile [][]string // slice of commands to be written to append-only file
 }
 
@@ -31,7 +32,7 @@ func (a *AofDirectoryCreator) Create(logger *logger.Logger) error {
 	appendDirPath := filepath.Join(a.WorkingDirectory, a.AppendDirName)
 	manifestFileName := a.AppendFileNameinFlag + ".manifest"
 	manifestFilePath := filepath.Join(appendDirPath, manifestFileName)
-	actualAppendFileName := fmt.Sprintf("%s.1.incr.aof", a.AppendOnlyFilenameInManifest)
+	actualAppendFileName := fmt.Sprintf("%s.1.incr.aof", a.AppendOnlyFileNameInManifest)
 	actualAppendFilePath := filepath.Join(appendDirPath, actualAppendFileName)
 	manifestFileEntry := fmt.Sprintf("file %s seq 1 type i", actualAppendFileName)
 
@@ -39,7 +40,7 @@ func (a *AofDirectoryCreator) Create(logger *logger.Logger) error {
 		return fmt.Errorf("Failed to create append-only directory %s: %w", appendDirPath, err)
 	}
 
-	appendBody := a.encodeCommandAsRESP(a.CommandsInsideAppendOnlyFile)
+	appendBody := a.EncodeCommandsAsRESP(a.CommandsInsideAppendOnlyFile)
 	if err := os.WriteFile(actualAppendFilePath, appendBody, 0o644); err != nil {
 		return fmt.Errorf("Failed to create append-only file %s: %w", actualAppendFilePath, err)
 	}
@@ -74,6 +75,10 @@ func (a *AofDirectoryCreator) Create(logger *logger.Logger) error {
 	return nil
 }
 
+func (a *AofDirectoryCreator) Cleanup(stageHarness *test_case_harness.TestCaseHarness) error {
+	return os.RemoveAll(filepath.Join(a.WorkingDirectory, a.AppendDirName))
+}
+
 func (a *AofDirectoryCreator) verifyMemberValues() {
 	if a.WorkingDirectory == "" {
 		panic("Codecrafters Internal Error - WorkingDirectory cannot be empty in AofDirectoryCreator")
@@ -87,7 +92,7 @@ func (a *AofDirectoryCreator) verifyMemberValues() {
 		panic("Codecrafters Internal Error - AppendFileName cannot be empty in AofDirectoryCreator")
 	}
 
-	if a.AppendOnlyFilenameInManifest == "" {
+	if a.AppendOnlyFileNameInManifest == "" {
 		panic("Codecrafters Internal Error - AppendOnlyFileNameInManifest cannot be empty in AofDirectoryCreator")
 	}
 
@@ -103,12 +108,12 @@ func (a *AofDirectoryCreator) verifyMemberValues() {
 	}
 }
 
-// encodeCommandAsRESP encodes commands as RESP bytes to be written to the append-only file
-func (a *AofDirectoryCreator) encodeCommandAsRESP(commands [][]string) []byte {
+// EncodeCommandsAsRESP encodes commands as RESP bytes to be written to the append-only file
+func (a *AofDirectoryCreator) EncodeCommandsAsRESP(commands [][]string) []byte {
 	var out []byte
 
 	for _, cmd := range commands {
-		out = append(out, resp_encoder.Encode(resp_value.NewStringArrayValue(cmd))...)
+		out = append(out, encoder.Encode(value.NewStringArrayValue(cmd))...)
 	}
 
 	return out

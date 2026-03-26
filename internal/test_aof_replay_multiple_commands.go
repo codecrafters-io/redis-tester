@@ -34,7 +34,7 @@ func testAofReplayMultipleCommands(stageHarness *test_case_harness.TestCaseHarne
 		WorkingDirectory:             workingDirectory,
 		AppendDirName:                appendDirName,
 		AppendFileNameinFlag:         appendFileName,
-		AppendOnlyFilenameInManifest: actualAppendFileName,
+		AppendOnlyFileNameInManifest: actualAppendFileName,
 		CommandsInsideAppendOnlyFile: [][]string{
 			{"SET", key1, value1},
 			{"SET", key2, value2},
