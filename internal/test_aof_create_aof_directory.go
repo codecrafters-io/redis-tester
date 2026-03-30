@@ -13,7 +13,7 @@ import (
 )
 
 func testAofCreateAofDirectory(stageHarness *test_case_harness.TestCaseHarness) error {
-	workingDirectory, err := MkdirTemp("aof")
+	dataDirectory, err := MkdirTemp("aof")
 
 	if err != nil {
 		return err
@@ -26,10 +26,10 @@ func testAofCreateAofDirectory(stageHarness *test_case_harness.TestCaseHarness) 
 	b := redis_executable.NewRedisExecutable(stageHarness)
 
 	// Ensures that the temporary working directory is deleted AFTER the executable is killed
-	stageHarness.RegisterTeardownFunc(func() { os.RemoveAll(workingDirectory) })
+	stageHarness.RegisterTeardownFunc(func() { os.RemoveAll(dataDirectory) })
 
 	if err := b.Run(
-		"--dir", workingDirectory,
+		"--dir", dataDirectory,
 		"--appendonly", "yes",
 		"--appenddirname", appendDirNameFlag,
 		"--appendfilename", appendFileNameFlag,
@@ -41,7 +41,7 @@ func testAofCreateAofDirectory(stageHarness *test_case_harness.TestCaseHarness) 
 
 	fsAsserter := filesystem_asserter.NewFilesystemAsserter([]filesystem_assertion.FilesystemAssertion{
 		&filesystem_assertion.DirExistsAssertion{
-			AbsolutePath: filepath.Join(workingDirectory, appendDirNameFlag),
+			AbsolutePath: filepath.Join(dataDirectory, appendDirNameFlag),
 		}},
 	)
 

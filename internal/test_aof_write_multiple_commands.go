@@ -13,7 +13,7 @@ import (
 )
 
 func testAofWriteMultipleCommands(stageHarness *test_case_harness.TestCaseHarness) error {
-	workingDirectory, err := MkdirTemp("aof")
+	dataDirectory, err := MkdirTemp("aof")
 
 	if err != nil {
 		return err
@@ -29,11 +29,11 @@ func testAofWriteMultipleCommands(stageHarness *test_case_harness.TestCaseHarnes
 
 	// Remove the working directory after redis has quit
 	stageHarness.RegisterTeardownFunc(func() {
-		os.RemoveAll(workingDirectory)
+		os.RemoveAll(dataDirectory)
 	})
 
 	if err := b.Run(
-		"--dir", workingDirectory,
+		"--dir", dataDirectory,
 		"--appendonly", "yes",
 		"--appenddirname", appendDirNameFlag,
 		"--appendfilename", appendFileNameFlag,
@@ -58,7 +58,7 @@ func testAofWriteMultipleCommands(stageHarness *test_case_harness.TestCaseHarnes
 	blpopCmd := []string{"BLPOP", listKey, "0"}
 
 	aofWriteTestCase := test_cases.AofWriteTestCase{
-		AppendOnlyFileAbsolutePath: filepath.Join(workingDirectory, appendDirNameFlag, appendFileBaseName),
+		AppendOnlyFileAbsolutePath: filepath.Join(dataDirectory, appendDirNameFlag, appendFileBaseName),
 		CommandWithAssertions: []test_cases.CommandWithAssertion{
 			{
 				Command:   lPushCmd,
