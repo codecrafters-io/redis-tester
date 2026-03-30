@@ -38,7 +38,7 @@ func (a *AofAppendOnlyFileAssertion) Run() FilesystemAssertionResult {
 
 	a.registerLog(NewFilesystemAssertionLog(
 		_SUCCESS,
-		fmt.Sprintf("✔ Append-only file %s exists", a.AbsolutePath),
+		fmt.Sprintf("✔ Append-only file %s exists", quotedPath),
 	))
 
 	// Assert the empty case first separatly, we need not decode commands here
