@@ -26,9 +26,10 @@ func testAofReplayMultipleCommands(stageHarness *test_case_harness.TestCaseHarne
 	actualAppendFileName := fmt.Sprintf("%s.aof", names[2])
 	key1 := names[3]
 	key2 := names[4]
-	value1 := strconv.Itoa(random.RandomInt(100, 500))
-	value2 := strconv.Itoa(random.RandomInt(100, 500))
-	value3 := strconv.Itoa(random.RandomInt(100, 500))
+	values := random.RandomInts(100, 500, 3)
+	value1 := strconv.Itoa(values[0])
+	value2 := strconv.Itoa(values[1])
+	value3 := strconv.Itoa(values[2])
 
 	aofDirectoryCreator := AofDirectoryCreator{
 		DataDirectory:                workingDirectory,
