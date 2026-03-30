@@ -31,14 +31,13 @@ func (a *FilesystemAsserter) RunAssertions(logger *logger.Logger) error {
 		panic("Codecrafters Internal Error - FilesystemAsserter: Timeout cannot be 0")
 	}
 
-	deadline := time.Now().Add(a.Timeout)
-	outcomes := a.runAssertionsConcurrently(a.assertions, deadline)
+	outcomes := a.runAssertionsConcurrently(a.assertions)
 	a.logAssertionResultLogs(logger, outcomes)
 	return a.firstAssertionErrorInOrder(outcomes)
 }
 
 // runAssertionsConcurrently runs each assertion in its own goroutine and fills outcomes by index.
-func (a *FilesystemAsserter) runAssertionsConcurrently(assertions []filesystem_assertion.FilesystemAssertion, deadline time.Time) []filesystem_assertion.FilesystemAssertionResult {
+func (a *FilesystemAsserter) runAssertionsConcurrently(assertions []filesystem_assertion.FilesystemAssertion) []filesystem_assertion.FilesystemAssertionResult {
 	outcomes := make([]filesystem_assertion.FilesystemAssertionResult, len(assertions))
 	var waitGroup sync.WaitGroup
 
