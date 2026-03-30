@@ -81,7 +81,7 @@ func (a *AofDirectoryCreator) Cleanup(stageHarness *test_case_harness.TestCaseHa
 
 func (a *AofDirectoryCreator) verifyMemberValues() {
 	if a.DataDirectory == "" {
-		panic("Codecrafters Internal Error - WorkingDirectory cannot be empty in AofDirectoryCreator")
+		panic("Codecrafters Internal Error - DataDirectory cannot be empty in AofDirectoryCreator")
 	}
 
 	if a.AppendDirName == "" {
