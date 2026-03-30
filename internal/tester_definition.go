@@ -71,7 +71,7 @@ var testerDefinition = tester_definition.TesterDefinition{
 			Slug:     "sm4",
 			TestFunc: testRdbReadValueWithExpiry,
 		},
-		// AOF persistence (write path)
+		// AOF persistence
 		{
 			Slug:     "uj3",
 			TestFunc: testAofConfigDefaults,

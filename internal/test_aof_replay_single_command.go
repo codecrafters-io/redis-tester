@@ -28,9 +28,9 @@ func testAofReplaySingleCommand(stageHarness *test_case_harness.TestCaseHarness)
 	value := strconv.Itoa(random.RandomInt(100, 500))
 
 	aofDirectoryCreator := AofDirectoryCreator{
-		WorkingDirectory:             workingDirectory,
+		DataDirectory:                workingDirectory,
 		AppendDirName:                appendDirName,
-		AppendFileNameinFlag:         appendFileName,
+		AppendFileNameInFlag:         appendFileName,
 		AppendOnlyFileNameInManifest: actualAppendFileName,
 		CommandsInsideAppendOnlyFile: [][]string{
 			{"SET", key, value},

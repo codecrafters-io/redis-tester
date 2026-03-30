@@ -31,9 +31,9 @@ func testAofReplayMultipleCommands(stageHarness *test_case_harness.TestCaseHarne
 	value3 := strconv.Itoa(random.RandomInt(100, 500))
 
 	aofDirectoryCreator := AofDirectoryCreator{
-		WorkingDirectory:             workingDirectory,
+		DataDirectory:                workingDirectory,
 		AppendDirName:                appendDirName,
-		AppendFileNameinFlag:         appendFileName,
+		AppendFileNameInFlag:         appendFileName,
 		AppendOnlyFileNameInManifest: actualAppendFileName,
 		CommandsInsideAppendOnlyFile: [][]string{
 			{"SET", key1, value1},

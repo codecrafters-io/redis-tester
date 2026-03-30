@@ -13,7 +13,7 @@ import (
 )
 
 func testAofFilterCommandsBeforeWrite(stageHarness *test_case_harness.TestCaseHarness) error {
-	workingDirectory, err := MkdirTemp("aof")
+	dataDirectory, err := MkdirTemp("aof")
 
 	if err != nil {
 		return err
@@ -31,11 +31,11 @@ func testAofFilterCommandsBeforeWrite(stageHarness *test_case_harness.TestCaseHa
 	b := redis_executable.NewRedisExecutable(stageHarness)
 
 	stageHarness.RegisterTeardownFunc(func() {
-		os.RemoveAll(workingDirectory)
+		os.RemoveAll(dataDirectory)
 	})
 
 	if err := b.Run(
-		"--dir", workingDirectory,
+		"--dir", dataDirectory,
 		"--appendonly", "yes",
 		"--appenddirname", appendDirNameFlag,
 		"--appendfilename", appendFileNameFlag,
@@ -59,7 +59,7 @@ func testAofFilterCommandsBeforeWrite(stageHarness *test_case_harness.TestCaseHa
 	setSecondCommand := []string{"SET", key2, value2}
 
 	aofWriteTestCase := test_cases.AofWriteTestCase{
-		AppendOnlyFileAbsolutePath: filepath.Join(workingDirectory, appendDirNameFlag, appendFileBaseName),
+		AppendOnlyFileAbsolutePath: filepath.Join(dataDirectory, appendDirNameFlag, appendFileBaseName),
 		CommandWithAssertions: []test_cases.CommandWithAssertion{
 			{
 				Command:   setFirstCommand,

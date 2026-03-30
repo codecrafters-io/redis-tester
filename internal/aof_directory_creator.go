@@ -19,9 +19,9 @@ import (
 // manifest file and parse the append-only file name, AppendFilenameFlag and
 // AppendOnlyFilenameInManifest can be specified separately
 type AofDirectoryCreator struct {
-	WorkingDirectory             string     // directory inside which Aof directory is created
+	DataDirectory                string     // directory inside which Aof directory is created
 	AppendDirName                string     // Value of appendonlydir flag
-	AppendFileNameinFlag         string     // Value of appendfilename (Used for manifest file name)
+	AppendFileNameInFlag         string     // Value of appendfilename (Used for manifest file name)
 	AppendOnlyFileNameInManifest string     // Value appendfilename to be used inside manifest
 	CommandsInsideAppendOnlyFile [][]string // slice of commands to be written to append-only file
 }
@@ -29,8 +29,8 @@ type AofDirectoryCreator struct {
 func (a *AofDirectoryCreator) Create(logger *logger.Logger) error {
 	a.verifyMemberValues()
 
-	appendDirPath := filepath.Join(a.WorkingDirectory, a.AppendDirName)
-	manifestFileName := a.AppendFileNameinFlag + ".manifest"
+	appendDirPath := filepath.Join(a.DataDirectory, a.AppendDirName)
+	manifestFileName := a.AppendFileNameInFlag + ".manifest"
 	manifestFilePath := filepath.Join(appendDirPath, manifestFileName)
 	actualAppendFileName := fmt.Sprintf("%s.1.incr.aof", a.AppendOnlyFileNameInManifest)
 	actualAppendFilePath := filepath.Join(appendDirPath, actualAppendFileName)
@@ -76,11 +76,11 @@ func (a *AofDirectoryCreator) Create(logger *logger.Logger) error {
 }
 
 func (a *AofDirectoryCreator) Cleanup(stageHarness *test_case_harness.TestCaseHarness) error {
-	return os.RemoveAll(filepath.Join(a.WorkingDirectory, a.AppendDirName))
+	return os.RemoveAll(filepath.Join(a.DataDirectory, a.AppendDirName))
 }
 
 func (a *AofDirectoryCreator) verifyMemberValues() {
-	if a.WorkingDirectory == "" {
+	if a.DataDirectory == "" {
 		panic("Codecrafters Internal Error - WorkingDirectory cannot be empty in AofDirectoryCreator")
 	}
 
@@ -88,7 +88,7 @@ func (a *AofDirectoryCreator) verifyMemberValues() {
 		panic("Codecrafters Internal Error - AppendDirName cannot be empty in AofDirectoryCreator")
 	}
 
-	if a.AppendFileNameinFlag == "" {
+	if a.AppendFileNameInFlag == "" {
 		panic("Codecrafters Internal Error - AppendFileName cannot be empty in AofDirectoryCreator")
 	}
 

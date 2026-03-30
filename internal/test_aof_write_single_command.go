@@ -14,7 +14,7 @@ import (
 )
 
 func testAofWriteSingleCommand(stageHarness *test_case_harness.TestCaseHarness) error {
-	workingDirectory, err := MkdirTemp("aof")
+	dataDirectory, err := MkdirTemp("aof")
 
 	if err != nil {
 		return err
@@ -33,11 +33,11 @@ func testAofWriteSingleCommand(stageHarness *test_case_harness.TestCaseHarness) 
 
 	// Remove the working directory after redis has quit
 	stageHarness.RegisterTeardownFunc(func() {
-		os.RemoveAll(workingDirectory)
+		os.RemoveAll(dataDirectory)
 	})
 
 	if err := b.Run(
-		"--dir", workingDirectory,
+		"--dir", dataDirectory,
 		"--appendonly", "yes",
 		"--appenddirname", appendDirNameFlag,
 		"--appendfilename", appendFileNameFlag,
@@ -58,7 +58,7 @@ func testAofWriteSingleCommand(stageHarness *test_case_harness.TestCaseHarness) 
 	setCommand := []string{"SET", key, value}
 
 	aofWriteTestCase := test_cases.AofWriteTestCase{
-		AppendOnlyFileAbsolutePath: filepath.Join(workingDirectory, appendDirNameFlag, appendFileBaseName),
+		AppendOnlyFileAbsolutePath: filepath.Join(dataDirectory, appendDirNameFlag, appendFileBaseName),
 		CommandWithAssertions: []test_cases.CommandWithAssertion{{
 			Command:   setCommand,
 			Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
