@@ -32,13 +32,13 @@ func (a *FilesystemAsserter) RunAssertions(logger *logger.Logger) error {
 	}
 
 	deadline := time.Now().Add(a.Timeout)
-	outcomes := runAssertionsConcurrently(a.assertions, deadline)
-	logAssertionResultLogs(logger, outcomes)
-	return firstAssertionErrorInOrder(outcomes)
+	outcomes := a.runAssertionsConcurrently(a.assertions, deadline)
+	a.logAssertionResultLogs(logger, outcomes)
+	return a.firstAssertionErrorInOrder(outcomes)
 }
 
 // runAssertionsConcurrently runs each assertion in its own goroutine and fills outcomes by index.
-func runAssertionsConcurrently(assertions []filesystem_assertion.FilesystemAssertion, deadline time.Time) []filesystem_assertion.FilesystemAssertionResult {
+func (a *FilesystemAsserter) runAssertionsConcurrently(assertions []filesystem_assertion.FilesystemAssertion, deadline time.Time) []filesystem_assertion.FilesystemAssertionResult {
 	outcomes := make([]filesystem_assertion.FilesystemAssertionResult, len(assertions))
 	var waitGroup sync.WaitGroup
 
@@ -46,7 +46,7 @@ func runAssertionsConcurrently(assertions []filesystem_assertion.FilesystemAsser
 		waitGroup.Add(1)
 		go func(idx int, assertion filesystem_assertion.FilesystemAssertion) {
 			defer waitGroup.Done()
-			outcomes[idx] = runAssertionUntilSuccessOrDeadline(assertion, deadline)
+			outcomes[idx] = a.runAssertionUntilSuccessOrTimeout(assertion)
 		}(assertionIndex, assertion)
 	}
 
@@ -54,9 +54,10 @@ func runAssertionsConcurrently(assertions []filesystem_assertion.FilesystemAsser
 	return outcomes
 }
 
-// runAssertionUntilSuccessOrDeadline retries filesystem_assertion.FilesystemAssertion.Run until nil error is returned or deadline is reached.
-func runAssertionUntilSuccessOrDeadline(assertion filesystem_assertion.FilesystemAssertion, deadline time.Time) filesystem_assertion.FilesystemAssertionResult {
+// runAssertionUntilSuccessOrTimeout retries filesystem_assertion.FilesystemAssertion.Run until nil error is returned or deadline is reached.
+func (a *FilesystemAsserter) runAssertionUntilSuccessOrTimeout(assertion filesystem_assertion.FilesystemAssertion) filesystem_assertion.FilesystemAssertionResult {
 	var lastResult filesystem_assertion.FilesystemAssertionResult
+	deadline := time.Now().Add(a.Timeout)
 
 	for {
 		result := assertion.Run()
@@ -76,7 +77,7 @@ func runAssertionUntilSuccessOrDeadline(assertion filesystem_assertion.Filesyste
 }
 
 // logAssertionResultLogs logs non-empty success messages in slice order.
-func logAssertionResultLogs(logger *logger.Logger, outcomes []filesystem_assertion.FilesystemAssertionResult) {
+func (a *FilesystemAsserter) logAssertionResultLogs(logger *logger.Logger, outcomes []filesystem_assertion.FilesystemAssertionResult) {
 	for _, outcome := range outcomes {
 		// If error is nil, log the success log of that outcome
 		if outcome.Err == nil {
@@ -96,7 +97,7 @@ func logAssertionResultLogs(logger *logger.Logger, outcomes []filesystem_asserti
 }
 
 // firstAssertionErrorInOrder returns the first non-nil error in outcomes slice order, or nil if all passed.
-func firstAssertionErrorInOrder(outcomes []filesystem_assertion.FilesystemAssertionResult) error {
+func (a *FilesystemAsserter) firstAssertionErrorInOrder(outcomes []filesystem_assertion.FilesystemAssertionResult) error {
 	for _, outcome := range outcomes {
 		if outcome.Err != nil {
 			return outcome.Err

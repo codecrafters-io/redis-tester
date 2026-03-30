@@ -36,6 +36,11 @@ func (a *AofAppendOnlyFileAssertion) Run() FilesystemAssertionResult {
 		}
 	}
 
+	a.registerLog(NewFilesystemAssertionLog(
+		_SUCCESS,
+		fmt.Sprintf("✔ Append-only file %s exists", a.AbsolutePath),
+	))
+
 	// Assert the empty case first separatly, we need not decode commands here
 	// Checking file contents is enough
 	if err, done := a.assertEmptyAofFileCase(fileContents); done {
@@ -83,7 +88,7 @@ func (a *AofAppendOnlyFileAssertion) assertEmptyAofFileCase(fileContents []byte)
 		return errors.New("Expected append-only file to be empty, is not empty"), true
 	}
 
-	a.registerLog(NewFilesystemAssertionLog(_SUCCESS, "✔ Found no commands in append-only file"))
+	a.registerLog(NewFilesystemAssertionLog(_SUCCESS, "✔ Append-only file is empty"))
 	return nil, true
 }
 

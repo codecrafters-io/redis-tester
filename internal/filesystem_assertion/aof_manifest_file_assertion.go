@@ -59,6 +59,6 @@ func (a *AofManifestFileAssertion) Run() FilesystemAssertionResult {
 	}
 
 	return FilesystemAssertionResult{
-		Err: fmt.Errorf("Expected manifest file to contain 'file %s seq 1 type i', not found", a.AppendOnlyFileBasename),
+		Err: fmt.Errorf("Expected line \"file %s seq 1 type i\" in the manifest file, not found", a.AppendOnlyFileBasename),
 	}
 }
