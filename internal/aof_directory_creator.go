@@ -62,10 +62,10 @@ func (a *AofDirectoryCreator) Create(logger *logger.Logger) error {
 	})
 
 	if len(a.CommandsInsideAppendOnlyFile) > 0 {
-		logger.Infof("Writing the following commands to append-only file %q", actualAppendFileName)
-		logger.WithAdditionalSecondaryPrefix(actualAppendFileName, func() {
+		logger.Infof("Writing append-only file %q", actualAppendFileName)
+		logger.WithAdditionalSecondaryPrefix("RESP Array", func() {
 			for _, cmd := range a.CommandsInsideAppendOnlyFile {
-				logger.Infof("%s", strings.Join(cmd, " "))
+				logger.Infof("[%s]", strings.Join(cmd, ", "))
 			}
 		})
 	} else {
