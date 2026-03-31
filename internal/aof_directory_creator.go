@@ -83,7 +83,7 @@ func (a *AofDirectoryCreator) createAppendOnlyFile(logger *logger.Logger, actual
 	var aofFileContents []byte
 
 	for _, command := range a.CommandsInsideAppendOnlyFile {
-		commandRespBytes := a.EncodeCommandAsRESPBytes(command)
+		commandRespBytes := a.encodeCommandAsRESPBytes(command)
 		aofFileContents = append(aofFileContents, commandRespBytes...)
 
 		// Display the command as if it would be displayed using the quoted "%q" directive
@@ -154,7 +154,7 @@ func (a *AofDirectoryCreator) verifyMemberValues() {
 	}
 }
 
-// EncodeCommandAsRESPBytes encodes a given command as RESP bytes to be written to the append-only file
-func (a *AofDirectoryCreator) EncodeCommandAsRESPBytes(command []string) []byte {
+// encodeCommandAsRESPBytes encodes a given command as RESP bytes to be written to the append-only file
+func (a *AofDirectoryCreator) encodeCommandAsRESPBytes(command []string) []byte {
 	return encoder.Encode(value.NewStringArrayValue(command))
 }
