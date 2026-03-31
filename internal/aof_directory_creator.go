@@ -10,6 +10,7 @@ import (
 	value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/tester-utils/logger"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
+	"github.com/dustin/go-humanize/english"
 )
 
 // AofDirectoryCreator is used to create an append-only directory
@@ -36,42 +37,87 @@ func (a *AofDirectoryCreator) Create(logger *logger.Logger) error {
 	actualAppendFilePath := filepath.Join(appendDirPath, actualAppendFileName)
 	manifestFileEntry := fmt.Sprintf("file %s seq 1 type i", actualAppendFileName)
 
-	if err := os.MkdirAll(appendDirPath, 0755); err != nil {
-		return fmt.Errorf("Failed to create append-only directory %s: %w", appendDirPath, err)
+	if err := a.createAppendOnlyDirectory(logger, appendDirPath, manifestFileName, actualAppendFileName); err != nil {
+		return err
 	}
 
-	appendBody := a.EncodeCommandsAsRESP(a.CommandsInsideAppendOnlyFile)
-	if err := os.WriteFile(actualAppendFilePath, appendBody, 0o644); err != nil {
-		return fmt.Errorf("Failed to create append-only file %s: %w", actualAppendFilePath, err)
+	if err := a.createAppendOnlyFile(logger, actualAppendFilePath); err != nil {
+		return err
 	}
 
-	manifestRaw := manifestFileEntry + "\n"
-	if err := os.WriteFile(manifestFilePath, []byte(manifestRaw), 0o644); err != nil {
-		return fmt.Errorf("Failed to create manifest file %s: %w", manifestFilePath, err)
+	if err := a.createManifestFile(logger, manifestFilePath, manifestFileEntry); err != nil {
+		return err
 	}
 
+	return nil
+}
+
+func (a *AofDirectoryCreator) createAppendOnlyDirectory(logger *logger.Logger, appendDirPath, manifestFileName, actualAppendFileName string) error {
 	logger.Infof("Creating append-only directory %q:", a.AppendDirName)
+
 	logger.WithAdditionalSecondaryPrefix(a.AppendDirName, func() {
 		logger.Infof("  - %s", manifestFileName)
 		logger.Infof("  - %s", actualAppendFileName)
 	})
 
-	logger.Infof("Creating manifest file %q", manifestFileName)
-	logger.WithAdditionalSecondaryPrefix(manifestFileName, func() {
-		logger.Infof("%s", manifestFileEntry)
-	})
+	if err := os.MkdirAll(appendDirPath, 0755); err != nil {
+		return fmt.Errorf("Failed to create append-only directory %s: %w", appendDirPath, err)
+	}
+
+	return nil
+}
+
+func (a *AofDirectoryCreator) createAppendOnlyFile(logger *logger.Logger, actualAppendFilePath string) error {
+	actualAppendFileName := filepath.Base(actualAppendFilePath)
 
 	if len(a.CommandsInsideAppendOnlyFile) > 0 {
-		logger.Infof("Writing append-only file %q", actualAppendFileName)
-		logger.WithAdditionalSecondaryPrefix("RESP Array", func() {
-			for _, cmd := range a.CommandsInsideAppendOnlyFile {
-				logger.Infof("[%s]", strings.Join(cmd, ", "))
-			}
-		})
+		logger.Infof(
+			"Writing %s to append-only file %q",
+			english.Plural(len(a.CommandsInsideAppendOnlyFile), "command", "commands"),
+			actualAppendFileName,
+		)
 	} else {
 		logger.Infof("Creating empty append-only file %s", actualAppendFileName)
 	}
 
+	var aofFileContents []byte
+
+	for _, command := range a.CommandsInsideAppendOnlyFile {
+		commandRespBytes := a.EncodeCommandAsRESPBytes(command)
+		aofFileContents = append(aofFileContents, commandRespBytes...)
+
+		// Display the command as if it would be displayed using the quoted "%q" directive
+		// But remove the surrounding quotes
+		comandRespBytesFormatted := strings.Trim(
+			fmt.Sprintf("%q", commandRespBytes),
+			"\"",
+		)
+
+		logger.WithAdditionalSecondaryPrefix(actualAppendFileName, func() {
+			logger.Infof("%s", comandRespBytesFormatted)
+		})
+	}
+
+	if err := os.WriteFile(actualAppendFilePath, aofFileContents, 0o644); err != nil {
+		return fmt.Errorf("Failed to create append-only file %s: %w", actualAppendFilePath, err)
+	}
+
+	return nil
+}
+
+func (a *AofDirectoryCreator) createManifestFile(logger *logger.Logger, manifestFilePath, manifestFileEntry string) error {
+	manifestFileName := filepath.Base(manifestFilePath)
+
+	logger.Infof("Creating manifest file %q", manifestFileName)
+
+	logger.WithAdditionalSecondaryPrefix(manifestFileName, func() {
+		logger.Infof("%s", manifestFileEntry)
+	})
+
+	manifestFileRawBytes := manifestFileEntry + "\n"
+	if err := os.WriteFile(manifestFilePath, []byte(manifestFileRawBytes), 0o644); err != nil {
+		return fmt.Errorf("Failed to create manifest file %s: %w", manifestFilePath, err)
+	}
 	return nil
 }
 
@@ -108,13 +154,7 @@ func (a *AofDirectoryCreator) verifyMemberValues() {
 	}
 }
 
-// EncodeCommandsAsRESP encodes commands as RESP bytes to be written to the append-only file
-func (a *AofDirectoryCreator) EncodeCommandsAsRESP(commands [][]string) []byte {
-	var out []byte
-
-	for _, cmd := range commands {
-		out = append(out, encoder.Encode(value.NewStringArrayValue(cmd))...)
-	}
-
-	return out
+// EncodeCommandAsRESPBytes encodes a given command as RESP bytes to be written to the append-only file
+func (a *AofDirectoryCreator) EncodeCommandAsRESPBytes(command []string) []byte {
+	return encoder.Encode(value.NewStringArrayValue(command))
 }
