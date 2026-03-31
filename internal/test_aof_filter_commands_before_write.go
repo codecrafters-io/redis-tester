@@ -53,16 +53,16 @@ func testAofFilterCommandsBeforeWrite(stageHarness *test_case_harness.TestCaseHa
 		return err
 	}
 
-	setFirstCommand := []string{"SET", key1, value1}
+	setCommand1 := []string{"SET", key1, value1}
 	getCommand := []string{"GET", key1}
 	echoCommand := []string{"ECHO", echoArg}
-	setSecondCommand := []string{"SET", key2, value2}
+	setCommand2 := []string{"SET", key2, value2}
 
 	aofWriteTestCase := test_cases.AofWriteTestCase{
 		AppendOnlyFileAbsolutePath: filepath.Join(dataDirectory, appendDirNameFlag, appendFileBaseName),
 		CommandWithAssertions: []test_cases.CommandWithAssertion{
 			{
-				Command:   setFirstCommand,
+				Command:   setCommand1,
 				Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
 			},
 			{
@@ -74,13 +74,13 @@ func testAofFilterCommandsBeforeWrite(stageHarness *test_case_harness.TestCaseHa
 				Assertion: resp_assertions.NewBulkStringAssertion(echoArg),
 			},
 			{
-				Command:   setSecondCommand,
+				Command:   setCommand2,
 				Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
 			},
 		},
 		ExpectedCommandsInAppendOnlyFile: [][]string{
-			setFirstCommand,
-			setSecondCommand,
+			setCommand1,
+			setCommand2,
 		},
 	}
 

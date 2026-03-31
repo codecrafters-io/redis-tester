@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 
 	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
 	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
@@ -51,29 +52,28 @@ func testAofWriteMultipleCommands(stageHarness *test_case_harness.TestCaseHarnes
 		return err
 	}
 
-	listKey := names[2]
-	listElement := names[3]
+	key1 := names[2]
+	key2 := names[3]
+	values := random.RandomInts(100, 500, 2)
+	value1 := strconv.Itoa(values[0])
+	value2 := strconv.Itoa(values[0])
 
-	lPushCmd := []string{"LPUSH", listKey, listElement}
-	blpopCmd := []string{"BLPOP", listKey, "0"}
+	setCommand1 := []string{"SET", key1, value1}
+	setCommand2 := []string{"SET", key2, value2}
 
 	aofWriteTestCase := test_cases.AofWriteTestCase{
 		AppendOnlyFileAbsolutePath: filepath.Join(dataDirectory, appendDirNameFlag, appendFileBaseName),
 		CommandWithAssertions: []test_cases.CommandWithAssertion{
 			{
-				Command:   lPushCmd,
-				Assertion: resp_assertions.NewIntegerAssertion(1),
+				Command:   setCommand1,
+				Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
 			},
 			{
-				Command:   blpopCmd,
-				Assertion: resp_assertions.NewOrderedBulkStringArrayAssertion([]string{listKey, listElement}),
+				Command:   setCommand2,
+				Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
 			},
 		},
-		ExpectedCommandsInAppendOnlyFile: [][]string{
-			lPushCmd,
-			// BLPOP is transformed to LPOP
-			{"LPOP", listKey},
-		},
+		ExpectedCommandsInAppendOnlyFile: [][]string{setCommand1, setCommand2},
 	}
 
 	return aofWriteTestCase.Run(client, logger)
