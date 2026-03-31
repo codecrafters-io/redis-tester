@@ -56,7 +56,7 @@ func testAofWriteMultipleCommands(stageHarness *test_case_harness.TestCaseHarnes
 	key2 := names[3]
 	values := random.RandomInts(100, 500, 2)
 	value1 := strconv.Itoa(values[0])
-	value2 := strconv.Itoa(values[0])
+	value2 := strconv.Itoa(values[1])
 
 	setCommand1 := []string{"SET", key1, value1}
 	setCommand2 := []string{"SET", key2, value2}
