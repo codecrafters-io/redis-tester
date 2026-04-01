@@ -27,14 +27,11 @@ func (a DataTypeAssertion) Run(value resp_value.Value) error {
 		receivedDataTypeHint = fmt.Sprintf(" (%s)", receivedDataTypeHint)
 	}
 
-	if value.Type != a.ExpectedType {
-		return fmt.Errorf(
-			"Expected %s%s, found %s%s",
-			a.ExpectedType, expectedDataTypeHint,
-			value.Type, receivedDataTypeHint,
-		)
-	}
-	return nil
+	return fmt.Errorf(
+		"Expected %s%s, found %s%s",
+		a.ExpectedType, expectedDataTypeHint,
+		value.Type, receivedDataTypeHint,
+	)
 }
 
 func (a DataTypeAssertion) getDataTypeHint(dataType string) string {
@@ -44,8 +41,6 @@ func (a DataTypeAssertion) getDataTypeHint(dataType string) string {
 		dataTypeHint = "$-1\r\n"
 	case resp_value.NIL_ARRAY:
 		dataTypeHint = "*-1\r\n"
-	default:
-		dataType = ""
 	}
 
 	if dataTypeHint != "" {
