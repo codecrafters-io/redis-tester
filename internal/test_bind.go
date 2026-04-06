@@ -14,8 +14,6 @@ func testBindToPort(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	logger := stageHarness.Logger
 
-	logger.Infof("Test log for testing regenerate_fixtures")
-
 	bindTestCase := test_cases.BindTestCase{
 		Port:    6379,
 		Retries: 15,
