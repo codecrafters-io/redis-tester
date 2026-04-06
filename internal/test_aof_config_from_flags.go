@@ -13,26 +13,26 @@ import (
 )
 
 func testAofConfigFromFlags(stageHarness *test_case_harness.TestCaseHarness) error {
-	workingDirectory, err := MkdirTemp("aof")
+	dataDirectory, err := MkdirTemp("aof")
 
 	if err != nil {
 		return err
 	}
 
 	baseNames := random.RandomWords(2)
-	appendDirName := baseNames[0]
-	appendFileName := fmt.Sprintf("%s.aof", baseNames[1])
+	appendDirNameFlag := baseNames[0]
+	appendFileNameFlag := fmt.Sprintf("%s.aof", baseNames[1])
 
 	b := redis_executable.NewRedisExecutable(stageHarness)
 
 	// Ensures that the temporary working directory is deleted AFTER the executable is killed
-	stageHarness.RegisterTeardownFunc(func() { os.RemoveAll(workingDirectory) })
+	stageHarness.RegisterTeardownFunc(func() { os.RemoveAll(dataDirectory) })
 
 	if err := b.Run(
-		"--dir", workingDirectory,
+		"--dir", dataDirectory,
 		"--appendonly", "yes",
-		"--appenddirname", appendDirName,
-		"--appendfilename", appendFileName,
+		"--appenddirname", appendDirNameFlag,
+		"--appendfilename", appendFileNameFlag,
 	); err != nil {
 		return err
 	}
@@ -49,7 +49,7 @@ func testAofConfigFromFlags(stageHarness *test_case_harness.TestCaseHarness) err
 		CommandWithAssertions: []test_cases.CommandWithAssertion{
 			{
 				Command:   []string{"CONFIG", "GET", "dir"},
-				Assertion: resp_assertions.NewConfigGetBulkStringValueAssertion("dir", workingDirectory),
+				Assertion: resp_assertions.NewConfigGetBulkStringValueAssertion("dir", dataDirectory),
 			},
 			{
 				Command:   []string{"CONFIG", "GET", "appendonly"},
@@ -57,11 +57,11 @@ func testAofConfigFromFlags(stageHarness *test_case_harness.TestCaseHarness) err
 			},
 			{
 				Command:   []string{"CONFIG", "GET", "appenddirname"},
-				Assertion: resp_assertions.NewConfigGetBulkStringValueAssertion("appenddirname", appendDirName),
+				Assertion: resp_assertions.NewConfigGetBulkStringValueAssertion("appenddirname", appendDirNameFlag),
 			},
 			{
 				Command:   []string{"CONFIG", "GET", "appendfilename"},
-				Assertion: resp_assertions.NewConfigGetBulkStringValueAssertion("appendfilename", appendFileName),
+				Assertion: resp_assertions.NewConfigGetBulkStringValueAssertion("appendfilename", appendFileNameFlag),
 			},
 		},
 	}

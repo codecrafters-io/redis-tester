@@ -5,10 +5,12 @@ go 1.24.0
 toolchain go1.24.2
 
 require (
+	al.essio.dev/pkg/shellescape v1.6.0
 	github.com/codecrafters-io/tester-utils v0.4.15
 	github.com/dustin/go-humanize v1.0.1
 	github.com/fatih/color v1.18.0
 	github.com/hdt3213/rdb v1.2.0
+	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
 	github.com/stretchr/testify v1.10.0
 	github.com/tidwall/pretty v1.2.1
 	gopkg.in/yaml.v3 v3.0.1
