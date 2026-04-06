@@ -115,6 +115,10 @@ setup:
 	sudo chmod 644 /usr/share/keyrings/redis-archive-keyring.gpg
 	@echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(shell lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/redis.list
 
+	echo 'Package: redis*' | sudo tee /etc/apt/preferences.d/redis-8.4.pref
+	echo 'Pin: version 6:8.4*' | sudo tee -a /etc/apt/preferences.d/redis-8.4.pref
+	echo 'Pin-Priority: 1000' | sudo tee -a /etc/apt/preferences.d/redis-8.4.pref
+
 	sudo apt-get update && sudo apt-get install redis -y
 
 	sudo service redis-server stop
