@@ -1,6 +1,9 @@
 package resp_assertions
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/fatih/color"
 )
 
@@ -16,4 +19,9 @@ func BuildExpectedVsReceivedErrorMessage(expectedValue string, receivedValue str
 	errorMsg += ColorizeString(color.FgRed, "Received:")
 	errorMsg += " \"" + receivedValue + "\""
 	return errorMsg
+}
+
+func FormatWithoutQuotes(input string) string {
+	formattedString := fmt.Sprintf("%q", input)
+	return strings.Trim(formattedString, "\"")
 }
