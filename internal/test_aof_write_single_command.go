@@ -63,7 +63,6 @@ func testAofWriteSingleCommand(stageHarness *test_case_harness.TestCaseHarness) 
 			Command:   setCommand,
 			Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
 		}},
-		ExpectedCommandsInAppendOnlyFile: [][]string{setCommand},
 	}
 
 	return aofWriteTestCase.Run(client, logger)

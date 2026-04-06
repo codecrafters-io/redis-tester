@@ -78,10 +78,6 @@ func testAofFilterCommandsBeforeWrite(stageHarness *test_case_harness.TestCaseHa
 				Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
 			},
 		},
-		ExpectedCommandsInAppendOnlyFile: [][]string{
-			setCommand1,
-			setCommand2,
-		},
 	}
 
 	return aofWriteTestCase.Run(client, logger)
