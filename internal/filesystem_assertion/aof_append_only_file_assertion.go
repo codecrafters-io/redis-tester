@@ -44,7 +44,7 @@ func (a *AofAppendOnlyFileAssertion) Run() FilesystemAssertionResult {
 
 	// Assert the empty case first separatly, we need not decode commands here
 	// Checking file contents is enough
-	if err, done := a.assertEmptyAofFileCase(fileContents); done {
+	if done, err := a.assertEmptyAofFileCase(fileContents); done {
 		return FilesystemAssertionResult{
 			Logs: a.accumulatedLogs,
 			Err:  err,
@@ -84,17 +84,17 @@ func (a *AofAppendOnlyFileAssertion) Run() FilesystemAssertionResult {
 	}
 }
 
-func (a *AofAppendOnlyFileAssertion) assertEmptyAofFileCase(fileContents []byte) (error, bool) {
+func (a *AofAppendOnlyFileAssertion) assertEmptyAofFileCase(fileContents []byte) (bool, error) {
 	if len(a.ExpectedCommands) != 0 {
-		return nil, false
+		return false, nil
 	}
 
 	if len(fileContents) > 0 {
-		return errors.New("Expected append-only file to be empty, is not empty"), true
+		return true, errors.New("Expected append-only file to be empty, is not empty")
 	}
 
 	a.registerLog(NewFilesystemAssertionLog(_SUCCESS, "✔ Append-only file is empty"))
-	return nil, true
+	return true, nil
 }
 
 func (a *AofAppendOnlyFileAssertion) decodeCommandsFromAppendOnlyFile(fileContents []byte) ([][]string, error) {
