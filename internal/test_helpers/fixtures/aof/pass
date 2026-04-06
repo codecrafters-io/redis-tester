@@ -166,7 +166,48 @@ Debug = true
 [33m[tester::#EP6] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#XZ2] [0m[94mRunning tests for Stage #XZ2 (xz2)[0m
+[33m[tester::#XZ2] [0m[94mCreating append-only directory "grape":[0m
+[33m[tester::#XZ2] [grape] [0m[94m  - blueberry.aof.manifest[0m
+[33m[tester::#XZ2] [grape] [0m[94m  - banana.aof.1.incr.aof[0m
+[33m[tester::#XZ2] [0m[94mWriting 1 command to append-only file "banana.aof.1.incr.aof"[0m
+[33m[tester::#XZ2] [banana.aof.1.incr.aof] [0m[94m*3\r\n$3\r\nSET\r\n$9\r\npineapple\r\n$3\r\n330\r\n[0m
+[33m[tester::#XZ2] [0m[94mCreating manifest file "blueberry.aof.manifest"[0m
+[33m[tester::#XZ2] [blueberry.aof.manifest] [0m[94mfile banana.aof.1.incr.aof seq 1 type i[0m
+[33m[tester::#XZ2] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/aof-8889 --appendonly yes --appenddirname grape --appendfilename blueberry.aof[0m
+[33m[tester::#XZ2] [client] [0m[36mConnected (port 48090 -> port 6379)[0m
+[33m[tester::#XZ2] [0m[94mChecking if the command in append-only file was replayed[0m
+[33m[tester::#XZ2] [client] [0m[94m$ redis-cli GET pineapple[0m
+[33m[tester::#XZ2] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$9\r\npineapple\r\n"[0m
+[33m[tester::#XZ2] [client] [0m[36mReceived bytes: "$3\r\n330\r\n"[0m
+[33m[tester::#XZ2] [client] [0m[36mReceived RESP bulk string: "330"[0m
+[33m[tester::#XZ2] [client] [0m[92m✔︎ Received "330"[0m
 [33m[tester::#XZ2] [0m[92mTest passed.[0m
+[33m[tester::#XZ2] [0m[36mTerminating program[0m
+[33m[tester::#XZ2] [0m[36mProgram terminated successfully[0m
 
 [33m[tester::#KN2] [0m[94mRunning tests for Stage #KN2 (kn2)[0m
+[33m[tester::#KN2] [0m[94mCreating append-only directory "orange":[0m
+[33m[tester::#KN2] [orange] [0m[94m  - apple.aof.manifest[0m
+[33m[tester::#KN2] [orange] [0m[94m  - pear.aof.1.incr.aof[0m
+[33m[tester::#KN2] [0m[94mWriting 3 commands to append-only file "pear.aof.1.incr.aof"[0m
+[33m[tester::#KN2] [pear.aof.1.incr.aof] [0m[94m*3\r\n$3\r\nSET\r\n$5\r\ngrape\r\n$3\r\n359\r\n[0m
+[33m[tester::#KN2] [pear.aof.1.incr.aof] [0m[94m*3\r\n$3\r\nSET\r\n$5\r\nmango\r\n$3\r\n275\r\n[0m
+[33m[tester::#KN2] [pear.aof.1.incr.aof] [0m[94m*3\r\n$3\r\nSET\r\n$5\r\ngrape\r\n$3\r\n239\r\n[0m
+[33m[tester::#KN2] [0m[94mCreating manifest file "apple.aof.manifest"[0m
+[33m[tester::#KN2] [apple.aof.manifest] [0m[94mfile pear.aof.1.incr.aof seq 1 type i[0m
+[33m[tester::#KN2] [0m[94m$ ./spawn_redis_server.sh --dir /tmp/aof-3020 --appendonly yes --appenddirname orange --appendfilename apple.aof[0m
+[33m[tester::#KN2] [client] [0m[36mConnected (port 48110 -> port 6379)[0m
+[33m[tester::#KN2] [0m[94mChecking if commands in append-only file were replayed[0m
+[33m[tester::#KN2] [client] [0m[94m$ redis-cli GET grape[0m
+[33m[tester::#KN2] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$5\r\ngrape\r\n"[0m
+[33m[tester::#KN2] [client] [0m[36mReceived bytes: "$3\r\n239\r\n"[0m
+[33m[tester::#KN2] [client] [0m[36mReceived RESP bulk string: "239"[0m
+[33m[tester::#KN2] [client] [0m[92m✔︎ Received "239"[0m
+[33m[tester::#KN2] [client] [0m[94m> GET mango[0m
+[33m[tester::#KN2] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$5\r\nmango\r\n"[0m
+[33m[tester::#KN2] [client] [0m[36mReceived bytes: "$3\r\n275\r\n"[0m
+[33m[tester::#KN2] [client] [0m[36mReceived RESP bulk string: "275"[0m
+[33m[tester::#KN2] [client] [0m[92m✔︎ Received "275"[0m
 [33m[tester::#KN2] [0m[92mTest passed.[0m
+[33m[tester::#KN2] [0m[36mTerminating program[0m
+[33m[tester::#KN2] [0m[36mProgram terminated successfully[0m
