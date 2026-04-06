@@ -13,7 +13,7 @@ import (
 )
 
 func testAofCreateAofManifestFile(stageHarness *test_case_harness.TestCaseHarness) error {
-	workingDirectory, err := MkdirTemp("aof")
+	dataDirectory, err := MkdirTemp("aof")
 
 	if err != nil {
 		return err
@@ -25,10 +25,10 @@ func testAofCreateAofManifestFile(stageHarness *test_case_harness.TestCaseHarnes
 	appendFileNameFlag := fmt.Sprintf("%s.aof", baseNames[1])
 	b := redis_executable.NewRedisExecutable(stageHarness)
 	// Ensures that the temporary working directory is deleted AFTER the executable is killed
-	stageHarness.RegisterTeardownFunc(func() { os.RemoveAll(workingDirectory) })
+	stageHarness.RegisterTeardownFunc(func() { os.RemoveAll(dataDirectory) })
 
 	if err := b.Run(
-		"--dir", workingDirectory,
+		"--dir", dataDirectory,
 		"--appendonly", "yes",
 		"--appenddirname", appendDirNameFlag,
 		"--appendfilename", appendFileNameFlag,
@@ -42,16 +42,16 @@ func testAofCreateAofManifestFile(stageHarness *test_case_harness.TestCaseHarnes
 	fsAsserter := filesystem_asserter.NewFilesystemAsserter([]filesystem_assertion.FilesystemAssertion{
 		// The append-only directory should exist
 		&filesystem_assertion.DirExistsAssertion{
-			AbsolutePath: filepath.Join(workingDirectory, appendDirNameFlag),
+			AbsolutePath: filepath.Join(dataDirectory, appendDirNameFlag),
 		},
 		&filesystem_assertion.AofAppendOnlyFileAssertion{
-			AbsolutePath: filepath.Join(workingDirectory, appendDirNameFlag, appendOnlyFileBaseName),
+			AbsolutePath: filepath.Join(dataDirectory, appendDirNameFlag, appendOnlyFileBaseName),
 			// No commands expected in append-only file
 			ExpectedCommands: [][]string{},
 		},
 		// The manifest must contain entry for append-only (incr) file
 		&filesystem_assertion.AofManifestFileAssertion{
-			AbsolutePath:           filepath.Join(workingDirectory, appendDirNameFlag, manifestFileBaseName),
+			AbsolutePath:           filepath.Join(dataDirectory, appendDirNameFlag, manifestFileBaseName),
 			AppendOnlyFileBasename: appendOnlyFileBaseName,
 		},
 	})

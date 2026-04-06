@@ -13,7 +13,7 @@ import (
 )
 
 func testAofConfigFromFlags(stageHarness *test_case_harness.TestCaseHarness) error {
-	workingDirectory, err := MkdirTemp("aof")
+	dataDirectory, err := MkdirTemp("aof")
 
 	if err != nil {
 		return err
@@ -26,10 +26,10 @@ func testAofConfigFromFlags(stageHarness *test_case_harness.TestCaseHarness) err
 	b := redis_executable.NewRedisExecutable(stageHarness)
 
 	// Ensures that the temporary working directory is deleted AFTER the executable is killed
-	stageHarness.RegisterTeardownFunc(func() { os.RemoveAll(workingDirectory) })
+	stageHarness.RegisterTeardownFunc(func() { os.RemoveAll(dataDirectory) })
 
 	if err := b.Run(
-		"--dir", workingDirectory,
+		"--dir", dataDirectory,
 		"--appendonly", "yes",
 		"--appenddirname", appendDirNameFlag,
 		"--appendfilename", appendFileNameFlag,
@@ -49,7 +49,7 @@ func testAofConfigFromFlags(stageHarness *test_case_harness.TestCaseHarness) err
 		CommandWithAssertions: []test_cases.CommandWithAssertion{
 			{
 				Command:   []string{"CONFIG", "GET", "dir"},
-				Assertion: resp_assertions.NewConfigGetBulkStringValueAssertion("dir", workingDirectory),
+				Assertion: resp_assertions.NewConfigGetBulkStringValueAssertion("dir", dataDirectory),
 			},
 			{
 				Command:   []string{"CONFIG", "GET", "appendonly"},
