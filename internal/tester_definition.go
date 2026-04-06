@@ -71,6 +71,47 @@ var testerDefinition = tester_definition.TesterDefinition{
 			Slug:     "sm4",
 			TestFunc: testRdbReadValueWithExpiry,
 		},
+		// AOF persistence
+		{
+			Slug:     "uj3",
+			TestFunc: testAofConfigDefaults,
+		},
+		{
+			Slug:     "vd9",
+			TestFunc: testAofConfigFromFlags,
+		},
+		{
+			Slug:     "fm0",
+			TestFunc: testAofCreateAofDirectory,
+		},
+		{
+			Slug:     "dw4",
+			TestFunc: testAofCreateAppendOnlyFile,
+		},
+		{
+			Slug:     "pb9",
+			TestFunc: testAofCreateAofManifestFile,
+		},
+		{
+			Slug:     "dc8",
+			TestFunc: testAofWriteSingleCommand,
+		},
+		{
+			Slug:     "fi1",
+			TestFunc: testAofWriteMultipleCommands,
+		},
+		{
+			Slug:     "ep6",
+			TestFunc: testAofFilterCommandsBeforeWrite,
+		},
+		{
+			Slug:     "xz2",
+			TestFunc: testAofReplaySingleCommand,
+		},
+		{
+			Slug:     "kn2",
+			TestFunc: testAofReplayMultipleCommands,
+		},
 		// Replication
 		{
 			Slug:     "bw1",
