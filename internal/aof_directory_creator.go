@@ -9,7 +9,6 @@ import (
 	encoder "github.com/codecrafters-io/redis-tester/internal/resp/encoder"
 	value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/tester-utils/logger"
-	"github.com/codecrafters-io/tester-utils/test_case_harness"
 	"github.com/dustin/go-humanize/english"
 )
 
@@ -119,10 +118,6 @@ func (a *AofDirectoryCreator) createManifestFile(logger *logger.Logger, manifest
 		return fmt.Errorf("Failed to create manifest file %s: %w", manifestFilePath, err)
 	}
 	return nil
-}
-
-func (a *AofDirectoryCreator) Cleanup(stageHarness *test_case_harness.TestCaseHarness) error {
-	return os.RemoveAll(filepath.Join(a.DataDirectory, a.AppendDirName))
 }
 
 func (a *AofDirectoryCreator) verifyMemberValues() {
