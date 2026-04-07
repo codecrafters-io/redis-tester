@@ -14,6 +14,10 @@ type RedisExecutable struct {
 	executable *executable.Executable
 	logger     *logger.Logger
 	args       []string
+
+	// isRunning is set to true after a successful .Start()
+	// and set to false after a successful .Kill()
+	isRunning bool
 }
 
 func NewRedisExecutable(stageHarness *test_case_harness.TestCaseHarness) *RedisExecutable {
@@ -48,6 +52,7 @@ func (b *RedisExecutable) Run(args ...string) error {
 		return err
 	}
 
+	b.isRunning = true
 	return nil
 }
 
@@ -56,6 +61,10 @@ func (b *RedisExecutable) HasExited() bool {
 }
 
 func (b *RedisExecutable) Kill() error {
+	if !b.isRunning {
+		return nil
+	}
+
 	b.logger.Debugf("Terminating program")
 	if err := b.executable.Kill(); err != nil {
 		b.logger.Debugf("Error terminating program: '%v'", err)
@@ -63,5 +72,7 @@ func (b *RedisExecutable) Kill() error {
 	}
 
 	b.logger.Debugf("Program terminated successfully")
+
+	b.isRunning = false
 	return nil // When does this happen?
 }

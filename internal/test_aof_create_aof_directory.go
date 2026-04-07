@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/codecrafters-io/redis-tester/internal/filesystem_asserter"
 	"github.com/codecrafters-io/redis-tester/internal/filesystem_assertion"
@@ -13,7 +14,15 @@ import (
 )
 
 func testAofCreateAofDirectory(stageHarness *test_case_harness.TestCaseHarness) error {
-	dataDirectory, err := MkdirTemp("aof")
+	if err := testAofCreateAofDirectoryOnAppendOnlyYes(stageHarness); err != nil {
+		return err
+	}
+
+	return testAofDontCreateAofDirectoryOnAppendOnlyNo(stageHarness)
+}
+
+func testAofCreateAofDirectoryOnAppendOnlyYes(stageHarness *test_case_harness.TestCaseHarness) error {
+	dataDirectory, err := MkdirTemp("aof-1")
 
 	if err != nil {
 		return err
@@ -46,5 +55,51 @@ func testAofCreateAofDirectory(stageHarness *test_case_harness.TestCaseHarness) 
 		}},
 	)
 
-	return fsAsserter.RunAssertions(logger)
+	if err := fsAsserter.RunAssertions(logger); err != nil {
+		return err
+	}
+
+	if err := b.Kill(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func testAofDontCreateAofDirectoryOnAppendOnlyNo(stageHarness *test_case_harness.TestCaseHarness) error {
+	dataDirectory, err := MkdirTemp("aof-2")
+
+	if err != nil {
+		return err
+	}
+
+	b := redis_executable.NewRedisExecutable(stageHarness)
+
+	stageHarness.RegisterTeardownFunc(func() { os.RemoveAll(dataDirectory) })
+
+	// Launch with --dir only (appendonly defaults to no)
+	if err := b.Run("--dir", dataDirectory); err != nil {
+		return err
+	}
+
+	logger := stageHarness.Logger
+
+	// Default appenddirname is "appendonlydir"; it must not be created when AOF is off.
+	appendOnlyDirPath := filepath.Join(dataDirectory, "appendonlydir")
+
+	// Sleep 100ms because even in the 'error' case where the executable creates the directory
+	// the directory might not have been created so early so it might accidentally pass the test
+	time.Sleep(100 * time.Millisecond)
+
+	fsAsserter := filesystem_asserter.NewFilesystemAsserter([]filesystem_assertion.FilesystemAssertion{
+		&filesystem_assertion.DirDoesNotExistAssertion{
+			AbsolutePath: appendOnlyDirPath,
+		},
+	})
+
+	if err := fsAsserter.RunAssertions(logger); err != nil {
+		return err
+	}
+
+	return nil
 }
