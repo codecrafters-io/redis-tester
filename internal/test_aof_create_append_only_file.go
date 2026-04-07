@@ -33,6 +33,7 @@ func testAofCreateAppendOnlyFile(stageHarness *test_case_harness.TestCaseHarness
 		"--appendonly", "yes",
 		"--appenddirname", appendDirNameFlag,
 		"--appendfilename", appendFileNameFlag,
+		"--appendfsync", "always",
 	); err != nil {
 		return err
 	}

@@ -32,6 +32,7 @@ func testAofCreateAofManifestFile(stageHarness *test_case_harness.TestCaseHarnes
 		"--appendonly", "yes",
 		"--appenddirname", appendDirNameFlag,
 		"--appendfilename", appendFileNameFlag,
+		"--appendfsync", "always",
 	); err != nil {
 		return err
 	}
