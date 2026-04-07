@@ -17,6 +17,7 @@ type RedisExecutable struct {
 
 	// isRunning is set to true after a successful .Start()
 	// and set to false after a successful .Kill()
+	// This is useful when killing executable mid-test and re-spawning it
 	isRunning bool
 }
 
