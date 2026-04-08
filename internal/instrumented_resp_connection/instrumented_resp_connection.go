@@ -1,12 +1,15 @@
 package instrumented_resp_connection
 
 import (
+	"fmt"
 	"net"
 
 	resp_connection "github.com/codecrafters-io/redis-tester/internal/resp/connection"
 	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
 	"github.com/codecrafters-io/tester-utils/logger"
 )
+
+const REDIS_DEFAULT_PORT = 6379
 
 type InstrumentedRespConnection struct {
 	*resp_connection.RespConnection
@@ -15,14 +18,19 @@ type InstrumentedRespConnection struct {
 	logger *logger.Logger
 }
 
-func defaultCallbacks(logger *logger.Logger) resp_connection.RespConnectionCallbacks {
+func defaultCallbacks(logger *logger.Logger, remoteAddr net.Addr) resp_connection.RespConnectionCallbacks {
 	return resp_connection.RespConnectionCallbacks{
 		BeforeSendCommand: func(reusedConnection bool, command string, args ...string) {
 			var commandPrefix string
 			if reusedConnection {
 				commandPrefix = ">"
 			} else {
-				commandPrefix = "$ redis-cli"
+				remotePort := remoteAddr.(*net.TCPAddr).Port
+				if remotePort == REDIS_DEFAULT_PORT {
+					commandPrefix = "$ redis-cli"
+				} else {
+					commandPrefix = fmt.Sprintf("$ redis-cli -p %d", remotePort)
+				}
 			}
 
 			commandWithArgs := append([]string{command}, args...)
@@ -46,7 +54,13 @@ func defaultCallbacks(logger *logger.Logger) resp_connection.RespConnectionCallb
 func NewFromAddr(baseLogger *logger.Logger, addr string, connIdentifier string) (*InstrumentedRespConnection, error) {
 	logger := baseLogger.Clone()
 	logger.PushSecondaryPrefix(connIdentifier)
-	c, err := resp_connection.NewRespConnectionFromAddr(addr, defaultCallbacks(logger))
+
+	remoteAddr, err := net.ResolveTCPAddr("tcp", addr)
+	if err != nil {
+		return nil, err
+	}
+
+	c, err := resp_connection.NewRespConnectionFromAddr(addr, defaultCallbacks(logger, remoteAddr))
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +73,8 @@ func NewFromAddr(baseLogger *logger.Logger, addr string, connIdentifier string) 
 func NewFromConn(baseLogger *logger.Logger, conn net.Conn, connIdentifier string) (*InstrumentedRespConnection, error) {
 	logger := baseLogger.Clone()
 	logger.PushSecondaryPrefix(connIdentifier)
-	c, err := resp_connection.NewRespConnectionFromConn(conn, defaultCallbacks(logger))
+
+	c, err := resp_connection.NewRespConnectionFromConn(conn, defaultCallbacks(logger, conn.RemoteAddr()))
 	if err != nil {
 		return nil, err
 	}
@@ -83,7 +98,8 @@ func (c *InstrumentedRespConnection) UpdateBaseLogger(l *logger.Logger) {
 	newLogger := l.Clone()
 	newLogger.PushSecondaryPrefix(c.GetIdentifier())
 	c.logger = newLogger
-	c.UpdateCallBacks(defaultCallbacks(c.logger))
+
+	c.UpdateCallBacks(defaultCallbacks(c.logger, c.Conn.RemoteAddr()))
 }
 
 func (c *InstrumentedRespConnection) SetReadValueInterceptor(transformer func(value resp_value.Value) resp_value.Value) {
