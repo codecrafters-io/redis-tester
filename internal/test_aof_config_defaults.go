@@ -49,6 +49,10 @@ func testAofConfigDefaults(stageHarness *test_case_harness.TestCaseHarness) erro
 				Command:   []string{"CONFIG", "GET", "appendfilename"},
 				Assertion: resp_assertions.NewConfigGetBulkStringValueAssertion("appendfilename", "appendonly.aof"),
 			},
+			{
+				Command:   []string{"CONFIG", "GET", "appendfsync"},
+				Assertion: resp_assertions.NewConfigGetBulkStringValueAssertion("appendfsync", "everysec"),
+			},
 		},
 	}
 

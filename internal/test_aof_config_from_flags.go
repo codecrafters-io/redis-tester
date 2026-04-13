@@ -22,6 +22,7 @@ func testAofConfigFromFlags(stageHarness *test_case_harness.TestCaseHarness) err
 	baseNames := random.RandomWords(2)
 	appendDirNameFlag := baseNames[0]
 	appendFileNameFlag := fmt.Sprintf("%s.aof", baseNames[1])
+	appendFsyncFlag := "always"
 
 	b := redis_executable.NewRedisExecutable(stageHarness)
 
@@ -33,6 +34,7 @@ func testAofConfigFromFlags(stageHarness *test_case_harness.TestCaseHarness) err
 		"--appendonly", "yes",
 		"--appenddirname", appendDirNameFlag,
 		"--appendfilename", appendFileNameFlag,
+		"--appendfsync", appendFsyncFlag,
 	); err != nil {
 		return err
 	}
@@ -62,6 +64,10 @@ func testAofConfigFromFlags(stageHarness *test_case_harness.TestCaseHarness) err
 			{
 				Command:   []string{"CONFIG", "GET", "appendfilename"},
 				Assertion: resp_assertions.NewConfigGetBulkStringValueAssertion("appendfilename", appendFileNameFlag),
+			},
+			{
+				Command:   []string{"CONFIG", "GET", "appendfsync"},
+				Assertion: resp_assertions.NewConfigGetBulkStringValueAssertion("appendfsync", appendFsyncFlag),
 			},
 		},
 	}

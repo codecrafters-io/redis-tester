@@ -52,6 +52,7 @@ func testAofReplaySingleCommand(stageHarness *test_case_harness.TestCaseHarness)
 		"--appendonly", "yes",
 		"--appenddirname", appendDirName,
 		"--appendfilename", appendFileName,
+		"--appendfsync", "always",
 	); err != nil {
 		return err
 	}
