@@ -44,9 +44,12 @@ func testListBlpopNoTimeout(stageHarness *test_case_harness.TestCaseHarness) err
 	}
 
 	rpushTestCase := test_cases.SendCommandTestCase{
-		Command:   "RPUSH",
-		Args:      []string{listKey, pushValue},
-		Assertion: resp_assertions.NewIntegerAssertion(1),
+		Command: "RPUSH",
+		Args:    []string{listKey, pushValue},
+		Assertion: resp_assertions.NewAnnotatedAssertion(
+			"RPUSH response",
+			resp_assertions.NewIntegerAssertion(1),
+		),
 	}
 
 	sendingClient := clients[2]
