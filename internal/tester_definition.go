@@ -390,6 +390,24 @@ var testerDefinition = tester_definition.TesterDefinition{
 			Slug:     "sq7",
 			TestFunc: testZsetZrem,
 		},
+		// Bitmaps
+		{
+			Slug:     "bq9",
+			TestFunc: testBitmapsSet1,
+		},
+		{
+			Slug:     "qj1",
+			TestFunc: testBitmapsGet2,
+		},
+		{
+			Slug:     "yj2",
+			TestFunc: testReadStringAsBits,
+		},
+		{
+			Slug:     "pk5",
+			TestFunc: testReadBitsAsString,
+		},
+
 		// Geospatial commands
 		{
 			Slug:     "zt4",
