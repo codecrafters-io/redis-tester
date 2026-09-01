@@ -283,6 +283,39 @@ var testerDefinition = tester_definition.TesterDefinition{
 			Slug:     "jf8",
 			TestFunc: testTxMultiTx,
 		},
+		// Optimistic locking
+		{
+			Slug:     "jb7",
+			TestFunc: testOptimisticLockingWatch,
+		},
+		{
+			Slug:     "jq9",
+			TestFunc: testOptimisticLockingWatchInTxn,
+		},
+		{
+			Slug:     "mh8",
+			TestFunc: testOptimisticLockingTrackingKeyModification,
+		},
+		{
+			Slug:     "fp0",
+			TestFunc: testOptimisticLockingWatchMultipleKeys,
+		},
+		{
+			Slug:     "uo9",
+			TestFunc: testOptimisticLockingWatchMissingKey,
+		},
+		{
+			Slug:     "bn1",
+			TestFunc: testOptimisticLockingUnwatch,
+		},
+		{
+			Slug:     "fn4",
+			TestFunc: testOptimisticLockingUnwatchOnExec,
+		},
+		{
+			Slug:     "hq1",
+			TestFunc: testOptimisticLockingUnwatchOnDiscard,
+		},
 		// Lists
 		{
 			Slug:     "mh6",
@@ -390,6 +423,24 @@ var testerDefinition = tester_definition.TesterDefinition{
 			Slug:     "sq7",
 			TestFunc: testZsetZrem,
 		},
+		// Bitmaps
+		{
+			Slug:     "bq9",
+			TestFunc: testBitmapsSet1,
+		},
+		{
+			Slug:     "qj1",
+			TestFunc: testBitmapsGet2,
+		},
+		{
+			Slug:     "yj2",
+			TestFunc: testReadStringAsBits,
+		},
+		{
+			Slug:     "pk5",
+			TestFunc: testReadBitsAsString,
+		},
+
 		// Geospatial commands
 		{
 			Slug:     "zt4",
@@ -455,39 +506,6 @@ var testerDefinition = tester_definition.TesterDefinition{
 		{
 			Slug:     "ws7",
 			TestFunc: testAuthCommandAuthentication,
-		},
-		// Optimistic locking
-		{
-			Slug:     "jb7",
-			TestFunc: testOptimisticLockingWatch,
-		},
-		{
-			Slug:     "jq9",
-			TestFunc: testOptimisticLockingWatchInTxn,
-		},
-		{
-			Slug:     "mh8",
-			TestFunc: testOptimisticLockingTrackingKeyModification,
-		},
-		{
-			Slug:     "fp0",
-			TestFunc: testOptimisticLockingWatchMultipleKeys,
-		},
-		{
-			Slug:     "uo9",
-			TestFunc: testOptimisticLockingWatchMissingKey,
-		},
-		{
-			Slug:     "bn1",
-			TestFunc: testOptimisticLockingUnwatch,
-		},
-		{
-			Slug:     "fn4",
-			TestFunc: testOptimisticLockingUnwatchOnExec,
-		},
-		{
-			Slug:     "hq1",
-			TestFunc: testOptimisticLockingUnwatchOnDiscard,
 		},
 	},
 }
