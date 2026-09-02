@@ -88,5 +88,9 @@ func testBitmapsBitopAndDiffLength(stageHarness *test_case_harness.TestCaseHarne
 		commands = append(commands, bitmapGetbitCommand(missingDestKey, offset, 0))
 	}
 
-	return test_cases.MultiCommandTestCase{CommandWithAssertions: commands}.RunAll(client, logger)
+	multiCommandTestCase := test_cases.MultiCommandTestCase{
+		CommandWithAssertions: commands,
+	}
+
+	return multiCommandTestCase.RunAll(client, logger)
 }

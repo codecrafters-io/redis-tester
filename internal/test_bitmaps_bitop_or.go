@@ -32,7 +32,11 @@ func testBitmapsBitopOr(stageHarness *test_case_harness.TestCaseHarness) error {
 	commands = append(commands, bitopOrSameLengthCommands(sameDest, sameKey1, sameKey2)...)
 	commands = append(commands, bitopOrDiffLengthCommands(diffDest, longerKey, shorterKey)...)
 
-	return test_cases.MultiCommandTestCase{CommandWithAssertions: commands}.RunAll(client, logger)
+	multiCommandTestCase := test_cases.MultiCommandTestCase{
+		CommandWithAssertions: commands,
+	}
+
+	return multiCommandTestCase.RunAll(client, logger)
 }
 
 func bitopOrSameLengthCommands(destKey, sourceKey1, sourceKey2 string) []test_cases.CommandWithAssertion {

@@ -68,7 +68,11 @@ func testBitmapsBitopAnd(stageHarness *test_case_harness.TestCaseHarness) error 
 		commands = append(commands, bitmapGetbitCommand(destKey, offset, 0))
 	}
 
-	return test_cases.MultiCommandTestCase{CommandWithAssertions: commands}.RunAll(client, logger)
+	multiCommandTestCase := test_cases.MultiCommandTestCase{
+		CommandWithAssertions: commands,
+	}
+
+	return multiCommandTestCase.RunAll(client, logger)
 }
 
 func bitmapSetbitCommand(key string, offset int) test_cases.CommandWithAssertion {
