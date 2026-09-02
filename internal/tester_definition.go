@@ -441,7 +441,7 @@ var testerDefinition = tester_definition.TesterDefinition{
 			TestFunc: testReadBitsAsString,
 		},
 		{
-			Slug:     "tz1",
+			Slug:     "yf6",
 			TestFunc: testBitmapsGrow,
 		},
 		{
