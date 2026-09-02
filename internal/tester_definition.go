@@ -440,6 +440,14 @@ var testerDefinition = tester_definition.TesterDefinition{
 			Slug:     "pk5",
 			TestFunc: testReadBitsAsString,
 		},
+		{
+			Slug:     "tz1",
+			TestFunc: testBitmapsGrow,
+		},
+		{
+			Slug:     "nx3",
+			TestFunc: testBitmapsBitcount,
+		},
 
 		// Geospatial commands
 		{
