@@ -26,3 +26,22 @@ func redisBitOffsets(value string, bit int) []int {
 	}
 	return offsets
 }
+
+// redisBitcountInByteRange sums popcount[start..end]. start/end are inclusive
+// byte indexes. If start > end or start is past the last byte, the result is 0.
+// If end is past the last byte, it is treated as the last byte.
+func redisBitcountInByteRange(popcount []int, start, end int) int {
+	byteCount := len(popcount)
+	if start > end || start >= byteCount {
+		return 0
+	}
+	if end >= byteCount {
+		end = byteCount - 1
+	}
+
+	count := 0
+	for b := start; b <= end; b++ {
+		count += popcount[b]
+	}
+	return count
+}
