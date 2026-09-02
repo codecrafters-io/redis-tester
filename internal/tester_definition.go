@@ -448,6 +448,18 @@ var testerDefinition = tester_definition.TesterDefinition{
 			Slug:     "nx3",
 			TestFunc: testBitmapsBitcount,
 		},
+		{
+			Slug:     "hv4",
+			TestFunc: testBitmapsBitopAnd,
+		},
+		{
+			Slug:     "dk2",
+			TestFunc: testBitmapsBitopAndDiffLength,
+		},
+		{
+			Slug:     "fr8",
+			TestFunc: testBitmapsBitopOr,
+		},
 
 		// Geospatial commands
 		{
