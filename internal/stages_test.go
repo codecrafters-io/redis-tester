@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"bytes"
 	"os"
 	"regexp"
 	"testing"
@@ -272,5 +273,44 @@ func normalizeTesterOutput(testerOutput []byte) []byte {
 		}
 	}
 
+	// YG4 GET-after-propagation: CI often receives the value on the first
+	// attempt; recorded fixtures often see a nil then retry. Strip the retry
+	// cycle so both timings compare equal.
+	testerOutput = getRetryCycleRegexp.ReplaceAll(testerOutput, nil)
+
 	return testerOutput
+}
+
+// Matches one GET retry after a null bulk string, including ANSI color codes.
+var getRetryCycleRegexp = regexp.MustCompile(`(?m)^.*Received bytes: "\$-1\\r\\n".*\n.*Received RESP null bulk string: "\$-1\\r\\n".*\n.*Retrying\.\.\. \(\d+/\d+ attempts\).*\n.*\[client\].*> GET \S+.*\n.*Sent bytes: "\*2\\r\\n\$3\\r\\nGET\\r\\n\$\d+\\r\\n[^"]+\\r\\n".*\n`)
+
+func TestNormalizeTesterOutputStripsGetRetries(t *testing.T) {
+	withRetry := []byte("" +
+		"[tester::#YG4] [test] [client] Sent bytes: \"*2\\r\\n$3\\r\\nGET\\r\\n$3\\r\\nfoo\\r\\n\"\n" +
+		"[tester::#YG4] [test] [client] Received bytes: \"$-1\\r\\n\"\n" +
+		"[tester::#YG4] [test] [client] Received RESP null bulk string: \"$-1\\r\\n\"\n" +
+		"[tester::#YG4] [test] Retrying... (1/5 attempts)\n" +
+		"[tester::#YG4] [test] [client] > GET foo\n" +
+		"[tester::#YG4] [test] [client] Sent bytes: \"*2\\r\\n$3\\r\\nGET\\r\\n$3\\r\\nfoo\\r\\n\"\n" +
+		"[tester::#YG4] [test] [client] Received bytes: \"$3\\r\\n123\\r\\n\"\n")
+	withoutRetry := []byte("" +
+		"[tester::#YG4] [test] [client] Sent bytes: \"*2\\r\\n$3\\r\\nGET\\r\\n$3\\r\\nfoo\\r\\n\"\n" +
+		"[tester::#YG4] [test] [client] Received bytes: \"$3\\r\\n123\\r\\n\"\n")
+
+	if got, want := normalizeTesterOutput(withRetry), normalizeTesterOutput(withoutRetry); !bytes.Equal(got, want) {
+		t.Fatalf("normalized outputs differ:\nwith retry:\n%s\nwithout:\n%s", got, want)
+	}
+
+	for _, path := range []string{
+		"./test_helpers/fixtures/repl-wait/pass",
+		"./test_helpers/fixtures/repl-wait/repl_propagation_retry",
+	} {
+		fixture, err := os.ReadFile(path)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if bytes.Contains(normalizeTesterOutput(fixture), []byte("Retrying...")) {
+			t.Fatalf("expected GET retry cycles to be stripped from %s", path)
+		}
+	}
 }
